@@ -6,12 +6,13 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.rule.ActivityTestRule
+import com.interswitchng.interswitchpossdk.base.BaseTestActivity
 import com.interswitchng.interswitchpossdk.utils.WaitUtils
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class WorkFlowsTest: BaseActivityTest() {
+class ActivityWorkflows: BaseTestActivity() {
 
     @Rule @JvmField
     val activityRule = ActivityTestRule(MainActivity::class.java, true, false)

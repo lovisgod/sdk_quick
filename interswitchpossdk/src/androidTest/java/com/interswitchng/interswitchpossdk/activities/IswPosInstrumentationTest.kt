@@ -1,9 +1,11 @@
-package com.interswitchng.interswitchpossdk
+package com.interswitchng.interswitchpossdk.activities
 
 import android.app.Application
 import android.app.Instrumentation
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.interswitchng.interswitchpossdk.IswPos
+import com.interswitchng.interswitchpossdk.MainActivity
 import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import org.junit.Assert.assertNotNull

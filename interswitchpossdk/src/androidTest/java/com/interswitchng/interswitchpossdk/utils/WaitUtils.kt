@@ -5,17 +5,17 @@ import android.support.test.espresso.IdlingResource
 
 object WaitUtils {
 
-    private val DEFAULT_WAIT_TIME = 3000
+    private const val defaultWaitTime = 3000L
 
     private var idlingResource: IdlingResource? = null
 
     private val idlingRegistry = IdlingRegistry.getInstance()
 
     @JvmOverloads
-    fun waitTime(waitingTime: Int = DEFAULT_WAIT_TIME) {
+    fun waitTime(waitingTime: Long = defaultWaitTime) {
         cleanupWaitTime()
 
-        idlingResource = ElapsedTimeIdlingResource(waitingTime.toLong())
+        idlingResource = ElapsedTimeIdlingResource(waitingTime)
         idlingResource?.let { idlingRegistry.register(it) }
     }
 

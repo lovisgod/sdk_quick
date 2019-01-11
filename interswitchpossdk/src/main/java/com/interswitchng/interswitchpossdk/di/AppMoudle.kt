@@ -17,13 +17,13 @@ import java.util.concurrent.TimeUnit
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 
-val serviceModule = module {
+private val serviceModule = module {
     single { IswPos.getInstance() }
     single { SharePreferenceManager(androidContext()) }
     single { UserService() } bind IUserService::class
 }
 
-val networkModule = module {
+private val networkModule = module {
 
     factory {
         OkHttpClient.Builder()
