@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">InterswitchPosSdk</string>
+    <string name="title_activity_ussd">UssdActivity</string>
+    <string name="title_choose_payment">Choose a payment option</string>
+    <string name="title_card">Card</string>
+    <string name="title_ussd">USSD</string>
+    <string name="title_qr_code">QR Code</string>
+    <string name="title_pay_code">Pay Code</string>
+    <string name="description_qr_code_image">QR Code Image</string>
 </resources>

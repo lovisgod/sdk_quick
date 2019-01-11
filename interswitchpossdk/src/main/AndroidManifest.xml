@@ -1,2 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.interswitchng.interswitchpossdk" />
+    package="com.interswitchng.interswitchpossdk">
+
+    <application>
+        <activity
+            android:name=".modules.ussdqr.activities.UssdActivity"
+            android:label="@string/title_activity_ussd"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".MainActivity"
+            android:label="IswPos"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".modules.ussdqr.activities.QrCodeActivity"
+            android:label="QR Code"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+    </application>
+
+</manifest>
