@@ -41,13 +41,11 @@ class QrCodeActivity : AppCompatActivity() {
 
         dialog.show()
 
-        val handler = Handler()
-
         Thread(Runnable {
 
-            Thread.sleep(2000)
+            Thread.sleep(1000)
 
-            handler.post {
+            runOnUiThread {
 
                 if (qrBitmap != null) {
                     qrCodeImage.setImageBitmap(qrBitmap)
@@ -71,7 +69,6 @@ class QrCodeActivity : AppCompatActivity() {
 
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
-
                 }
             }
         }).start()

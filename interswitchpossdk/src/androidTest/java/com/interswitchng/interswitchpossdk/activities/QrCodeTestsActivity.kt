@@ -1,6 +1,5 @@
 package com.interswitchng.interswitchpossdk.activities
 
-import android.support.test.annotation.UiThreadTest
 import android.support.test.rule.ActivityTestRule
 import com.interswitchng.interswitchpossdk.base.BaseTestActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
@@ -21,7 +20,6 @@ class QrCodeTestsActivity: BaseTestActivity() {
     }
 
     @Test
-    @UiThreadTest
     fun should_show_qr_code_image() {
         WaitUtils.waitTime(2000)
 

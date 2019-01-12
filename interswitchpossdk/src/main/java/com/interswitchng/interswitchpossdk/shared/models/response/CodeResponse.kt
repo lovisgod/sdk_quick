@@ -8,6 +8,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.interswitchng.interswitchpossdk.R
+import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 
 internal data class CodeResponse(
         val responseCode: String,
@@ -23,10 +24,13 @@ internal data class CodeResponse(
 
 
     @Throws(WriterException::class)
-    internal fun getBitmap(context: Context, length: Int = 300): Bitmap? {
+    internal fun getBitmap(context: Context, lengthInDp: Int = 300): Bitmap? {
         return qrCodeData?.let {
 
             try {
+                // length in pixels
+                val length = DisplayUtils.convertDpToPixel(lengthInDp.toFloat(), context).toInt()
+
                 // create bitmap matrix
                 val bitMatrix: BitMatrix = MultiFormatWriter().encode(it, BarcodeFormat.QR_CODE, length, length, null)
 

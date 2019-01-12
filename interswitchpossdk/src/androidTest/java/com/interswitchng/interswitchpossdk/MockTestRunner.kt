@@ -1,8 +1,9 @@
-package com.interswitchng.interswitchpossdk.base
+package com.interswitchng.interswitchpossdk
 
 import android.app.Application
 import android.content.Context
 import android.support.test.runner.AndroidJUnitRunner
+import com.interswitchng.interswitchpossdk.base.MockApplication
 
 class MockTestRunner: AndroidJUnitRunner() {
 
