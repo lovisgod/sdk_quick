@@ -4,6 +4,7 @@ import android.support.test.internal.runner.junit4.statement.UiThreadStatement.r
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PayableResponseHandler
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 
 internal class MockPayableService : Payable {
@@ -13,7 +14,7 @@ internal class MockPayableService : Payable {
     private val response = CodeResponse(empty, empty, empty, empty, empty, empty, empty, empty, url)
 
 
-    override fun initiateUssdPayment(request: PaymentInfo, callback: PayableResponseHandler) {
+    override fun initiateUssdPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
 
         Thread(Runnable {
 
@@ -24,7 +25,7 @@ internal class MockPayableService : Payable {
         }).start()
     }
 
-    override fun initiateQrPayment(request: PaymentInfo, callback: PayableResponseHandler) {
+    override fun initiateQrPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
 
         Thread(Runnable {
 

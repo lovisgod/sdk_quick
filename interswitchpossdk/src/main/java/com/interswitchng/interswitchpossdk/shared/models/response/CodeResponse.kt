@@ -24,7 +24,7 @@ data class CodeResponse(
 
 
     @Throws(WriterException::class)
-    internal fun getBitmap(context: Context, lengthInDp: Int = 300): Bitmap? {
+    internal fun getBitmap(context: Context, lengthInDp: Int = 250): Bitmap? {
         return qrCodeData?.let {
 
             try {

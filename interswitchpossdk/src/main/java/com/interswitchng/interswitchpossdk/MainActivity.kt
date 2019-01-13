@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         qrPayment.setOnClickListener {
-            val ussdIntent = Intent(this, QrCodeActivity::class.java)
-            ussdIntent.putExtra(KEY_PAYMENT_INFO, info)
-            startActivity(ussdIntent)
+            val qrIntent = Intent(this, QrCodeActivity::class.java)
+            qrIntent.putExtra(KEY_PAYMENT_INFO, info)
+            startActivity(qrIntent)
         }
     }
 }
