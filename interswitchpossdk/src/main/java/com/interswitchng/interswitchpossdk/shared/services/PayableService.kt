@@ -1,16 +1,19 @@
 package com.interswitchng.interswitchpossdk.shared.services
 
+import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
-import com.interswitchng.interswitchpossdk.shared.interfaces.PayableCodeCallback
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.interfaces.PayableResponseHandler
+import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 
-internal class PayableService: Payable {
-    override fun initiateQrPayment(paymentInfo: PaymentInfo, callback: PayableCodeCallback) {
-        TODO("not implemented")
+internal class PayableService(private val httpService: IHttpService): Payable {
+
+    override fun initiateQrPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
+        httpService.getQrCode(request).processPayment(callback)
     }
 
-    override fun initiateUssdPayment(paymentInfo: PaymentInfo, callback: PayableCodeCallback) {
-        TODO("not implemented")
+    override fun initiateUssdPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
+        httpService.getUssdCode(request).processPayment(callback)
     }
 
 }

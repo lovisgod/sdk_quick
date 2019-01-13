@@ -1,9 +1,8 @@
 package com.interswitchng.interswitchpossdk.shared.services
 
-import android.content.Context
 import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
 
-internal class KeyValueStore(context: Context, private val prefManager: SharePreferenceManager): IKeyValueStore {
+internal class KeyValueStore(private val prefManager: SharePreferenceManager): IKeyValueStore {
 
     override fun saveString(key: String, value: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

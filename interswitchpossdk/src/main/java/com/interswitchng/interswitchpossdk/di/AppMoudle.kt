@@ -4,9 +4,9 @@ import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.services.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
+import com.interswitchng.interswitchpossdk.shared.utilities.PayableAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -50,6 +50,7 @@ private val networkModule = module {
         val builder = Retrofit.Builder()
                 .baseUrl(BuildConfig.ISW_USSD_QR_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(PayableAdapterFactory.create())
 
         // get the okhttp client for the retrofit
         val clientBuilder: OkHttpClient.Builder = get()
@@ -58,14 +59,6 @@ private val networkModule = module {
         val authInterceptor: Interceptor = get(AUTH_INTERCEPTOR)
         // add auth interceptor for max services
         clientBuilder.addInterceptor(authInterceptor)
-
-
-        // add chuck interceptor in debug mode
-//        if (BuildConfig.DEBUG) {
-//            // chuck interceptor if in debug mode
-//            val interceptor: ChuckInterceptor = get()
-//            clientBuilder.addInterceptor(interceptor)
-//        }
 
         // add client to retrofit builder
         val client = clientBuilder.build()

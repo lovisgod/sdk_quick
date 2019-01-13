@@ -10,7 +10,7 @@ import com.google.zxing.common.BitMatrix
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 
-internal data class CodeResponse(
+data class CodeResponse(
         val responseCode: String,
         val responseDescription: String,
         val date: String,

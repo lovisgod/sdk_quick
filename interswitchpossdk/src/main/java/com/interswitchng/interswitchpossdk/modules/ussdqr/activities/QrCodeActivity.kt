@@ -6,10 +6,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.QR_FORMAT_RAW
+import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.TRANSACTION_QR
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.activity_qr_code.*
@@ -38,41 +42,27 @@ class QrCodeActivity : AppCompatActivity() {
     private fun setupImage() {
 
         val paymentInfo: PaymentInfo = intent.getParcelableExtra(KEY_PAYMENT_INFO)
+        val instance = IswPos.getInstance()
+        val request = CodeRequest.from(instance.config, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
 
         dialog.show()
 
-        Thread(Runnable {
-
-            Thread.sleep(1000)
-
-            runOnUiThread {
-
-                if (qrBitmap != null) {
-                    qrCodeImage.setImageBitmap(qrBitmap)
-                    dialog.dismiss()
+        if (qrBitmap != null) {
+            qrCodeImage.setImageBitmap(qrBitmap)
+            dialog.dismiss()
+        } else {
+            // initiate qr payment
+            paymentService.initiateQrPayment(request) { response, throwable ->
+                if (throwable != null) {
+                    // handle error
                 } else {
-
-                    // initiate qr payment
-            //        paymentService.initiateQrPayment(paymentInfo) { response, throwable ->
-            //            if (throwable != null) {
-            //                // handle error
-            //            } else {
-            //                // handle response, show
-            //            }
-            //        }
-
-                    val url = "https://www.google.com"
-                    val empty = ""
-
-                    val response = CodeResponse(empty, empty, empty, empty, empty, empty, empty, empty, url)
-                    qrBitmap = response.getBitmap(this)
+                    qrBitmap = response?.getBitmap(this)
 
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
                 }
             }
-        }).start()
-
+        }
     }
 
 }
