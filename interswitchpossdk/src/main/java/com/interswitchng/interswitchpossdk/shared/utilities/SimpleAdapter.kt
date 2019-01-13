@@ -17,7 +17,7 @@ internal class Simple<R>(private val call: Call<R>) {
         }
     }
 
-    fun processPayment(responseHandler: PayableResponseHandler<R?> ) {
+    fun process(responseHandler: PayableResponseHandler<R?> ) {
 
         // define callback
         val callback = object : Callback<R> {
@@ -37,7 +37,7 @@ internal class Simple<R>(private val call: Call<R>) {
 }
 
 
-internal class PayableCallAdapter<R>(private val responseType: Type) : CallAdapter<R, Any> {
+internal class SimpleCallAdapter<R>(private val responseType: Type) : CallAdapter<R, Any> {
 
     override fun responseType(): Type = responseType
 

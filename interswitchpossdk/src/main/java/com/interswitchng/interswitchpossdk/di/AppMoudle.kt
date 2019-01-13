@@ -6,7 +6,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
 import com.interswitchng.interswitchpossdk.shared.services.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
-import com.interswitchng.interswitchpossdk.shared.utilities.PayableAdapterFactory
+import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -50,7 +50,7 @@ private val networkModule = module {
         val builder = Retrofit.Builder()
                 .baseUrl(BuildConfig.ISW_USSD_QR_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(PayableAdapterFactory.create())
+                .addCallAdapterFactory(SimpleAdapterFactory.create())
 
         // get the okhttp client for the retrofit
         val clientBuilder: OkHttpClient.Builder = get()

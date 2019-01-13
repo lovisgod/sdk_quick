@@ -1,10 +1,8 @@
-package com.interswitchng.interswitchpossdk
+package com.interswitchng.interswitchpossdk.adapter
 
 import com.interswitchng.interswitchpossdk.Utilities.getJson
-import com.interswitchng.interswitchpossdk.di.appModules
-import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
-import com.interswitchng.interswitchpossdk.shared.utilities.PayableAdapterFactory
+import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
 import com.nhaarman.mockitokotlin2.mock
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -20,7 +18,7 @@ import org.koin.test.KoinTest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class PayableAdapterTest: KoinTest {
+class SimpleAdapterTest: KoinTest {
 
     private val sampleResponse = getJson("success-code-response.json")
     private val mockServer = MockWebServer()
@@ -31,7 +29,7 @@ class PayableAdapterTest: KoinTest {
         val url = mockServer.url("/")
         val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(PayableAdapterFactory.create())
+                .addCallAdapterFactory(SimpleAdapterFactory.create())
                 .baseUrl(url)
                 .build()
 

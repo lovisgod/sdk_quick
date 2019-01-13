@@ -9,11 +9,11 @@ import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 internal class PayableService(private val httpService: IHttpService): Payable {
 
     override fun initiateQrPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
-        httpService.getQrCode(request).processPayment(callback)
+        httpService.getQrCode(request).process(callback)
     }
 
     override fun initiateUssdPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
-        httpService.getUssdCode(request).processPayment(callback)
+        httpService.getUssdCode(request).process(callback)
     }
 
 }
