@@ -5,14 +5,18 @@ import android.os.Parcelable
 
 data class PaymentInfo (
     internal val amount: Int,
+    private val stan: String,
     internal val bankCode: String? = null
 ): Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
-            parcel.readString())
+            parcel.readString(),
+            parcel.readString()) {
+    }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(amount)
+        parcel.writeString(stan)
         parcel.writeString(bankCode)
     }
 
