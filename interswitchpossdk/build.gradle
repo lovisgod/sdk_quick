@@ -44,6 +44,7 @@ android {
         animationsDisabled true
         unitTests {
             includeAndroidResources = true
+            returnDefaultValues = true
         }
     }
 
@@ -61,6 +62,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.google.zxing:core:$zxing_version"
+    implementation project(':posinterface')
 
 
     testImplementation 'junit:junit:4.12'
