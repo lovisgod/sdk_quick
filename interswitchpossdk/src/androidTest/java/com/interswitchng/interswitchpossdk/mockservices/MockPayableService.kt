@@ -2,11 +2,10 @@ package com.interswitchng.interswitchpossdk.mockservices
 
 import android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
-import com.interswitchng.interswitchpossdk.shared.interfaces.PayableResponseHandler
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
 
 internal class MockPayableService : Payable {
 
@@ -26,7 +25,7 @@ internal class MockPayableService : Payable {
             Bank(103, "GUARANTY TRUST BANK", "GTB"),
             Bank(114, "Skye Bank", "SKYE"))
 
-    override fun initiateUssdPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
+    override fun initiateUssdPayment(request: CodeRequest, callback: SimpleResponseHandler<CodeResponse?>) {
 
         Thread(Runnable {
 
@@ -37,7 +36,7 @@ internal class MockPayableService : Payable {
         }).start()
     }
 
-    override fun initiateQrPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>) {
+    override fun initiateQrPayment(request: CodeRequest, callback: SimpleResponseHandler<CodeResponse?>) {
 
         Thread(Runnable {
 
@@ -48,7 +47,7 @@ internal class MockPayableService : Payable {
         }).start()
     }
 
-    override fun getBanks(callback: PayableResponseHandler<List<Bank>?>) {
+    override fun getBanks(callback: SimpleResponseHandler<List<Bank>?>) {
         Thread(Runnable {
             Thread.sleep(2000)
 

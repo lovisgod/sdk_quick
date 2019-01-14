@@ -1,13 +1,14 @@
 package com.interswitchng.interswitchpossdk.shared.utilities
 
-import com.interswitchng.interswitchpossdk.shared.interfaces.PayableResponseHandler
 import retrofit2.*
 import java.io.IOException
 import java.lang.reflect.Type
 
+internal typealias SimpleResponseHandler<T> = (T, Throwable?) -> Unit
+
 internal class Simple<R>(private val call: Call<R>) {
 
-    fun test(responseHandler: PayableResponseHandler<R?>) {
+    fun test(responseHandler: SimpleResponseHandler<R?>) {
         // run in the same thread
         try {
             val response = call.execute()
@@ -17,7 +18,7 @@ internal class Simple<R>(private val call: Call<R>) {
         }
     }
 
-    fun process(responseHandler: PayableResponseHandler<R?> ) {
+    fun process(responseHandler: SimpleResponseHandler<R?> ) {
 
         // define callback
         val callback = object : Callback<R> {

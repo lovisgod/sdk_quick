@@ -1,12 +1,12 @@
-package com.interswitchng.interswitchpossdk
+package com.interswitchng.interswitchpossdk.activities
 
 import android.app.Application
 import org.junit.Test
-import org.robolectric.RuntimeEnvironment
 import android.content.Intent
-import android.provider.SyncStateContract
 import android.widget.LinearLayout
 import androidx.test.core.app.ApplicationProvider
+import com.interswitchng.interswitchpossdk.MainActivity
+import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO

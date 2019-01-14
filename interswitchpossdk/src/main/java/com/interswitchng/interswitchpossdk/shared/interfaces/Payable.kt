@@ -3,16 +3,15 @@ package com.interswitchng.interswitchpossdk.shared.interfaces
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
 
 internal interface Payable {
 
-    fun initiateQrPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>)
+    fun initiateQrPayment(request: CodeRequest, callback: SimpleResponseHandler<CodeResponse?>)
 
-    fun initiateUssdPayment(request: CodeRequest, callback: PayableResponseHandler<CodeResponse?>)
+    fun initiateUssdPayment(request: CodeRequest, callback: SimpleResponseHandler<CodeResponse?>)
+
+    fun getBanks(callback: SimpleResponseHandler<List<Bank>?>)
 
     // other two
-
-    fun getBanks(callback: PayableResponseHandler<List<Bank>?>)
 }
-
-internal typealias PayableResponseHandler<T> = (T, Throwable?) -> Unit
