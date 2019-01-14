@@ -6,7 +6,7 @@ import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 internal data class CodeRequest(
         val alias: String,
         val amount: String,
-        val bankCode: String,
+        val bankCode: String?,
         val date: String,
         val stan: String,
         val terminalId: String,
@@ -28,7 +28,7 @@ internal data class CodeRequest(
         internal fun from(config: POSConfiguration, paymentInfo: PaymentInfo, transactionType: String, qrFormat: String? = null) = CodeRequest (
                 alias = "",
                 amount = "${paymentInfo.amount}",
-                bankCode = "",
+                bankCode = "${paymentInfo.bankCode}",
                 date = "",
                 stan = "",
                 terminalId = "",

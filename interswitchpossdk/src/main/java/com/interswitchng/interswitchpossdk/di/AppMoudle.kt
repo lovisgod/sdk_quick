@@ -4,6 +4,8 @@ import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
+import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
@@ -20,7 +22,8 @@ const val AUTH_INTERCEPTOR = "auth_interceptor"
 private val serviceModule = module {
     single { IswPos.getInstance() }
     single { SharePreferenceManager(androidContext()) }
-    single { UserService() } bind IUserService::class
+    single<Payable>  { PayableService(get()) }
+    single<IUserService> { UserService() }
 }
 
 private val networkModule = module {
