@@ -24,7 +24,7 @@ class IswPosInstrumentationTest {
         InstrumentationRegistry.getInstrumentation().addMonitor(monitor)
 
         val app = InstrumentationRegistry.getTargetContext().applicationContext as Application
-        val config = POSConfiguration()
+        val config = POSConfiguration("", "", "", "", "", "")
         IswPos.configureTerminal(app, config)
     }
 
@@ -32,7 +32,7 @@ class IswPosInstrumentationTest {
     @Test
     fun should_start_main_activity_when_payment_is_initiated() {
 
-        val paymentInfo = PaymentInfo(20000)
+        val paymentInfo = PaymentInfo(20000, "Stan")
         IswPos.getInstance().initiatePayment(paymentInfo)
 
         val mainActivity = monitor.waitForActivityWithTimeout(10 * 1000) // wait for 10 seconds

@@ -1,6 +1,7 @@
-package com.interswitchng.interswitchpossdk
+package com.interswitchng.interswitchpossdk.config
 
 import android.app.Application
+import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert.assertNotNull
@@ -13,7 +14,7 @@ class IswPosTest {
     @Before
     fun setup() {
         val app: Application = mock()
-        val config = POSConfiguration()
+        val config: POSConfiguration = mock()
         IswPos.configureTerminal(app, config)
     }
 

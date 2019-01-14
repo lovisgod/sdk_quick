@@ -1,11 +1,12 @@
-package com.interswitchng.interswitchpossdk
+package com.interswitchng.interswitchpossdk.config
 
 import android.app.Instrumentation
+import com.interswitchng.interswitchpossdk.MainActivity
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 class IswPosInstrumentedTest {

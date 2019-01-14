@@ -10,7 +10,7 @@ class MockApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val config = POSConfiguration()
+        val config = POSConfiguration("", "", "", "", "", "")
 
         IswPos.configureTerminal(this, config)
         // override existing modules

@@ -25,7 +25,7 @@ class MainActivityTests {
 
     @Before
     fun setup() {
-        val parcel = PaymentInfo(2000)
+        val parcel = PaymentInfo(2000, "")
         val mainIntent = Intent().apply {
             putExtra(KEY_PAYMENT_INFO, parcel)
         }

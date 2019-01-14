@@ -5,7 +5,7 @@ import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 
 abstract class BaseTestActivity {
-    private val paymentInfo = PaymentInfo(2000)
+    private val paymentInfo = PaymentInfo(2000, "Stan")
     val intent = Intent().apply {
         putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
     }
