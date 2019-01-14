@@ -1,8 +1,9 @@
-package com.interswitch.posinterface;
+package com.interswitch.posinterface.posshim;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.interswitch.posinterface.Holder;
 import com.pax.dal.IDAL;
 import com.pax.neptunelite.api.NeptuneLiteUser;
 

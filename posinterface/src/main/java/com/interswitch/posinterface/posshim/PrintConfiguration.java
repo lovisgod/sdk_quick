@@ -1,4 +1,4 @@
-package com.interswitch.posinterface;
+package com.interswitch.posinterface.posshim;
 
 import android.graphics.Bitmap;
 

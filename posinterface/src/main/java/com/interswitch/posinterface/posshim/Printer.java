@@ -1,8 +1,9 @@
-package com.interswitch.posinterface;
+package com.interswitch.posinterface.posshim;
 
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.interswitch.posinterface.Holder;
 import com.pax.dal.IPrinter;
 import com.pax.dal.entity.EFontTypeAscii;
 import com.pax.dal.entity.EFontTypeExtCode;

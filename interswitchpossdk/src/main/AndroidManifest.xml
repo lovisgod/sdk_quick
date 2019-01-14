@@ -2,23 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.interswitchng.interswitchpossdk">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
         <activity
             android:name=".modules.ussdqr.activities.UssdActivity"
             android:label="@string/title_activity_ussd"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".MainActivity"
             android:label="IswPos"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".modules.ussdqr.activities.QrCodeActivity"
+        <activity
+            android:name=".modules.ussdqr.activities.QrCodeActivity"
             android:label="QR Code"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".modules.card.CardActivity"></activity>
     </application>
 
 </manifest>

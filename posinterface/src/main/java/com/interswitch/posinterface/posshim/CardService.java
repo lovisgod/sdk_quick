@@ -1,10 +1,14 @@
-package com.interswitch.posinterface;
+package com.interswitch.posinterface.posshim;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.Log;
 
+import com.interswitch.posinterface.DeviceImplNeptune;
+import com.interswitch.posinterface.Holder;
+import com.interswitch.posinterface.ImplEmv;
+import com.interswitch.posinterface.TransResult;
 import com.pax.dal.IDAL;
 import com.pax.dal.IIcc;
 import com.pax.dal.entity.EFontTypeAscii;

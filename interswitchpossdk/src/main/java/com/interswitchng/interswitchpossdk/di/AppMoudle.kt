@@ -47,7 +47,7 @@ private val networkModule = module {
         }
     }
 
-    // retrofit client builder for MAX services
+    // retrofit
     single {
 
         val builder = Retrofit.Builder()

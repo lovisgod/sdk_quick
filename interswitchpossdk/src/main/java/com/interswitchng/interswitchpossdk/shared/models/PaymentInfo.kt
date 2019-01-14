@@ -5,7 +5,7 @@ import android.os.Parcelable
 
 data class PaymentInfo (
     internal val amount: Int,
-    private val stan: String,
+    internal val stan: String?,
     internal val bankCode: String? = null
 ): Parcelable {
     constructor(parcel: Parcel) : this(

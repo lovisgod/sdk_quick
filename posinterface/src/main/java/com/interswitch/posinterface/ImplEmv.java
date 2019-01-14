@@ -7,6 +7,7 @@ import android.util.SparseArray;
 
 import com.interswitch.posinterface.action.ActionEnterPin;
 import com.interswitch.posinterface.action.ActionResult;
+import com.interswitch.posinterface.posshim.Transaction;
 import com.pax.jemv.clcommon.ACType;
 import com.pax.jemv.clcommon.ByteArray;
 import com.pax.jemv.clcommon.EMV_APPLIST;
