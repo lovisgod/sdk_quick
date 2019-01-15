@@ -14,6 +14,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "com.interswitchng.interswitchpossdk.MockTestRunner"
+        testInstrumentationRunnerArguments(shouldMock: 'true')
     }
 
     buildTypes {

@@ -16,11 +16,11 @@ internal data class TransactionInformation(
 
         internal fun from(config: POSConfiguration, paymentInfo: PaymentInfo) = TransactionInformation (
                 currencyCode = "",
-                merchantId = "",
-                merchantLocation = "",
+                merchantId = config.merchantId,
+                merchantLocation = config.merchantLocation,
                 posGeoCode = "",
-                terminalType = "",
-                uniqueId = ""
+                terminalType = config.terminalType,
+                uniqueId = config.uniqueId
         )
     }
 }

@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.widget.Toast
+import com.interswitchng.interswitchpossdk.BaseActivity
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
@@ -20,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_qr_code.*
 import org.koin.android.ext.android.inject
 
 
-class QrCodeActivity : AppCompatActivity() {
+class QrCodeActivity : BaseActivity() {
 
     private val paymentService: Payable by inject()
 
@@ -42,7 +45,6 @@ class QrCodeActivity : AppCompatActivity() {
     private fun setupImage() {
 
         val paymentInfo: PaymentInfo = intent.getParcelableExtra(KEY_PAYMENT_INFO)
-        val instance = IswPos.getInstance()
         val request = CodeRequest.from(instance.config, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
 
         dialog.show()
@@ -53,16 +55,42 @@ class QrCodeActivity : AppCompatActivity() {
         } else {
             // initiate qr payment
             paymentService.initiateQrPayment(request) { response, throwable ->
-                if (throwable != null) {
-                    // handle error
-                } else {
-                    qrBitmap = response?.getBitmap(this)
+                if (throwable != null) handleError(throwable)
+                else response?.apply { handleResponse(this) }
+            }
+        }
 
+    }
+
+    private fun handleResponse(response: CodeResponse) {
+        when(response.responseCode) {
+            CodeResponse.OK -> {
+                qrBitmap = response.getBitmap(this)
+                val byte = qrBitmap?.byteCount
+                runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
                 }
             }
+            CodeResponse.ERROR -> {
+                runOnUiThread {
+                    val msg = "An error occured: ${response.responseDescription}"
+                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+                }
+            }
+            else -> {
+                // show error message
+            }
         }
+    }
+
+    private fun handleError(throwable: Throwable) {
+        // handle error
+    }
+
+    override fun retryTransaction() {
+
     }
 
 }

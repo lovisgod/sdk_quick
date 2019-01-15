@@ -2,7 +2,8 @@ package com.interswitchng.interswitchpossdk.shared.utilities
 
 import android.content.Context
 import android.util.DisplayMetrics
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 object DisplayUtils {
@@ -27,5 +28,11 @@ object DisplayUtils {
      */
     fun convertPixelsToDp(px: Float, context: Context): Float {
         return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    }
+
+    fun getIsoString(date: Date): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        return dateFormat.format(Date())
     }
 }

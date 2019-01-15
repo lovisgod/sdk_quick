@@ -23,5 +23,5 @@ internal interface IHttpService {
                              @Query("transactionReference") transactionReference: String)
 
     @GET(TILL_BANKS_END_POINT)
-    fun getBanks(): Simple<List<Bank>>
+    fun getBanks(): Simple<List<Bank>?>
 }

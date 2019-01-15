@@ -3,16 +3,27 @@ package com.interswitchng.interswitchpossdk.shared.models
 import android.os.Parcel
 import android.os.Parcelable
 
-data class PaymentInfo (
-    internal val amount: Int,
-    internal val stan: String?,
-    internal val bankCode: String? = null
-): Parcelable {
+class PaymentInfo: Parcelable {
+
+    internal val amount: Int
+    internal val stan: String
+    internal var bankCode: String
+
+    constructor(amount: Int, stan: String?) {
+        this.amount = amount
+        this.stan = stan ?: ""
+        this.bankCode = ""
+    }
+
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
-            parcel.readString(),
-            parcel.readString()) {
+            parcel.readString())
+
+
+    internal constructor(amount: Int, stan: String, bankCode: String): this(amount, stan) {
+        this.bankCode = bankCode
     }
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(amount)

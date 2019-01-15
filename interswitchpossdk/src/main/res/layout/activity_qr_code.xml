@@ -10,9 +10,10 @@
     <ImageView
         android:id="@+id/qrCodeImage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:contentDescription="@string/description_qr_code_image"
         android:layout_margin="15dp"
+        android:src="@drawable/placeholder"
         />
 
 </android.support.constraint.ConstraintLayout>

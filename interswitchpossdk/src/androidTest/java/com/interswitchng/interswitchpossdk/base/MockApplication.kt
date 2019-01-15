@@ -10,11 +10,27 @@ class MockApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val config = POSConfiguration("", "", "", "", "", "")
+
+        val alias = "000007"
+        val terminalId = "2069018M"
+        val merchantId = "IBP000000001384"
+        val merchantLocation = "AIRTEL NETWORKS LIMITED PH MALL"
+        // val currencyCode = "566"
+        // val posGeoCode = "0023400000000056"
+        val terminalType = "PAX"
+        val uniqueId = "280-820-589"
+
+        val config = POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation)
 
         IswPos.configureTerminal(this, config)
-        // override existing modules
-        loadKoinModules(mockAppModules)
+
+        if (shouldMock)
+            // override existing modules
+            loadKoinModules(mockAppModules)
+    }
+
+    companion object {
+        internal var shouldMock = true
     }
 
 }

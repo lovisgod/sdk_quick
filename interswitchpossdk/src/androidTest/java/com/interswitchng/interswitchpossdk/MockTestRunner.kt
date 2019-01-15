@@ -2,6 +2,7 @@ package com.interswitchng.interswitchpossdk
 
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import android.support.test.runner.AndroidJUnitRunner
 import com.interswitchng.interswitchpossdk.base.MockApplication
 
@@ -12,4 +13,11 @@ class MockTestRunner: AndroidJUnitRunner() {
         return super.newApplication(cl, MockApplication::class.java.name, context)
     }
 
+    override fun onCreate(arguments: Bundle?) {
+        super.onCreate(arguments)
+        arguments?.apply {
+            val mocks = getString("shouldMock") ?: "true"
+            MockApplication.shouldMock = mocks.toBoolean()
+        }
+    }
 }

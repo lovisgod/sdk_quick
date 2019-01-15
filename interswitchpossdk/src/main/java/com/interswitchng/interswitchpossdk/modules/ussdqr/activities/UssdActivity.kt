@@ -16,9 +16,10 @@ import org.koin.android.ext.android.inject
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.interswitchng.interswitchpossdk.BaseActivity
 
 
-class UssdActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     private val paymentService: Payable by inject()
 
@@ -75,7 +76,12 @@ class UssdActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             // get the payment info
             val paymentInfo: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
             // set the selected bank-code for payment
-            val paymentInfoPrime = paymentInfo.copy(bankCode = bankCodes[selectedItem])
+            val bankCode =
+                    if(bankCodes.containsKey(selectedItem)) bankCodes[selectedItem]!!
+                    else ""
+
+            // create payment info with bank code
+            val paymentInfoPrime = PaymentInfo(paymentInfo.amount, paymentInfo.stan, bankCode)
             val request = CodeRequest.from(instance.config, paymentInfoPrime, TRANSACTION_USSD)
 
             dialog.show()
@@ -108,6 +114,10 @@ class UssdActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(arg: AdapterView<*>) {
+
+    }
+
+    override fun retryTransaction() {
 
     }
 

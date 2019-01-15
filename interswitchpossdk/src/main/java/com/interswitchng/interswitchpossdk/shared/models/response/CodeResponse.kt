@@ -12,22 +12,26 @@ import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 
 data class CodeResponse(
         val responseCode: String,
-        val responseDescription: String,
-        val date: String,
-        val reference: String,
-        val bankShortCode: String,
-        val defaultShortCode: String,
-        val terminalId: String,
-        val transactionReference: String,
+        val responseDescription: String?,
+        val date: String?,
+        val reference: String?,
+        val bankShortCode: String?,
+        val defaultShortCode: String?,
+        val terminalId: String?,
+        val transactionReference: String?,
         val qrCodeData: String?
 ) {
 
 
     @Throws(WriterException::class)
-    internal fun getBitmap(context: Context, lengthInDp: Int = 250): Bitmap? {
+    internal fun getBitmap(context: Context, lengthInDp: Int = 240): Bitmap? {
         return qrCodeData?.let {
 
             try {
+                // colors
+                val white = ContextCompat.getColor(context, android.R.color.white)
+                val black = ContextCompat.getColor(context, android.R.color.black)
+
                 // length in pixels
                 val length = DisplayUtils.convertDpToPixel(lengthInDp.toFloat(), context).toInt()
 
@@ -47,11 +51,11 @@ data class CodeResponse(
 
                     for (x in 0 until bitMatrixWidth) {
                         val color =
-                                if (bitMatrix.get(x, y)) android.R.color.black
-                                else android.R.color.white
+                                if (bitMatrix.get(x, y)) black
+                                else white
 
                         // set the color of specific pixel
-                        pixels[offset + x] = ContextCompat.getColor(context, color)
+                        pixels[offset + x] = color
                     }
                 }
 
@@ -67,5 +71,11 @@ data class CodeResponse(
                 return null
             }
         }
+    }
+
+
+    companion object {
+        internal const val OK = "00"
+        internal const val ERROR = "10500"
     }
 }

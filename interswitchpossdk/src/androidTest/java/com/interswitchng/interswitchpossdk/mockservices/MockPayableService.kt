@@ -17,7 +17,7 @@ internal class MockPayableService : Payable {
     private val defaultShortCode = "*322*419*051691201*46524#"
     private val terminalId = "2069018M"
     private val transactionReference = "TRSuiKz3mpqoXmDsW7bqiiZsZ"
-    private val qrCodeData = "https://www.google.com"
+    private val qrCodeData = "000201021340771312156775204599953035665406100.005802NG5911Refund Test6005Lagos62290525ptu3UzobDrKJ9IE0kgcvxHITl6304432C"
     private val response = CodeResponse(code, desc, date, ref, bankShortCode, defaultShortCode, terminalId, transactionReference, qrCodeData)
 
     private val banksResponse = listOf(Bank(107, "ACCESS BANK PLC", "ABP"),
