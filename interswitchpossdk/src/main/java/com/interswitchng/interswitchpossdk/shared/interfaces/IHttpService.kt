@@ -6,6 +6,7 @@ import com.interswitchng.interswitchpossdk.shared.Constants.TILL_TRANSACTION_STA
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.Simple
 import retrofit2.http.*
 
@@ -20,7 +21,7 @@ internal interface IHttpService {
     @GET("$TILL_TRANSACTION_STATUS/{transactionType}")
     fun getTransactionStatus(@Path("transactionType") transactionType: String,
                              @Query("merchantCode") merchantCode: String,
-                             @Query("transactionReference") transactionReference: String)
+                             @Query("transactionReference") transactionReference: String): Simple<Transaction>
 
     @GET(TILL_BANKS_END_POINT)
     fun getBanks(): Simple<List<Bank>?>

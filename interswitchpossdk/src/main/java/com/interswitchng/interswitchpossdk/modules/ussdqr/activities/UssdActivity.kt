@@ -17,6 +17,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
 
 
 class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
@@ -95,9 +96,12 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                     if (throwable != null) {
                         // TODO handle error
                     } else {
-                        ussdCode = response?.bankShortCode ?: response?.defaultShortCode
-                        ussdText.text = ussdCode
-                        dialog.dismiss()
+                        response?.apply {
+                            ussdCode = response.bankShortCode ?: response.defaultShortCode
+                            ussdText.text = ussdCode
+                            dialog.dismiss()
+                            checkTransactionStatus(TransactionStatus(request.transactionType, response.transactionReference!!, request.alias))
+                        }
                     }
                 }
             }

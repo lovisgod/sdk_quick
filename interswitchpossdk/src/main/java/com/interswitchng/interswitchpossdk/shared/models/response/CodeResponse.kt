@@ -76,6 +76,7 @@ data class CodeResponse(
 
     companion object {
         internal const val OK = "00"
+        internal const val PENDING = "Z00"
         internal const val ERROR = "10500"
     }
 }

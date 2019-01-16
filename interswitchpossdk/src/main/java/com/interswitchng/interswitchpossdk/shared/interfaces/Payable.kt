@@ -1,8 +1,10 @@
 package com.interswitchng.interswitchpossdk.shared.interfaces
 
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
 
 internal interface Payable {
@@ -13,5 +15,6 @@ internal interface Payable {
 
     fun getBanks(callback: SimpleResponseHandler<List<Bank>?>)
 
+    fun checkPayment(transaction: TransactionStatus, callback: SimpleResponseHandler<Transaction?>)
     // other two
 }

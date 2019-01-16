@@ -17,6 +17,7 @@ import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.QR_FORMAT_RAW
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.TRANSACTION_QR
+import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.activity_qr_code.*
@@ -56,13 +57,13 @@ class QrCodeActivity : BaseActivity() {
             // initiate qr payment
             paymentService.initiateQrPayment(request) { response, throwable ->
                 if (throwable != null) handleError(throwable)
-                else response?.apply { handleResponse(this) }
+                else response?.apply { handleResponse(request, this) }
             }
         }
 
     }
 
-    private fun handleResponse(response: CodeResponse) {
+    private fun handleResponse(request: CodeRequest, response: CodeResponse) {
         when(response.responseCode) {
             CodeResponse.OK -> {
                 qrBitmap = response.getBitmap(this)
@@ -70,6 +71,7 @@ class QrCodeActivity : BaseActivity() {
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
+                    checkTransactionStatus(TransactionStatus(request.transactionType, response.transactionReference!!, request.alias))
                 }
             }
             CodeResponse.ERROR -> {

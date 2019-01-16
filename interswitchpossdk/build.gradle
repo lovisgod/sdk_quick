@@ -63,6 +63,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.google.zxing:core:$zxing_version"
+    implementation 'com.tapadoo.android:alerter:3.0.0'
     implementation project(':posinterface')
 
 
