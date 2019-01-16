@@ -1,9 +1,6 @@
 package com.interswitchng.interswitchpossdk.activities
 
-import android.app.Application
-import android.content.Context
 import android.content.Intent
-import androidx.test.core.app.ApplicationProvider
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
@@ -41,15 +38,15 @@ class QrCodeActivityTest {
     @Before
     fun setup() {
         val nothing = ""
-        val posConfiguration = POSConfiguration(nothing, nothing, nothing, nothing, nothing, nothing)
+        val posConfiguration = POSConfiguration.default()
         instance = mock { on(mock.config).thenReturn(posConfiguration) }
     }
 
     @Test
-    fun should_show_show_error_message_when_request_fails() {
+    fun should_show_show_error_message_when_qr_code_request_fails() {
         // mock dependencies
         val failedResponse: CodeResponse = mock()
-        whenever(failedResponse.responseCode).thenReturn(CodeResponse.ERROR)
+        whenever(failedResponse.responseCode).thenReturn(CodeResponse.SERVER_ERROR)
 
         val service: Payable = mock()
         whenever(service.initiateQrPayment(any(), any())).then{
@@ -70,4 +67,5 @@ class QrCodeActivityTest {
         assertNotNull("Last Toast message was null", lastToastText)
         assertTrue(lastToastText.contains("error"))
     }
+
 }

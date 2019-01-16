@@ -15,6 +15,6 @@ internal interface Payable {
 
     fun getBanks(callback: SimpleResponseHandler<List<Bank>?>)
 
-    fun checkPayment(transaction: TransactionStatus, callback: SimpleResponseHandler<Transaction?>)
+    fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback)
     // other two
 }

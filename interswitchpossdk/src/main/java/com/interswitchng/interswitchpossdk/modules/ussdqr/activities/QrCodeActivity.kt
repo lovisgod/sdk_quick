@@ -3,13 +3,9 @@ package com.interswitchng.interswitchpossdk.modules.ussdqr.activities
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.BaseActivity
-import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
@@ -19,6 +15,7 @@ import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Com
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.TRANSACTION_QR
 import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.activity_qr_code.*
 import org.koin.android.ext.android.inject
@@ -71,10 +68,11 @@ class QrCodeActivity : BaseActivity() {
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
-                    checkTransactionStatus(TransactionStatus(request.transactionType, response.transactionReference!!, request.alias))
+                    checkTransactionStatus(TransactionStatus(request.transactionType,
+                            response.transactionReference!!, instance.config.merchantCode))
                 }
             }
-            CodeResponse.ERROR -> {
+            CodeResponse.SERVER_ERROR -> {
                 runOnUiThread {
                     val msg = "An error occured: ${response.responseDescription}"
                     Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
@@ -91,8 +89,18 @@ class QrCodeActivity : BaseActivity() {
         // handle error
     }
 
-    override fun retryTransaction() {
+    override fun onTransactionSuccessful(transaction: Transaction) {
+        printBtn.visibility = View.VISIBLE
+        textMessage.visibility = View.VISIBLE
 
+        printBtn.setOnClickListener {
+            printBtn.isClickable = false
+            printBtn.isEnabled = false
+
+            Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
+        }
+
+        qrCodeImage.setImageResource(R.drawable.placeholder)
+        Toast.makeText(this, "amount of ${transaction.amount} paid successfully", Toast.LENGTH_LONG).show()
     }
-
 }

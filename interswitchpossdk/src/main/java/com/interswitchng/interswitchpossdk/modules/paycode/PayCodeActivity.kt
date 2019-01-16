@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.interswitchng.interswitchpossdk.BaseActivity
 import com.interswitchng.interswitchpossdk.R
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 
 class PayCodeActivity : BaseActivity() {
 
@@ -12,7 +13,8 @@ class PayCodeActivity : BaseActivity() {
         setContentView(R.layout.activity_pay_code)
     }
 
-    override fun retryTransaction() {
+    override fun onTransactionSuccessful(transaction: Transaction) {
 
     }
+
 }

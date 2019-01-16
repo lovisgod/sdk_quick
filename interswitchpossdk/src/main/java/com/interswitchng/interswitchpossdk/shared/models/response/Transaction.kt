@@ -13,8 +13,7 @@ internal class Transaction (
 ) {
 
 
-    fun isCompleted(): Boolean {
-        val isDone = responseCode == CodeResponse.OK
-        return isDone
-    }
+    fun isCompleted(): Boolean = responseCode == CodeResponse.OK
+    fun isPending(): Boolean = responseCode == CodeResponse.PENDING
+    fun isSuccessful(): Boolean = isCompleted()
 }

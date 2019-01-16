@@ -76,7 +76,8 @@ data class CodeResponse(
 
     companion object {
         internal const val OK = "00"
-        internal const val PENDING = "Z00"
-        internal const val ERROR = "10500"
+        internal const val PENDING = "Z0"
+        internal const val BAD_REQUEST = "10400"
+        internal const val SERVER_ERROR = "10500"
     }
 }

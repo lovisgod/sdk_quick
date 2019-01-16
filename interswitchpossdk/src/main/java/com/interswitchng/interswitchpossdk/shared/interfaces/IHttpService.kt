@@ -21,7 +21,7 @@ internal interface IHttpService {
     @GET("$TILL_TRANSACTION_STATUS/{transactionType}")
     fun getTransactionStatus(@Path("transactionType") transactionType: String,
                              @Query("merchantCode") merchantCode: String,
-                             @Query("transactionReference") transactionReference: String): Simple<Transaction>
+                             @Query("transactionReference") transactionReference: String): Simple<Transaction?>
 
     @GET(TILL_BANKS_END_POINT)
     fun getBanks(): Simple<List<Bank>?>

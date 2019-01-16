@@ -18,4 +18,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
+    <TextView
+        android:id="@+id/textMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_transaction_approved"
+        android:textSize="24sp"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:visibility="visible"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/printBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_print_receipt"
+        android:layout_margin="15dp"
+        android:visibility="gone"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@android:color/holo_blue_dark"
+        app:layout_constraintTop_toBottomOf="@+id/qrCodeImage"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible"
+        />
+
 </android.support.constraint.ConstraintLayout>

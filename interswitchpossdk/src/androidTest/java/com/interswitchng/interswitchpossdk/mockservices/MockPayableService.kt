@@ -2,6 +2,7 @@ package com.interswitchng.interswitchpossdk.mockservices
 
 import android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.response.Bank
@@ -58,12 +59,12 @@ internal class MockPayableService : Payable {
         }).start()
     }
 
-    override fun checkPayment(transaction: TransactionStatus, callback: SimpleResponseHandler<Transaction?>) {
+    override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback) {
         Thread(Runnable {
             Thread.sleep(defaultTime)
             val response = Transaction(3380867, 5000, "XeAAoeCX8dklyjbBMDg5wysiA", "00", "566", false, "011", 50, null)
 
-            runOnUiThread { callback(response, null) }
+            //runOnUiThread { callback(response, null) }
         }).start()
     }
 }

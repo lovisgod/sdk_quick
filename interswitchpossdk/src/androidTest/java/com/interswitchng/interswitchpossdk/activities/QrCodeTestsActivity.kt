@@ -11,12 +11,15 @@ import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.base.BaseTestActivity
 import com.interswitchng.interswitchpossdk.base.MockApplication
 import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
+import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.utils.WaitUtils
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext.loadKoinModules
 
 @RunWith(AndroidJUnit4::class)
 class QrCodeTestsActivity: BaseTestActivity() {
@@ -25,39 +28,59 @@ class QrCodeTestsActivity: BaseTestActivity() {
     val activityRule = ActivityTestRule(QrCodeActivity::class.java, true, false)
 
 
-    @Before
-    fun startWithCustomIntent() {
-        // don't mock
-        activityRule.launchActivity(intent)
-    }
-
     @Test
     fun should_show_qr_code_image() {
+        activityRule.launchActivity(intent)
 
         onView(withText(R.string.title_processing_payment)).check(matches(isDisplayed()))
 
         WaitUtils.waitTime(2000)
         onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))
 
+        WaitUtils.cleanupWaitTime()
+    }
 
-        WaitUtils.waitTime(2000)
-        onView(withText("Transaction in progress")).check(matches(isDisplayed()))
+    @Test
+    fun should_show_success_message_when_transaction_is_successful() {
+//        val service : Payable = mock()
+        loadKoinModules(module(override = true) {
+//            single { service }
+        })
+
+        activityRule.launchActivity(intent)
 
         WaitUtils.waitTime(3000)
-        onView(withText("Transaction completed successfully")).check { view, noViewFoundException ->
+        onView(withText(R.string.title_processing_payment)).check(matches(isDisplayed()))
+
+        WaitUtils.waitTime(3000)
+        onView(withText(R.string.title_transaction_completed_successfully)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
             Assert.assertTrue(view.visibility == View.VISIBLE)
         }
-
-        WaitUtils.cleanupWaitTime()
     }
 
     @Test
     fun should_show_error_msg() {
+        activityRule.launchActivity(intent)
+
         WaitUtils.waitTime(1000)
 
+        WaitUtils.waitTime(3000)
+        onView(withText(R.string.title_transaction_not_confirmed)).check(matches(isDisplayed()))
+
+        WaitUtils.waitTime(3000)
+        onView(withText(R.string.content_transaction_not_confirmed)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+    }
+
+    @Test
+    fun should_terminate_polling_when_transaction_takes_over_5_minutes() {
 
     }
 

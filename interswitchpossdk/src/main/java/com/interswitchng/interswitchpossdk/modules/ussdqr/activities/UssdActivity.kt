@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.BaseActivity
 import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 
 
 class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
@@ -100,7 +101,8 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                             ussdCode = response.bankShortCode ?: response.defaultShortCode
                             ussdText.text = ussdCode
                             dialog.dismiss()
-                            checkTransactionStatus(TransactionStatus(request.transactionType, response.transactionReference!!, request.alias))
+                            checkTransactionStatus(TransactionStatus(request.transactionType,
+                                    response.transactionReference!!, instance.config.merchantCode))
                         }
                     }
                 }
@@ -121,9 +123,8 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     }
 
-    override fun retryTransaction() {
-
+    override fun onTransactionSuccessful(transaction: Transaction) {
+        Toast.makeText(this, "amount of ${transaction.amount} paid successfully", Toast.LENGTH_LONG).show()
     }
-
 
 }

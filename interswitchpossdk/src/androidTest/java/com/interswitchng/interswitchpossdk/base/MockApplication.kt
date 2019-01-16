@@ -19,8 +19,9 @@ class MockApplication: Application() {
         // val posGeoCode = "0023400000000056"
         val terminalType = "PAX"
         val uniqueId = "280-820-589"
+        val merchantCode = "MX5882"
 
-        val config = POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation)
+        val config = POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation, merchantCode)
 
         IswPos.configureTerminal(this, config)
 
