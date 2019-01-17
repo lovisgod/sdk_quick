@@ -18,4 +18,7 @@
     <string name="title_transaction_completed_successfully">Transaction completed successfully</string>
     <string name="title_transaction_not_confirmed">Transaction not confirmed</string>
     <string name="content_transaction_not_confirmed">Unable to confirm transaction, please try again later</string>
+    <string name="title_transaction_error">Transaction Error</string>
+    <string name="title_transaction_timeout">Transaction Timeout</string>
+    <string name="content_transaction_in_progress_time_out">Transaction progress timed out</string>
 </resources>

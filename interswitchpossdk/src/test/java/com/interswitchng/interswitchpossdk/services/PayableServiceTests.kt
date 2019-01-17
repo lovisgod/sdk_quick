@@ -26,7 +26,7 @@ class PayableServiceTests {
         }
 
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.process(any())).doAnswer {
+            on(mock.test(any())).doAnswer {
                 val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
                 argumentCallback(successTransaction, null)
             }
@@ -60,7 +60,7 @@ class PayableServiceTests {
         }
 
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.process(any())).doAnswer {
+            on(mock.test(any())).doAnswer {
                 val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
                 argumentCallback(pendingTransaction, null)
             }
@@ -93,7 +93,7 @@ class PayableServiceTests {
         }
 
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.process(any())).doAnswer {
+            on(mock.test(any())).doAnswer {
                 val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
                 argumentCallback(pendingTransaction, null)
             }
@@ -104,12 +104,15 @@ class PayableServiceTests {
         }
 
         val service = PayableService(httpService)
-        service.checkPayment(status, 3000, transactionStatusCallback)
-        Thread.sleep(6000)
+        service.checkPayment(status, 6000, transactionStatusCallback)
+
+        Thread.sleep(7500)
+        verify(transactionStatusCallback, times(0)).onTransactionTimeOut()
+        verify(transactionStatusCallback, times(2)).onTransactionStillPending(any())
 
 
+        Thread.sleep(2000)
         verify(transactionStatusCallback, times(0)).onTransactionCompleted(any())
-        verify(transactionStatusCallback, times(0)).onTransactionStillPending(any())
         verify(transactionStatusCallback, times(0)).onTransactionError(anyOrNull(), anyOrNull())
         verify(transactionStatusCallback, times(1)).onTransactionTimeOut()
     }
@@ -117,7 +120,7 @@ class PayableServiceTests {
 
 
     @Test
-    fun `should invoke 'onTransactionError' of callback when the transactionStatus is pending`() {
+    fun `should invoke 'onTransactionError' of callback when the transactionStatus is not pending or completed`() {
         val transactionStatusCallback: TransactionRequeryCallback = mock()
         val status = TransactionStatus("", "", "")
 
@@ -128,7 +131,7 @@ class PayableServiceTests {
         }
 
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.process(any())).doAnswer {
+            on(mock.test(any())).doAnswer {
                 val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
                 argumentCallback(pendingTransaction, null)
             }

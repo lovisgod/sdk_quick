@@ -1,28 +1,15 @@
 package com.interswitchng.interswitchpossdk.adapter
 
-import com.interswitchng.interswitchpossdk.Utilities.getJson
-import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.utilities.Simple
-import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleCallAdapter
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
-import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
-import org.junit.After
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Test
-import org.koin.dsl.module.module
-import org.koin.standalone.StandAloneContext.loadKoinModules
-import org.koin.standalone.get
 import org.koin.test.KoinTest
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
 class SimpleAdapterTest: KoinTest {

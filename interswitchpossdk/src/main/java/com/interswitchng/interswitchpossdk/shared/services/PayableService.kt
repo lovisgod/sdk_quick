@@ -8,7 +8,6 @@ import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStat
 import com.interswitchng.interswitchpossdk.shared.models.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
-import java.util.logging.Handler
 
 internal class PayableService(private val httpService: IHttpService): Payable {
 
@@ -27,38 +26,42 @@ internal class PayableService(private val httpService: IHttpService): Payable {
     override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback) {
         var hasResponse = false
         Thread(Runnable {
-            var secs = 0L
-
+            var secs = 1L
+            var elapsedTime = secs
             while (!hasResponse) {
-                httpService.getTransactionStatus(status.type, status.merchantCode, status.reference).process { transaction, throwable ->
+                httpService.getTransactionStatus(status.type, status.merchantCode, status.reference).test { transaction, throwable ->
                     when {
                         throwable != null -> {
                             callback.onTransactionError(transaction, throwable)
                         }
-                        transaction?.isCompleted() == true -> {
+                        transaction == null -> {
+
+                        }
+                        transaction.isCompleted() -> {
                             callback.onTransactionCompleted(transaction)
                             hasResponse = true
                         }
-                        transaction?.isPending() == true && timeout < secs * 1000 -> {
+                        transaction.isPending() && timeout > elapsedTime -> {
                             callback.onTransactionStillPending(transaction)
                             secs += 2
                         }
-                        transaction?.isPending() == true && timeout > secs * 1000 -> {
+                        transaction.isPending() && timeout <= elapsedTime -> {
                             secs = 0
                             hasResponse = true
                             callback.onTransactionTimeOut()
                         }
                         else -> {
                             // some other error occurred
-                            // terminate thread and return
+                            // terminate loop and return
                             secs = 0
                             hasResponse = true
-                            transaction?.apply { callback.onTransactionError(this, null) }
+                            callback.onTransactionError(transaction, throwable)
                         }
                     }
                 }
 
                 val nextDuration = secs * 1000
+                elapsedTime += nextDuration
                 Thread.sleep(nextDuration)
             }
         }).start()

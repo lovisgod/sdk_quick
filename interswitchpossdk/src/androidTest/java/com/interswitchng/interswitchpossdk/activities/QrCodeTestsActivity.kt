@@ -1,20 +1,21 @@
 package com.interswitchng.interswitchpossdk.activities
 
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import com.google.gson.Gson
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.base.BaseTestActivity
-import com.interswitchng.interswitchpossdk.base.MockApplication
+import com.interswitchng.interswitchpossdk.mockservices.MockPayableService
 import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.utils.Utilities
 import com.interswitchng.interswitchpossdk.utils.WaitUtils
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,36 +43,72 @@ class QrCodeTestsActivity: BaseTestActivity() {
 
     @Test
     fun should_show_success_message_when_transaction_is_successful() {
-//        val service : Payable = mock()
+
+        val service: Payable = MockPayableService.Builder()
+                .setPaymentStatusCall {
+                    val successString = Utilities.getJson(activityRule.activity, "success-transaction-response.json")
+                    val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
+                    it.onTransactionCompleted(transaction)
+                }
+                .build()
+
         loadKoinModules(module(override = true) {
-//            single { service }
+            single { service }
         })
 
         activityRule.launchActivity(intent)
 
         WaitUtils.waitTime(3000)
-        onView(withText(R.string.title_processing_payment)).check(matches(isDisplayed()))
+        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
 
-        WaitUtils.waitTime(3000)
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+        WaitUtils.cleanupWaitTime()
+
+
+        WaitUtils.waitTime(1000)
+        WaitUtils.cleanupWaitTime()
         onView(withText(R.string.title_transaction_completed_successfully)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
             Assert.assertTrue(view.visibility == View.VISIBLE)
         }
+
     }
 
     @Test
-    fun should_show_error_msg() {
+    fun should_show_error_msg_when_transaction_fails() {
+
+        var errorMsg = "error"
+        val service: Payable = MockPayableService.Builder()
+                .setPaymentStatusCall {
+                    val successString = Utilities.getJson(activityRule.activity,"failed-transaction-response.json")
+                    val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
+                    errorMsg = transaction.responseDescription ?: "error"
+                    it.onTransactionError(transaction, null)
+                }
+                .build()
+
+        loadKoinModules(module(override = true) {
+            single { service }
+        })
+
+
         activityRule.launchActivity(intent)
 
+        WaitUtils.waitTime( 500)
+        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+
         WaitUtils.waitTime(1000)
-
-        WaitUtils.waitTime(3000)
-        onView(withText(R.string.title_transaction_not_confirmed)).check(matches(isDisplayed()))
-
-        WaitUtils.waitTime(3000)
-        onView(withText(R.string.content_transaction_not_confirmed)).check { view, noViewFoundException ->
+        onView(withText(errorMsg)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -80,8 +117,36 @@ class QrCodeTestsActivity: BaseTestActivity() {
     }
 
     @Test
-    fun should_terminate_polling_when_transaction_takes_over_5_minutes() {
+    fun should_show_error_msg_when_transaction_times_out() {
 
+        val service: Payable = MockPayableService.Builder()
+                .setPaymentStatusCall { it.onTransactionTimeOut() }
+                .build()
+
+        loadKoinModules(module(override = true) {
+            single { service }
+        })
+
+
+        activityRule.launchActivity(intent)
+
+        WaitUtils.waitTime( 500)
+        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+
+        WaitUtils.waitTime(1000)
+        onView(withText(R.string.content_transaction_in_progress_time_out)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+
+        WaitUtils.cleanupWaitTime()
     }
 
 }

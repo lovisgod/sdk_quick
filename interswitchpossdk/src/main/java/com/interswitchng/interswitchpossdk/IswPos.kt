@@ -11,10 +11,12 @@ import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
-class IswPos(private val app: Application, internal val config: POSConfiguration) {
+class IswPos private constructor(private val app: Application, internal val config: POSConfiguration) {
 
     fun initiatePayment(paymentInfo: PaymentInfo) {
-        val intent = Intent(app, MainActivity::class.java)
+        val intent = Intent(app, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
         intent.putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
         app.startActivity(intent)
     }

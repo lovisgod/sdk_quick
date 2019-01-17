@@ -10,7 +10,13 @@ import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
 
-internal class MockPayableService : Payable {
+internal class MockPayableService private constructor(
+        private val qr: ((SimpleResponseHandler<CodeResponse?>) -> Unit)?,
+        private val ussd: ((SimpleResponseHandler<CodeResponse?>) -> Unit)?,
+        private val banks: ((SimpleResponseHandler<List<Bank>?>) -> Unit)?,
+        private val paymentStatus: ((TransactionRequeryCallback) -> Unit)?) : Payable {
+
+
 
     private val defaultTime = 2500L
     private val code = "00"
@@ -35,7 +41,10 @@ internal class MockPayableService : Payable {
 
             Thread.sleep(defaultTime)
 
-            runOnUiThread { callback(response, null) }
+            runOnUiThread {
+                if (ussd != null) ussd.invoke(callback)
+                else callback(response, null)
+            }
 
         }).start()
     }
@@ -46,7 +55,10 @@ internal class MockPayableService : Payable {
 
             Thread.sleep(defaultTime)
 
-            runOnUiThread { callback(response, null) }
+            runOnUiThread {
+                if (qr != null) qr.invoke(callback)
+                else callback(response, null)
+            }
 
         }).start()
     }
@@ -55,7 +67,10 @@ internal class MockPayableService : Payable {
         Thread(Runnable {
             Thread.sleep(defaultTime)
 
-            runOnUiThread { callback(banksResponse, null) }
+            runOnUiThread {
+                if (banks != null) banks.invoke(callback)
+                else callback(banksResponse, null)
+            }
         }).start()
     }
 
@@ -64,7 +79,40 @@ internal class MockPayableService : Payable {
             Thread.sleep(defaultTime)
             val response = Transaction(3380867, 5000, "XeAAoeCX8dklyjbBMDg5wysiA", "00", "566", false, "011", 50, null)
 
-            //runOnUiThread { callback(response, null) }
+            runOnUiThread {
+                if (paymentStatus != null) paymentStatus.invoke(callback)
+                else callback.onTransactionCompleted(response)
+            }
         }).start()
+    }
+
+    class Builder {
+        private var qr: ((SimpleResponseHandler<CodeResponse?>) -> Unit)? = null
+        private var ussd: ((SimpleResponseHandler<CodeResponse?>) -> Unit)? = null
+        private var banks: ((SimpleResponseHandler<List<Bank>?>) -> Unit)? = null
+        private var paymentStatus: ((TransactionRequeryCallback) -> Unit)? = null
+
+        fun setQrCall(call: (SimpleResponseHandler<CodeResponse?>) -> Unit): Builder {
+            qr = call
+            return this
+        }
+
+        fun setUssdCall(call: (SimpleResponseHandler<CodeResponse?>) -> Unit): Builder {
+            ussd = call
+            return this
+        }
+
+        fun setBanksCall(call: (SimpleResponseHandler<List<Bank>?>) -> Unit): Builder {
+            banks = call
+            return this
+        }
+
+        fun setPaymentStatusCall(call: (TransactionRequeryCallback) -> Unit): Builder {
+            paymentStatus = call
+            return this
+        }
+
+        fun build() = MockPayableService(qr, ussd, banks, paymentStatus)
+
     }
 }

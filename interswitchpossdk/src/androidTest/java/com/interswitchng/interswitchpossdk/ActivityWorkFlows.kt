@@ -35,23 +35,32 @@ class ActivityWorkFlows: BaseTestActivity() {
         WaitUtils.waitTime(25000)
         onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))
 
+        WaitUtils.waitTime(25000)
+        onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))
+
+        WaitUtils.waitTime(25000)
+        onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))
+
+        WaitUtils.waitTime(25000)
+        onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))
+
         WaitUtils.cleanupWaitTime()
     }
 
 
     @Test
     fun show_ussd_work_flow() {
-        WaitUtils.waitTime(500)
+        WaitUtils.waitTime(1500)
 
         onView(withId(R.id.ussdPayment)).perform(click())
 
-        WaitUtils.waitTime(500)
+        WaitUtils.waitTime(3500)
         onView(withId(R.id.banks)).perform(click())
 
-        WaitUtils.waitTime(500)
+        WaitUtils.waitTime(3500)
         onView(withText("GUARANTY TRUST BANK")).perform(click())
 
-        WaitUtils.waitTime(500)
+        WaitUtils.waitTime(1500)
         onView(withId(R.id.btnGetCode)).perform(click())
 
         WaitUtils.waitTime(10000)

@@ -8,24 +8,41 @@ import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.view.View
 import android.widget.TextView
+import com.google.gson.Gson
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.base.BaseTestActivity
+import com.interswitchng.interswitchpossdk.mockservices.MockPayableService
 import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.UssdActivity
+import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.utils.Utilities
 import com.interswitchng.interswitchpossdk.utils.WaitUtils
+import org.junit.Assert
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.dsl.module.module
+import org.koin.standalone.StandAloneContext
 
 class UssdCodeActivityTests: BaseTestActivity() {
 
     @Rule @JvmField
     val activityRule = ActivityTestRule<UssdActivity>(UssdActivity::class.java, true, false)
 
-    @Before
-    fun setup() {
+    private fun startWorkflow() {
+
         activityRule.launchActivity(intent)
+
+        WaitUtils.waitTime(500)
+        onView(withId(R.id.banks)).perform(ViewActions.click())
+
+        WaitUtils.waitTime(500)
+        onView(ViewMatchers.withText("GUARANTY TRUST BANK")).perform(ViewActions.click())
+
+        WaitUtils.waitTime(500)
+        onView(withId(R.id.btnGetCode)).perform(ViewActions.click())
     }
 
     @Test
@@ -55,15 +72,112 @@ class UssdCodeActivityTests: BaseTestActivity() {
         WaitUtils.cleanupWaitTime()
     }
 
-    private fun startWorkflow() {
+    @Test
+    fun should_show_success_message_when_transaction_is_successful() {
 
-        WaitUtils.waitTime(500)
-        onView(withId(R.id.banks)).perform(ViewActions.click())
+        val service: Payable = MockPayableService.Builder()
+                .setPaymentStatusCall {
+                    val successString = Utilities.getJson(activityRule.activity, "success-transaction-response.json")
+                    val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
+                    it.onTransactionCompleted(transaction)
+                }
+                .build()
 
-        WaitUtils.waitTime(500)
-        onView(ViewMatchers.withText("GUARANTY TRUST BANK")).perform(ViewActions.click())
+        StandAloneContext.loadKoinModules(module(override = true) {
+            single { service }
+        })
 
-        WaitUtils.waitTime(500)
-        onView(withId(R.id.btnGetCode)).perform(ViewActions.click())
+        startWorkflow()
+
+        WaitUtils.waitTime(3000)
+        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+        WaitUtils.cleanupWaitTime()
+
+
+        WaitUtils.waitTime(1000)
+        WaitUtils.cleanupWaitTime()
+        onView(withText(R.string.title_transaction_completed_successfully)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+
     }
+
+    @Test
+    fun should_show_error_msg_when_transaction_fails() {
+
+        var errorMsg = "error"
+        val service: Payable = MockPayableService.Builder()
+                .setPaymentStatusCall {
+                    val successString = Utilities.getJson(activityRule.activity,"failed-transaction-response.json")
+                    val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
+                    errorMsg = transaction.responseDescription ?: "error"
+                    it.onTransactionError(transaction, null)
+                }
+                .build()
+
+        StandAloneContext.loadKoinModules(module(override = true) {
+            single { service }
+        })
+
+
+        startWorkflow()
+
+        WaitUtils.waitTime( 500)
+        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+
+        WaitUtils.waitTime(1000)
+        onView(withText(errorMsg)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+    }
+
+    @Test
+    fun should_show_error_msg_when_transaction_times_out() {
+
+        val service: Payable = MockPayableService.Builder()
+                .setPaymentStatusCall { it.onTransactionTimeOut() }
+                .build()
+
+        StandAloneContext.loadKoinModules(module(override = true) {
+            single { service }
+        })
+
+
+        startWorkflow()
+
+        WaitUtils.waitTime( 500)
+        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+
+        WaitUtils.waitTime(1000)
+        onView(withText(R.string.content_transaction_in_progress_time_out)).check { view, noViewFoundException ->
+
+            Assert.assertNull(noViewFoundException)
+
+            Assert.assertTrue(view.visibility == View.VISIBLE)
+        }
+
+        WaitUtils.cleanupWaitTime()
+    }
+
 }

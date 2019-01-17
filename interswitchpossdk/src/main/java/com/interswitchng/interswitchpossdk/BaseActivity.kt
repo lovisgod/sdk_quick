@@ -17,25 +17,28 @@ abstract class BaseActivity : AppCompatActivity() {
 
 
     fun checkTransactionStatus(status: TransactionStatus) {
-        val alerter = Alerter.create(this)
+        Alerter.create(this)
                 .setTitle(getString(R.string.title_transaction_in_progress))
                 .setText(getString(R.string.title_checking_transaction_status))
                 .enableProgress(true)
                 .setDismissable(false)
-                .setDuration(10 * 1000)
+                .enableInfiniteDuration(true)
                 .setBackgroundColorRes(android.R.color.darker_gray)
                 .setProgressColorRes(android.R.color.white)
+                .show()
 
-        alerter.show()
-
-        payableService.checkPayment(status, 5 * 60 * 1000, TransactionStatusCallback())
+        // check payment status and timeout after 5 minutes
+        val seconds = resources.getInteger(R.integer.poolingTime)
+        payableService.checkPayment(status, seconds.toLong(), TransactionStatusCallback())
     }
 
     private fun completePayment() {
         Alerter.clearCurrent(this)
+
         Alerter.create(this)
                 .setTitle(getString(R.string.title_transaction_successful))
                 .setText(getString(R.string.title_transaction_completed_successfully))
+                .setDismissable(false)
                 .setBackgroundColorRes(android.R.color.holo_green_light)
                 .setDuration(15 * 1000)
                 .show()
@@ -68,11 +71,41 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         override fun onTransactionError(transaction: Transaction?, throwable: Throwable?) {
+            // get error message
+            val message = throwable?.message
+                    ?: transaction?.responseDescription
+                    ?: "An error occurred, please try again"
+
+
+            // clear current notification
+            Alerter.clearCurrent(this@BaseActivity)
+
             // change notification to error notification
+            Alerter.create(this@BaseActivity)
+                    .setTitle(getString(R.string.title_transaction_error))
+                    .setText(message)
+                    .setIcon(R.drawable.ic_error)
+                    .setDismissable(false)
+                    .setBackgroundColorRes(android.R.color.holo_red_dark)
+                    .setDuration(15 * 1000)
+                    .show()
         }
 
         override fun onTransactionTimeOut() {
             // change notification to error notification
+
+            // clear current notification
+            Alerter.clearCurrent(this@BaseActivity)
+
+            // change notification to error notification
+            Alerter.create(this@BaseActivity)
+                    .setTitle(getString(R.string.title_transaction_timeout))
+                    .setText(getString(R.string.content_transaction_in_progress_time_out))
+                    .setIcon(R.drawable.ic_warning)
+                    .setDismissable(false)
+                    .setBackgroundColorRes(android.R.color.holo_orange_dark)
+                    .setDuration(15 * 1000)
+                    .show()
         }
 
     }
