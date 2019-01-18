@@ -60,17 +60,17 @@ abstract class BaseActivity : AppCompatActivity() {
     private inner class TransactionStatusCallback: TransactionRequeryCallback {
 
 
-        override fun onTransactionCompleted(transaction: Transaction) {
+        override fun onTransactionCompleted(transaction: Transaction) = runOnUiThread {
+            // set and complete payment
             transactionResponse = transaction
-            // complete payment on ui thread
-            runOnUiThread { completePayment() }
+            completePayment()
         }
 
         override fun onTransactionStillPending(transaction: Transaction) {
             // extend the time for the notification
         }
 
-        override fun onTransactionError(transaction: Transaction?, throwable: Throwable?) {
+        override fun onTransactionError(transaction: Transaction?, throwable: Throwable?) = runOnUiThread {
             // get error message
             val message = throwable?.message
                     ?: transaction?.responseDescription
@@ -91,7 +91,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     .show()
         }
 
-        override fun onTransactionTimeOut() {
+        override fun onTransactionTimeOut() = runOnUiThread {
             // change notification to error notification
 
             // clear current notification

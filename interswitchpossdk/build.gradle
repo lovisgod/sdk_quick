@@ -24,21 +24,6 @@ android {
         }
     }
 
-    flavorDimensions "default"
-
-    productFlavors {
-        qa {
-
-            buildConfigField("String", "ISW_USSD_QR_BASE_URL", "\"https://qa.interswitchng.com/paymentgateway/api/v1/\"")
-
-        }
-
-        production {
-
-            buildConfigField("String", "ISW_USSD_QR_BASE_URL", "\"nothing.yet.supplied/\"")
-
-        }
-    }
 
     testOptions {
         execution 'ANDROID_TEST_ORCHESTRATOR'

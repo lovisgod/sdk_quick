@@ -13,7 +13,9 @@ import org.koin.standalone.StandAloneContext.loadKoinModules
 
 class IswPos private constructor(private val app: Application, internal val config: POSConfiguration) {
 
-    fun initiatePayment(paymentInfo: PaymentInfo) {
+    fun initiatePayment(amount: Int) {
+        val stan = "005609"
+        val paymentInfo = PaymentInfo(amount, stan)
         val intent = Intent(app, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
@@ -35,7 +37,7 @@ class IswPos private constructor(private val app: Application, internal val conf
 
             // add app context
             val appContext = module {
-                single { app.applicationContext as Context }
+                single { app.applicationContext }
             }
 
             // set up koin

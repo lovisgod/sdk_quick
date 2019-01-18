@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -25,6 +29,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation project(path: ':interswitchpossdk')
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:$robolectric_version"
@@ -33,4 +38,5 @@ dependencies {
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation "com.android.support.test:rules:$test_runner_version"
 }

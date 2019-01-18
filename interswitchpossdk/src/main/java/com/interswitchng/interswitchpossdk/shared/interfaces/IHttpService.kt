@@ -18,9 +18,8 @@ internal interface IHttpService {
     @POST(TILL_CODE_END_POINT)
     fun getUssdCode(@Body request: CodeRequest): Simple<CodeResponse>
 
-    @GET("$TILL_TRANSACTION_STATUS/{transactionType}")
-    fun getTransactionStatus(@Path("transactionType") transactionType: String,
-                             @Query("merchantCode") merchantCode: String,
+    @GET(TILL_TRANSACTION_STATUS)
+    fun getTransactionStatus(@Query("merchantCode") merchantCode: String,
                              @Query("transactionReference") transactionReference: String): Simple<Transaction?>
 
     @GET(TILL_BANKS_END_POINT)

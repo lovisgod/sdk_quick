@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.di
 
-import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
+import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
@@ -49,9 +49,9 @@ private val networkModule = module {
 
     // retrofit
     single {
-
+        val iswBaseUrl = androidContext().getString(R.string.ISW_USSD_QR_BASE_URL)
         val builder = Retrofit.Builder()
-                .baseUrl(BuildConfig.ISW_USSD_QR_BASE_URL)
+                .baseUrl(iswBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(SimpleAdapterFactory.create())
 

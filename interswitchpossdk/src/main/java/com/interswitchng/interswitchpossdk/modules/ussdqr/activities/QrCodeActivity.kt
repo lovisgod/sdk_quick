@@ -8,7 +8,6 @@ import android.widget.Toast
 import com.interswitchng.interswitchpossdk.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
-import com.interswitchng.interswitchpossdk.shared.Constants.QR_TRNASACTION_STATUS
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
@@ -69,8 +68,7 @@ class QrCodeActivity : BaseActivity() {
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
-                    checkTransactionStatus(TransactionStatus(QR_TRNASACTION_STATUS,
-                            response.transactionReference!!, instance.config.merchantCode))
+                    checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
                 }
             }
             CodeResponse.SERVER_ERROR -> {

@@ -1,0 +1,3 @@
+<resources>
+    <string name="ISW_USSD_QR_BASE_URL">https://qa.interswitchng.com/paymentgateway/api/v1/</string>
+</resources>

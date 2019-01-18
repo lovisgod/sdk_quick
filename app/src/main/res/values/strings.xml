@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">InterswitchPosSdkDemo</string>
+    <string name="app_name">POS Sample</string>
+    <string name="action_pay">PAY</string>
 </resources>

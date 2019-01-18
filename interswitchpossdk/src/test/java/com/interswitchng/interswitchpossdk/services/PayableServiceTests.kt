@@ -36,7 +36,7 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any(), any())) doReturn simpleResponse
+            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
         val threadCountBeforeServiceCall = Thread.activeCount()
@@ -74,7 +74,7 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any(), any())) doReturn simpleResponse
+            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
 
@@ -112,7 +112,7 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any(), any())) doReturn simpleResponse
+            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
         val service = PayableService(httpService)
@@ -155,7 +155,7 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any(), any())) doReturn simpleResponse
+            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
 

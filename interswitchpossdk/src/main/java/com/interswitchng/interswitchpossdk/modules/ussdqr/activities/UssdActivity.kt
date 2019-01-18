@@ -1,7 +1,6 @@
 package com.interswitchng.interswitchpossdk.modules.ussdqr.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
@@ -17,8 +16,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.BaseActivity
-import com.interswitchng.interswitchpossdk.shared.Constants.USSD_TRANSACTION_STATUS
 import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 
 
@@ -31,10 +30,10 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
 
 
-    //get strings of first item
+    // get strings of first item
     private val firstItem = "Choose a bank"
     private var selectedItem = ""
-
+    // container for banks and bank-codes
     private lateinit var bankCodes: MutableMap<String, String>
 
 
@@ -53,7 +52,10 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private fun setupUI() {
         loadBanks()
         banks.onItemSelectedListener = this
-        btnGetCode.setOnTouchListener { _, _ -> getBankCode();true }
+        btnGetCode.setOnClickListener { _ ->
+            btnGetCode.isEnabled = false
+            getBankCode()
+        }
 
     }
 
@@ -65,7 +67,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 bankCodes = mutableMapOf(firstItem to "")
                 allBanks?.map { bankCodes.put(it.name, it.code) }
                 val bankNames = bankCodes.keys.toList()
-                banks.adapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, bankNames)
+                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, bankNames) }
             }
         }
     }
@@ -95,20 +97,23 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             } else {
                 // initiate ussd payment
                 paymentService.initiateUssdPayment(request) { response, throwable ->
-                    if (throwable != null) {
-                        // TODO handle error
-                    } else {
-                        response?.apply {
-                            ussdCode = response.bankShortCode ?: response.defaultShortCode
-                            ussdText.text = ussdCode
-                            dialog.dismiss()
-                            checkTransactionStatus(TransactionStatus(USSD_TRANSACTION_STATUS,
-                                    response.transactionReference!!, instance.config.merchantCode))
-                        }
-                    }
+                    // handle error or response
+                    if (throwable != null)  handleError(throwable)
+                    else response?.apply { runOnUiThread { handleResponse(this) } }
                 }
             }
         }
+    }
+
+    private fun handleResponse(response: CodeResponse) {
+        ussdCode = response.bankShortCode ?: response.defaultShortCode
+        ussdText.text = ussdCode
+        dialog.dismiss()
+        checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
+    }
+
+    private fun handleError(throwable: Throwable) {
+        // TODO handle error
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {

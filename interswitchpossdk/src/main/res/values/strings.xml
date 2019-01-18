@@ -8,12 +8,12 @@
     <string name="title_pay_code">Pay Code</string>
     <string name="description_qr_code_image">QR Code Image</string>
     <string name="title_processing_payment">Processing Payment</string>
-    <string name="title_loading">Loading...</string>
+    <string name="title_loading">Loading…</string>
     <string name="title_get_bank_code">get bank code</string>
     <string name="title_print_receipt">Print Receipt</string>
     <string name="title_transaction_approved">Transaction Approved</string>
     <string name="title_transaction_in_progress">Transaction in progress</string>
-    <string name="title_checking_transaction_status">Checking transaction status...</string>
+    <string name="title_checking_transaction_status">Checking transaction status…</string>
     <string name="title_transaction_successful">Transaction Successful</string>
     <string name="title_transaction_completed_successfully">Transaction completed successfully</string>
     <string name="title_transaction_not_confirmed">Transaction not confirmed</string>
@@ -21,4 +21,5 @@
     <string name="title_transaction_error">Transaction Error</string>
     <string name="title_transaction_timeout">Transaction Timeout</string>
     <string name="content_transaction_in_progress_time_out">Transaction progress timed out</string>
+    <string name="ISW_USSD_QR_BASE_URL">http:://url:has:not:been:set</string>
 </resources>

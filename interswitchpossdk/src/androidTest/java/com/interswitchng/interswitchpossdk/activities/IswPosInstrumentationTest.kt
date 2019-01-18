@@ -32,8 +32,7 @@ class IswPosInstrumentationTest {
     @Test
     fun should_start_main_activity_when_payment_is_initiated() {
 
-        val paymentInfo = PaymentInfo(20000, "Stan")
-        IswPos.getInstance().initiatePayment(paymentInfo)
+        IswPos.getInstance().initiatePayment(200000)
 
         val mainActivity = monitor.waitForActivityWithTimeout(10 * 1000) // wait for 10 seconds
 
