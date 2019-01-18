@@ -9,6 +9,8 @@ import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.utilities.Simple
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
 import com.nhaarman.mockitokotlin2.*
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
 import org.junit.Test
 
 class PayableServiceTests {
@@ -16,6 +18,7 @@ class PayableServiceTests {
 
     @Test
     fun `should invoke 'onTransactionComplete' of callback when the transactionStatus is completed`() {
+
         val transactionStatusCallback: TransactionRequeryCallback = mock()
         val status = TransactionStatus("", "", "")
 
@@ -36,15 +39,19 @@ class PayableServiceTests {
             on(mock.getTransactionStatus(any(), any(), any())) doReturn simpleResponse
         }
 
+        val threadCountBeforeServiceCall = Thread.activeCount()
         val service = PayableService(httpService)
         service.checkPayment(status, 3000, transactionStatusCallback)
-        Thread.sleep(2000)
+        val threadCountDuringServiceCall = Thread.activeCount()
+        assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
 
 
-        verify(transactionStatusCallback, times(1)).onTransactionCompleted(any())
+        Thread.sleep(3000)
+        verify(transactionStatusCallback, times(1)).onTransactionCompleted(successTransaction)
         verify(transactionStatusCallback, times(0)).onTransactionStillPending(any())
         verify(transactionStatusCallback, times(0)).onTransactionError(anyOrNull(), anyOrNull())
         verify(transactionStatusCallback, times(0)).onTransactionTimeOut()
+        assertTrue(threadCountDuringServiceCall > Thread.activeCount())
     }
 
 
@@ -70,11 +77,16 @@ class PayableServiceTests {
             on(mock.getTransactionStatus(any(), any(), any())) doReturn simpleResponse
         }
 
+
         val service = PayableService(httpService)
+        val threadCountBeforeServiceCall = Thread.activeCount()
         service.checkPayment(status, 3000, transactionStatusCallback)
-        Thread.sleep(2000)
+        val threadCountDuringServiceCall = Thread.activeCount()
+        assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
 
 
+        Thread.sleep(2800)
+        assertTrue(threadCountDuringServiceCall == Thread.activeCount())
         verify(transactionStatusCallback, times(0)).onTransactionCompleted(any())
         verify(transactionStatusCallback, times(1)).onTransactionStillPending(any())
         verify(transactionStatusCallback, times(0)).onTransactionError(anyOrNull(), anyOrNull())
@@ -104,14 +116,19 @@ class PayableServiceTests {
         }
 
         val service = PayableService(httpService)
+        val threadCountBeforeServiceCall = Thread.activeCount()
         service.checkPayment(status, 6000, transactionStatusCallback)
+
 
         Thread.sleep(7500)
         verify(transactionStatusCallback, times(0)).onTransactionTimeOut()
         verify(transactionStatusCallback, times(2)).onTransactionStillPending(any())
+        val threadCountDuringServiceCall = Thread.activeCount()
+        assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
 
 
-        Thread.sleep(2000)
+        Thread.sleep(1000)
+        assertTrue(threadCountDuringServiceCall > Thread.activeCount())
         verify(transactionStatusCallback, times(0)).onTransactionCompleted(any())
         verify(transactionStatusCallback, times(0)).onTransactionError(anyOrNull(), anyOrNull())
         verify(transactionStatusCallback, times(1)).onTransactionTimeOut()
@@ -141,11 +158,16 @@ class PayableServiceTests {
             on(mock.getTransactionStatus(any(), any(), any())) doReturn simpleResponse
         }
 
+
         val service = PayableService(httpService)
+        val threadCountBeforeServiceCall = Thread.activeCount()
         service.checkPayment(status, 3000, transactionStatusCallback)
+        val threadCountDuringServiceCall = Thread.activeCount()
+        assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
+
+
         Thread.sleep(2000)
-
-
+        assertTrue(threadCountDuringServiceCall > Thread.activeCount())
         verify(transactionStatusCallback, times(0)).onTransactionCompleted(any())
         verify(transactionStatusCallback, times(0)).onTransactionStillPending(any())
         verify(transactionStatusCallback, times(1)).onTransactionError(anyOrNull(), anyOrNull())
@@ -158,7 +180,7 @@ class PayableServiceTests {
         val callback: SimpleResponseHandler<List<Bank>?> = mock()
 
         val response: Simple<List<Bank>?> = mock()
-        whenever(response.process(any())).then {
+        whenever(response.process( any())).then {
             val argumentCallback:  SimpleResponseHandler<List<Bank>?> = it.getArgument(0)
             argumentCallback(listOf(), null)
         }

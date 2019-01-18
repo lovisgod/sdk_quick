@@ -33,6 +33,7 @@ allprojects {
         robolectric_version = '4.0.2'
         androidx_version = '1.0.0'
         test_runner_version = '1.0.2'
+        concurrent_version = '0.4.4'
     }
 }
 

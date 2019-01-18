@@ -73,6 +73,7 @@ dependencies {
     testImplementation "org.koin:koin-test:$koin_version"
     testImplementation "androidx.test:core:$androidx_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
+    testImplementation "net.jodah:concurrentunit:$concurrent_version"
 
     androidTestImplementation "com.android.support.test:runner:$test_runner_version"
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
