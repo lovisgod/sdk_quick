@@ -20,7 +20,7 @@ class PayableServiceTests {
     fun `should invoke 'onTransactionComplete' of callback when the transactionStatus is completed`() {
 
         val transactionStatusCallback: TransactionRequeryCallback = mock()
-        val status = TransactionStatus("", "", "")
+        val status = TransactionStatus("", "")
 
 
         val successTransaction: Transaction = mock {
@@ -58,7 +58,7 @@ class PayableServiceTests {
     @Test
     fun `should invoke 'onTransactionStillPending' of callback when the transactionStatus is pending`() {
         val transactionStatusCallback: TransactionRequeryCallback = mock()
-        val status = TransactionStatus("", "", "")
+        val status = TransactionStatus("", "")
 
 
         val pendingTransaction: Transaction = mock {
@@ -96,7 +96,7 @@ class PayableServiceTests {
     @Test
     fun `should invoke 'onTransactionTimeout' of callback when the transactionStatus is pending beyond specified timeout`() {
         val transactionStatusCallback: TransactionRequeryCallback = mock()
-        val status = TransactionStatus("", "", "")
+        val status = TransactionStatus("", "")
 
 
         val pendingTransaction: Transaction = mock {
@@ -139,7 +139,7 @@ class PayableServiceTests {
     @Test
     fun `should invoke 'onTransactionError' of callback when the transactionStatus is not pending or completed`() {
         val transactionStatusCallback: TransactionRequeryCallback = mock()
-        val status = TransactionStatus("", "", "")
+        val status = TransactionStatus("", "")
 
 
         val pendingTransaction: Transaction = mock {

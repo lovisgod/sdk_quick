@@ -7,10 +7,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.interswitch.posinterface.posshim.CardService
-import com.interswitch.posinterface.posshim.PosError
-import com.interswitch.posinterface.posshim.PosInterface
-import com.interswitch.posinterface.posshim.Transaction
+import com.interswitch.posinterface.posshim.*
 import com.interswitchng.interswitchpossdk.R
 import org.koin.android.ext.android.inject
 
@@ -34,11 +31,10 @@ class CardActivity : AppCompatActivity(), CardService.Callback {
 
         // on card read, interact with NIBBS
 
+        // init lib
+        //pos.attachCallback(this)
 
-        //init lib
-        pos.attachCallback(this)
-
-        //init views
+        // init views
         insertCardContainer = findViewById(R.id.insert_card_instruction_container)
         insertPinContainer = findViewById(R.id.layout_enter_pin_container)
         submitButton = findViewById(R.id.btn_submit_pin)
@@ -53,7 +49,7 @@ class CardActivity : AppCompatActivity(), CardService.Callback {
                 return@setOnClickListener
             }
 
-            pos.setTransaction(Transaction(20, pin))
+            // pos.setTransaction(Transaction(20, pin))
             submitButton.isEnabled = false
         }
     }
@@ -68,10 +64,10 @@ class CardActivity : AppCompatActivity(), CardService.Callback {
         insertCardContainer.visibility = View.GONE
     }
 
-    override fun onCardRead(pan: String?) {
+    override fun onCardRead(card: Card?) {
         insertCardContainer.visibility = View.GONE
         runOnUiThread {
-            val status = "Card number is $pan, Now we are going to contact NIBBS"
+            val status = "Card number is ${card?.pan}, Now we are going to contact NIBBS"
             statusTextView.text = status
             submitButton.isEnabled = true
         }

@@ -34,10 +34,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/insert_card_instruction_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/insert_card_instruction_container"
         android:layout_gravity="center">
         <TextView
             android:layout_width="wrap_content"
@@ -47,12 +47,11 @@
             android:textColor="@color/design_default_color_primary"/>
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:alpha="0.5"
-            android:src="@drawable/ic_sd_card_black_24dp"
-            android:layout_marginTop="16dp"/>
+            android:src="@drawable/insert_credit_card" />
+
     </LinearLayout>
 
     <TextView

@@ -25,7 +25,7 @@ import org.robolectric.shadows.ShadowToast
 
 
 @RunWith(RobolectricTestRunner::class)
-class QrCodeActivityTest {
+class QrCodeActivityTests {
 
     private lateinit var activity: QrCodeActivity
     private val parcel = PaymentInfo(2000, "stan")

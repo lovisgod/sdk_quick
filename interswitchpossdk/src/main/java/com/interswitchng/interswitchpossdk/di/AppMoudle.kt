@@ -1,5 +1,6 @@
 package com.interswitchng.interswitchpossdk.di
 
+import com.interswitch.posinterface.posshim.CardService
 import com.interswitch.posinterface.posshim.PosInterface
 import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
@@ -23,10 +24,11 @@ const val AUTH_INTERCEPTOR = "auth_interceptor"
 
 private val serviceModule = module {
     single { IswPos.getInstance() }
-    single { SharePreferenceManager(androidContext()) }
     single<Payable>  { PayableService(get()) }
     single<IUserService> { UserService() }
-    single { PosInterface.getInstance(androidContext()) }
+    single { SharePreferenceManager(androidContext()) }
+    single { CardService.getInstance(androidContext()) }
+    single { PosInterface.getInstance(androidContext(), get()) }
 }
 
 private val networkModule = module {

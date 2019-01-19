@@ -38,23 +38,24 @@ public final class PosInterface {
 
     private CardService mCardDetectionService;
 
-    private PosInterface(Context context) {
+    private PosInterface(Context context, CardService cardService) {
 
-        IDAL idal = null;
         try {
-            idal = NeptuneLiteUser.getInstance().getDal(context);
+            IDAL idal = NeptuneLiteUser.getInstance().getDal(context);
             Holder.setdal(idal);
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Failed to initialize Lib " + e);
         }
-        mCardDetectionService = CardService.getInstance(context);
+
+
+        mCardDetectionService = cardService;
         mCardDetectionService.startListening();
     }
 
-    public static synchronized PosInterface getInstance(Context context) {
+    public static synchronized PosInterface getInstance(Context context, CardService cardService) {
 
-        if (instance == null) instance = new PosInterface(context);
+        if (instance == null) instance = new PosInterface(context, cardService);
 
         return instance;
     }
@@ -64,7 +65,7 @@ public final class PosInterface {
     }
 
     public void setTransaction(Transaction transaction) {
-        mCardDetectionService.setTransaction(transaction);
+        // mCardDetectionService.setTransaction(transaction);
     }
 
     public void print(PrintConfiguration data) {

@@ -32,7 +32,7 @@ class IswPosInstrumentedTest {
             putExtra(KEY_PAYMENT_INFO, payment)
         }
 
-        IswPos.getInstance().initiatePayment(payment)
+        IswPos.getInstance().initiatePayment(5000)
         val actual = Shadows.shadowOf(app).nextStartedActivity
 
         val isSame = expectedIntent2 == expectedIntent

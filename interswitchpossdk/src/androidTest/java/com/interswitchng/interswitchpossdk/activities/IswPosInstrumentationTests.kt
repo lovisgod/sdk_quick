@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class IswPosInstrumentationTest {
+class IswPosInstrumentationTests {
 
     private val monitor = Instrumentation.ActivityMonitor(MainActivity::class.java.simpleName, null, true)
 
