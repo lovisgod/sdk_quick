@@ -38,12 +38,14 @@ public final class CardService {
     private Transaction mTransaction;
 
     private static CardService sInstance;
+    private static final Object LOCK = new Object();
+    private ImplEmv emv;
 
 
     public interface Callback {
 
         void onCardDetected();
-        void onCardRead(String pan);
+        void onCardRead(Card card);
         void onCardRemoved();
         void onError(PosError error);
     }
@@ -53,9 +55,15 @@ public final class CardService {
         this.callback = callback;
     }
 
-    public void setTransaction(Transaction transaction) {
-        mTransaction = transaction;
-        startReading();
+    public void checkPin(String pin) {
+        mTransaction = new Transaction(0, pin);
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                startReading();
+            }
+        });
     }
 
     public static synchronized CardService getInstance(Context context) {
@@ -140,8 +148,15 @@ public final class CardService {
             @Override
             public void run() {
 
-                ImplEmv emv = new ImplEmv(mContext);
-                int ret = emv.startContactEmvTrans();
+                if (emv == null) {
+
+                    emv = new ImplEmv(mContext, mTransaction);
+                }
+
+                int ret = -10;
+                synchronized (LOCK) {
+                    ret = emv.startContactEmvTrans();
+                }
 
                 if (ret == -1) {
                     setCurrentState(STATE_REMOVED);
@@ -161,8 +176,16 @@ public final class CardService {
 
     private void startReading() {
 
-        ImplEmv emv = new ImplEmv(mContext, mTransaction);
-        int ret = emv.startContactEmvTrans();
+        if (emv == null) {
+            emv = new ImplEmv(mContext, mTransaction);
+        }
+
+        int ret = -10;
+
+        synchronized (LOCK) {
+            ret = emv.startContactEmvTrans();
+        }
+
         if (ret == -1) {
             mHandler.removeCallbacksAndMessages(null);
 
@@ -171,7 +194,9 @@ public final class CardService {
         }
 
         if (ret == TransResult.EMV_ARQC) {
-            ret = emv.CompleteContactEmvTrans();
+            synchronized (LOCK) {
+                ret = emv.CompleteContactEmvTrans();
+            }
         }
 
         if (ret == TransResult.EMV_ONLINE_APPROVED || ret == TransResult.EMV_OFFLINE_APPROVED
@@ -182,9 +207,13 @@ public final class CardService {
 
             strTrack2 = strTrack2.split("F")[0];
             final String pan = strTrack2.split("D")[0];
+            final String expiry = strTrack2.split("D")[1].substring(0, 4);
 
-            callback.onCardRead(pan);
+            Card card = new Card();
+            card.pan = pan;
+            card.expiry = expiry;
 
+            callback.onCardRead(card);
         }
 
     }

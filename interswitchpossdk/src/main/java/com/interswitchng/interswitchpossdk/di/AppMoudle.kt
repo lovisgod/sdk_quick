@@ -1,5 +1,7 @@
 package com.interswitchng.interswitchpossdk.di
 
+import com.interswitch.posinterface.posshim.PosInterface
+import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
@@ -24,6 +26,7 @@ private val serviceModule = module {
     single { SharePreferenceManager(androidContext()) }
     single<Payable>  { PayableService(get()) }
     single<IUserService> { UserService() }
+    single { PosInterface.getInstance(androidContext()) }
 }
 
 private val networkModule = module {

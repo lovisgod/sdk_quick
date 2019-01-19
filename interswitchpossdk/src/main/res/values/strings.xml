@@ -22,4 +22,6 @@
     <string name="title_transaction_timeout">Transaction Timeout</string>
     <string name="content_transaction_in_progress_time_out">Transaction progress timed out</string>
     <string name="ISW_USSD_QR_BASE_URL">http:://url:has:not:been:set</string>
+    <string name="label_insert_card">Insert your card</string>
+    <string name="enter_pin">Enter Pin</string>
 </resources>
