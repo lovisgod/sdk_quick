@@ -7,7 +7,9 @@ import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
+import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.services.POSDeviceService
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
@@ -26,9 +28,10 @@ private val serviceModule = module {
     single { IswPos.getInstance() }
     single<Payable>  { PayableService(get()) }
     single<IUserService> { UserService() }
+    single<POSDevice> { POSDeviceService(get()) }
     single { SharePreferenceManager(androidContext()) }
     single { CardService.getInstance(androidContext()) }
-    single { PosInterface.getInstance(androidContext(), get()) }
+    single<PosInterface> { PosInterface.getInstance(androidContext(), get()) }
 }
 
 private val networkModule = module {

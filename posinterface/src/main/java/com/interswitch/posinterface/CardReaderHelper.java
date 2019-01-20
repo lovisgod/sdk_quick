@@ -20,8 +20,8 @@ import com.pax.dal.exceptions.PiccDevException;
  * Created by yanglj on 2017-11-02.
  */
 
-public class myCardReaderHelper {
-    private static myCardReaderHelper instance;
+public class CardReaderHelper {
+    private static CardReaderHelper instance;
     private IMag mag;
     private IIcc icc;
     private IPicc piccInternal;
@@ -36,13 +36,13 @@ public class myCardReaderHelper {
     private static final byte SLOT_ICC = (byte) 0x00;
 
 
-    private myCardReaderHelper() {
+    private CardReaderHelper() {
         //lock = new Object();
     }
 
-    public static synchronized myCardReaderHelper getInstance() {
+    public static synchronized CardReaderHelper getInstance() {
         if (instance == null) {
-            instance = new myCardReaderHelper();
+            instance = new CardReaderHelper();
         }
         //instance.setContext(context);
         return instance;

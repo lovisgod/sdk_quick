@@ -2,6 +2,7 @@ package com.interswitchng.interswitchpossdk.config
 
 import android.app.Application
 import android.content.Context
+import com.interswitch.posinterface.posshim.PosInterface
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.di.activityModules
 import com.interswitchng.interswitchpossdk.di.appModules
@@ -23,8 +24,9 @@ class DependencyGraphTest: KoinTest {
     @Test
     fun checkDependencyGraph() {
         // add app context
-        val appContext = module {
+        val appContext = module(override = true) {
             single { mock<Context>() }
+            single<PosInterface> { mock() }
         }
 
         // get all modules

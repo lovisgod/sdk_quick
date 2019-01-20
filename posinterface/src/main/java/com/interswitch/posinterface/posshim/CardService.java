@@ -3,6 +3,7 @@ package com.interswitch.posinterface.posshim;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.telecom.Call;
 import android.util.Log;
 
 import com.interswitch.posinterface.DeviceImplNeptune;
@@ -53,6 +54,10 @@ public final class CardService {
 
     public void setCallback(Callback callback) {
         this.callback = callback;
+    }
+
+    public void removeCallback(Callback callback) {
+        this.callback = null;
     }
 
     public void checkPin(String pin) {

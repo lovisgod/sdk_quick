@@ -7,13 +7,17 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.interswitch.posinterface.posshim.*
 import com.interswitchng.interswitchpossdk.R
+import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
+import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
+import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
+import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import org.koin.android.ext.android.inject
 
-class CardActivity : AppCompatActivity(), CardService.Callback {
+class CardActivity : AppCompatActivity() {
 
-    private val pos: PosInterface by inject()
+    private val pos: POSDevice by inject()
+    private val cardCallback = CardCallback()
 
     private lateinit var insertCardContainer: LinearLayout
     private lateinit var insertPinContainer: LinearLayout
@@ -31,8 +35,8 @@ class CardActivity : AppCompatActivity(), CardService.Callback {
 
         // on card read, interact with NIBBS
 
-        // init lib
-        //pos.attachCallback(this)
+        // attach callback to detect card
+        pos.attachCallback(cardCallback)
 
         // init views
         insertCardContainer = findViewById(R.id.insert_card_instruction_container)
@@ -54,30 +58,37 @@ class CardActivity : AppCompatActivity(), CardService.Callback {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        pos.detachCallback(cardCallback)
+    }
+
     private fun toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun onCardDetected() {
+    internal inner class CardCallback : CardInsertedCallback {
 
-        insertPinContainer.visibility = View.VISIBLE
-        insertCardContainer.visibility = View.GONE
-    }
-
-    override fun onCardRead(card: Card?) {
-        insertCardContainer.visibility = View.GONE
-        runOnUiThread {
-            val status = "Card number is ${card?.pan}, Now we are going to contact NIBBS"
-            statusTextView.text = status
-            submitButton.isEnabled = true
+        override fun onCardDetected() {
+            insertPinContainer.visibility = View.VISIBLE
+            insertCardContainer.visibility = View.GONE
         }
-    }
 
-    override fun onCardRemoved() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        override fun onCardRead(card: CardDetail) {
+            insertCardContainer.visibility = View.GONE
+            runOnUiThread {
+                val status = "CardDetail number is ${card.pan}, Now we are going to contact NIBBS"
+                statusTextView.text = status
+                submitButton.isEnabled = true
+            }
+        }
 
-    override fun onError(error: PosError?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        override fun onCardRemoved() {
+            TODO("not implemented")
+        }
+
+        override fun onError(error: DeviceError) {
+            TODO("not implemented")
+        }
     }
 }

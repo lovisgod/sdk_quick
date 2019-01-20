@@ -11,8 +11,49 @@ public final class PosInterface {
 
     private static PosInterface instance;
 
-    static {
+    private CardService mCardDetectionService;
 
+    private PosInterface(Context context, CardService cardService) {
+
+        try {
+            IDAL idal = NeptuneLiteUser.getInstance().getDal(context);
+            Holder.setdal(idal);
+
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize Lib " + e);
+        }
+
+
+        mCardDetectionService = cardService;
+        mCardDetectionService.startListening();
+    }
+
+    public void attachCallback(CardService.Callback callback) {
+        mCardDetectionService.setCallback(callback);
+    }
+
+    public void removeCallback(CardService.Callback callback) {
+        mCardDetectionService.removeCallback(callback);
+    }
+
+    public void setTransaction(Transaction transaction) {
+        // mCardDetectionService.setTransaction(transaction);
+    }
+
+    public void print(PrintConfiguration data) {
+        mCardDetectionService.print(data);
+    }
+
+    public static synchronized PosInterface getInstance(Context context, CardService cardService) {
+        if (!hasLoadedLibraries) loadLibraries();
+        if (instance == null) instance = new PosInterface(context, cardService);
+
+        return instance;
+    }
+
+    private static boolean hasLoadedLibraries = false;
+
+    private static void loadLibraries() {
         Log.d("CardEx", "Loading Libs");
         System.loadLibrary("F_DEVICE_LIB_PayDroid");
         System.loadLibrary("F_PUBLIC_LIB_PayDroid");
@@ -34,41 +75,7 @@ public final class PosInterface {
         System.loadLibrary("JNI_DPAS_v100");
         System.loadLibrary("JNI_JCB_v100");
         System.loadLibrary("JNI_PURE_v100");
-    }
 
-    private CardService mCardDetectionService;
-
-    private PosInterface(Context context, CardService cardService) {
-
-        try {
-            IDAL idal = NeptuneLiteUser.getInstance().getDal(context);
-            Holder.setdal(idal);
-
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to initialize Lib " + e);
-        }
-
-
-        mCardDetectionService = cardService;
-        mCardDetectionService.startListening();
-    }
-
-    public static synchronized PosInterface getInstance(Context context, CardService cardService) {
-
-        if (instance == null) instance = new PosInterface(context, cardService);
-
-        return instance;
-    }
-
-    public void attachCallback(CardService.Callback callback) {
-        mCardDetectionService.setCallback(callback);
-    }
-
-    public void setTransaction(Transaction transaction) {
-        // mCardDetectionService.setTransaction(transaction);
-    }
-
-    public void print(PrintConfiguration data) {
-        mCardDetectionService.print(data);
+        hasLoadedLibraries = true;
     }
 }
