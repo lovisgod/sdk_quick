@@ -5,46 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".modules.cardDetail.CardActivity">
+    tools:context=".modules.card.CardActivity">
+
 
     <LinearLayout
+        android:id="@+id/insertCardContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/layout_enter_pin_container"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal">
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minEms="8"
-            android:hint="@string/enter_pin"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:inputType="number"
-            android:id="@+id/edt_pin"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="Submit"
-            android:id="@+id/btn_submit_pin"/>
+        android:layout_gravity="center"
+        android:visibility="gone">
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/insert_card_instruction_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="@string/label_insert_card"
-            android:textColor="@color/design_default_color_primary"/>
+            android:text="@string/label_insert_card" />
 
         <ImageView
             android:layout_width="100dp"
@@ -54,8 +30,49 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/insertPinContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_result"/>
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/cardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_marginBottom="15dp"
+            tools:text="card: xxxx-xxxx-xxxx-1239"
+            />
+
+
+        <com.interswitchng.interswitchpossdk.modules.card.PinEditText
+            android:id="@+id/cardPin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:digits="0123456789"
+            android:inputType="numberPassword"
+            android:maxLength="4"
+            android:textIsSelectable="false"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            tools:text="44445"
+            />
+
+        <Button
+            android:id="@+id/btnSubmitPin"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:text="Submit"
+            />
+
+    </LinearLayout>
+
 </FrameLayout>

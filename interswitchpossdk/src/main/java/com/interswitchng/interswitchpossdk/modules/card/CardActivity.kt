@@ -12,6 +12,8 @@ import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
 import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
 import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
+import kotlinx.android.synthetic.main.activity_card.*
 import org.koin.android.ext.android.inject
 
 class CardActivity : AppCompatActivity() {
@@ -19,48 +21,53 @@ class CardActivity : AppCompatActivity() {
     private val pos: POSDevice by inject()
     private val cardCallback = CardCallback()
 
-    private lateinit var insertCardContainer: LinearLayout
-    private lateinit var insertPinContainer: LinearLayout
-    private lateinit var submitButton: LinearLayout
-    private lateinit var pinEditText: EditText
-    private lateinit var statusTextView: TextView
+    private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card)
-        // show insert card
-        // show insert pin
-        // on submit, check pin/ get card info
-
-
-        // on card read, interact with NIBBS
 
         // attach callback to detect card
         pos.attachCallback(cardCallback)
 
-        // init views
-        insertCardContainer = findViewById(R.id.insert_card_instruction_container)
-        insertPinContainer = findViewById(R.id.layout_enter_pin_container)
-        submitButton = findViewById(R.id.btn_submit_pin)
-        pinEditText = findViewById(R.id.edt_pin)
-        statusTextView = findViewById(R.id.tv_result)
-
-        submitButton.setOnClickListener {
-
-            val pin = pinEditText.text.toString().trim()
-            if (pin.isEmpty()) {
-                toast("Enter your pin")
-                return@setOnClickListener
-            }
-
-            // pos.setTransaction(Transaction(20, pin))
-            submitButton.isEnabled = false
-        }
+        showInsertCard()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         pos.detachCallback(cardCallback)
+    }
+
+
+    private fun showInsertCard() {
+        insertCardContainer.visibility = View.VISIBLE
+
+        btnSubmitPin.isEnabled = false
+        btnSubmitPin.setOnClickListener(null)
+        insertPinContainer.visibility = View.GONE
+    }
+
+    private fun showInputPin() {
+        insertCardContainer.visibility = View.GONE
+
+        btnSubmitPin.isEnabled = true
+        insertPinContainer.visibility = View.VISIBLE
+        btnSubmitPin.setOnClickListener {
+
+            val pin = cardPin.text.toString().trim()
+            if (pin.isEmpty()) {
+                toast("Enter your pin")
+                return@setOnClickListener
+            }
+
+            btnSubmitPin.isEnabled = false
+            pos.checkPin(pin)
+        }
+    }
+
+    private fun showLoader(message: String) {
+        dialog.setMessage(message)
+        dialog.show()
     }
 
     private fun toast(message: String) {
@@ -70,16 +77,15 @@ class CardActivity : AppCompatActivity() {
     internal inner class CardCallback : CardInsertedCallback {
 
         override fun onCardDetected() {
-            insertPinContainer.visibility = View.VISIBLE
-            insertCardContainer.visibility = View.GONE
+            runOnUiThread { showLoader("Reading Card") }
         }
 
-        override fun onCardRead(card: CardDetail) {
-            insertCardContainer.visibility = View.GONE
+        override fun onCardRead(cardDetail: CardDetail) {
             runOnUiThread {
-                val status = "CardDetail number is ${card.pan}, Now we are going to contact NIBBS"
-                statusTextView.text = status
-                submitButton.isEnabled = true
+                showInputPin()
+                val lastFour = cardDetail.pan.substring(cardDetail.pan.length - 4)
+                cardNumber.text = "xxxx-xxxx-xxxx-$lastFour"
+                btnSubmitPin.isEnabled = true
             }
         }
 

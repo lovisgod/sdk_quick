@@ -17,7 +17,7 @@
             android:name=".modules.ussdqr.QrCodeActivity"
             android:label="QR Code"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".modules.cardDetail.CardActivity"
+        <activity android:name=".modules.card.CardActivity"
             android:label="Card"
             android:theme="@style/AppTheme.NoActionBar" />
 

@@ -42,6 +42,10 @@ internal class POSDeviceService(private val device: PosInterface) : POSDevice, C
         device.print(printConfig)
     }
 
+    override fun checkPin(string: String) {
+        device.checkPin(string)
+    }
+
 
     //---------------------------------------------------------------
     // Implementation for NeptuneSDK CardService.Callback interface

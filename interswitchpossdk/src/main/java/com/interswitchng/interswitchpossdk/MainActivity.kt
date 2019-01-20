@@ -3,6 +3,8 @@ package com.interswitchng.interswitchpossdk
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.interswitchng.interswitchpossdk.modules.card.CardActivity
+import com.interswitchng.interswitchpossdk.modules.paycode.PayCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
@@ -32,6 +34,18 @@ class MainActivity : AppCompatActivity() {
             val qrIntent = Intent(this, QrCodeActivity::class.java)
             qrIntent.putExtra(KEY_PAYMENT_INFO, info)
             startActivity(qrIntent)
+        }
+
+        cardPayment.setOnClickListener {
+            val cardIntent = Intent(this, CardActivity::class.java)
+            cardIntent.putExtra(KEY_PAYMENT_INFO, info)
+            startActivity(cardIntent)
+        }
+
+        cardPayment.setOnClickListener {
+            val payCodeIntent = Intent(this, PayCodeActivity::class.java)
+            payCodeIntent.putExtra(KEY_PAYMENT_INFO, info)
+            startActivity(payCodeIntent)
         }
     }
 }

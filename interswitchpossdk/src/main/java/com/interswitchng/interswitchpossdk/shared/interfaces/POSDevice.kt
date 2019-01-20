@@ -9,4 +9,6 @@ internal interface POSDevice {
     fun detachCallback(callback: CardInsertedCallback)
 
     fun printReceipt(printSlip: List<PrintObject>)
+
+    fun checkPin(string: String)
 }

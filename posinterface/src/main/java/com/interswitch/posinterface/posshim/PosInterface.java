@@ -40,6 +40,10 @@ public final class PosInterface {
         // mCardDetectionService.setTransaction(transaction);
     }
 
+    public void checkPin(String pin) {
+        mCardDetectionService.checkPin(pin);
+    }
+
     public void print(PrintConfiguration data) {
         mCardDetectionService.print(data);
     }
