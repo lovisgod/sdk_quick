@@ -6,7 +6,7 @@
 
     <application>
         <activity
-            android:name=".modules.ussdqr.activities.UssdActivity"
+            android:name=".modules.ussdqr.UssdActivity"
             android:label="@string/title_activity_ussd"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -14,7 +14,7 @@
             android:label="IswPos"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".modules.ussdqr.activities.QrCodeActivity"
+            android:name=".modules.ussdqr.QrCodeActivity"
             android:label="QR Code"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".modules.cardDetail.CardActivity"

@@ -2,7 +2,7 @@ package com.interswitchng.interswitchpossdk.activities
 
 import android.content.Intent
 import com.interswitchng.interswitchpossdk.IswPos
-import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration

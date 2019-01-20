@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.modules.ussdqr.activities
+package com.interswitchng.interswitchpossdk.modules.ussdqr
 
 import android.os.Bundle
 import android.view.View

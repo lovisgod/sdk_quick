@@ -7,8 +7,8 @@ import android.widget.LinearLayout
 import androidx.test.core.app.ApplicationProvider
 import com.interswitchng.interswitchpossdk.MainActivity
 import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
-import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.UssdActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import org.junit.Assert.assertEquals

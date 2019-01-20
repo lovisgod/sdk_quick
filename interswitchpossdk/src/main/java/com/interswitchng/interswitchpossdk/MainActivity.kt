@@ -3,8 +3,8 @@ package com.interswitchng.interswitchpossdk
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
-import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.UssdActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import kotlinx.android.synthetic.main.activity_main.*

@@ -10,7 +10,7 @@ import com.google.gson.Gson
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.base.BaseTestActivity
 import com.interswitchng.interswitchpossdk.mockservices.MockPayableService
-import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.QrCodeActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.utils.Utilities

@@ -12,7 +12,7 @@ import com.google.gson.Gson
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.base.BaseTestActivity
 import com.interswitchng.interswitchpossdk.mockservices.MockPayableService
-import com.interswitchng.interswitchpossdk.modules.ussdqr.activities.UssdActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.utils.Utilities
@@ -20,7 +20,6 @@ import com.interswitchng.interswitchpossdk.utils.WaitUtils
 import org.junit.Assert
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.koin.dsl.module.module
