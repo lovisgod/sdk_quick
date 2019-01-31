@@ -197,4 +197,21 @@ class PayableServiceTests {
     }
 
 
+    @Test
+    fun testCopy() {
+        val bytes = byteArrayOf(1,2,3,4,5,6)
+        val copy = ByteArray(bytes.size - 4)
+        if (bytes.size > 4)
+            System.arraycopy(bytes, 0, copy, 0, bytes.size - 4)
+
+        for (b in copy)
+            print(b)
+
+        println(copy.size)
+
+        val m = String(byteArrayOf(0x0))
+        println(m.length)
+        println(m.isEmpty())
+        println(m.isBlank())
+    }
 }
