@@ -146,6 +146,8 @@ class QrCodeActivity : BaseActivity() {
             printBtn.isEnabled = false
 
             Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
+            val amount = PrintObject.Data(amountText.text.toString())
+            prints.add(amount)
             posDevice.printReceipt(prints)
             printBtn.isClickable = true
             printBtn.isEnabled = true
