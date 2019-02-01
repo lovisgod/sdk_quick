@@ -1,7 +1,6 @@
 package com.interswitchng.interswitchpossdk
 
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import com.interswitchng.interswitchpossdk.di.activityModules
 import com.interswitchng.interswitchpossdk.di.appModules
@@ -25,24 +24,32 @@ class IswPos private constructor(private val app: Application, internal val conf
 
     companion object {
 
+        private var isConfigured = false
+
         private lateinit var INSTANCE: IswPos
 
         @JvmStatic
         fun configureTerminal(app: Application, configuration: POSConfiguration) {
 
-            // prevent multiple threads from creating instance
-            synchronized(this) {
-                INSTANCE = IswPos(app, configuration)
-            }
+            if (!isConfigured) {
 
-            // add app context
-            val appContext = module {
-                single { app.applicationContext }
-            }
+                // prevent multiple threads from creating instance
+                synchronized(this) {
+                    INSTANCE = IswPos(app, configuration)
+                }
 
-            // set up koin
-            val modules = appModules + activityModules + appContext
-            loadKoinModules(modules)
+                // add app context
+                val appContext = module {
+                    single { app.applicationContext }
+                }
+
+                // set up koin
+                val modules = appModules + activityModules + appContext
+                loadKoinModules(modules)
+
+                // set configured
+                isConfigured = true
+            }
         }
 
         @JvmStatic

@@ -24,6 +24,7 @@ import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_ussd.*
 import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
+import java.text.NumberFormat
 
 
 class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
@@ -41,6 +42,8 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     // container for banks and bank-codes
     private lateinit var bankCodes: MutableMap<String, String>
     private val prints = mutableListOf<PrintObject>()
+    // get the payment info
+    private lateinit var paymentInfo: PaymentInfo
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +52,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
         setSupportActionBar(toolbar)
         toolbar.title = "USSD"
+        paymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
     }
 
     override fun onStart() {
@@ -57,6 +61,10 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     }
 
     private fun setupUI() {
+
+        val amount = NumberFormat.getInstance().format(paymentInfo.amount)
+        amountText.text = getString(R.string.amount, amount)
+
         loadBanks()
         banks.onItemSelectedListener = this
         btnGetCode.setOnClickListener { _ ->
@@ -83,8 +91,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         if (selectedItem == "" || selectedItem == firstItem) {
             Toast.makeText(this, "You have to select a Bank", Toast.LENGTH_LONG).show()
         } else {
-            // get the payment info
-            val paymentInfo: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
             // set the selected bank-code for payment
             val bankCode =
                     if (bankCodes.containsKey(selectedItem)) bankCodes[selectedItem]!!
@@ -119,6 +125,9 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 if (t != null) logger.log(t.localizedMessage)
                 else logger.log(s!!)
             }
+
+            // check transaction status
+            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
@@ -137,8 +146,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             prints.add(PrintObject.Data( this))
         }
         dialog.dismiss()
-        checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
-
 
         // TODO remove mock trigger
         showMockButtons(request, response)

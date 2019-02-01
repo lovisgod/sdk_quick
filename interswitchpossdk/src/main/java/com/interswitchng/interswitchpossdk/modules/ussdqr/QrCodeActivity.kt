@@ -25,6 +25,7 @@ import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_qr_code.*
 import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
+import java.text.NumberFormat
 
 
 class QrCodeActivity : BaseActivity() {
@@ -55,8 +56,13 @@ class QrCodeActivity : BaseActivity() {
 
 
     private fun setupImage() {
-
+        // get payment info
         val paymentInfo: PaymentInfo = intent.getParcelableExtra(KEY_PAYMENT_INFO)
+
+        // set the amount
+        val amount = NumberFormat.getInstance().format(paymentInfo.amount)
+        amountText.text = getString(R.string.amount, amount)
+
         val request = CodeRequest.from(instance.config, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
 
         dialog.show()
@@ -86,6 +92,9 @@ class QrCodeActivity : BaseActivity() {
                 if (t != null) logger.log(t.localizedMessage)
                 else logger.log(s!!)
             }
+
+            // check transaction status
+            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
@@ -106,7 +115,6 @@ class QrCodeActivity : BaseActivity() {
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
-                    checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
 
                     // TODO remove mock trigger
                     showTransactionMocks(request, response)

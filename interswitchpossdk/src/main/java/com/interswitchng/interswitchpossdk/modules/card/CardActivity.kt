@@ -9,15 +9,18 @@ import android.widget.TextView
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.BaseActivity
 import com.interswitchng.interswitchpossdk.R
+import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
 import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
 import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.activity_card.*
 import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
+import java.text.NumberFormat
 
 class CardActivity : BaseActivity() {
 
@@ -31,6 +34,14 @@ class CardActivity : BaseActivity() {
         setContentView(R.layout.activity_card)
         setSupportActionBar(toolbar)
         toolbar.title = "Card"
+
+
+        // get payment info
+        val paymentInfo: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
+
+        // set the amount
+        val amount = NumberFormat.getInstance().format(paymentInfo.amount)
+        amountText.text = getString(R.string.amount, amount)
 
         // attach callback to detect card
         pos.attachCallback(cardCallback)

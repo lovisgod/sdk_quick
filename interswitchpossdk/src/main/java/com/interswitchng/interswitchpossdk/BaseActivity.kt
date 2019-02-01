@@ -69,7 +69,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 .enableInfiniteDuration(true)
                 .setBackgroundColorRes(android.R.color.darker_gray)
                 .setProgressColorRes(android.R.color.white)
-                //.show()
+                .show()
 
         // check payment status and timeout after 5 minutes
         val seconds = resources.getInteger(R.integer.poolingTime)
