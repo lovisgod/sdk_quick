@@ -17,6 +17,7 @@ import com.pax.dal.entity.EFontTypeExtCode;
 import com.pax.dal.exceptions.IccDevException;
 import com.pax.jemv.device.DeviceManager;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -66,7 +67,7 @@ public final class CardService {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                startReading();
+                //startReading();
             }
         });
     }
@@ -230,21 +231,27 @@ public final class CardService {
             public void run() {
 
                 Printer printer = Printer.getInstance();
+                printer.init();
+
                 printer.fontSet(EFontTypeAscii.FONT_16_32,
                         EFontTypeExtCode.FONT_16_32);
+                printer.step(50);
 
-                for (Object object: data.getPrintObjects()) {
+                List<Object> printObjects = data.getPrintObjects();
+                for (Object object: printObjects) {
 
                     if (object instanceof String) {
-                        printer.printStr((String) object, null);
+                        printer.printStr((String) object + "\n\n", null);
                     }else if (object instanceof PrintConfiguration.Line) {
                         printer.getDotLine();
                     }else if (object instanceof Bitmap) {
                         printer.printBitmap((Bitmap) object);
                     }
                 }
+                printer.step(50);
+                Log.d("Printer", "print slip size: "+ printObjects.size());
 
-                String status = Printer.getInstance().start();
+                String status = printer.start();
                 log("Printer => " + status);
             }
         });

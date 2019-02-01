@@ -7,7 +7,7 @@
     <string name="title_qr_code">QR Code</string>
     <string name="title_pay_code">Pay Code</string>
     <string name="description_qr_code_image">QR Code Image</string>
-    <string name="title_processing_payment">Processing Payment</string>
+    <string name="title_processing_payment">Generating Code</string>
     <string name="title_loading">Loading…</string>
     <string name="title_get_bank_code">get bank code</string>
     <string name="title_print_receipt">Print Receipt</string>

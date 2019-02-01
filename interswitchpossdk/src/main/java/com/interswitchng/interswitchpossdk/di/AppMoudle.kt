@@ -2,11 +2,9 @@ package com.interswitchng.interswitchpossdk.di
 
 import com.interswitch.posinterface.posshim.CardService
 import com.interswitch.posinterface.posshim.PosInterface
-import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.*
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.services.POSDeviceService
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.SharePreferenceManager
@@ -29,17 +27,20 @@ private val serviceModule = module {
     single<POSDevice> { POSDeviceService(get()) }
     single { SharePreferenceManager(androidContext()) }
     single { CardService.getInstance(androidContext()) }
-    single<PosInterface> { PosInterface.getInstance(androidContext(), get()) }
+    single<PosInterface> {
+        PosInterface.setDalInstanced(androidContext())
+        PosInterface.getInstance(get())
+    }
 
     // TODO remove this
-    single<POSDevice>(override = true) {
-        object : POSDevice {
-            override fun attachCallback(callback: CardInsertedCallback) {}
-            override fun detachCallback(callback: CardInsertedCallback) {}
-            override fun printReceipt(printSlip: List<PrintObject>) {}
-            override fun checkPin(string: String) {}
-        }
-    }
+//    single<POSDevice>(override = true) {
+//        object : POSDevice {
+//            override fun attachCallback(callback: CardInsertedCallback) {}
+//            override fun detachCallback(callback: CardInsertedCallback) {}
+//            override fun printReceipt(printSlip: List<PrintObject>) {}
+//            override fun checkPin(string: String) {}
+//        }
+//    }
 }
 
 private val networkModule = module {

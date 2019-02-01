@@ -3,7 +3,6 @@ package com.interswitchng.interswitchpossdk.modules.ussdqr
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.BaseActivity
@@ -39,7 +38,7 @@ class QrCodeActivity : BaseActivity() {
     private val logger by lazy { Logger.with("QR") }
 
     private var qrBitmap: Bitmap? = null
-    private val prints = mutableListOf<PrintObject>()
+    private val printSlip = mutableListOf<PrintObject>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +99,7 @@ class QrCodeActivity : BaseActivity() {
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-            posDevice.printReceipt(prints)
+            posDevice.printReceipt(printSlip)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
         }
@@ -111,7 +110,7 @@ class QrCodeActivity : BaseActivity() {
             CodeResponse.OK -> {
                 qrBitmap = response.getBitmap(this)
                 val bitmap = PrintObject.BitMap(qrBitmap!!)
-                prints.add(bitmap)
+                printSlip.add(bitmap)
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
                     dialog.dismiss()
@@ -141,14 +140,15 @@ class QrCodeActivity : BaseActivity() {
         completeButtonsContainer.visibility = View.VISIBLE
         textMessage.visibility = View.VISIBLE
 
+        val amount = PrintObject.Data(amountText.text.toString())
+        printSlip.add(amount)
+        posDevice.printReceipt(printSlip)
+
         printBtn.setOnClickListener {
             printBtn.isClickable = false
             printBtn.isEnabled = false
 
             Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
-            val amount = PrintObject.Data(amountText.text.toString())
-            prints.add(amount)
-            posDevice.printReceipt(prints)
             printBtn.isClickable = true
             printBtn.isEnabled = true
         }

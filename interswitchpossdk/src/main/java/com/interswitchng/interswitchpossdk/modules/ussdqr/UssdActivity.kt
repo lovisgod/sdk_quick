@@ -1,7 +1,6 @@
 package com.interswitchng.interswitchpossdk.modules.ussdqr
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -41,7 +40,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private var selectedItem = ""
     // container for banks and bank-codes
     private lateinit var bankCodes: MutableMap<String, String>
-    private val prints = mutableListOf<PrintObject>()
+    private val printSlip = mutableListOf<PrintObject>()
     // get the payment info
     private lateinit var paymentInfo: PaymentInfo
 
@@ -127,13 +126,13 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             }
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-            posDevice.printReceipt(prints)
+            posDevice.printReceipt(printSlip)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
         }
@@ -143,7 +142,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         ussdCode = response.bankShortCode ?: response.defaultShortCode
         ussdCode?.apply {
             ussdText.text = this
-            prints.add(PrintObject.Data( this))
+            printSlip.add(PrintObject.Data( this))
         }
         dialog.dismiss()
 
@@ -190,14 +189,15 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     override fun onTransactionSuccessful(transaction: Transaction) {
         completeButtonsContainer.visibility = View.VISIBLE
 
+        val amount = PrintObject.Data(amountText.text.toString())
+        printSlip.add(amount)
+        posDevice.printReceipt(printSlip)
+
         printBtn.setOnClickListener {
             printBtn.isClickable = false
             printBtn.isEnabled = false
 
             Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
-            val amount = PrintObject.Data(amountText.text.toString())
-            prints.add(amount)
-            posDevice.printReceipt(prints)
             printBtn.isClickable = true
             printBtn.isEnabled = true
         }

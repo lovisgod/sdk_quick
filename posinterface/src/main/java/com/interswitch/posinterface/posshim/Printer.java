@@ -18,6 +18,7 @@ public class Printer {
         printer = Holder.getIdal().getPrinter();
     }
 
+
     public static Printer getInstance() {
         if (mPrinter == null) {
             mPrinter = new Printer();

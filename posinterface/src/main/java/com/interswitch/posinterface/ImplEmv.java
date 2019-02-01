@@ -5,8 +5,7 @@ import android.os.ConditionVariable;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.interswitch.posinterface.action.ActionEnterPin;
-import com.interswitch.posinterface.action.ActionResult;
+
 import com.interswitch.posinterface.posshim.Transaction;
 import com.pax.jemv.clcommon.ACType;
 import com.pax.jemv.clcommon.ByteArray;
@@ -61,8 +60,12 @@ public class ImplEmv {
 
     public ImplEmv(Context context, Transaction transaction) {
         this(context);
-        mTransaction = transaction;
 
+        if (transaction == null) {
+            transaction = new Transaction(10, "1992");
+        }
+
+        mTransaction = transaction;
         ulAmntAuth = transaction.amount;
         amount = String.valueOf(amount);
         ulAmntOther = 0;
@@ -423,28 +426,28 @@ public class ImplEmv {
         cv = new ConditionVariable();
         final String totalAmount =  amount;
         final String leftTimes = Integer.toString(offlinePinLeftTimes);
-
-        //showEnterPin(context,pan,isOnlinePin, offlinePinLeftTimes);
-        ActionEnterPin actionEnterPin = new ActionEnterPin(new AAction.ActionStartListener() {
-
-            byte[] track2 = getTlv(0x57);
-
-            String strTrack2 = Holder.getConvert().bcdToStr(track2).split("F")[0];
-            //strTrack2 = strTrack2.split("F")[0];
-            String pan = strTrack2.split("D")[0];
-
-            @Override
-            public void onStart(AAction action) {
-                ((ActionEnterPin) action).setParam(emvContext, pan, onlinePin, totalAmount, leftTimes);
-            }
-
-        });
-        actionEnterPin.setEndListener(new AAction.ActionEndListener() {
-            @Override
-            public void onEnd(AAction action, ActionResult result) {
-            }
-        });
-        actionEnterPin.execute();
+//
+//        //showEnterPin(context,pan,isOnlinePin, offlinePinLeftTimes);
+//        ActionEnterPin actionEnterPin = new ActionEnterPin(new AAction.ActionStartListener() {
+//
+//            byte[] track2 = getTlv(0x57);
+//
+//            String strTrack2 = Holder.getConvert().bcdToStr(track2).split("F")[0];
+//            //strTrack2 = strTrack2.split("F")[0];
+//            String pan = strTrack2.split("D")[0];
+//
+//            @Override
+//            public void onStart(AAction action) {
+//                ((ActionEnterPin) action).setParam(emvContext, pan, onlinePin, totalAmount, leftTimes);
+//            }
+//
+//        });
+//        actionEnterPin.setEndListener(new AAction.ActionEndListener() {
+//            @Override
+//            public void onEnd(AAction action, ActionResult result) {
+//            }
+//        });
+//        actionEnterPin.execute();
         //cv.block(); // for the Offline pin case, block it for make sure the PIN activity is ready, otherwise, may get the black screen.
     }
 
