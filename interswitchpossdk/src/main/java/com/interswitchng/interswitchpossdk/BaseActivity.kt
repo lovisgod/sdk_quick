@@ -2,19 +2,28 @@ package com.interswitchng.interswitchpossdk
 
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
 import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.tapadoo.alerter.Alerter
 import org.koin.android.ext.android.inject
+import java.util.concurrent.ExecutorService
 
 abstract class BaseActivity : AppCompatActivity() {
 
+    internal val posDevice: POSDevice by inject()
     private val payableService: Payable by inject()
     protected val instance: IswPos by inject()
     private lateinit var transactionResponse: Transaction
+    private var pollingExecutor: ExecutorService? = null
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopPolling()
+    }
 
     fun checkTransactionStatus(status: TransactionStatus) {
         Alerter.create(this)
@@ -29,7 +38,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
         // check payment status and timeout after 5 minutes
         val seconds = resources.getInteger(R.integer.poolingTime)
-        payableService.checkPayment(status, seconds.toLong(), TransactionStatusCallback())
+        pollingExecutor = payableService.checkPayment(status, seconds.toLong(), TransactionStatusCallback())
     }
 
     private fun completePayment() {
@@ -52,6 +61,10 @@ abstract class BaseActivity : AppCompatActivity() {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
+    protected fun stopPolling() {
+        Alerter.clearCurrent(this)
+        pollingExecutor?.shutdownNow()
+    }
 
     internal abstract fun onTransactionSuccessful(transaction: Transaction)
 

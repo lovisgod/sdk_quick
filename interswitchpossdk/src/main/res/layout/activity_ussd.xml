@@ -7,15 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".modules.ussdqr.UssdActivity">
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-
     <Spinner
         android:id="@+id/banks"
         android:layout_width="fill_parent"
@@ -36,7 +27,7 @@
         tools:text="@string/app_name"
         />
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnGetCode"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -44,7 +35,83 @@
         android:layout_marginTop="25dp"
         android:layout_marginBottom="15dp"
         android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@android:color/holo_blue_bright"
+        android:visibility="gone"
+        android:enabled="false"
+        tools:visibility="visible"
         />
 
+    <LinearLayout
+        android:id="@+id/mockButtonsContainer"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/ussdText">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/initiateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pay"
+            android:layout_margin="15dp"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@android:color/holo_green_dark"
+            app:layout_constraintTop_toBottomOf="@+id/qrCodeImage"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/printCodeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Print Code"
+            android:layout_margin="15dp"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toBottomOf="@+id/qrCodeImage"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/completeButtonsContainer"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/qrCodeImage">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/printBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_print_receipt"
+            android:layout_margin="15dp"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toBottomOf="@+id/qrCodeImage"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/doneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="done"
+            android:layout_margin="15dp"
+            android:textColor="@android:color/white"
+            app:backgroundTint="@android:color/holo_green_dark"
+            app:layout_constraintTop_toBottomOf="@+id/qrCodeImage"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+
+    </LinearLayout>
 
 </LinearLayout>

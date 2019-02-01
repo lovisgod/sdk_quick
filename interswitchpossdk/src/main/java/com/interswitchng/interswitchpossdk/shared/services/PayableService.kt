@@ -8,6 +8,9 @@ import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStat
 import com.interswitchng.interswitchpossdk.shared.models.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 internal class PayableService(private val httpService: IHttpService): Payable {
 
@@ -23,9 +26,11 @@ internal class PayableService(private val httpService: IHttpService): Payable {
         httpService.getUssdCode(request).process(callback)
     }
 
-    override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback) {
+    override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
+        val executor = Executors.newSingleThreadScheduledExecutor()
+
         var hasResponse = false
-        Thread(Runnable {
+        executor.execute {
             var secs = 1L
             var elapsedTime = secs
             while (!hasResponse) {
@@ -66,6 +71,8 @@ internal class PayableService(private val httpService: IHttpService): Payable {
                 elapsedTime += nextDuration
                 if (!hasResponse) Thread.sleep(nextDuration)
             }
-        }).start()
+        }
+
+        return executor
     }
 }

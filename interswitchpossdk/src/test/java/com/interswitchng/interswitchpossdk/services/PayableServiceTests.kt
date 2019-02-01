@@ -12,6 +12,9 @@ import com.nhaarman.mockitokotlin2.*
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Test
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class PayableServiceTests {
 
@@ -194,6 +197,24 @@ class PayableServiceTests {
 
         verify(httpService, times(1)).getBanks()
         verify(callback, times(1)).invoke(any(), anyOrNull())
+    }
+
+    @Test
+    fun testExecutor() {
+        val scheduler = Executors.newSingleThreadScheduledExecutor()
+
+        println(Thread.activeCount())
+        scheduler.execute {
+            println("before sleep")
+            Thread.sleep(5000)
+            println("after sleep")
+        }
+
+        Thread.sleep(3000)
+        scheduler.shutdownNow()
+        Thread.sleep(3000)
+
+        assertEquals(1, Thread.activeCount())
     }
 
 
