@@ -7,16 +7,19 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.interswitchng.interswitchpossdk.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
 import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
 import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.activity_card.*
+import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
 
-class CardActivity : AppCompatActivity() {
+class CardActivity : BaseActivity() {
 
     private val pos: POSDevice by inject()
     private val cardCallback = CardCallback()
@@ -26,6 +29,8 @@ class CardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card)
+        setSupportActionBar(toolbar)
+        toolbar.title = "Card"
 
         // attach callback to detect card
         pos.attachCallback(cardCallback)
@@ -73,6 +78,8 @@ class CardActivity : AppCompatActivity() {
     private fun toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
+
+    override fun onTransactionSuccessful(transaction: Transaction) {}
 
     internal inner class CardCallback : CardInsertedCallback {
 

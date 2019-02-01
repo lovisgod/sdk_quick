@@ -5,20 +5,38 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
-        <activity
-            android:name=".modules.ussdqr.UssdActivity"
-            android:label="@string/title_activity_ussd"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".MainActivity"
             android:label="IswPos"
+            android:finishOnTaskLaunch="true"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".modules.ussdqr.UssdActivity"
+            android:label="USSD"
+            android:finishOnTaskLaunch="true"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".modules.ussdqr.QrCodeActivity"
             android:label="QR Code"
+            android:finishOnTaskLaunch="true"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".modules.card.CardActivity"
             android:label="Card"
+            android:finishOnTaskLaunch="true"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".modules.paycode.PayCodeActivity"
+            android:label="Pay Code"
+            android:finishOnTaskLaunch="true"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>

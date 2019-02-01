@@ -1,12 +1,20 @@
 package com.interswitchng.interswitchpossdk
 
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
+import com.interswitchng.interswitchpossdk.modules.card.CardActivity
+import com.interswitchng.interswitchpossdk.modules.paycode.PayCodeActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
+import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
+import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import org.koin.android.ext.android.inject
 import java.util.concurrent.ExecutorService
@@ -25,6 +33,33 @@ abstract class BaseActivity : AppCompatActivity() {
         stopPolling()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_options, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId) {
+            R.id.cancelPayment -> {
+                finish()
+                true
+            }
+            R.id.changePaymentMethod -> {
+                val exclude = when(this) {
+                    is QrCodeActivity -> BottomSheetOptionsDialog.QR
+                    is PayCodeActivity -> BottomSheetOptionsDialog.PAYCODE
+                    is CardActivity -> BottomSheetOptionsDialog.CARD
+                    else -> BottomSheetOptionsDialog.USSD
+                }
+                val info: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
+                val optionsDialog: BottomSheetOptionsDialog = BottomSheetOptionsDialog.newInstance(exclude, info)
+                optionsDialog.show(supportFragmentManager, optionsDialog.tag)
+                true
+            }
+            else -> false
+        }
+    }
+
     fun checkTransactionStatus(status: TransactionStatus) {
         Alerter.create(this)
                 .setTitle(getString(R.string.title_transaction_in_progress))
@@ -34,7 +69,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 .enableInfiniteDuration(true)
                 .setBackgroundColorRes(android.R.color.darker_gray)
                 .setProgressColorRes(android.R.color.white)
-                .show()
+                //.show()
 
         // check payment status and timeout after 5 minutes
         val seconds = resources.getInteger(R.integer.poolingTime)
@@ -65,6 +100,7 @@ abstract class BaseActivity : AppCompatActivity() {
         Alerter.clearCurrent(this)
         pollingExecutor?.shutdownNow()
     }
+
 
     internal abstract fun onTransactionSuccessful(transaction: Transaction)
 

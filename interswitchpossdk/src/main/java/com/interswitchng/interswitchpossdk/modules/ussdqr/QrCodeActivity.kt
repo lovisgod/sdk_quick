@@ -23,6 +23,7 @@ import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_qr_code.*
+import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
 
 
@@ -42,6 +43,9 @@ class QrCodeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qr_code)
+
+        setSupportActionBar(toolbar)
+        toolbar.title = "QR Code"
     }
 
     override fun onStart() {
@@ -87,7 +91,7 @@ class QrCodeActivity : BaseActivity() {
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-            // posDevice.printReceipt(prints)
+            posDevice.printReceipt(prints)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
         }
@@ -134,7 +138,7 @@ class QrCodeActivity : BaseActivity() {
             printBtn.isEnabled = false
 
             Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
-            // posDevice.printReceipt(prints)
+            posDevice.printReceipt(prints)
             printBtn.isClickable = true
             printBtn.isEnabled = true
         }

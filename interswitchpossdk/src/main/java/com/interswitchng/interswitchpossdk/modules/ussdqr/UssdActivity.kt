@@ -13,6 +13,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.TRANSACTION_USSD
 import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
@@ -21,6 +22,7 @@ import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_ussd.*
+import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
 
 
@@ -38,11 +40,15 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private var selectedItem = ""
     // container for banks and bank-codes
     private lateinit var bankCodes: MutableMap<String, String>
+    private val prints = mutableListOf<PrintObject>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ussd)
+
+        setSupportActionBar(toolbar)
+        toolbar.title = "USSD"
     }
 
     override fun onStart() {
@@ -81,7 +87,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             val paymentInfo: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
             // set the selected bank-code for payment
             val bankCode =
-                    if(bankCodes.containsKey(selectedItem)) bankCodes[selectedItem]!!
+                    if (bankCodes.containsKey(selectedItem)) bankCodes[selectedItem]!!
                     else ""
 
             // create payment info with bank code
@@ -93,8 +99,8 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             // initiate ussd payment
             paymentService.initiateUssdPayment(request) { response, throwable ->
                 // handle error or response
-                if (throwable != null)  handleError(throwable)
-                else response?.apply { runOnUiThread { handleResponse(request,this) } }
+                if (throwable != null) handleError(throwable)
+                else response?.apply { runOnUiThread { handleResponse(request, this) } }
             }
 
         }
@@ -118,7 +124,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-            // posDevice.printReceipt(prints)
+            posDevice.printReceipt(prints)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
         }
@@ -126,10 +132,12 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     private fun handleResponse(request: CodeRequest, response: CodeResponse) {
         ussdCode = response.bankShortCode ?: response.defaultShortCode
-        ussdText.text = ussdCode
+        ussdCode?.apply {
+            ussdText.text = this
+            prints.add(PrintObject.Data( this))
+        }
         dialog.dismiss()
         checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
-
 
 
         // TODO remove mock trigger
@@ -143,7 +151,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
 
     private fun showGetCodeButton(shouldShow: Boolean) {
-        val visibility = if(shouldShow) View.VISIBLE else View.GONE
+        val visibility = if (shouldShow) View.VISIBLE else View.GONE
         btnGetCode.visibility = visibility
         btnGetCode.isEnabled = shouldShow
     }
@@ -180,7 +188,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             printBtn.isEnabled = false
 
             Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
-            // posDevice.printReceipt(prints)
+            posDevice.printReceipt(prints)
             printBtn.isClickable = true
             printBtn.isEnabled = true
         }

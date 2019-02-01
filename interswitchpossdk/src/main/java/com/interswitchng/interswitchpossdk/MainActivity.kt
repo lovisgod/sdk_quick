@@ -10,6 +10,7 @@ import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_payment_options.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,24 +28,28 @@ class MainActivity : AppCompatActivity() {
         ussdPayment.setOnClickListener {
             val ussdIntent = Intent(this, UssdActivity::class.java)
             ussdIntent.putExtra(KEY_PAYMENT_INFO, info)
+            ussdIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(ussdIntent)
         }
 
         qrPayment.setOnClickListener {
             val qrIntent = Intent(this, QrCodeActivity::class.java)
             qrIntent.putExtra(KEY_PAYMENT_INFO, info)
+            qrIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(qrIntent)
         }
 
         cardPayment.setOnClickListener {
             val cardIntent = Intent(this, CardActivity::class.java)
             cardIntent.putExtra(KEY_PAYMENT_INFO, info)
+            cardIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(cardIntent)
         }
 
-        cardPayment.setOnClickListener {
+        payCodePayment.setOnClickListener {
             val payCodeIntent = Intent(this, PayCodeActivity::class.java)
             payCodeIntent.putExtra(KEY_PAYMENT_INFO, info)
+            payCodeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(payCodeIntent)
         }
     }

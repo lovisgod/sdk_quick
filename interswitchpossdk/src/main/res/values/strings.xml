@@ -24,4 +24,6 @@
     <string name="ISW_USSD_QR_BASE_URL">http:://url:has:not:been:set</string>
     <string name="label_insert_card">Insert your card</string>
     <string name="enter_pin">Enter Pin</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_change_payment">Change Payment</string>
 </resources>

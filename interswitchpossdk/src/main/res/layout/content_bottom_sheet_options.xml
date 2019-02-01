@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".modules.paycode.PayCodeActivity">
+    android:paddingTop="30dp"
+    android:paddingBottom="30dp"
+    app:behavior_hideable="true"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-
-    <include layout="@layout/content_toolbar" />
+    <include layout="@layout/content_payment_options" />
 
 </android.support.constraint.ConstraintLayout>
