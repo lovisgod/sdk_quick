@@ -17,8 +17,9 @@ class PayCodeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pay_code)
 
-        setSupportActionBar(toolbar)
-        toolbar.title = "Pay Code"
+
+        // setup toolbar
+        setupToolbar("Pay Code")
 
 
         // get payment info

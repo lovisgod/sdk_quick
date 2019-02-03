@@ -1,6 +1,8 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light" />
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="windowBackground">@color/colorMainBackground</item>
+    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -11,11 +13,26 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.PaymentOption">
-        <item name="android:background">?attr/selectableItemBackground</item>
+    <style name="AppTheme.PaymentContent">
+        <item name="android:layout_marginRight">@dimen/content_margin</item>
+        <item name="android:layout_marginLeft">@dimen/content_margin</item>
         <item name="android:padding">10dp</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
+    </style>
+
+    <style name="AppTheme.PaymentOption" parent="AppTheme.PaymentContent">
+        <item name="android:background">@drawable/bg_card_shadow</item>
+        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
+        <item name="android:layout_marginBottom">@dimen/content_small_margin</item>
+        <item name="android:padding">@dimen/content_padding</item>
+    </style>
+
+    <style name="AppTheme.PaymentText" parent="AppTheme.PaymentContent">
+        <item name="android:textSize">@dimen/content_text_size</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:focusable">false</item>
+        <item name="android:clickable">false</item>
     </style>
 
     <public />

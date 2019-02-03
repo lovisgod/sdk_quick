@@ -14,7 +14,7 @@ class IswPos private constructor(private val app: Application, internal val conf
 
     fun initiatePayment(amount: Int) {
         val stan = "005609"
-        val paymentInfo = PaymentInfo(amount * 100, stan)
+        val paymentInfo = PaymentInfo(amount, stan)
         val intent = Intent(app, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }

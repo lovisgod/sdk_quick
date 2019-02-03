@@ -32,9 +32,9 @@ class CardActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card)
-        setSupportActionBar(toolbar)
-        toolbar.title = "Card"
 
+        // setup toolbar
+        setupToolbar("Card")
 
         // get payment info
         val paymentInfo: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)

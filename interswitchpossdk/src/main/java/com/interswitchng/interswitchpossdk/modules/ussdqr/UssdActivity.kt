@@ -49,8 +49,9 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ussd)
 
-        setSupportActionBar(toolbar)
-        toolbar.title = "USSD"
+        // setup toolbar
+        setupToolbar("USSD")
+
         paymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
     }
 

@@ -29,7 +29,7 @@ internal data class CodeRequest(
 
         internal fun from(config: POSConfiguration, paymentInfo: PaymentInfo, transactionType: String, qrFormat: String? = null) = CodeRequest (
                 alias = config.alias,
-                amount = "${paymentInfo.amount}",
+                amount = "${paymentInfo.amount * 100}",
                 bankCode = paymentInfo.bankCode,
                 date = DisplayUtils.getIsoString(Date()),
                 stan = paymentInfo.stan,

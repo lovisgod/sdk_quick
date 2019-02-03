@@ -63,20 +63,12 @@ public final class PosInterface {
         System.loadLibrary("F_EMV_LIB_PayDroid");
         System.loadLibrary("F_ENTRY_LIB_PayDroid");
         System.loadLibrary("F_MC_LIB_PayDroid");
-        System.loadLibrary("F_WAVE_LIB_PayDroid");
-        System.loadLibrary("F_AE_LIB_PayDroid");
-        System.loadLibrary("F_QPBOC_LIB_PayDroid");
-        System.loadLibrary("F_DPAS_LIB_PayDroid");
-        System.loadLibrary("F_JCB_LIB_PayDroid");
+
+
         System.loadLibrary("F_PURE_LIB_PayDroid");
         System.loadLibrary("JNI_EMV_v100");
         System.loadLibrary("JNI_ENTRY_v100");
         System.loadLibrary("JNI_MC_v100");
-        System.loadLibrary("JNI_WAVE_v100");
-        System.loadLibrary("JNI_AE_v100");
-        System.loadLibrary("JNI_QPBOC_v100");
-        System.loadLibrary("JNI_DPAS_v100");
-        System.loadLibrary("JNI_JCB_v100");
         System.loadLibrary("JNI_PURE_v100");
 
         hasLoadedLibraries = true;

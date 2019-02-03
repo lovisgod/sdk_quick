@@ -5,40 +5,41 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
-
         <activity
             android:name=".MainActivity"
-            android:label="IswPos"
             android:finishOnTaskLaunch="true"
+            android:label="IswPos"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".modules.ussdqr.UssdActivity"
-            android:label="USSD"
             android:finishOnTaskLaunch="true"
+            android:label="USSD"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".modules.ussdqr.QrCodeActivity"
+            android:finishOnTaskLaunch="true"
             android:label="QR Code"
-            android:finishOnTaskLaunch="true"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".modules.card.CardActivity"
+        <activity
+            android:name=".modules.card.CardActivity"
+            android:finishOnTaskLaunch="true"
             android:label="Card"
-            android:finishOnTaskLaunch="true"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".modules.paycode.PayCodeActivity"
+        <activity
+            android:name=".modules.paycode.PayCodeActivity"
+            android:finishOnTaskLaunch="true"
             android:label="Pay Code"
-            android:finishOnTaskLaunch="true"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
-
     </application>
 
 </manifest>

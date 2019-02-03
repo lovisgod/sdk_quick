@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.interswitchng.interswitchpossdk.IswPos;
 import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration;
 
+
 public class DemoActivity extends AppCompatActivity {
 
     @Override
@@ -51,7 +52,7 @@ public class DemoActivity extends AppCompatActivity {
                 if (enteredAmount.isEmpty()) {
                     Toast.makeText(DemoActivity.this, "Amount value is required", Toast.LENGTH_LONG).show();
                 } else {
-                    // trigger payment
+                   // trigger payment
                    IswPos.getInstance().initiatePayment(Integer.valueOf(enteredAmount));
                 }
             }

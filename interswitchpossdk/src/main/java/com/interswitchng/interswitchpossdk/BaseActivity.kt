@@ -16,6 +16,7 @@ import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStat
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
+import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
 import java.util.concurrent.ExecutorService
 
@@ -41,6 +42,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item?.itemId) {
             R.id.cancelPayment -> {
+                // TODO show confirmation dialog
                 finish()
                 true
             }
@@ -58,6 +60,11 @@ abstract class BaseActivity : AppCompatActivity() {
             }
             else -> false
         }
+    }
+
+    fun setupToolbar(title: String) {
+        setSupportActionBar(toolbar)
+        toolbar.title = title
     }
 
     fun checkTransactionStatus(status: TransactionStatus) {
@@ -157,5 +164,9 @@ abstract class BaseActivity : AppCompatActivity() {
                     .show()
         }
 
+    }
+
+    override fun onBackPressed() {
+        // do nothing
     }
 }

@@ -44,8 +44,8 @@ class QrCodeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qr_code)
 
-        setSupportActionBar(toolbar)
-        toolbar.title = "QR Code"
+        // setup toolbar
+        setupToolbar("QR Code")
     }
 
     override fun onStart() {
