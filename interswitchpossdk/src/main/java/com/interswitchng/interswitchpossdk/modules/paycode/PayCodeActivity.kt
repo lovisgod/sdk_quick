@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.modules.paycode
 
 import android.os.Bundle
-import com.interswitchng.interswitchpossdk.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.common.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo

@@ -1,9 +1,11 @@
-package com.interswitchng.interswitchpossdk
+package com.interswitchng.interswitchpossdk.shared.common
 
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.interswitchng.interswitchpossdk.IswPos
+import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.card.CardActivity
 import com.interswitchng.interswitchpossdk.modules.paycode.PayCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity

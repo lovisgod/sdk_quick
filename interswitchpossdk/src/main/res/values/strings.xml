@@ -28,4 +28,6 @@
     <string name="action_change_payment">Change Payment</string>
     <string name="amount">Amount: %1$s</string>
     <string name="hint_qr_code">Please scan QR code to pay using your banking app</string>
+    <string name="hint_transaction_success">Your transaction was successful</string>
+    <string name="action_close">Close</string>
 </resources>

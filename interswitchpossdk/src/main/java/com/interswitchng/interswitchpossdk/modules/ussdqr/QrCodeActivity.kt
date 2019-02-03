@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.interswitchng.interswitchpossdk.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.common.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
@@ -22,7 +22,6 @@ import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_qr_code.*
-import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
 import java.text.NumberFormat
 

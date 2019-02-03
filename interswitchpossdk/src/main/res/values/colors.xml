@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#00bbe3</color>
-    <color name="colorPrimaryDark">#004563</color>
+    <color name="colorPrimaryDark">#004361</color>
     <color name="colorMainBackground">#eaecef</color>
     <color name="colorTextPrimary">@android:color/white</color>
     <color name="colorTextSecondary">#004563</color>
     <color name="colorSecondaryIcon">#dfdfdf</color>
     <color name="colorQrCodeBackground">#f8f8f9</color>
     <color name="textColorDark">#363636</color>
-    <color name="qr_code_reader_square">#00c530</color>
+    <color name="textColorSuccess">#00c530</color>
 </resources>

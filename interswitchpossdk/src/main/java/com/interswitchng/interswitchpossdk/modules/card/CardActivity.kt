@@ -1,13 +1,9 @@
 package com.interswitchng.interswitchpossdk.modules.card
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
-import com.interswitchng.interswitchpossdk.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.common.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
@@ -18,7 +14,6 @@ import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.activity_card.*
-import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
 import java.text.NumberFormat
 

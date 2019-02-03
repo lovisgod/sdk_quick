@@ -77,7 +77,7 @@
                 tools:visibility="visible"
                 android:layout_marginTop="@dimen/content_small_margin"
                 android:padding="@dimen/content_small_margin"
-                android:background="@drawable/bg_bottom_half_card"
+                android:background="@drawable/bg_card_bottom_half_card"
                 app:layout_constraintTop_toBottomOf="@+id/qrCodeImage">
 
                 <android.support.v7.widget.AppCompatButton
