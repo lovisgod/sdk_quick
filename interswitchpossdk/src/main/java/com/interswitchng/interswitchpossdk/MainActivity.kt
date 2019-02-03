@@ -7,7 +7,6 @@ import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.content_toolbar.*
-import android.content.Intent
 
 
 
@@ -18,9 +17,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
-        toolbar.title = "Payment Method"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+        toolbar.title = "Payment Method"
 
         // get payment info
         val paymentInfo: PaymentInfo = intent.getParcelableExtra(KEY_PAYMENT_INFO)

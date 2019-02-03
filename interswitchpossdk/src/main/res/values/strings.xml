@@ -26,5 +26,6 @@
     <string name="enter_pin">Enter Pin</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_change_payment">Change Payment</string>
-    <string name="amount">amount: %1$s</string>
+    <string name="amount">Amount: %1$s</string>
+    <string name="hint_qr_code">Please scan QR code to pay using your banking app</string>
 </resources>

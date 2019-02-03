@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme.PaymentOption"  parent="AppTheme.PaymentContent">
+    <style name="ISW.PaymentOption" parent="ISW.PaymentContent">
         <item name="android:background">@drawable/bg_card</item>
         <item name="android:elevation">@dimen/elevation</item>
         <item name="android:layout_marginTop">@dimen/content_small_margin</item>
         <item name="android:layout_marginBottom">@dimen/content_small_margin</item>
         <item name="android:padding">@dimen/content_padding</item>
+    </style>
+
+    <style name="ISW.QrCode.Content">
+        <item name="android:backgroundTint">#f8f8f9</item>
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:elevation">@dimen/elevation</item>
     </style>
 
 </resources>

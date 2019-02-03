@@ -24,7 +24,7 @@
 
         <LinearLayout
             android:id="@+id/cardPayment"
-            style="@style/AppTheme.PaymentOption"
+            style="@style/ISW.PaymentOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -40,7 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                style="@style/AppTheme.PaymentText"
+                style="@style/ISW.PaymentText"
                 android:layout_gravity="center_vertical"
                 android:text="@string/title_card" />
 
@@ -56,7 +56,7 @@
 
         <LinearLayout
             android:id="@+id/ussdPayment"
-            style="@style/AppTheme.PaymentOption"
+            style="@style/ISW.PaymentOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                style="@style/AppTheme.PaymentText"
+                style="@style/ISW.PaymentText"
                 android:layout_gravity="center_vertical"
                 android:text="@string/title_ussd" />
 
@@ -85,7 +85,7 @@
 
         <LinearLayout
             android:id="@+id/qrPayment"
-            style="@style/AppTheme.PaymentOption"
+            style="@style/ISW.PaymentOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -100,7 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                style="@style/AppTheme.PaymentText"
+                style="@style/ISW.PaymentText"
                 android:layout_gravity="center_vertical"
                 android:text="@string/title_qr_code" />
 
@@ -115,7 +115,7 @@
 
         <LinearLayout
             android:id="@+id/payCodePayment"
-            style="@style/AppTheme.PaymentOption"
+            style="@style/ISW.PaymentOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -130,7 +130,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                style="@style/AppTheme.PaymentText"
+                style="@style/ISW.PaymentText"
                 android:layout_gravity="center_vertical"
                 android:text="@string/title_pay_code" />
 

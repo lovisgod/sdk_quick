@@ -11,35 +11,35 @@
             android:label="IswPos"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.ussdqr.UssdActivity"
             android:finishOnTaskLaunch="true"
             android:label="USSD"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.ussdqr.QrCodeActivity"
             android:finishOnTaskLaunch="true"
             android:label="QR Code"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.card.CardActivity"
             android:finishOnTaskLaunch="true"
             android:label="Card"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.paycode.PayCodeActivity"
             android:finishOnTaskLaunch="true"
             android:label="Pay Code"
             android:screenOrientation="portrait"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ISW.NoActionBar" />
     </application>
 
 </manifest>
