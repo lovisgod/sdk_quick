@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.interswitchng.interswitchpossdk.shared.common.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
@@ -135,26 +135,4 @@ class QrCodeActivity : BaseActivity() {
         // handle error
     }
 
-    override fun onTransactionSuccessful(transaction: Transaction) {
-        completeButtonsContainer.visibility = View.VISIBLE
-        textMessage.visibility = View.VISIBLE
-
-        val amount = PrintObject.Data(amountText.text.toString())
-        printSlip.add(amount)
-        posDevice.printReceipt(printSlip)
-
-        printBtn.setOnClickListener {
-            printBtn.isClickable = false
-            printBtn.isEnabled = false
-
-            Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
-            printBtn.isClickable = true
-            printBtn.isEnabled = true
-        }
-
-        doneButton.setOnClickListener { finish() }
-
-        qrCodeImage.setImageResource(R.drawable.placeholder)
-        Toast.makeText(this, "amount of ${transaction.amount} paid successfully", Toast.LENGTH_LONG).show()
-    }
 }

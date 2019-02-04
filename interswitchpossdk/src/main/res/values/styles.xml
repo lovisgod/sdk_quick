@@ -2,9 +2,9 @@
 
 
     <style name="ISW" parent="Theme.AppCompat.Light">
-        <item name="android:windowBackground">@color/colorMainBackground</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/iswColorMainBackground</item>
+        <item name="colorPrimary">@color/iswColorPrimary</item>
+        <item name="colorPrimaryDark">@color/iswColorPrimaryDark</item>
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
@@ -34,7 +34,7 @@
 
     <style name="ISW.PaymentText" parent="ISW.PaymentContent">
         <item name="android:textSize">@dimen/content_text_size</item>
-        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:textColor">@color/iswColorTextSecondary</item>
         <item name="android:focusable">false</item>
         <item name="android:clickable">false</item>
     </style>

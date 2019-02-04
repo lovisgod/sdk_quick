@@ -35,14 +35,12 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
-
         <activity
-            android:name=".shared.common.TransactionReceiptActivity"
+            android:name=".shared.activities.TransactionReceiptActivity"
             android:label="Transaction Approved"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/ISW.NoActionBar"
-            />
+            android:theme="@style/ISW.NoActionBar" />
     </application>
 
 </manifest>

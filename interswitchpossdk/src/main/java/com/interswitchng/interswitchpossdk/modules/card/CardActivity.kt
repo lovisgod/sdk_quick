@@ -3,7 +3,7 @@ package com.interswitchng.interswitchpossdk.modules.card
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.interswitchng.interswitchpossdk.shared.common.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
@@ -85,7 +85,6 @@ class CardActivity : BaseActivity() {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun onTransactionSuccessful(transaction: Transaction) {}
 
     internal inner class CardCallback : CardInsertedCallback {
 

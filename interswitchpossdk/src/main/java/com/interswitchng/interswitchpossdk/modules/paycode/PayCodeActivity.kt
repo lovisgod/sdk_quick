@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.modules.paycode
 
 import android.os.Bundle
-import com.interswitchng.interswitchpossdk.shared.common.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
@@ -26,10 +26,6 @@ class PayCodeActivity : BaseActivity() {
         // set the amount
         val amount = NumberFormat.getInstance().format(paymentInfo.amount)
         amountText.text = getString(R.string.amount, amount)
-    }
-
-    override fun onTransactionSuccessful(transaction: Transaction) {
-
     }
 
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00bbe3</color>
-    <color name="colorPrimaryDark">#004361</color>
-    <color name="colorMainBackground">#eaecef</color>
-    <color name="colorTextPrimary">@android:color/white</color>
-    <color name="colorTextSecondary">#004563</color>
-    <color name="colorSecondaryIcon">#dfdfdf</color>
-    <color name="colorQrCodeBackground">#f8f8f9</color>
-    <color name="textColorDark">#363636</color>
-    <color name="textColorSuccess">#00c530</color>
+    <color name="iswColorPrimary">#00bbe3</color>
+    <color name="iswColorPrimaryDark">#004361</color>
+    <color name="iswColorMainBackground">#eaecef</color>
+    <color name="iswColorTextPrimary">@android:color/white</color>
+    <color name="iswColorTextSecondary">#004563</color>
+    <color name="iswColorSecondaryIcon">#dfdfdf</color>
+    <color name="iswColorQrCodeBackground">#f8f8f9</color>
+    <color name="iswTextColorDark">#363636</color>
+    <color name="iswTextColorSuccess">#00c530</color>
 </resources>

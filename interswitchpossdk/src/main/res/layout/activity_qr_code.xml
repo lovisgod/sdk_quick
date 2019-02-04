@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:padding="15dp"
-                android:textColor="@color/textColorDark"
+                android:textColor="@color/iswTextColorDark"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintTop_toTopOf="parent"
@@ -85,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:text="Pay"
+                    android:text="Confirm Payment"
                     android:textColor="@android:color/white"
                     app:backgroundTint="@android:color/holo_green_dark"
                     app:layout_constraintStart_toStartOf="parent"
@@ -105,40 +105,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/completeButtonsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/qrCodeImage"
-                tools:visibility="visible">
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/printBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="@string/title_print_receipt"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="@android:color/holo_blue_dark"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/qrCodeImage" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/doneButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="done"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="@android:color/holo_green_dark"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/qrCodeImage" />
-
-
-            </LinearLayout>
 
         </android.support.constraint.ConstraintLayout>
 

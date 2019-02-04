@@ -8,7 +8,7 @@
     <!-- border -->
     <stroke
         android:width="2dp"
-        android:color="@color/colorPrimaryDark" />
+        android:color="@color/iswColorPrimaryDark" />
 
     <!-- corner roundness -->
     <corners android:radius="2dp" />
