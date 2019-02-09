@@ -1,4 +1,4 @@
-package com.igweze.ebi.paxemvcontact.utilities
+package com.interswitchng.interswitchpossdk.utils
 
 import android.util.Log
 

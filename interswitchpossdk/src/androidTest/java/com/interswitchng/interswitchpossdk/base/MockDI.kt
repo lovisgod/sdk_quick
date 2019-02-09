@@ -15,7 +15,6 @@ private val mockServiceModule = module(override = true) {
     single<IKeyValueStore> { MockKeyValueStore() }
     single<Payable> { MockPayableService.Builder().build() }
     single<IUserService> { MockUserService(get()) }
-    single<POSDevice> { MockPOSDevice() }
 }
 
 

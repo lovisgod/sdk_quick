@@ -6,7 +6,7 @@ import android.util.SparseArray
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bcd2Str
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bytes2String
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.str2Bcd
-import com.igweze.ebi.paxemvcontact.utilities.Logger
+import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.EMV_APPLIST
 import com.pax.jemv.clcommon.OnlineResult

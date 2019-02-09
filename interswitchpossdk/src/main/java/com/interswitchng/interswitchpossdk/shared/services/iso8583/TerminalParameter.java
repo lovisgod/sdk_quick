@@ -1,4 +1,4 @@
-package com.igweze.ebi.paxemvcontact.iso8583;
+package com.interswitchng.interswitchpossdk.shared.services.iso8583;
 
 import java.util.ArrayList;
 import java.util.List;

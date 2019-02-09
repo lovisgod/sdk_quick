@@ -1,4 +1,4 @@
-package com.igweze.ebi.paxemvcontact.iso8583;
+package com.interswitchng.interswitchpossdk.shared.services.iso8583.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -6,7 +6,7 @@ import android.content.res.AssetManager;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Util {
+public class FileUtils {
 
     public static String[] getFilesArrayFromAssets(Context context, String path) {
         AssetManager assetManager = context.getResources().getAssets();

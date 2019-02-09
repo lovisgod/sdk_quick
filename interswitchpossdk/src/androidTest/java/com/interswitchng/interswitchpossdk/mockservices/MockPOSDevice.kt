@@ -24,7 +24,7 @@ internal class MockPOSDevice: POSDevice {
 
     override fun detachCallback(callback: CardInsertedCallback) {}
 
-    override fun printReceipt(slip: List<PrintObject>) {
+    override fun printSlip(slip: List<PrintObject>, user: String) {
 
     }
 

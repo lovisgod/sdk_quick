@@ -1,41 +1,29 @@
-package com.igweze.ebi.paxemvcontact.iso8583;
+package com.interswitchng.interswitchpossdk.shared.services.iso8583;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket;
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.FileUtils;
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils;
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.NibssIsoMessage;
 import com.solab.iso8583.IsoMessage;
-import com.solab.iso8583.IsoType;
-import com.solab.iso8583.IsoValue;
 import com.solab.iso8583.MessageFactory;
 import com.solab.iso8583.parse.ConfigParser;
 
-import org.jpos.iso.IFA_BINARY;
-import org.jpos.iso.IFA_LLBINARY;
-import org.jpos.iso.IFA_LLCHAR;
-import org.jpos.iso.IFA_NUMERIC;
-import org.jpos.iso.ISOException;
-import org.jpos.iso.ISOField;
-import org.jpos.iso.ISOMsg;
-import org.jpos.iso.packager.GenericPackager;
-import org.jpos.iso.packager.ISO87APackager;
-import org.xml.sax.InputSource;
-
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.igweze.ebi.paxemvcontact.utilities.Constants.SERVER_IP;
-import static com.igweze.ebi.paxemvcontact.utilities.Constants.SERVER_PORT;
-import static com.igweze.ebi.paxemvcontact.utilities.Constants.TIMEOUT;
-import static com.igweze.ebi.paxemvcontact.utilities.DisplayUtils.dateFormatter;
-import static com.igweze.ebi.paxemvcontact.utilities.DisplayUtils.timeAndDateFormatter;
-import static com.igweze.ebi.paxemvcontact.utilities.DisplayUtils.timeFormatter;
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.SERVER_IP;
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.SERVER_PORT;
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.TIMEOUT;
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.dateFormatter;
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter;
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.timeFormatter;
 
 public class NibbsCommunication {
 
@@ -50,7 +38,6 @@ public class NibbsCommunication {
 //    private static SimpleDateFormat F7 = new SimpleDateFormat("MMddhhmmss", Locale.getDefault());
     private static SimpleDateFormat LOCAL_TIME = new SimpleDateFormat("hhmmss", Locale.getDefault());
     private static SimpleDateFormat F13 = new SimpleDateFormat("MMdd", Locale.getDefault());
-    private ISO87APackager packager = new ISO87APackager();
     public static String CLEAR_MASTER_KEY = "DBEECACCB4210977ACE73A1D873CA59F";
     private Context mContext;
     public MessageFactory<IsoMessage> messageFactory;
@@ -70,7 +57,7 @@ public class NibbsCommunication {
         try {
 
             if (messageFactory == null) {
-                byte[] data = Util.getFromAssets(mContext);
+                byte[] data = FileUtils.getFromAssets(mContext);
                 String string = new String(data);
                 StringReader stringReader = new StringReader(string);
                 messageFactory = ConfigParser.createFromReader(stringReader);
@@ -132,15 +119,12 @@ public class NibbsCommunication {
         return makeKeyCall("9G0000");
     }
 
-    public ISOMsg makeGetParametersCall() {
+    public IsoMessage makeGetParametersCall() {
 
         try {
 
             String field3 = "9C0000";
             String field62 = "01009280824266";
-
-            ISO87APackager packager = new ISO87APackager();
-            packager.setFieldPackager(64, new IFA_BINARY(32, "MAC 1"));
 
             Date now = new Date();
             String stan = getNextStan();
@@ -163,14 +147,11 @@ public class NibbsCommunication {
                 System.arraycopy(bytes, 0, temp, 0, length - 64);
             }
 
-            String hashValue = TripleDES.getMac(get(KEY_SESSION_KEY), temp); //SHA256
+            String hashValue = IsoUtils.getMac(get(KEY_SESSION_KEY), temp); //SHA256
 
             message.setValue(64, hashValue);
+            message.dump(System.out, "parameter request ---- ");
 
-            ISOMsg tem = new ISOMsg();
-            tem.setPackager(this.packager);
-            tem.unpack(message.getMessage().writeData());
-            tem.dump(System.out, "parameter request ---- ");
 
             NibssIsoSocket socket = socketFactory.create(SERVER_IP, SERVER_PORT, TIMEOUT * 5);
             socket.connect();
@@ -178,14 +159,9 @@ public class NibbsCommunication {
             byte[] response = socket.sendReceive(message.getMessage().writeData());//(terminalDownloadMsg.pack());
 
             IsoMessage isoMessage = messageFactory.parseMessage(response, 0, false);
+            message.dump(System.out, "parameter response ---- ");
 
-
-            ISOMsg isoMsg = new ISOMsg();
-            isoMsg.setPackager(packager);
-            isoMsg.unpack(response);
-            isoMsg.dump(System.out, "parameter response ----");
-
-            return isoMsg;
+            return isoMessage;
         } catch (Exception e) {
             logEx(e);
             e.printStackTrace();
@@ -253,7 +229,7 @@ public class NibbsCommunication {
             System.arraycopy(bytes, 0, temp, 0, length - 64);
         }
 
-        String hashValue = TripleDES.getMac(get(KEY_SESSION_KEY), temp); //SHA256
+        String hashValue = IsoUtils.getMac(get(KEY_SESSION_KEY), temp); //SHA256
         message.setValue(128, hashValue);
 
         byte[] messageData = message.getMessage().writeData();
@@ -304,7 +280,7 @@ public class NibbsCommunication {
                 System.arraycopy(bytes, 0, temp, 0, length - 64);
             }
 
-            String hashValue = TripleDES.getMac(get(KEY_SESSION_KEY), temp); //SHA256
+            String hashValue = IsoUtils.getMac(get(KEY_SESSION_KEY), temp); //SHA256
             message.setValue(128, hashValue);
 
             message.dump(System.out, "request -- ");

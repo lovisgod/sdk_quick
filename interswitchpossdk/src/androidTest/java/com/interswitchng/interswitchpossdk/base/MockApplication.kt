@@ -1,12 +1,9 @@
 package com.interswitchng.interswitchpossdk.base
 
 import android.app.Application
-import com.igweze.ebi.paxemvcontact.POSDeviceService
-import com.igweze.ebi.paxemvcontact.posshim.CardService
-import com.igweze.ebi.paxemvcontact.posshim.PosInterface
 import com.interswitchng.interswitchpossdk.IswPos
+import com.interswitchng.interswitchpossdk.mockservices.MockPOSDevice
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
-import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
 class MockApplication: Application() {
@@ -29,11 +26,8 @@ class MockApplication: Application() {
 
 
         // setup device for terminal
-        val cardService = CardService.getInstance(applicationContext)
-        PosInterface.setDalInstance(applicationContext)
-        val pos = PosInterface.getInstance(cardService)
-        val deviceService = POSDeviceService(pos)
-        IswPos.configureTerminal(this, deviceService)
+        val device = MockPOSDevice()
+        IswPos.configureTerminal(this, device)
 
         // load mock modules based on runner arguments
         if (shouldMock) {

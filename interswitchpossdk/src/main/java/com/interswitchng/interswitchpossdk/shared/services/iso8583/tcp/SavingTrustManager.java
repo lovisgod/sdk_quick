@@ -1,8 +1,9 @@
-package com.igweze.ebi.paxemvcontact.iso8583;
+package com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp;
 
-import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by joel.dada on 11/1/2018.

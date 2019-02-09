@@ -14,8 +14,13 @@ import com.pax.jemv.clcommon.RetCode
 import kotlinx.android.synthetic.main.activity_pin_input.*
 import android.R.attr.tag
 import com.igweze.ebi.paxemvcontact.emv.*
-import com.igweze.ebi.paxemvcontact.iso8583.*
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.str2Bcd
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.Card
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.NibbsCommunication
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.TerminalParameter
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.Transaction
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.TripleDES
 import java.util.*
 
 
@@ -171,7 +176,7 @@ class PinInputActivity : AppCompatActivity(), PinCallback {
                 logger.log("Decrypted Pin => $decryptedPinKey");
 
                 val managementData = communication.makeGetParametersCall();
-                val terminalData = managementData.getString(62);
+                val terminalData = managementData.getField<String>(62).value;
 
 
                 val data = TerminalParameter.parse(terminalData);

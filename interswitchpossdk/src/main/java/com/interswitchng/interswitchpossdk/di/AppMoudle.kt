@@ -3,9 +3,8 @@ package com.interswitchng.interswitchpossdk.di
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.*
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
-import com.interswitchng.interswitchpossdk.shared.services.SharePreferenceManager
+import com.interswitchng.interswitchpossdk.shared.services.storage.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
 import okhttp3.Interceptor

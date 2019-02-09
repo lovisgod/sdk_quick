@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.services
+package com.interswitchng.interswitchpossdk.shared.services.storage
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
 

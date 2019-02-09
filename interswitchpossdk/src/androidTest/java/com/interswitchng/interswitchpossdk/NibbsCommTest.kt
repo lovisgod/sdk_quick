@@ -1,22 +1,16 @@
-package com.igweze.ebi.paxemvcontact
+package com.interswitchng.interswitchpossdk
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.igweze.ebi.paxemvcontact.iso8583.*
-import com.igweze.ebi.paxemvcontact.utilities.Constants.SERVER_IP
-import com.igweze.ebi.paxemvcontact.utilities.Constants.SERVER_PORT
-import com.igweze.ebi.paxemvcontact.utilities.Constants.TIMEOUT
-import com.igweze.ebi.paxemvcontact.utilities.EmvUtils
-import com.igweze.ebi.paxemvcontact.utilities.Logger
-import com.solab.iso8583.IsoMessage
-import org.jpos.iso.*
-import org.jpos.iso.packager.ISO87APackager
-import org.junit.Assert
-import org.junit.Assert.assertEquals
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.*
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.*
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.*
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.SERVER_IP
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.SERVER_PORT
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.TIMEOUT
+import com.interswitchng.interswitchpossdk.utils.Logger
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 @RunWith(AndroidJUnit4::class)
@@ -55,7 +49,7 @@ class NibbsCommTest {
         logger.log("Decrypted Pin => $decryptedPinKey")
 
         val managementData = communication.makeGetParametersCall()
-        val terminalDataString = managementData.getString(62)
+        val terminalDataString = managementData.getField<String>(62).value
         logger.log("Terminal Data String => $terminalDataString")
 
         val terminalData = TerminalParameter.parse(terminalDataString);
@@ -70,10 +64,7 @@ class NibbsCommTest {
 
         val request = txnRequest.writeData()
         val response = socket.sendReceive(request)
-        val responseMsg = ISOMsg()
-
-        responseMsg.packager = ISO87APackager()
-        responseMsg.unpack(response)
+        val responseMsg = NibssIsoMessage(communication.messageFactory.parseMessage(response, 0))
         responseMsg.dump(System.out, "")
     }
 
@@ -104,7 +95,7 @@ class NibbsCommTest {
         logger.log("Decrypted Pin => $decryptedPinKey")
 
         val managementData = communication.makeGetParametersCall()
-        val terminalDataString = managementData.getString(62)
+        val terminalDataString = managementData.getField<String>(62).value
         logger.log("Terminal Data String => $terminalDataString")
 
         val terminalData = TerminalParameter.parse(terminalDataString);
@@ -120,10 +111,7 @@ class NibbsCommTest {
 
         val request = txnRequest.writeData()
         val response = socket.sendReceive(request)
-        val responseMsg = ISOMsg()
-
-        responseMsg.packager = ISO87APackager()
-        responseMsg.unpack(response)
+        val responseMsg = NibssIsoMessage(communication.messageFactory.parseMessage(response, 0))
         responseMsg.dump(System.out, "")
     }
 

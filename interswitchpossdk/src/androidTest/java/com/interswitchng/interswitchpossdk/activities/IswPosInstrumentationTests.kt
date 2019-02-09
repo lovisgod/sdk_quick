@@ -21,10 +21,6 @@ class IswPosInstrumentationTests {
     @Before
     fun setup() {
         InstrumentationRegistry.getInstrumentation().addMonitor(monitor)
-
-        val app = InstrumentationRegistry.getTargetContext().applicationContext as Application
-        val config = POSConfiguration.default()
-        IswPos.configureTerminal(app, config)
     }
 
 

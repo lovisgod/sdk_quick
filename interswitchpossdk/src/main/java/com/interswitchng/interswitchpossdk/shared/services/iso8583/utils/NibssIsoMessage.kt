@@ -1,4 +1,4 @@
-package com.igweze.ebi.paxemvcontact.iso8583
+package com.interswitchng.interswitchpossdk.shared.services.iso8583.utils
 
 import com.solab.iso8583.IsoMessage
 import java.io.PrintStream

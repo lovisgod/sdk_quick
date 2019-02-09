@@ -1,10 +1,8 @@
-package com.igweze.ebi.paxemvcontact.iso8583;
+package com.interswitchng.interswitchpossdk.shared.services.iso8583.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -12,6 +10,9 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils.bytesToHex;
+import static com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils.hexToBytes;
 
 /**
  *
@@ -110,57 +111,5 @@ public class TripleDES {
         byte[] decrypted = cipher.doFinal(hexToBytes(encrypted));
         return bytesToHex(decrypted);
     }
-
-    public static byte[] hexToBytes(String hex) {
-        if ((hex.length() & 0x01) == 0x01)
-            throw new IllegalArgumentException();
-
-        byte[] bytes = new byte[hex.length() / 2];
-        for (int idx = 0; idx < bytes.length; ++idx) {
-            int hi = Character.digit((int) hex.charAt(idx * 2), 16);
-            int lo = Character.digit((int) hex.charAt(idx * 2 + 1), 16);
-            if ((hi < 0) || (lo < 0))
-                throw new IllegalArgumentException();
-            bytes[idx] = (byte) ((hi << 4) | lo);
-        }
-
-        return bytes;
-    }
-
-    public static String bytesToHex(byte[] bytes) {
-
-        char[] hex = new char[bytes.length * 2];
-        for (int idx = 0; idx < bytes.length; ++idx) {
-            int hi = (bytes[idx] & 0xF0) >>> 4;
-            int lo = (bytes[idx] & 0x0F);
-            hex[idx * 2] = (char) (hi < 10 ? '0' + hi : 'A' - 10 + hi);
-            hex[idx * 2 + 1] = (char) (lo < 10 ? '0' + lo : 'A' - 10 + lo);
-        }
-        return new String(hex);
-    }
-
-    public static String getMac(String seed, byte[] macDataBytes) throws Exception{
-
-        byte [] keyBytes = hexToBytes(seed);
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        digest.update(keyBytes, 0, keyBytes.length);
-        digest.update(macDataBytes, 0, macDataBytes.length);
-        byte[] hashedBytes = digest.digest();
-        String hashText = bytesToHex(hashedBytes);
-        hashText = hashText.replace(" ", "");
-
-        if (hashText.length() < 64) {
-            int numberOfZeroes = 64 - hashText.length();
-            String zeroes = "";
-            String temp = hashText.toString();
-            for (int i = 0; i < numberOfZeroes; i++)
-                zeroes = zeroes + "0";
-            temp = zeroes + temp;
-            return temp;
-        }
-
-        return hashText;
-    }
-
 
 }

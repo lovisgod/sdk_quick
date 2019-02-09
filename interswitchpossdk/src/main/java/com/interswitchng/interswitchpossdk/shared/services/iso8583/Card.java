@@ -1,4 +1,4 @@
-package com.igweze.ebi.paxemvcontact.iso8583;
+package com.interswitchng.interswitchpossdk.shared.services.iso8583;
 
 public final class Card {
 
