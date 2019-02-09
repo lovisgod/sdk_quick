@@ -5,7 +5,6 @@ import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import kotlinx.android.synthetic.main.activity_pay_code.*
 import java.text.NumberFormat
 

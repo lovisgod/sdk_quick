@@ -14,7 +14,7 @@ import com.interswitchng.interswitchpossdk.base.BaseTestActivity
 import com.interswitchng.interswitchpossdk.mockservices.MockPayableService
 import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.utils.Utilities
 import com.interswitchng.interswitchpossdk.utils.WaitUtils
 import org.junit.Assert

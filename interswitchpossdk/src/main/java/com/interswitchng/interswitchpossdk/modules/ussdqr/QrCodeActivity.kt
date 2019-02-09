@@ -13,12 +13,11 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
-import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
-import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.QR_FORMAT_RAW
-import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest.Companion.TRANSACTION_QR
-import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
-import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest.Companion.QR_FORMAT_RAW
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_QR
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_qr_code.*

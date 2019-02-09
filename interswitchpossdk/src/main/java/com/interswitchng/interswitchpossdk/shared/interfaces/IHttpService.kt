@@ -3,10 +3,10 @@ package com.interswitchng.interswitchpossdk.shared.interfaces
 import com.interswitchng.interswitchpossdk.shared.Constants.TILL_BANKS_END_POINT
 import com.interswitchng.interswitchpossdk.shared.Constants.TILL_CODE_END_POINT
 import com.interswitchng.interswitchpossdk.shared.Constants.TILL_TRANSACTION_STATUS
-import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
-import com.interswitchng.interswitchpossdk.shared.models.response.Bank
-import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.Simple
 import retrofit2.http.*
 

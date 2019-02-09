@@ -1,9 +1,9 @@
-package com.interswitchng.interswitchpossdk.shared.models.request
+package com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request
 
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 
-internal data class TransactionInformation(
+internal data class TransactionInfo(
         val currencyCode: String,
         val merchantId: String,
         val merchantLocation: String,
@@ -14,7 +14,7 @@ internal data class TransactionInformation(
 
     companion object {
 
-        internal fun from(config: POSConfiguration, paymentInfo: PaymentInfo) = TransactionInformation (
+        internal fun from(config: POSConfiguration, paymentInfo: PaymentInfo) = TransactionInfo (
                 currencyCode = "",
                 merchantId = config.merchantId,
                 merchantLocation = config.merchantLocation,

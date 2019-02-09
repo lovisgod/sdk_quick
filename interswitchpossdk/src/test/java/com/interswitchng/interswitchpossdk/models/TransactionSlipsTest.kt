@@ -2,14 +2,16 @@ package com.interswitchng.interswitchpossdk.models
 
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
-import com.interswitchng.interswitchpossdk.shared.models.transaction.*
-import com.interswitchng.interswitchpossdk.shared.models.printslips.*
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionInfo
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
+import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.CardSlip
+import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.TransactionSlip
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.logging.SimpleFormatter
 
 class TransactionSlipsTest {
 

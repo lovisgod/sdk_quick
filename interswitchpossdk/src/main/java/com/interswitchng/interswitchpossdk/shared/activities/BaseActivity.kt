@@ -15,11 +15,10 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
-import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
-import com.tapadoo.alerter.OnHideAlertListener
 import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
 import java.util.concurrent.ExecutorService

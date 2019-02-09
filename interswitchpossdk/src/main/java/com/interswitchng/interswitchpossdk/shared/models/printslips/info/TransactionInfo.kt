@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.models.transaction
+package com.interswitchng.interswitchpossdk.shared.models.printslips.info
 
 internal data class TransactionInfo(
         val stan: String,

@@ -3,12 +3,11 @@ package com.interswitchng.interswitchpossdk.shared.services
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
-import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
-import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
-import com.interswitchng.interswitchpossdk.shared.models.response.Bank
-import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
-import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

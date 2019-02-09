@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.models.request
+package com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request
 
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
@@ -14,7 +14,7 @@ internal data class CodeRequest(
         val terminalId: String,
         val transactionType: String,
         val qrFormat: String?,
-        val additionalInformation: TransactionInformation
+        val additionalInformation: TransactionInfo
 ) {
 
     companion object {
@@ -36,7 +36,7 @@ internal data class CodeRequest(
                 terminalId = config.terminalId,
                 transactionType = transactionType,
                 qrFormat = qrFormat,
-                additionalInformation = TransactionInformation.from(config, paymentInfo)
+                additionalInformation = TransactionInfo.from(config, paymentInfo)
         )
     }
 }

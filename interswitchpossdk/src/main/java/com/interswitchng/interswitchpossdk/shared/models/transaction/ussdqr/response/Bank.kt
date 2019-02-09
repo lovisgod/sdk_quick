@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.models.response
+package com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response
 
 data class Bank(
         val id: Int,
