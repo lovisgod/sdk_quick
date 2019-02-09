@@ -1,17 +1,16 @@
 package com.interswitchng.interswitchpossdk.modules.card
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
+import com.interswitchng.interswitchpossdk.modules.card.model.CardTransactionState
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
 import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
 import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.activity_card.*
 import org.koin.android.ext.android.inject
@@ -23,6 +22,7 @@ class CardActivity : BaseActivity() {
     private val cardCallback = CardCallback()
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
+    private var transactionState = CardTransactionState.ShowInsertCard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,7 @@ class CardActivity : BaseActivity() {
         // attach callback to detect card
         pos.attachCallback(cardCallback)
 
-        showInsertCard()
+        showNextScreen()
     }
 
     override fun onDestroy() {
@@ -49,32 +49,28 @@ class CardActivity : BaseActivity() {
         pos.detachCallback(cardCallback)
     }
 
-
-    private fun showInsertCard() {
-        insertCardContainer.visibility = View.VISIBLE
-
-        btnSubmitPin.isEnabled = false
-        btnSubmitPin.setOnClickListener(null)
-        insertPinContainer.visibility = View.GONE
-    }
-
-    private fun showInputPin() {
-        insertCardContainer.visibility = View.GONE
-
-        btnSubmitPin.isEnabled = true
-        insertPinContainer.visibility = View.VISIBLE
-        btnSubmitPin.setOnClickListener {
-
-            val pin = cardPin.text.toString().trim()
-            if (pin.isEmpty()) {
-                toast("Enter your pin")
-                return@setOnClickListener
+    private fun showNextScreen() {
+        transactionState = when(transactionState) {
+            CardTransactionState.ShowInsertCard -> {
+                insertCardContainer.bringToFront()
+                CardTransactionState.ChooseAccountType
             }
-
-            btnSubmitPin.isEnabled = false
-            pos.checkPin(pin)
+            CardTransactionState.ChooseAccountType -> {
+                accountOptionsContainer.bringToFront()
+                CardTransactionState.EnterPin
+            }
+            CardTransactionState.EnterPin -> {
+                insertPinContainer.bringToFront()
+                // TODO rectify this
+                CardTransactionState.EnterPin
+            }
         }
     }
+
+    private fun showAccountOptions() {
+        accountOptionsContainer.bringToFront()
+    }
+
 
     private fun showLoader(message: String) {
         dialog.setMessage(message)
@@ -94,10 +90,9 @@ class CardActivity : BaseActivity() {
 
         override fun onCardRead(cardDetail: CardDetail) {
             runOnUiThread {
-                showInputPin()
+                showNextScreen()
                 val lastFour = cardDetail.pan.substring(cardDetail.pan.length - 4)
                 cardNumber.text = "xxxx-xxxx-xxxx-$lastFour"
-                btnSubmitPin.isEnabled = true
             }
         }
 

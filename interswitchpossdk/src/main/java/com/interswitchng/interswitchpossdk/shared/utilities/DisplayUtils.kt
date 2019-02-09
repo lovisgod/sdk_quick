@@ -47,7 +47,7 @@ object DisplayUtils {
     fun getIsoString(date: Date): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-        return dateFormat.format(Date())
+        return dateFormat.format(date)
     }
 
     fun setupPaymentOptions(root: View, info: PaymentInfo) {

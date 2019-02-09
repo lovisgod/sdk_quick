@@ -50,7 +50,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.google.zxing:core:$zxing_version"
     implementation 'com.tapadoo.android:alerter:3.0.0'
-    implementation project(':posinterface')
 
 
     testImplementation 'junit:junit:4.12'
@@ -60,6 +59,7 @@ dependencies {
     testImplementation "androidx.test:core:$androidx_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     testImplementation "net.jodah:concurrentunit:$concurrent_version"
+    testImplementation project(':paxemvcontact')
 
     androidTestImplementation "com.android.support.test:runner:$test_runner_version"
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

@@ -28,7 +28,7 @@ class TransactionReceiptActivity : BaseActivity() {
         printSlip.add(amount)
 
         printBtn.setOnClickListener {
-            posDevice.printReceipt(printSlip)
+//            posDevice.printReceipt(printSlip)
             printBtn.isClickable = false
             printBtn.isEnabled = false
 

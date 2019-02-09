@@ -20,20 +20,38 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="amount: 50,000" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="next"
+        />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
         tools:context=".modules.card.CardActivity">
 
+        <LinearLayout
+            android:id="@+id/accountOptionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/iswColorMainBackground">
+
+            <include layout="@layout/content_account_options" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/insertCardContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:background="@color/iswColorMainBackground">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -44,7 +62,6 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center_horizontal"
                 android:src="@drawable/insert_credit_card" />
 
         </LinearLayout>
@@ -52,11 +69,9 @@
         <LinearLayout
             android:id="@+id/insertPinContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:background="@color/iswColorMainBackground">
 
             <TextView
                 android:id="@+id/cardNumber"
@@ -81,13 +96,6 @@
                 android:textSize="20sp"
                 tools:text="44445" />
 
-            <Button
-                android:id="@+id/btnSubmitPin"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:text="Submit" />
 
         </LinearLayout>
 

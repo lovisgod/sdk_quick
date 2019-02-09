@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.modules.card.model
 
 enum class CardTransactionState {
-    ShowInputCard,
+    ShowInsertCard,
     ChooseAccountType,
     EnterPin
 }

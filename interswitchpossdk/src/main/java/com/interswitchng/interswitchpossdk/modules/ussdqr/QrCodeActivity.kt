@@ -92,13 +92,13 @@ class QrCodeActivity : BaseActivity() {
             }
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-            posDevice.printReceipt(printSlip)
+//            posDevice.printReceipt(printSlip)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
         }

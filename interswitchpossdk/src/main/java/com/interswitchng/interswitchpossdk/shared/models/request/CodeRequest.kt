@@ -1,6 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.models.request
 
-import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import java.util.*

@@ -6,8 +6,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.MainActivity
-import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
