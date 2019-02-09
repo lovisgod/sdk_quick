@@ -152,21 +152,21 @@ class PinInputActivity : AppCompatActivity(), PinCallback {
                     hex?.apply { stringBuilder.append(this) }
                 }
 
-                val masterKeyMessage = communication.makeGetMasterKeyCall();
+                val masterKeyMessage = communication.makeGetMasterKeyCall().getField<String>(SRCI)
                 val masterKeyDescrypted = TripleDES.soften(NibbsCommunication.CLEAR_MASTER_KEY,
-                        masterKeyMessage.getString(SRCI));
+                        masterKeyMessage.value);
                 communication.put(NibbsCommunication.KEY_MASTER_KEY, masterKeyDescrypted);
 
                 logger.log("Decrypted Master => $masterKeyDescrypted");
-                val sessionKeyIsoMsg = communication.makeGetSessionKeyCall();
+                val sessionKeyIsoMsg = communication.makeGetSessionKeyCall().getField<String>(SRCI)
                 val decryptedSessionKey = TripleDES.soften(communication.get(NibbsCommunication.KEY_MASTER_KEY),
-                        sessionKeyIsoMsg.getString(SRCI));
+                        sessionKeyIsoMsg.value);
                 communication.put(NibbsCommunication.KEY_SESSION_KEY, decryptedSessionKey);
                 logger.log("Decrypted Session => $decryptedSessionKey");
 
-                val pinKeyMsg = communication.makeGetPinKeyCall();
+                val pinKeyMsg = communication.makeGetPinKeyCall().getField<String>(SRCI)
                 val decryptedPinKey = TripleDES.soften(communication.get(NibbsCommunication.KEY_MASTER_KEY),
-                        pinKeyMsg.getString(SRCI));
+                        pinKeyMsg.value)
                 communication.put(NibbsCommunication.KEY_PIN_KEY, decryptedPinKey);
                 logger.log("Decrypted Pin => $decryptedPinKey");
 

@@ -12,21 +12,21 @@ class NibssIsoMessage(val message: IsoMessage)  {
         return this
     }
 
-    fun dump(p: PrintStream) {
+    fun dump(p: PrintStream, indent: String = "") {
 
         val type = message.type.toByte()
-        p.println("<isomsg mti=\"$type\">")
+        p.println("$indent<isomsg mti=\"$type\">")
 
         for (i in 0 until 129) {
             val field = message.getField<Any>(i)
             if (field != null) {
                 field.toString()
-                val value = "\t\t <field id=\"$i\"  value=\"$field\" />"
+                val value = "$indent\t\t <field id=\"$i\"  value=\"$field\" />"
                 p.println(value)
             }
         }
 
-        p.println( "</isomsg>")
+        p.println( "$indent</isomsg>")
 
     }
 }

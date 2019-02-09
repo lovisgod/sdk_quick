@@ -47,7 +47,7 @@ public class NibbsCommunication {
             KEY_SESSION_KEY = "session_key_data",
             KEY_PIN_KEY = "pin_key_data";
 
-    private static SimpleDateFormat F7 = new SimpleDateFormat("MMddhhmmss", Locale.getDefault());
+//    private static SimpleDateFormat F7 = new SimpleDateFormat("MMddhhmmss", Locale.getDefault());
     private static SimpleDateFormat LOCAL_TIME = new SimpleDateFormat("hhmmss", Locale.getDefault());
     private static SimpleDateFormat F13 = new SimpleDateFormat("MMdd", Locale.getDefault());
     private ISO87APackager packager = new ISO87APackager();
@@ -62,112 +62,7 @@ public class NibbsCommunication {
         mContext = context;
         socketFactory = factory;
         preferences = context.getSharedPreferences(NIBSS_PREFS, Context.MODE_PRIVATE);
-    }
-
-    public ISOMsg makeGetMasterKeyCall() {
-
-        try {
-
-            packager.setFieldPackager(53, new IFA_NUMERIC(32, "Security Related Data Control"));
-            ISOMsg isoMsg = new ISOMsg();
-            isoMsg.setMTI("0800");
-            isoMsg.set(3, "9A0000");
-            isoMsg.set(7, F7.format(new Date()));
-            isoMsg.set(11, getNextStan());
-            isoMsg.set(12, LOCAL_TIME.format(new Date()));
-            isoMsg.set(13, F13.format(new Date()));
-            isoMsg.set(41, terminalID);
-            isoMsg.setPackager(packager);
-            isoMsg.dump(System.out, "request ---");
-
-            byte[] message = isoMsg.pack();
-            NibssIsoSocket socket = socketFactory.create(SERVER_IP, SERVER_PORT, TIMEOUT);
-            socket.connect();
-
-            byte[] response = socket.sendReceive(message);
-            init();
-            IsoMessage messageResponse = messageFactory.parseMessage(response, 0);
-            ISOMsg msg = new ISOMsg();
-            msg.setPackager(packager);
-            msg.unpack(response);
-            msg.dump(System.out, "");
-
-            return msg;
-        } catch (ISOException e) {
-            logEx(e);
-        } catch (UnsupportedEncodingException | ParseException e) {
-            logEx(e);
-        }
-
-        return null;
-    }
-
-    public ISOMsg makeGetSessionKeyCall() {
-
-        try {
-
-            packager.setFieldPackager(53, new IFA_NUMERIC(32, "Security Related Data Control"));
-
-            ISOMsg sessionKeyIsoMsg = new ISOMsg();
-            sessionKeyIsoMsg.setMTI("0800");
-            sessionKeyIsoMsg.set(3, "9B0000");
-            sessionKeyIsoMsg.set(7, F7.format(new Date()));
-            sessionKeyIsoMsg.set(11, getNextStan());
-            sessionKeyIsoMsg.set(12, LOCAL_TIME.format(new Date()));
-            sessionKeyIsoMsg.set(13, F13.format(new Date()));
-            sessionKeyIsoMsg.set(41, terminalID);
-            sessionKeyIsoMsg.setPackager(packager);
-
-            byte[] sessionKeyPayload = sessionKeyIsoMsg.pack();
-
-            NibssIsoSocket socket = socketFactory.create(SERVER_IP, SERVER_PORT, TIMEOUT);
-            socket.connect();
-
-            byte[] response = socket.sendReceive(sessionKeyPayload);
-
-            ISOMsg sessionResponse = new ISOMsg();
-            sessionResponse.setPackager(packager);
-            sessionResponse.unpack(response);
-            sessionResponse.dump(System.out, "");
-
-            return sessionResponse;
-        } catch (Exception e) {
-            logEx(e);
-        }
-        return null;
-    }
-
-    public ISOMsg makeGetPinKeyCall() {
-
-        try {
-
-            packager.setFieldPackager(53, new IFA_NUMERIC(32, "Security Related Data Control"));
-            ISOMsg pinKeyMsg = new ISOMsg();
-            pinKeyMsg.setMTI("0800");
-            pinKeyMsg.set(3, "9G0000");
-            pinKeyMsg.set(7, F7.format(new Date()));
-            pinKeyMsg.set(11, getNextStan());
-            pinKeyMsg.set(12, LOCAL_TIME.format(new Date()));
-            pinKeyMsg.set(13, F13.format(new Date()));
-            pinKeyMsg.set(41, terminalID);
-            pinKeyMsg.setPackager(packager);
-
-            byte[] pinKeyData = pinKeyMsg.pack();
-            NibssIsoSocket socket = socketFactory.create(SERVER_IP, SERVER_PORT, TIMEOUT);
-            socket.connect();
-
-            byte[] pinKeyDataResponse = socket.sendReceive(pinKeyData);
-            ISOMsg pinKeyResponse = new ISOMsg();
-            pinKeyResponse.setPackager(packager);
-            pinKeyResponse.unpack(pinKeyDataResponse);
-
-            pinKeyResponse.dump(System.out, "");
-            return pinKeyResponse;
-        } catch (Exception e) {
-
-            logEx(e);
-        }
-        return null;
+        init();
     }
 
     public void init() {
@@ -188,12 +83,59 @@ public class NibbsCommunication {
         }
     }
 
+    private IsoMessage makeKeyCall(String code) {
+        try {
+
+            Date now = new Date();
+            String stan = getNextStan();
+
+            NibssIsoMessage message = new NibssIsoMessage(messageFactory.newMessage(0x800));
+            message
+                    .setValue(3, code)
+                    .setValue(7, timeAndDateFormatter.format(now))
+                    .setValue(11, stan)
+                    .setValue(12, timeFormatter.format(now))
+                    .setValue(13, dateFormatter.format(now))
+                    .setValue(41, terminalID);
+
+            // remove unset fields
+            message.getMessage().removeFields(62, 64);
+
+            message.dump(System.out, "request -- ");
+
+            NibssIsoSocket socket = socketFactory.create(SERVER_IP, SERVER_PORT, TIMEOUT);
+            socket.connect();
+
+            byte[] response = socket.sendReceive(message.getMessage().writeData());
+            NibssIsoMessage msg = new NibssIsoMessage(messageFactory.parseMessage(response, 0));
+
+            msg.dump(System.out, "response -- ");
+
+            return msg.getMessage();
+        } catch (UnsupportedEncodingException | ParseException e) {
+            logEx(e);
+        }
+
+        return null;
+
+    }
+
+    public IsoMessage makeGetMasterKeyCall() {
+        return makeKeyCall("9A0000");
+    }
+
+    public IsoMessage makeGetSessionKeyCall() {
+            return makeKeyCall("9B0000");
+    }
+
+    public IsoMessage makeGetPinKeyCall() {
+        return makeKeyCall("9G0000");
+    }
+
     public ISOMsg makeGetParametersCall() {
 
         try {
 
-
-            String field0 = "0800";
             String field3 = "9C0000";
             String field62 = "01009280824266";
 
@@ -203,11 +145,7 @@ public class NibbsCommunication {
             Date now = new Date();
             String stan = getNextStan();
 
-
-            init();
-
-            int type = Integer.parseInt(field0, 16);
-            NibssIsoMessage message = new NibssIsoMessage(messageFactory.newMessage(type));
+            NibssIsoMessage message = new NibssIsoMessage(messageFactory.newMessage(0x800));
             message
                     .setValue(3, field3)
                     .setValue(7, timeAndDateFormatter.format(now))
@@ -271,18 +209,17 @@ public class NibbsCommunication {
 
 
         TerminalData terminalData = TerminalData.get(preferences);
-        int type = Integer.parseInt("0200", 16);
-        NibssIsoMessage message = new NibssIsoMessage(messageFactory.newMessage(type));
+        NibssIsoMessage message = new NibssIsoMessage(messageFactory.newMessage(0x200));
         Date now = new Date();
 
         message
                 .setValue(2, transaction.card.pan)
                 .setValue(3, "002000")
                 .setValue(4, "000000002100") //String.format(Locale.getDefault(), "%012d", transaction.amount))
-                .setValue(7, F7.format(now))
+                .setValue(7, timeAndDateFormatter.format(now))
                 .setValue(11, getNextStan())
-                .setValue(12, LOCAL_TIME.format(now))
-                .setValue(13, F13.format(now))
+                .setValue(12, timeFormatter.format(now))
+                .setValue(13, dateFormatter.format(now))
                 .setValue(14, transaction.card.expiry)
                 .setValue(18, terminalData.merchantCategoryCode)
                 .setValue(22, "051")
@@ -305,6 +242,8 @@ public class NibbsCommunication {
                 .setValue(123, "510101511344101");
 
 
+        // remove unset fields
+        message.getMessage().removeFields(32, 52, 59);
         System.out.println("purchase request before copy => " + message.getMessage().debugString());
 
         byte[] bytes = message.getMessage().writeData();
@@ -320,78 +259,45 @@ public class NibbsCommunication {
         byte[] messageData = message.getMessage().writeData();
         System.out.println("purchase request after copy => " + message.getMessage().debugString());
 
-
-        ISOMsg sample = new ISOMsg();
-        sample.setPackager(new ISO87APackager());
-        sample.unpack(messageData);
-        sample.dump(System.out, "purchase request ---- ");
-
+        message.dump(System.out, "request -- ");
         return message.getMessage();
     }
 
-
-    public ISOMsg paycodeTransaction() {
+    public IsoMessage getPaycodeTransaction() {
 
         try {
+
             TerminalData terminalData = TerminalData.get(preferences);
-            int type = Integer.parseInt("0200", 16);
-            IsoMessage message = messageFactory.newMessage(type);
-            IsoMessage templ = messageFactory.getMessageTemplate(type);
+            NibssIsoMessage message = new NibssIsoMessage(messageFactory.newMessage(0x200));
             Date now = new Date();
 
-            message.setValue(2, "5061011234567890008", templ.getField(2).getType(), templ.getField(2).getLength());
-            message.setValue(3, "010000", templ.getField(3).getType(), templ.getField(3).getLength());
-            message.setValue(4, "000015000000", templ.getField(4).getType(), templ.getField(4).getLength());
+            message
+                    .setValue(2, "5061011234567890008")
+                    .setValue(3, "000000")
+                    .setValue(4, "000000002100") //String.format(Locale.getDefault(), "%012d", transaction.amount))
+                    .setValue(7, timeAndDateFormatter.format(now))
+                    .setValue(11, getNextStan())
+                    .setValue(12, timeFormatter.format(now))
+                    .setValue(13, dateFormatter.format(now))
+                    .setValue(18, terminalData.merchantCategoryCode)
+                    .setValue(22, "001")
+                    .setValue(23, "001")
+                    .setValue(25, "00")
+                    .setValue(26, "06")
+                    .setValue(28, "C00000000")
+                    .setValue(37, "000000000008")
+                    .setValue(40, "601")
+                    .setValue(41, terminalID)
+                    .setValue(42, terminalData.merchantId)
+                    .setValue(43, terminalData.merchantLocation)
+                    .setValue(49, terminalData.currencyCode)
+                    .setValue(59, "09")
+                    .setValue(123, "510101511344101");
 
-            message.setValue(7, F7.format(now), templ.getField(7).getType(), templ.getField(7).getLength());
+            // remove unset fields
+            message.getMessage().removeFields(14, 35, 32, 52, 55);
 
-            message.setValue(11, getNextStan(), templ.getField(11).getType(), templ.getField(11).getLength());
-
-            message.setValue(12, LOCAL_TIME.format(now), templ.getField(12).getType(),
-                    templ.getField(12).getLength());
-
-            message.setValue(13, F13.format(now), templ.getField(13).getType(), templ.getField(13).getLength());
-
-            message.setValue(18, terminalData.merchantCategoryCode, templ.getField(18).getType(),
-                    templ.getField(18).getLength());
-
-            message.setValue(22, "051", templ.getField(22).getType(), templ.getField(22).getLength());
-
-            message.setValue(23, "001", templ.getField(23).getType(), templ.getField(23).getLength());
-
-            message.setValue(25, "00", templ.getField(25).getType(),
-                    templ.getField(25).getLength());
-
-            message.setValue(26, "06", templ.getField(26).getType(),
-                    templ.getField(26).getLength());
-
-            message.setValue(28, "C00005000", templ.getField(28).getType(),
-                    templ.getField(28).getLength());
-
-            message.setValue(37, "000000000008", templ.getField(37).getType(), templ.getField(37).getLength());
-
-            message.setValue(40, "601", templ.getField(40).getType(),
-                    templ.getField(40).getLength());
-
-            message.setValue(41, "20390007", templ.getField(41).getType(),
-                    templ.getField(41).getLength());
-
-            message.setValue(42, terminalData.merchantId, IsoType.ALPHA, 15);
-
-            message.setValue(43, terminalData.merchantLocation, templ.getField(43).getType(),
-                    templ.getField(43).getLength());
-
-            message.setValue(49, "566", templ.getField(49).getType(),
-                    templ.getField(49).getLength());
-
-            message.setValue(59, "90", templ.getField(59).getType(),
-                    templ.getField(59).getLength());
-
-            message.setValue(123, "510101511344101", templ.getField(123).getType(), templ.getField(123).getLength());
-
-            message.setValue(128, new String(new byte[]{0x0}), templ.getField(128).getType(), templ.getField(128).getLength());
-
-            byte[] bytes = message.writeData();
+            byte[] bytes = message.getMessage().writeData();
             int length = bytes.length;
             byte[] temp = new byte[length - 64];
             if (length >= 64) {
@@ -399,25 +305,12 @@ public class NibbsCommunication {
             }
 
             String hashValue = TripleDES.getMac(get(KEY_SESSION_KEY), temp); //SHA256
-            message.setValue(128, hashValue, templ.getField(128).getType(), templ.getField(128).getLength());
+            message.setValue(128, hashValue);
 
-            byte[] messageData = message.writeData();
-            NibssIsoSocket socket = new NibssIsoSocket(SERVER_IP, SERVER_PORT, TIMEOUT * 10);
-            socket.connect();
+            message.dump(System.out, "request -- ");
 
-            System.out.print("message ---- " + message.debugString());
-            /// sample log
-            ISOMsg sample = new ISOMsg();
-            sample.setPackager(new ISO87APackager());
-            sample.unpack(messageData);
-            sample.dump(System.out, "sample ---- ");
-            /// end sample log
+            return message.getMessage();
 
-            byte[] response = socket.sendReceive(sample.pack());
-            ISOMsg responseMsg = new ISOMsg();
-            responseMsg.setPackager(packager);
-            responseMsg.unpack(response);
-            return responseMsg;
         } catch (Exception e) {
 
             logEx(e);
