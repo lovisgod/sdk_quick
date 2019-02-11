@@ -2,7 +2,8 @@ package com.interswitchng.interswitchpossdk.shared.interfaces
 
 import com.interswitchng.interswitchpossdk.shared.Constants.TILL_BANKS_END_POINT
 import com.interswitchng.interswitchpossdk.shared.Constants.TILL_CODE_END_POINT
-import com.interswitchng.interswitchpossdk.shared.Constants.TILL_TRANSACTION_STATUS
+import com.interswitchng.interswitchpossdk.shared.Constants.TILL_TRANSACTION_STATUS_QR
+import com.interswitchng.interswitchpossdk.shared.Constants.TILL_TRANSACTION_STATUS_USSD
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
@@ -18,8 +19,13 @@ internal interface IHttpService {
     @POST(TILL_CODE_END_POINT)
     fun getUssdCode(@Body request: CodeRequest): Simple<CodeResponse>
 
-    @GET(TILL_TRANSACTION_STATUS)
-    fun getTransactionStatus(@Query("merchantCode") merchantCode: String,
+    @GET(TILL_TRANSACTION_STATUS_QR)
+    fun getQrTransactionStatus(@Query("merchantCode") merchantCode: String,
+                             @Query("transactionReference") transactionReference: String): Simple<Transaction?>
+
+
+    @GET(TILL_TRANSACTION_STATUS_USSD)
+    fun getUssdTransactionStatus(@Query("merchantCode") merchantCode: String,
                              @Query("transactionReference") transactionReference: String): Simple<Transaction?>
 
     @GET(TILL_BANKS_END_POINT)

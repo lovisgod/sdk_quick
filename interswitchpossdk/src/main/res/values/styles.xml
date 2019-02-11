@@ -51,5 +51,9 @@
         <item name="android:background">@drawable/bg_card_shadow</item>
     </style>
 
+    <style name="ISW.Progress" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@android:color/black</item>
+    </style>
+
     <public />
 </resources>

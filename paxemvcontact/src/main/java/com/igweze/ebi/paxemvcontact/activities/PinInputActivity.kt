@@ -3,24 +3,20 @@ package com.igweze.ebi.paxemvcontact.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.igweze.ebi.paxemvcontact.R
-import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bcd2Str
-import com.igweze.ebi.paxemvcontact.utilities.Logger
-import com.pax.dal.entity.EKeyCode
-import com.pax.dal.entity.EPedType
-import com.pax.dal.entity.EPinBlockMode
-import com.pax.dal.exceptions.PedDevException
-import com.pax.jemv.clcommon.ACType
-import com.pax.jemv.clcommon.RetCode
-import kotlinx.android.synthetic.main.activity_pin_input.*
-import android.R.attr.tag
 import com.igweze.ebi.paxemvcontact.emv.*
-import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.str2Bcd
+import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bcd2Str
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.Card
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.NibbsCommunication
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.TerminalParameter
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.Transaction
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.TripleDES
+import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.pax.dal.entity.EKeyCode
+import com.pax.dal.entity.EPedType
+import com.pax.dal.exceptions.PedDevException
+import com.pax.jemv.clcommon.RetCode
+import kotlinx.android.synthetic.main.activity_pin_input.*
 import java.util.*
 
 

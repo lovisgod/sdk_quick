@@ -41,6 +41,12 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
+        <activity
+            android:name=".modules.settings.SettingsActivity"
+            android:label="Settings"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
     </application>
 
 </manifest>

@@ -33,4 +33,15 @@
     <string name="hint_account_type">Select account type</string>
     <string name="title_savings">Savings</string>
     <string name="title_current">Current</string>
+    <string name="action_download">Download</string>
+    <string name="title_downloading_keys">Downloading Keys…</string>
+    <string name="title_date">downloaded: %1s</string>
+    <string name="title_download_terminal_configuration">Download Terminal Configuration</string>
+    <string name="title_download_keys">Download Keys</string>
+    <string name="title_terminal_config_downloaded">Terminal Config Donwloaded</string>
+    <string name="title_keys_downloaded">Keys Downloaded</string>
+    <string name="title_terminal_id">Terminal ID</string>
+    <string name="title_error_downloading_terminal_config">Error Downloading Terminal Configuration</string>
+    <string name="title_error_downloading_keys">Error downloading keys</string>
+    <string name="title_downloading_terminal_config">Downloading Terminal Config</string>
 </resources>

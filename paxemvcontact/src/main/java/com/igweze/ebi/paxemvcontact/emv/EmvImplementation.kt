@@ -1,11 +1,11 @@
 package com.igweze.ebi.paxemvcontact.emv
 
-import android.app.Application
 import android.os.ConditionVariable
 import android.util.SparseArray
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bcd2Str
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bytes2String
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.str2Bcd
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.EMV_APPLIST
@@ -18,7 +18,7 @@ import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
 import java.util.*
 
-class EmvImplementation(private val pinCallback: PinCallback)  {
+class EmvImplementation(private val pinCallback: PinCallback, private val terminalInfo: TerminalInfo)  {
 
     private val emvParameters = EmvParam()
     private val tlvs = SparseArray<ByteArray>()

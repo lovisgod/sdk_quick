@@ -33,6 +33,9 @@ internal class PayableService(private val httpService: IHttpService): Payable {
             var secs = 1L
             var elapsedTime = secs
             while (!hasResponse) {
+                val call = when(status.) {
+
+                }
                 httpService.getTransactionStatus(status.merchantCode, status.reference).test { transaction, throwable ->
                     when {
                         throwable != null -> {

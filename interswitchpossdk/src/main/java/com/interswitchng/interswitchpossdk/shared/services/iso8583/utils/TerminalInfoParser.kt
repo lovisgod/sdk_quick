@@ -22,6 +22,7 @@ internal object TerminalInfoParser {
 
                 val tag = tmp.substring(0, 2)
                 tmp = tmp.substring(2)
+
                 val len = Integer.parseInt(tmp.substring(0, 3))
                 tmp = tmp.substring(3)
                 val value = tmp.substring(0, len)

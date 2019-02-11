@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.TerminalData
 
-internal data class TerminalInfo(
+data class TerminalInfo(
     val terminalId: String,
     val merchantId: String,
     val merchantLocation: String,
@@ -37,9 +37,12 @@ internal data class TerminalInfo(
 
         private const val PERSIST_KEY = "terminal_data"
 
-        fun get(store: IKeyValueStore): TerminalData {
+        internal fun get(store: IKeyValueStore): TerminalData? {
             val jsonString = store.getString(PERSIST_KEY, "")
-            return Gson().fromJson(jsonString, TerminalData::class.java)
+            return when(jsonString) {
+                "" -> null
+                else -> Gson().fromJson(jsonString, TerminalData::class.java)
+            }
         }
     }
 }
