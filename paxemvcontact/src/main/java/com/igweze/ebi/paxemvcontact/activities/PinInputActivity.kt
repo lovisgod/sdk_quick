@@ -1,35 +1,32 @@
 package com.igweze.ebi.paxemvcontact.activities
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.support.v7.app.AppCompatActivity
 import com.igweze.ebi.paxemvcontact.R
 import com.igweze.ebi.paxemvcontact.emv.*
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bcd2Str
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.Card
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.NibbsCommunication
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.TerminalParameter
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.Transaction
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.TripleDES
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.pax.dal.IPed
 import com.pax.dal.entity.EKeyCode
 import com.pax.dal.entity.EPedType
+import com.pax.dal.entity.EPinBlockMode
+import com.pax.dal.exceptions.EPedDevException
 import com.pax.dal.exceptions.PedDevException
 import com.pax.jemv.clcommon.RetCode
 import kotlinx.android.synthetic.main.activity_pin_input.*
-import java.util.*
 
 
-class PinInputActivity : AppCompatActivity(), PinCallback {
+class PinInputActivity : AppCompatActivity(), PinCallback, IPed.IPedInputPinListener {
 
 
     private val logger by lazy { Logger.with("MainActivity") }
     private val ped by lazy { POSDevice.dal.getPed(EPedType.INTERNAL) }
     private val emvImpl by lazy { EmvImplementation(this) }
+    private var pinResult: Int = RetCode.EMV_OK
 
-    private var pin = ""
-
-    private var pinData: ByteArray? = null
+    private var pinData: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,31 +37,52 @@ class PinInputActivity : AppCompatActivity(), PinCallback {
     }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+        ped.setInputPinListener(null) // remove the pin pad
+    }
+
+
     private fun startTransaction() {
         Thread {
-            val amount = 5000L
+            val amount = 500
             emvImpl.setAmount(amount)
+            val empty = ""
+            val terminalInfo = TerminalInfo("20390007", "20390007",
+                    empty, empty, "0566", "0566", 1200, 1200)
+            emvImpl.setupContactEmvTransaction(terminalInfo)
             val result = emvImpl.startContactEmvTransaction()
 
             if (result == TransactionResult.EMV_OFFLINE_APPROVED) emvImpl.completeContactEmvTransaction()
-            else if (result == TransactionResult.EMV_ARQC) processOnline()
+            else if (result == TransactionResult.EMV_ARQC) logger.log("online should be processed") //processOnline()
         }.start()
     }
 
 
     override fun enterPin(isOnline: Boolean, offlineTriesLeft: Int, panBlock: String) {
-        if (isOnline) getOnlinePin(panBlock)
-        else getOfflinePin()
+        try {
+
+            // set check interval
+            ped.setIntervalTime(1, 1)
+            // set input listener
+            ped.setInputPinListener(this)
+
+            // trigger pin input based flag
+            if (isOnline) getOnlinePin(panBlock)
+            else getOfflinePin()
+
+        } catch (e: PedDevException) {
+            logger.logErr("Error occured verifying pin: isOnline - $isOnline, code - ${e.errCode}, msg - ${e.errMsg}")
+            setPinResult(e.errCode) // set the pin result
+        }
     }
 
     override fun getPinResult(panBlock: String): Int {
-        logger.log("Pindata after getResult: " + pinData?.let { bcd2Str(it) })
-
-
-        return if (pinData == null) RetCode.EMV_NO_PASSWORD else RetCode.EMV_OK
+        logger.log("pin result : $pinResult")
+        return pinResult
     }
 
-    override fun showInputCard() {
+    override fun showInsertCard() {
         runOnUiThread { tvPassword.text = "Insert Card into terminal" }
 
         // try and detect card
@@ -74,130 +92,56 @@ class PinInputActivity : AppCompatActivity(), PinCallback {
         runOnUiThread { tvPassword.text = " " }
     }
 
+    override fun showPinOk() {
+        // todo show pin ok
+    }
 
     private fun getOnlinePin(panBlock: String) {
-
-        try {
-
-            ped.setIntervalTime(1, 1)
-
-            ped.setInputPinListener {
-                // react to key press
-                val temp = when (it) {
-                    EKeyCode.KEY_CLEAR -> ""
-                    EKeyCode.KEY_ENTER, EKeyCode.KEY_CANCEL -> "" + tvPassword.text
-                    else -> "*" + tvPassword.text
-                }
-
-                // get key values
-                extractKeys(it)
-
-                // set password text
-                runOnUiThread { tvPassword.text = temp }
-
-                if (it == EKeyCode.KEY_ENTER) emvImpl.pinEntryReady()
-            }
-
-            // show pin dialog
-            val pinData = ped.verifyPlainPin(0x00, "4", 0x00, 60 * 1000)
-            val pinResult = bcd2Str(pinData)
-            logger.log("Pindata before getResult: " + pinData?.let { bcd2Str(it) })
-        } catch (e: PedDevException) {
-            logger.logErr("Error occured: code - ${e.errCode}, msg - ${e.errMsg}")
+        val pinBlock = ped.getPinBlock(INDEX_TPK, "4,5", panBlock.toByteArray(), EPinBlockMode.ISO9564_0, 60 * 1000)
+        if (pinBlock == null)
+            pinResult = RetCode.EMV_NO_PASSWORD
+        else {
+            pinResult = RetCode.EMV_OK
+            pinData = bcd2Str(pinBlock)
         }
     }
 
     private fun getOfflinePin() {
-
+        // make system sleep so that PED screen will show up
+//        Thread.sleep(500)
+        SystemClock.sleep(300)
     }
 
-    private fun extractKeys(key: EKeyCode) {
-        val keyValue = when (key) {
-            EKeyCode.KEY_0 -> "0"
-            EKeyCode.KEY_1 -> "1"
-            EKeyCode.KEY_2 -> "2"
-            EKeyCode.KEY_3 -> "3"
-            EKeyCode.KEY_4 -> "4"
-            EKeyCode.KEY_5 -> "5"
-            EKeyCode.KEY_6 -> "6"
-            EKeyCode.KEY_7 -> "7"
-            EKeyCode.KEY_8 -> "8"
-            EKeyCode.KEY_9 -> "9"
-            else -> ""
+    override fun onKeyEvent(key: EKeyCode?) {
+        // react to key press
+        val temp = when (key) {
+            EKeyCode.KEY_CLEAR -> ""
+            EKeyCode.KEY_ENTER,
+            EKeyCode.KEY_CANCEL -> {
+                // remove input listener
+                ped.setInputPinListener(null)
+                "" + tvPassword.text
+            }
+            else -> "*" + tvPassword.text
         }
 
-        pin = if (keyValue == "" && key == EKeyCode.KEY_CLEAR) "" else "$pin$keyValue"
+        // set password text
+        runOnUiThread { tvPassword.text = temp }
     }
 
-
-    private fun processOnline() {
-        val communication = NibbsCommunication(this) { ip, port, timeout -> NibssIsoSocket(ip, port, timeout.toInt()) }
-        val SRCI = 53
-        val RESPONSE_CODE = 39
-
-        val build = { tag: Int ->
-            emvImpl.getTlv(tag)?.let {
-                Integer.toHexString(tag) +
-                        String.format(Locale.getDefault(), "0%s", Integer.toHexString(it.size)) +
-                        bcd2Str(it)
-            }
+    private fun setPinResult(errCode: Int) {
+        pinResult = when (errCode) {
+            EPedDevException.PED_ERR_INPUT_CANCEL.errCodeFromBasement -> RetCode.EMV_USER_CANCEL
+            EPedDevException.PED_ERR_INPUT_TIMEOUT.errCodeFromBasement -> RetCode.EMV_TIME_OUT
+            EPedDevException.PED_ERR_PIN_BYPASS_BYFUNKEY.errCodeFromBasement -> RetCode.EMV_NO_PASSWORD
+            EPedDevException.PED_ERR_NO_PIN_INPUT.errCodeFromBasement -> RetCode.EMV_NO_PASSWORD
+            else -> RetCode.EMV_NO_PINPAD
         }
-
-        Thread {
-
-            try {
-
-                val stringBuilder = StringBuilder()
-                for (tag in REQUEST_TAGS) {
-                    val hex = build(tag.tag)
-                    hex?.apply { stringBuilder.append(this) }
-                }
-
-                val masterKeyMessage = communication.makeGetMasterKeyCall().getField<String>(SRCI)
-                val masterKeyDescrypted = TripleDES.soften(NibbsCommunication.CLEAR_MASTER_KEY,
-                        masterKeyMessage.value);
-                communication.put(NibbsCommunication.KEY_MASTER_KEY, masterKeyDescrypted);
-
-                logger.log("Decrypted Master => $masterKeyDescrypted");
-                val sessionKeyIsoMsg = communication.makeGetSessionKeyCall().getField<String>(SRCI)
-                val decryptedSessionKey = TripleDES.soften(communication.get(NibbsCommunication.KEY_MASTER_KEY),
-                        sessionKeyIsoMsg.value);
-                communication.put(NibbsCommunication.KEY_SESSION_KEY, decryptedSessionKey);
-                logger.log("Decrypted Session => $decryptedSessionKey");
-
-                val pinKeyMsg = communication.makeGetPinKeyCall().getField<String>(SRCI)
-                val decryptedPinKey = TripleDES.soften(communication.get(NibbsCommunication.KEY_MASTER_KEY),
-                        pinKeyMsg.value)
-                communication.put(NibbsCommunication.KEY_PIN_KEY, decryptedPinKey);
-                logger.log("Decrypted Pin => $decryptedPinKey");
-
-                val managementData = communication.makeGetParametersCall();
-                val terminalData = managementData.getField<String>(62).value;
-
-
-                val data = TerminalParameter.parse(terminalData);
-                if (data != null) {
-                    data.persist(communication.preferences);
-                }
-
-                val transaction = Transaction();
-                val card = Card()
-
-                transaction.amount = 5000;
-
-                card.expiry = "1912"
-                card.pin = "1992"
-                card.pan = emvImpl.getPan()
-                card.track2Data = emvImpl.getTrack2()?.let(::bcd2Str)
-
-                transaction.card = card;
-//                val txnResponse = communication.purchaseTransaction(transaction, stringBuilder.toString());
-//                logger.log("Transaction Response => " + txnResponse.getString(RESPONSE_CODE));
-            } catch (e: Exception) {
-                logger.logErr(e.localizedMessage);
-            }
-        }.start()
     }
 
+
+    companion object {
+        private const val INDEX_TPK: Byte = 0x03
+    }
 
 }

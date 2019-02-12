@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.mockservices
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 

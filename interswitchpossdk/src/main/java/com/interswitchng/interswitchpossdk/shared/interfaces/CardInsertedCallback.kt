@@ -5,8 +5,8 @@ import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 
 
 interface CardInsertedCallback {
-    fun onCardDetected()
     fun onCardRead(cardDetail: CardDetail)
+    fun onCardDetected()
     fun onCardRemoved()
     fun onError(error: DeviceError)
 }

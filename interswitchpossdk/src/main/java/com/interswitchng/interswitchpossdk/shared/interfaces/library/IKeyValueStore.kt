@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.interfaces
+package com.interswitchng.interswitchpossdk.shared.interfaces.library
 
 internal interface IKeyValueStore {
 

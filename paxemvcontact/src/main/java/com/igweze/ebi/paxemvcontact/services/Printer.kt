@@ -1,39 +1,30 @@
-package com.igweze.ebi.paxemvcontact
+package com.igweze.ebi.paxemvcontact.services
 
-import com.igweze.ebi.paxemvcontact.posshim.*
+import com.igweze.ebi.paxemvcontact.posshim.Printer
 import com.igweze.ebi.paxemvcontact.utilities.StringUtils
-import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
-import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
-import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.IPrinter
+import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
 import com.pax.dal.entity.EFontTypeAscii
 import com.pax.dal.entity.EFontTypeExtCode
-import java.util.concurrent.Executors
 
-class POSDeviceService(private val device: PosInterface) : POSDevice, CardService.Callback {
+object Printer: IPrinter {
 
-    private val line: String = "-".repeat(SCREEN_NORMAL_LENGTH)
+    // screen caharacter length
+    private const val SCREEN_LARGE_LENGTH = 24
+    private const val SCREEN_NORMAL_LENGTH = 32
 
-    private var cardCallback: CardInsertedCallback? = null
+    // font sizes
+    private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_16_24, EFontTypeExtCode.FONT_16_16)
+    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_16_32)
 
+    private val line: String = "-".repeat(SCREEN_LARGE_LENGTH)
 
     //----------------------------------------------------------
-    //      Implementation for ISW POSDevice interface
+    //      Implementation for ISW Printer interface
     //----------------------------------------------------------
-    override fun attachCallback(callback: CardInsertedCallback) {
-        cardCallback = callback
-        // attach callback to device
-        device.attachCallback(this)
-    }
-
-    override fun detachCallback(callback: CardInsertedCallback) {
-        device.removeCallback(this)
-        cardCallback = null
-    }
-
-    override fun printSlip(slip: List<PrintObject>, user: String) {
+    override fun printSlip(slip: List<PrintObject>, user: UserType) {
         Thread {
             val printer = Printer.getInstance()
 
@@ -104,45 +95,4 @@ class POSDeviceService(private val device: PosInterface) : POSDevice, CardServic
         }
     }
 
-    override fun checkPin(string: String) {
-        device.checkPin(string)
-    }
-
-
-    //---------------------------------------------------------------
-    // Implementation for NeptuneSDK CardService.Callback interface
-    //----------------------------------------------------------------
-    override fun onCardDetected() {
-        cardCallback?.onCardDetected()
-    }
-
-    override fun onCardRead(card: Card?) {
-        card?.apply {
-            val cardCopy = CardDetail(pan, expiry)
-            cardCallback?.onCardRead(cardCopy)
-        }
-    }
-
-    override fun onCardRemoved() {
-        cardCallback?.onCardRemoved()
-    }
-
-    override fun onError(error: PosError?) {
-        error?.apply {
-            // TODO get the correct error code from POSError
-            val errorCode = DeviceError.ERR_CARD_ERROR
-            // translate error to domain error
-            val deviceError = DeviceError(errorMessage, errorCode)
-            cardCallback?.onError(deviceError)
-        }
-    }
-
-    companion object {
-        const val SCREEN_LARGE_LENGTH = 24
-        const val SCREEN_NORMAL_LENGTH = 32
-
-        val NORMAL_FONT = Pair(EFontTypeAscii.FONT_16_24, EFontTypeExtCode.FONT_16_16)
-        val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_16_32)
-
-    }
 }

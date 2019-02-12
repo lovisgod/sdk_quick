@@ -8,8 +8,8 @@ import android.support.v7.widget.AppCompatButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.igweze.ebi.paxemvcontact.POSDeviceService;
-import com.igweze.ebi.paxemvcontact.activities.PrintActivity;
+import com.igweze.ebi.paxemvcontact.services.POSDeviceService;
+import com.igweze.ebi.paxemvcontact.activities.PinInputActivity;
 import com.igweze.ebi.paxemvcontact.posshim.CardService;
 import com.igweze.ebi.paxemvcontact.posshim.PosInterface;
 import com.interswitchng.interswitchpossdk.IswPos;
@@ -23,17 +23,17 @@ public class DemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_demo);
 
         configureTerminal();
-//        setupUI();
+        setupUI();
 
-        Intent intent = new Intent(this, PrintActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, PinInputActivity.class);
+//        startActivity(intent);
     }
 
     private void configureTerminal() {
         PosInterface.setDalInstance(getApplicationContext());
         CardService cardService = CardService.getInstance(getApplicationContext());
-        PosInterface pos = PosInterface.getInstance(cardService);
-        POSDeviceService deviceService = new POSDeviceService(pos);
+        PosInterface.getInstance(cardService);
+        POSDeviceService deviceService = POSDeviceService.create();
 
         // configure terminal
         IswPos.configureTerminal(getApplication(), deviceService);

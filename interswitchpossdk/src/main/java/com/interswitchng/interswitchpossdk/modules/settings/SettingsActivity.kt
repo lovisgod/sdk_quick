@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
-import com.interswitchng.interswitchpossdk.shared.interfaces.IsoService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.activity_settings.*
 import org.koin.android.ext.android.inject

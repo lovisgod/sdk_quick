@@ -1,6 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.services
 
-import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IUserService
 
 internal class UserService: IUserService {
 

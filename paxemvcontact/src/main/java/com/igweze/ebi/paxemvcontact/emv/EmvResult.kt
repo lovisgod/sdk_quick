@@ -2,7 +2,7 @@ package com.igweze.ebi.paxemvcontact.emv
 
 import com.pax.jemv.clcommon.RetCode
 
-enum class EmvExceptions private constructor(val errCode: Int, val errMsg: String) {
+enum class EmvResult private constructor(val errCode: Int, val errMsg: String) {
     EMV_OK(RetCode.EMV_OK, "success"),
     EMV_ERR_ICC_RESET(RetCode.ICC_RESET_ERR, "icc reset error"),
     EMV_ERR_ICC_CMD(RetCode.ICC_CMD_ERR, "icc cmd error"),

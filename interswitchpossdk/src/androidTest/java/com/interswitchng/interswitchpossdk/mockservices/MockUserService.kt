@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.mockservices
 
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
-import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IUserService
 
 internal class MockUserService(private val keyValueStore: IKeyValueStore): IUserService {
 

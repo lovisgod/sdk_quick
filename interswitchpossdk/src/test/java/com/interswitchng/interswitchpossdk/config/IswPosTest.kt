@@ -2,8 +2,7 @@ package com.interswitchng.interswitchpossdk.config
 
 import android.app.Application
 import com.interswitchng.interswitchpossdk.IswPos
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame

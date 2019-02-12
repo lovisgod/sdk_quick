@@ -1,6 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.services.storage
 
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 
 internal class KeyValueStore(private val prefManager: SharePreferenceManager): IKeyValueStore {
 

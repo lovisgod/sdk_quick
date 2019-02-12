@@ -8,8 +8,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.settings.SettingsActivity
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
-import com.interswitchng.interswitchpossdk.shared.interfaces.IsoService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert.assertEquals

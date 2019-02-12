@@ -1,13 +1,11 @@
 package com.interswitchng.interswitchpossdk.base
 
 import com.interswitchng.interswitchpossdk.mockservices.MockKeyValueStore
-import com.interswitchng.interswitchpossdk.mockservices.MockPOSDevice
 import com.interswitchng.interswitchpossdk.mockservices.MockPayableService
 import com.interswitchng.interswitchpossdk.mockservices.MockUserService
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
-import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IUserService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import org.koin.dsl.module.module
 
 

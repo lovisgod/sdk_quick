@@ -5,7 +5,7 @@ import android.content.Intent
 import com.interswitchng.interswitchpossdk.di.activityModules
 import com.interswitchng.interswitchpossdk.di.appModules
 import com.interswitchng.interswitchpossdk.shared.Constants
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import org.koin.dsl.module.module

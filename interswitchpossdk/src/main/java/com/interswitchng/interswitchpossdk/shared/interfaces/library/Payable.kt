@@ -1,5 +1,7 @@
-package com.interswitchng.interswitchpossdk.shared.interfaces
+package com.interswitchng.interswitchpossdk.shared.interfaces.library
 
+import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank

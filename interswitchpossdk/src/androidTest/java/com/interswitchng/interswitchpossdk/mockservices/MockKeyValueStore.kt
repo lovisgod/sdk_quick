@@ -1,6 +1,6 @@
 package com.interswitchng.interswitchpossdk.mockservices
 
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 
 class MockKeyValueStore: IKeyValueStore {
     override fun saveString(key: String, value: String) {

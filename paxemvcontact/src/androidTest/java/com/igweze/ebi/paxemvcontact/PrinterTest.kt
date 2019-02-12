@@ -3,7 +3,6 @@ package com.igweze.ebi.paxemvcontact
 import android.os.Looper
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import org.junit.Before
 import org.junit.Test
@@ -12,6 +11,9 @@ import java.util.*
 import com.igweze.ebi.paxemvcontact.models.*
 import com.igweze.ebi.paxemvcontact.posshim.CardService
 import com.igweze.ebi.paxemvcontact.posshim.PosInterface
+import com.igweze.ebi.paxemvcontact.services.POSDeviceService
+import com.interswitchng.interswitchpossdk.shared.models.core.UserType
+import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 
 
 @RunWith(AndroidJUnit4::class)
@@ -53,7 +55,7 @@ class PrinterTest {
         val now = Date()
         val info = TransactionInfo(
                 stan = "000120",
-                dateTime = DateUtils.dateStringFormatter.format(now),
+                dateTime = DisplayUtils.getIsoString(now),
                 amount = amount,
                 cardPan = pan,
                 cardExpiry = expiry,
@@ -76,9 +78,9 @@ class PrinterTest {
     @Test
     fun printCardSlip() {
         val slip = getCardSlip()
-        val device = POSDeviceService(pos)
+        val device = POSDeviceService.create()
 
-        device.printSlip(slip, "customer")
+        device.printer.printSlip(slip, UserType.Customer)
 
         Thread.sleep(3000)
     }

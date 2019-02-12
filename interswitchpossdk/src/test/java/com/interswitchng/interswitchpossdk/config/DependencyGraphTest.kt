@@ -5,7 +5,7 @@ import android.content.Context
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.di.activityModules
 import com.interswitchng.interswitchpossdk.di.appModules
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.After
 import org.junit.Assert.assertNotNull

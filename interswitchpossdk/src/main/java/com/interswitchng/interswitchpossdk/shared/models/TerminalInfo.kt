@@ -1,21 +1,20 @@
 package com.interswitchng.interswitchpossdk.shared.models
 
 import com.google.gson.Gson
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.TerminalData
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 
 data class TerminalInfo(
-    val terminalId: String,
-    val merchantId: String,
-    val merchantLocation: String,
-    val merchantCategoryCode: String,
-    val countryCode: String,
-    val currencyCode: String,
-    val callHomeTimeInMin: Int,
-    val serverTimeoutInSec: Int) {
+        val terminalId: String,
+        val merchantId: String,
+        val merchantNameAndLocation: String,
+        val merchantCategoryCode: String,
+        val countryCode: String,
+        val currencyCode: String,
+        val callHomeTimeInMin: Int,
+        val serverTimeoutInSec: Int) {
 
 
-    fun persist(store: IKeyValueStore) {
+    internal fun persist(store: IKeyValueStore) {
         val jsonString = Gson().toJson(this)
         store.saveString(PERSIST_KEY, jsonString)
     }
@@ -24,7 +23,7 @@ data class TerminalInfo(
         return """
             | terminalId: $terminalId
             | merchantId: $merchantId
-            | merchantLocation: $merchantLocation
+            | merchantNameAndLocation: $merchantNameAndLocation
             | merchantCategory: $merchantCategoryCode
             | currencyCode: $currencyCode
             | callHomeTimeInMin: $callHomeTimeInMin
@@ -37,11 +36,11 @@ data class TerminalInfo(
 
         private const val PERSIST_KEY = "terminal_data"
 
-        internal fun get(store: IKeyValueStore): TerminalData? {
+        internal fun get(store: IKeyValueStore): TerminalInfo? {
             val jsonString = store.getString(PERSIST_KEY, "")
             return when(jsonString) {
                 "" -> null
-                else -> Gson().fromJson(jsonString, TerminalData::class.java)
+                else -> Gson().fromJson(jsonString, TerminalInfo::class.java)
             }
         }
     }

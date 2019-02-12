@@ -1,28 +1,29 @@
 package com.interswitchng.interswitchpossdk.modules.card
 
+import android.app.Activity
 import android.os.Bundle
-import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.card.model.CardTransactionState
-import com.interswitchng.interswitchpossdk.shared.Constants
-import com.interswitchng.interswitchpossdk.shared.errors.DeviceError
-import com.interswitchng.interswitchpossdk.shared.interfaces.CardInsertedCallback
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
-import com.interswitchng.interswitchpossdk.shared.models.CardDetail
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
+import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_card.*
-import org.koin.android.ext.android.inject
+import kotlinx.android.synthetic.main.content_account_options.*
 import java.text.NumberFormat
 
 class CardActivity : BaseActivity() {
 
-    private val pos: POSDevice by inject()
-    private val cardCallback = CardCallback()
+    private val logger by lazy { Logger.with("CardActivity") }
+    private val emv by lazy { posDevice.emvCardTransaction }
+    private val printer by lazy { posDevice.printer }
+    private val emvCallback by lazy { CardCallback() }
+    private lateinit var accountType: AccountType
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
-    private var transactionState = CardTransactionState.ShowInsertCard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,77 +32,125 @@ class CardActivity : BaseActivity() {
         // setup toolbar
         setupToolbar("Card")
 
-        // get payment info
-        val paymentInfo: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
-
         // set the amount
         val amount = NumberFormat.getInstance().format(paymentInfo.amount)
         amountText.text = getString(R.string.amount, amount)
+    }
 
-        // attach callback to detect card
-        pos.attachCallback(cardCallback)
-
-        showNextScreen()
+    override fun onStart() {
+        super.onStart()
+        setupUI()
+        setupTransaction()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        pos.detachCallback(cardCallback)
+        emv.removeEmvCallback(emvCallback)
+        emv.cancelTransaction()
     }
 
-    private fun showNextScreen() {
-        transactionState = when(transactionState) {
-            CardTransactionState.ShowInsertCard -> {
-                insertCardContainer.bringToFront()
-                CardTransactionState.ChooseAccountType
-            }
-            CardTransactionState.ChooseAccountType -> {
-                accountOptionsContainer.bringToFront()
-                CardTransactionState.EnterPin
-            }
-            CardTransactionState.EnterPin -> {
-                insertPinContainer.bringToFront()
-                // TODO rectify this
-                CardTransactionState.EnterPin
-            }
+    private fun setupUI() {
+        savingsAccount.setOnClickListener {
+            accountType = AccountType.Savings
+            startTransaction()
+        }
+        currentAccount.setOnClickListener {
+            accountType = AccountType.Current
+            startTransaction()
         }
     }
 
-    private fun showAccountOptions() {
-        accountOptionsContainer.bringToFront()
+    private fun setupTransaction() {
+        Thread {
+
+            // attach callback for emv transaction
+            emv.setEmvCallback(emvCallback)
+
+            // setup mock terminal info
+            val empty = ""
+            val terminalInfo = TerminalInfo("20390007", "20390007",
+                    empty, empty, "0566", "0566",
+                    1200, 1200)
+
+            // setup card transaction
+            // todo change amount to kobo
+            emv.setupTransaction(paymentInfo.amount, terminalInfo)
+
+            runOnUiThread {
+                dialog.dismiss()
+                showContainer(CardTransactionState.ChooseAccountType)
+            }
+
+        }.start()
     }
 
+    private fun startTransaction() {
+        Thread {
+            // start card transaction
+            val result = emv.startTransaction()
 
-    private fun showLoader(message: String) {
+            if (result == TransactionResult.OFFLINE_APPROVED) emv.completeTransaction()
+            else if (result == TransactionResult.ONLINE_REQUIRED) logger.log("online should be processed") // processOnline()
+
+        }.start()
+    }
+
+    private fun showLoader(title: String = "Processing", message: String) {
+        dialog.setTitle(title)
         dialog.setMessage(message)
         dialog.show()
     }
 
-    private fun toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-
-    internal inner class CardCallback : CardInsertedCallback {
-
-        override fun onCardDetected() {
-            runOnUiThread { showLoader("Reading Card") }
+    private fun showContainer(state: CardTransactionState) {
+        val container = when(state) {
+            CardTransactionState.ShowInsertCard -> insertCardContainer
+            CardTransactionState.ChooseAccountType -> accountOptionsContainer
+            CardTransactionState.EnterPin -> insertPinContainer
+            CardTransactionState.Default -> blankContainer
         }
 
-        override fun onCardRead(cardDetail: CardDetail) {
+        runOnUiThread { container.bringToFront() }
+    }
+
+    private fun cancelTransaction(reason: String) {
+        runOnUiThread {
+            setResult(Activity.RESULT_CANCELED)
+            toast(reason)
+            finish()
+        }
+    }
+
+    internal inner class CardCallback : EmvCallback {
+
+        override fun showInsertCard() {
+            showContainer(CardTransactionState.ShowInsertCard)
+        }
+
+        override fun onCardDetected() {
             runOnUiThread {
-                showNextScreen()
-                val lastFour = cardDetail.pan.substring(cardDetail.pan.length - 4)
-                cardNumber.text = "xxxx-xxxx-xxxx-$lastFour"
+                showContainer(CardTransactionState.Default)
+                showLoader("Reading Card", "Loading...")
             }
         }
 
-        override fun onCardRemoved() {
-            TODO("not implemented")
+        override fun showEnterPin() {
+            showContainer(CardTransactionState.EnterPin)
         }
 
-        override fun onError(error: DeviceError) {
-            TODO("not implemented")
+        override fun setPinText(text: String) {
+            runOnUiThread { cardPin.setText(text) }
+        }
+
+        override fun showPinOk() {
+            runOnUiThread { toast("Pin Input ok") }
+        }
+
+        override fun onCardRemoved() {
+            cancelTransaction("Transaction Cancelled: Card was removed")
+        }
+
+        override fun onTransactionCancelled(code: Int, reason: String) {
+            cancelTransaction(reason)
         }
     }
 }

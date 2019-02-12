@@ -9,6 +9,7 @@ import com.igweze.ebi.paxemvcontact.emv.DeviceImplNeptune;
 import com.igweze.ebi.paxemvcontact.emv.EmvImplementation;
 import com.igweze.ebi.paxemvcontact.emv.PinCallback;
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils;
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo;
 import com.pax.dal.IDAL;
 import com.pax.dal.IIcc;
 import com.pax.dal.entity.EFontTypeAscii;
@@ -158,7 +159,8 @@ public final class CardService implements PinCallback {
 
                 int ret = -10;
                 synchronized (LOCK) {
-                    ret = emv.startContactEmvTransaction();
+                    TerminalInfo tf = null;
+                     ret = emv.startContactEmvTransaction();
                 }
 
                 if (ret == -1) {
@@ -186,6 +188,7 @@ public final class CardService implements PinCallback {
         int ret = -10;
 
         synchronized (LOCK) {
+            TerminalInfo tf = null;
             ret = emv.startContactEmvTransaction();
         }
 
@@ -267,9 +270,12 @@ public final class CardService implements PinCallback {
 
 
     @Override
-    public void showInputCard() {
+    public void showInsertCard() {
 
     }
+
+    @Override
+    public void showPinOk() {}
 
     @Override
     public int getPinResult(@NotNull String panBlock) {

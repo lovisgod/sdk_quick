@@ -1,8 +1,9 @@
 package com.interswitchng.interswitchpossdk.shared.services
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
@@ -25,7 +26,7 @@ internal class PayableService(private val httpService: IHttpService): Payable {
         httpService.getUssdCode(request).process(callback)
     }
 
-    override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
+    override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
         val executor = Executors.newSingleThreadScheduledExecutor()
 
         var hasResponse = false
@@ -33,10 +34,12 @@ internal class PayableService(private val httpService: IHttpService): Payable {
             var secs = 1L
             var elapsedTime = secs
             while (!hasResponse) {
-                val call = when(status.) {
-
+                val call = when(type) {
+                    PaymentType.USSD -> httpService.getUssdTransactionStatus(status.merchantCode, status.reference)
+                    else -> httpService.getQrTransactionStatus(status.merchantCode, status.reference)
                 }
-                httpService.getTransactionStatus(status.merchantCode, status.reference).test { transaction, throwable ->
+
+                call.test { transaction, throwable ->
                     when {
                         throwable != null -> {
                             secs = 0

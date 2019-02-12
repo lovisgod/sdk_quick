@@ -3,6 +3,8 @@ package com.interswitchng.interswitchpossdk.di
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.*
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IUserService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.storage.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService

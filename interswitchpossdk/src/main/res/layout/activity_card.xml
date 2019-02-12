@@ -20,18 +20,13 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="amount: 50,000" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="next"
-        />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
         tools:context=".modules.card.CardActivity">
+
 
         <LinearLayout
             android:id="@+id/accountOptionsContainer"
@@ -93,11 +88,19 @@
                 android:inputType="numberPassword"
                 android:maxLength="4"
                 android:textIsSelectable="false"
+                android:clickable="false"
                 android:textSize="20sp"
                 tools:text="44445" />
 
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/blankContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/iswColorMainBackground" />
 
     </FrameLayout>
 </LinearLayout>

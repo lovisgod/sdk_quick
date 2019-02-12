@@ -5,8 +5,8 @@ import com.interswitchng.interswitchpossdk.shared.Constants.CLEAR_MASTER_KEY
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PIN_KEY
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_SESSION_KEY
-import com.interswitchng.interswitchpossdk.shared.interfaces.IKeyValueStore
-import com.interswitchng.interswitchpossdk.shared.interfaces.IsoService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
@@ -200,7 +200,7 @@ internal class IsoServiceImpl(
                     .setValue(40, "601")
                     .setValue(41, terminalInfo.terminalId)
                     .setValue(42, terminalInfo.merchantId)
-                    .setValue(43, terminalInfo.merchantLocation)
+                    .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
                     //        String pinData = TripleDES.harden(get(KEY_PIN_KEY), transaction.card.pin);
                     //        message.setValue(52, pinData.getBytes(), templ.getField(52).getType(), templ.getField(52).getLength());

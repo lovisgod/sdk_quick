@@ -8,7 +8,7 @@ import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo

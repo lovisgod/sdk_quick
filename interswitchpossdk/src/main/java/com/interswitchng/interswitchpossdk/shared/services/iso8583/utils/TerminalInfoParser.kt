@@ -65,7 +65,7 @@ internal object TerminalInfoParser {
                         serverTimeoutInSec = map["04"] as Int,
                         callHomeTimeInMin = map["07"] as Int,
                         merchantCategoryCode = map["08"] as String,
-                        merchantLocation = map["52"] as String
+                        merchantNameAndLocation = map["52"] as String
                 )
 
                 if (terminalInfo.countryCode.length >= 4) {

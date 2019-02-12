@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.mockservices
 
 import android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus

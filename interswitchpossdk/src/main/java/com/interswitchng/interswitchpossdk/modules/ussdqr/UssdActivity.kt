@@ -8,7 +8,7 @@ import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
@@ -39,8 +39,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     // container for banks and bank-codes
     private lateinit var bankCodes: MutableMap<String, String>
     private val printSlip = mutableListOf<PrintObject>()
-    // get the payment info
-    private lateinit var paymentInfo: PaymentInfo
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
