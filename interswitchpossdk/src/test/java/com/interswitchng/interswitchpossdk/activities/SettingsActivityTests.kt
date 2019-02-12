@@ -95,7 +95,7 @@ class SettingsActivityTests {
         // start activity
         activityController.start()
 
-        terminalIdText.setText("12345678")
+        terminalIdText.setText("20390007")
 
         keyButton.performClick()
         Thread.sleep(3000)
@@ -133,7 +133,7 @@ class SettingsActivityTests {
         // start activity
         activityController.start()
 
-        terminalIdText.setText("12345678")
+        terminalIdText.setText("20390007")
 
         terminalButton.performClick()
         Thread.sleep(3000)

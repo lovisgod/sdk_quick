@@ -143,7 +143,11 @@ internal class IsoServiceImpl(
             }
 
 
-            val hashValue = IsoUtils.getMac(store.getString(KEY_SESSION_KEY, ""), temp) //SHA256
+            // confirm that key was downloaded
+            val key = store.getString(KEY_SESSION_KEY, "")
+            if (key.isEmpty()) return false
+
+            val hashValue = IsoUtils.getMac(key, temp) //SHA256
             message.setValue(64, hashValue)
             message.dump(System.out, "parameter request ---- ")
 

@@ -3,11 +3,16 @@ package com.interswitchng.interswitchpossdk.di
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.*
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IUserService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.storage.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.IsoServiceImpl
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
+import com.interswitchng.interswitchpossdk.shared.services.storage.KeyValueStore
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -24,6 +29,8 @@ private val serviceModule = module {
     single<Payable>  { PayableService(get()) }
     single<IUserService> { UserService() }
     single { SharePreferenceManager(androidContext()) }
+    single<IKeyValueStore> { KeyValueStore(get()) }
+    single<IsoService> { (factory: (String, Int, Int) -> NibssIsoSocket) ->  IsoServiceImpl (androidContext(), get(), factory) }
 
     // TODO remove this
 //    single<POSDevice>(override = true) {

@@ -5,21 +5,28 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.R
+import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
 
     private val store: IKeyValueStore by inject()
-    private val isoService: IsoService by inject()
+    private val factory: (String, Int, Int) -> NibssIsoSocket = { ip, port, timeout -> NibssIsoSocket(ip, port, timeout)}
+    private val isoService: IsoService by inject { parametersOf(factory) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        setSupportActionBar(toolbar)
     }
 
     override fun onStart() {
@@ -32,6 +39,14 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
+
+        btnDownloadParameters.setOnClickListener {
+            btnDownloadParameters.isEnabled = false
+
+            // click other buttons
+            btnDownloadKeys.performClick()
+            btnDownloadTerminalConfig.performClick()
+        }
 
         // set up buttons
         btnDownloadKeys.setOnClickListener {

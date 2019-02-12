@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -24,9 +26,6 @@ public class DemoActivity extends AppCompatActivity {
 
         configureTerminal();
         setupUI();
-
-//        Intent intent = new Intent(this, PinInputActivity.class);
-//        startActivity(intent);
     }
 
     private void configureTerminal() {
@@ -54,5 +53,23 @@ public class DemoActivity extends AppCompatActivity {
         });
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.demo_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.terminal_config) {
+            IswPos.showSettingsScreen();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

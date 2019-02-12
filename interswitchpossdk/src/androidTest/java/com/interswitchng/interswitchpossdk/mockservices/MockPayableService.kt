@@ -3,6 +3,7 @@ package com.interswitchng.interswitchpossdk.mockservices
 import android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
@@ -76,7 +77,7 @@ internal class MockPayableService private constructor(
         }).start()
     }
 
-    override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
+    override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
         val executor = Executors.newSingleThreadScheduledExecutor()
 
         executor.execute {

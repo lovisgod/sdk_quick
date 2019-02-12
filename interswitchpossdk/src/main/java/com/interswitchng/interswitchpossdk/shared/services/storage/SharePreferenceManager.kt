@@ -16,9 +16,9 @@ internal class SharePreferenceManager(private val context: Context) {
 
     fun getBoolean(key: String): Boolean = getSharedPreference().getBoolean(key,false)
 
-    fun saveNumber(key: String, default: Float = 0.0f): Float = getSharedPreference().getFloat(key, default)
+    fun saveNumber(key: String, default: Long) = getEditor().putLong(key, default).commit()
 
-    fun getNumber(key: String, default: Float = 0.0f): Float = getSharedPreference().getFloat(key, default)
+    fun getNumber(key: String, default: Long): Long = getSharedPreference().getLong(key, default)
 
     fun removeValue(key: String) = getEditor().remove(key).commit()
 

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">POS Sample</string>
     <string name="action_pay">PAY</string>
+    <string name="terminal_configuration">Terminal Configuration</string>
 </resources>

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import com.interswitchng.interswitchpossdk.di.activityModules
 import com.interswitchng.interswitchpossdk.di.appModules
+import com.interswitchng.interswitchpossdk.modules.settings.SettingsActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
@@ -73,8 +74,13 @@ class IswPos private constructor(private val app: Application, internal val devi
             }
         }
 
-        private fun getTerminalParameters() {
-
+        @JvmStatic
+        fun showSettingsScreen() {
+            val app = INSTANCE.app
+            val intent = Intent(app, SettingsActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            app.startActivity(intent)
         }
 
         @JvmStatic
