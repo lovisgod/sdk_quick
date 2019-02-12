@@ -50,7 +50,7 @@ internal class IsoServiceImpl(
     }
     private val timeout by lazy { TIMEOUT * 2 } // two minutes
 
-    private fun makeKeyCall(terminalId: String, code: String): String? {
+    private fun makeKeyCall(terminalId: String, code: String, key: String): String? {
         try {
 
             val now = Date()
@@ -81,7 +81,7 @@ internal class IsoServiceImpl(
 
             // extract encrypted key with clear key
             val encryptedKey = msg.message.getField<String>(SRCI)
-            val decryptedKey = TripleDES.soften(CLEAR_MASTER_KEY, encryptedKey.value)
+            val decryptedKey = TripleDES.soften(key, encryptedKey.value)
             logger.log("Decrypted Key => $decryptedKey")
 
             return decryptedKey
@@ -96,24 +96,26 @@ internal class IsoServiceImpl(
 
     override fun downloadKey(terminalId: String): Boolean {
         // get master key & save
-        val isMasterSaved = makeKeyCall(terminalId, "9A0000")?.let { masterKey ->
+        val isDownloaded = makeKeyCall(terminalId, "9A0000", CLEAR_MASTER_KEY)?.let { masterKey ->
             store.saveString(KEY_MASTER_KEY, masterKey)
-            true
+
+            // get pin key & save
+            val isSessionSaved = makeKeyCall(terminalId, "9B0000", masterKey)?.let { sessionKey ->
+                store.saveString(KEY_SESSION_KEY, sessionKey)
+                true
+            }
+
+            // get pin key & save
+            val isPinSaved = makeKeyCall(terminalId, "9G0000", masterKey)?.let { pinKey ->
+                store.saveString(KEY_PIN_KEY, pinKey)
+                true
+            }
+
+            isPinSaved == true && isSessionSaved == true
+
         }
 
-        // get pin key & save
-        val isSessionSaved = makeKeyCall(terminalId, "9B0000")?.let { sessionKey ->
-            store.saveString(KEY_SESSION_KEY, sessionKey)
-            true
-        }
-
-        // get pin key & save
-        val isPinSaved = makeKeyCall(terminalId, "9G0000")?.let { pinKey ->
-            store.saveString(KEY_PIN_KEY, pinKey)
-            true
-        }
-
-        return isMasterSaved == true && isSessionSaved == true && isPinSaved == true
+        return isDownloaded == true
     }
 
     override fun downloadTerminalParameters(terminalId: String): Boolean {
