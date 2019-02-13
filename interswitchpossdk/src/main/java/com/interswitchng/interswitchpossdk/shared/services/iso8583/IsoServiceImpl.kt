@@ -207,14 +207,13 @@ internal class IsoServiceImpl(
                     .setValue(26, "06")
                     .setValue(28, "C00000000")
                     .setValue(35, transaction.cardTrack2)
-                    .setValue(37, "000000000008")
+                    .setValue(37, "0000000000008")
                     .setValue(40, "601")
                     .setValue(41, terminalInfo.terminalId)
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
                     .setValue(55, transaction.icc)
-                    .setValue(123, "511101511344101")
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -222,10 +221,12 @@ internal class IsoServiceImpl(
 
                 val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
                 message.setValue(52, pinData)
+                    .setValue(123, "510101511344101")
 
                 // remove unset fields
                 message.message.removeFields(32, 59)
             } else {
+                message.setValue(123, "511101511344101")
                 // remove unset fields
                 message.message.removeFields(32, 52, 59)
             }
