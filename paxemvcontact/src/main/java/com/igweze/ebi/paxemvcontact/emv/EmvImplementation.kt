@@ -105,7 +105,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
             merchName = terminalInfo.merchantNameAndLocation.toByteArray()
             termId = terminalInfo.terminalId.toByteArray()
             merchId = terminalInfo.merchantId.toByteArray()
-            forceOnline = 0
+            forceOnline = 1
             terminalType = 34
             exCapability = str2Bcd("E000F0A001")
         }

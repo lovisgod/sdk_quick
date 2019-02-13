@@ -18,6 +18,7 @@ import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
 import java.io.UnsupportedEncodingException
+import java.security.SecureRandom
 import java.text.ParseException
 import java.util.*
 
@@ -190,13 +191,15 @@ internal class IsoServiceImpl(
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "00" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
+            val stan = getNextStan()
+            val randomReference = "000000$stan"
 
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
                     .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
                     .setValue(7, timeAndDateFormatter.format(now))
-                    .setValue(11, getNextStan())
+                    .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
                     .setValue(13, dateFormatter.format(now))
                     .setValue(14, transaction.cardExpiry)
@@ -207,7 +210,7 @@ internal class IsoServiceImpl(
                     .setValue(26, "06")
                     .setValue(28, "C00000000")
                     .setValue(35, transaction.cardTrack2)
-                    .setValue(37, "0000000000008")
+                    .setValue(37, randomReference)
                     .setValue(40, "601")
                     .setValue(41, terminalInfo.terminalId)
                     .setValue(42, terminalInfo.merchantId)
@@ -230,8 +233,6 @@ internal class IsoServiceImpl(
                 // remove unset fields
                 message.message.removeFields(32, 52, 59)
             }
-
-
 
             // set message hash
             val bytes = message.message.writeData()
@@ -273,6 +274,7 @@ internal class IsoServiceImpl(
 
         return String.format(Locale.getDefault(), "%06d", newStan)
     }
+
 
     companion object {
         private const val KEY_STAN = "stan"

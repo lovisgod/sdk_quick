@@ -216,9 +216,11 @@ object EmvUtils {
         for (tagValue in tagValues) {
             tagValue.second?.apply {
                 val tag = Integer.toHexString(tagValue.first).toUpperCase()
-                val length = String.format("0%s", Integer.toHexString(size)).toUpperCase()
+                val length = Integer.toHexString(size)
+                // prepend 0 based on value length
+                val lengthStr = (if (length.length > 1) length else "0$length").toUpperCase()
                 val value = bcd2Str(this)
-                hex = "$hex$tag$length$value"
+                hex = "$hex$tag$lengthStr$value"
             }
         }
 
