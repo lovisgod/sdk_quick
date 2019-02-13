@@ -1,3 +1,5 @@
 <resources>
     <string name="ISW_USSD_QR_BASE_URL">https://qa.interswitchng.com/paymentgateway/api/v1/</string>
+    <string name="cms">DBEECACCB4210977ACE73A1D873CA59F</string>
+    <string name="nibss_ip">196.6.103.72</string>
 </resources>

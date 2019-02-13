@@ -11,10 +11,28 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+
+    signingConfigs {
+        paxConfig {
+            keyAlias 'PAX'
+            keyPassword 'B6H2A7Y8WG'
+            storeFile file(rootDir.absolutePath + '/PAXKeystore.jks')
+            storePassword 'B6H2A7Y8WG'
+        }
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.paxConfig
+            applicationIdSuffix '.release'
+        }
+
+        debug {
+            applicationIdSuffix '.debug'
         }
     }
     compileOptions {

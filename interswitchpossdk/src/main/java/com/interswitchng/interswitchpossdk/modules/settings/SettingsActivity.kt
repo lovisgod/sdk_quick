@@ -5,22 +5,18 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.content_toolbar.*
 import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
 
     private val store: IKeyValueStore by inject()
-    private val factory: (String, Int, Int) -> NibssIsoSocket = { ip, port, timeout -> NibssIsoSocket(ip, port, timeout)}
-    private val isoService: IsoService by inject { parametersOf(factory) }
+    private val isoService: IsoService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -158,7 +154,7 @@ class SettingsActivity : AppCompatActivity() {
         if (isSuccessful) {
             // get and store date
             val date = Date()
-            store.getNumber(KEY_DATE_KEYS, date.time)
+            store.saveNumber(KEY_DATE_KEYS, date.time)
 
             // set the texts
             val dateStr = DisplayUtils.getIsoString(date)
@@ -193,7 +189,7 @@ class SettingsActivity : AppCompatActivity() {
         if (isSuccessful) {
             // get and store date
             val date = Date()
-            store.getNumber(KEY_DATE_TERMINAL, date.time)
+            store.saveNumber(KEY_DATE_TERMINAL, date.time)
 
             // set the texts
             val dateStr = DisplayUtils.getIsoString(date)

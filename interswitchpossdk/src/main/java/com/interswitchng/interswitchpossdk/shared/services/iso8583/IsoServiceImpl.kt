@@ -1,19 +1,16 @@
 package com.interswitchng.interswitchpossdk.shared.services.iso8583
 
 import android.content.Context
-import com.interswitchng.interswitchpossdk.shared.Constants.CLEAR_MASTER_KEY
+import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PIN_KEY
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_SESSION_KEY
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoSocket
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.*
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.SERVER_IP
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.SERVER_PORT
-import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.Constants.TIMEOUT
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.dateFormatter
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.timeFormatter
@@ -27,7 +24,7 @@ import java.util.*
 internal class IsoServiceImpl(
         private val context: Context,
         private val store: IKeyValueStore,
-        private val socketFactory: (String, Int, Int) -> NibssIsoSocket) : IsoService {
+        private val socket: IsoSocket) : IsoService {
 
     private val logger by lazy { Logger.with("IsoServiceImpl") }
     private val messageFactory by lazy {
@@ -48,7 +45,6 @@ internal class IsoServiceImpl(
             throw e
         }
     }
-    private val timeout by lazy { TIMEOUT * 2 } // two minutes
 
     private fun makeKeyCall(terminalId: String, code: String, key: String): String? {
         try {
@@ -69,12 +65,15 @@ internal class IsoServiceImpl(
             message.message.removeFields(62, 64)
             message.dump(System.out, "request -- ")
 
-            // connect to socket endpoint
-            val socket = socketFactory(SERVER_IP, SERVER_PORT, timeout)
-            socket.connect()
+            // open to socket endpoint
+            socket.open()
 
             // send request and process response
             val response = socket.sendReceive(message.message.writeData())
+            // close connection
+            socket.close()
+
+            // read message
             val msg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             msg.dump(System.out, "response -- ")
 
@@ -95,8 +94,11 @@ internal class IsoServiceImpl(
     }
 
     override fun downloadKey(terminalId: String): Boolean {
+        // get clear key
+        val cms = context.getString(R.string.cms)
+
         // get master key & save
-        val isDownloaded = makeKeyCall(terminalId, "9A0000", CLEAR_MASTER_KEY)?.let { masterKey ->
+        val isDownloaded = makeKeyCall(terminalId, "9A0000", cms)?.let { masterKey ->
             store.saveString(KEY_MASTER_KEY, masterKey)
 
             // get pin key & save
@@ -112,7 +114,6 @@ internal class IsoServiceImpl(
             }
 
             isPinSaved == true && isSessionSaved == true
-
         }
 
         return isDownloaded == true
@@ -153,12 +154,15 @@ internal class IsoServiceImpl(
             message.setValue(64, hashValue)
             message.dump(System.out, "parameter request ---- ")
 
+            // open socket connection
+            socket.open()
 
-            val socket = socketFactory(SERVER_IP, SERVER_PORT, timeout)
-            socket.connect()
-
-
+            // send request and receive response
             val response = socket.sendReceive(message.message.writeData())
+            // close connection
+            socket.close()
+
+            // read message
             val responseMessage = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMessage.dump(System.out, "parameter response ---- ")
 
@@ -185,11 +189,12 @@ internal class IsoServiceImpl(
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "00" + transaction.accountType.value + "00"
+            val hasPin = transaction.cardPIN.isNotEmpty()
 
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
-                    .setValue(4, "000000002100") //String.format(Locale.getDefault(), "%012d", transaction.amount))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
                     .setValue(7, timeAndDateFormatter.format(now))
                     .setValue(11, getNextStan())
                     .setValue(12, timeFormatter.format(now))
@@ -208,14 +213,23 @@ internal class IsoServiceImpl(
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
-                    //        String pinData = TripleDES.harden(get(KEY_PIN_KEY), transaction.card.pin);
-                    //        message.setValue(52, pinData.getBytes(), templ.getField(52).getType(), templ.getField(52).getLength());
                     .setValue(55, transaction.icc)
-                    .setValue(123, "510101511344101")
+                    .setValue(123, "511101511344101")
 
+            if (hasPin) {
+                val pinKey = store.getString(KEY_PIN_KEY, "")
+                if (pinKey.isEmpty()) return
 
-            // remove unset fields
-            message.message.removeFields(32, 52, 59)
+                val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
+                message.setValue(52, pinData)
+
+                // remove unset fields
+                message.message.removeFields(32, 59)
+            } else {
+                // remove unset fields
+                message.message.removeFields(32, 52, 59)
+            }
+
 
 
             // set message hash
@@ -231,12 +245,15 @@ internal class IsoServiceImpl(
             message.setValue(128, hashValue)
             message.dump(System.out, "request -- ")
 
+            // open connection
+            socket.open()
 
-            val socket =  NibssIsoSocket(SERVER_IP, SERVER_PORT, TIMEOUT * 3) // timeout 3 minutes
-            socket.connect()
-
+            socket.setTimeout(2 * 60000)
             val request = message.message.writeData()
             val response = socket.sendReceive(request)
+            // close connection
+            socket.close()
+
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 

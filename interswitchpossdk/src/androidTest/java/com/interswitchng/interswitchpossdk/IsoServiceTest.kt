@@ -16,7 +16,11 @@ class IsoServiceTest {
     fun sendTerminalRequest() {
         val prefMnager = SharePreferenceManager(context)
         val keyValueStore = KeyValueStore(prefMnager)
-        val isoService = IsoServiceImpl(context, keyValueStore) { ip, port, time -> NibssIsoSocket(ip, port, time) }
+
+        val ip = context.resources.getString(R.string.nibss_ip)
+        val port = context.resources.getInteger(R.integer.nibss_port)
+        val iso = NibssIsoSocket(ip, port, 6000)
+        val isoService = IsoServiceImpl(context, keyValueStore, iso)
 
         val terminalId = "20390007"
         val result = isoService.downloadKey(terminalId)

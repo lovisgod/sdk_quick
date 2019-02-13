@@ -4,7 +4,10 @@
  */
 package com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoSocket;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,7 +27,7 @@ import javax.net.ssl.TrustManager;
  * @author tosin.eniolorunda
  */
 
-public class NibssIsoSocket {
+public class NibssIsoSocket implements IsoSocket {
 
     private SSLSocket socket;
     private SocketAddress socketAddress;
@@ -61,6 +64,11 @@ public class NibssIsoSocket {
         Log.d("Test", "Error", e);
     }
 
+    @Override
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
     private byte[] concat(byte[] A, byte[] B) {
         int aLen = A.length;
         int bLen = B.length;
@@ -70,7 +78,8 @@ public class NibssIsoSocket {
         return C;
     }
 
-    public boolean connect() {
+    @Override
+    public boolean open() {
         try {
 
             try {
@@ -96,7 +105,8 @@ public class NibssIsoSocket {
         }
     }
 
-    public boolean send(byte[] data) {
+    @Override
+    public boolean send(@NonNull byte[] data) {
         int length = (int) data.length;
         byte[] headerbytes = new byte[2];
 
@@ -141,6 +151,7 @@ public class NibssIsoSocket {
     }
 
     /*data comes over the stream untill a timeout or nibss closes the socket*/
+    @Override
     public byte[] receive() {
         byte[] lenData = new byte[2];
         byte[] receivedData = null;
@@ -160,7 +171,8 @@ public class NibssIsoSocket {
         return receivedData;
     }
 
-    public byte[] sendReceive(byte[] data) {
+    @Override
+    public byte[] sendReceive(@NonNull byte[] data) {
         send(data);
         return receive();
     }

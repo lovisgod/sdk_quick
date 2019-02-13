@@ -181,7 +181,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     protected fun toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        runOnUiThread { Toast.makeText(this, message, Toast.LENGTH_LONG).show() }
     }
 
     override fun onBackPressed() {

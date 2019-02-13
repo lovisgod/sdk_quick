@@ -71,6 +71,9 @@ internal object TerminalInfoParser {
                 if (terminalInfo.countryCode.length >= 4) {
                     terminalInfo = terminalInfo.copy(countryCode = terminalInfo.countryCode.substring(1, terminalInfo.countryCode.length))
                 }
+                if (terminalInfo.currencyCode.length >= 4) {
+                    terminalInfo = terminalInfo.copy(currencyCode = terminalInfo.currencyCode.substring(1, terminalInfo.currencyCode.length))
+                }
 
                 return terminalInfo
             }

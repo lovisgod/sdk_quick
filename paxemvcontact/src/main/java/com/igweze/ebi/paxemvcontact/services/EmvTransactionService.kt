@@ -11,6 +11,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.pax.dal.IPed
 import com.pax.dal.entity.EKeyCode
@@ -84,6 +85,26 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
     override fun cancelTransaction() {
         ped.setInputPinListener(null) // remove the pin pad
         emvCallback = null
+    }
+
+    override fun getTransactionInfo(): EmvData? {
+        // get track2 data
+        return emvImpl.getTrack2()?.let {
+            // get pinData (only for online PIN)
+            var carPin = pinData ?: ""
+
+            // get track 2 string
+            var track2data = EmvUtils.bcd2Str(it)
+
+            // extract pan and expiry
+            var strTrack2 = track2data.split("F")[0]
+            val pan = strTrack2.split("D")[0]
+            val expiry = strTrack2.split("D")[1].substring(0, 4)
+
+            val icc = emvImpl.getIccData()
+
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc)
+        }
     }
 
 

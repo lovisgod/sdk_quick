@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="poolingTime">50000</integer>
+    <integer name="nibss_port">5043</integer>
+    <integer name="timeout">60</integer>
 </resources>

@@ -4,6 +4,8 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
 
 interface EmvCardTransaction {
 
@@ -20,5 +22,7 @@ interface EmvCardTransaction {
     fun completeTransaction()
 
     fun cancelTransaction()
+
+    fun getTransactionInfo(): EmvData?
 
 }

@@ -207,4 +207,21 @@ object EmvUtils {
         }
         return ret
     }
+
+
+    @JvmStatic
+    fun buildIccString(tagValues: List<Pair<Int, ByteArray?>>): String {
+        var hex = ""
+
+        for (tagValue in tagValues) {
+            tagValue.second?.apply {
+                val tag = Integer.toHexString(tagValue.first).toUpperCase()
+                val length = String.format("0%s", Integer.toHexString(size)).toUpperCase()
+                val value = bcd2Str(this)
+                hex = "$hex$tag$length$value"
+            }
+        }
+
+        return hex
+    }
 }

@@ -4,6 +4,7 @@ import com.igweze.ebi.paxemvcontact.utilities.EmvUtils
 import com.igweze.ebi.paxemvcontact.utilities.StringUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.jvm.internal.PropertyReference0Impl
 
 class TestFile {
 
@@ -37,5 +38,13 @@ class TestFile {
         assertEquals(StringUtils.center("foo", 3), ("foo"))
         assertEquals(StringUtils.center("foo", -1), ("foo"))
         assertEquals(StringUtils.center("moon", 10), ("   moon   "))
+    }
+
+    @Test
+    fun intToHex() {
+        val hexString = Integer.toHexString(2)
+        val formatedString = String.format("0%s", hexString).toUpperCase()
+        println("hex: $hexString")
+        println("formatted: $formatedString")
     }
 }

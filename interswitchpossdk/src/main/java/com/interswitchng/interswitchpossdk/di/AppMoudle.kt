@@ -3,10 +3,8 @@ package com.interswitchng.interswitchpossdk.di
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.*
-import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
-import com.interswitchng.interswitchpossdk.shared.interfaces.library.IUserService
-import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
-import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.*
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.storage.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
@@ -30,7 +28,19 @@ private val serviceModule = module {
     single<IUserService> { UserService() }
     single { SharePreferenceManager(androidContext()) }
     single<IKeyValueStore> { KeyValueStore(get()) }
-    single<IsoService> { (factory: (String, Int, Int) -> NibssIsoSocket) ->  IsoServiceImpl (androidContext(), get(), factory) }
+    factory<IsoService> { IsoServiceImpl (androidContext(), get(), get()) }
+    factory<IsoSocket> {
+        val resource = androidContext().resources
+        val serverIp = resource.getString(R.string.nibss_ip)
+        val port = resource.getInteger(R.integer.nibss_port)
+        // try getting terminal info
+        val store: IKeyValueStore = get()
+        val terminalInfo = TerminalInfo.get(store)
+        // get timeout based on terminal info
+        val timeout = terminalInfo?.serverTimeoutInSec  ?: resource.getInteger(R.integer.timeout)
+
+        return@factory NibssIsoSocket(serverIp, port, timeout * 1000)
+    }
 
     // TODO remove this
 //    single<POSDevice>(override = true) {

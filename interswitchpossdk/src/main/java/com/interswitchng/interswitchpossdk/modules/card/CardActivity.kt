@@ -2,25 +2,34 @@ package com.interswitchng.interswitchpossdk.modules.card
 
 import android.app.Activity
 import android.os.Bundle
-import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.card.model.CardTransactionState
+import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.AccountType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.PurchaseType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_card.*
 import kotlinx.android.synthetic.main.content_account_options.*
+import org.koin.android.ext.android.inject
 import java.text.NumberFormat
 
 class CardActivity : BaseActivity() {
 
     private val logger by lazy { Logger.with("CardActivity") }
-    private val emv by lazy { posDevice.emvCardTransaction }
+
     private val printer by lazy { posDevice.printer }
     private val emvCallback by lazy { CardCallback() }
+    private val emv by lazy { posDevice.getEmvCardTransaction() }
+
+    private val isoService: IsoService by inject()
+    private val store: IKeyValueStore by inject()
     private lateinit var accountType: AccountType
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
@@ -89,8 +98,14 @@ class CardActivity : BaseActivity() {
             // start card transaction
             val result = emv.startTransaction()
 
-            if (result == TransactionResult.OFFLINE_APPROVED) emv.completeTransaction()
-            else if (result == TransactionResult.ONLINE_REQUIRED) logger.log("online should be processed") // processOnline()
+            when (result) {
+                TransactionResult.OFFLINE_APPROVED -> emv.completeTransaction()
+                TransactionResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
+                TransactionResult.OFFLINE_DENIED -> {
+                    toast("Transaction Declined")
+                    showContainer(CardTransactionState.Default)
+                }
+            }
 
         }.start()
     }
@@ -118,6 +133,19 @@ class CardActivity : BaseActivity() {
             toast(reason)
             finish()
         }
+    }
+
+    private fun processOnline() {
+        TerminalInfo.get(store)?.let { terminalInfo ->
+            val emv = emv.getTransactionInfo()
+
+            if (emv != null) {
+                val transactionInfo = TransactionInfo.fromEmv(emv, paymentInfo.amount, PurchaseType.Card, accountType)
+                isoService.initiatePurchase(terminalInfo, transactionInfo)
+            } else {
+                toast("Unable to get icc")
+            }
+        } ?: toast("No terminal info, found on device")
     }
 
     internal inner class CardCallback : EmvCallback {

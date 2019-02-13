@@ -1,6 +1,7 @@
 package com.igweze.ebi.paxemvcontact.emv
 
 import android.util.SparseArray
+import com.igweze.ebi.paxemvcontact.utilities.EmvUtils
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bcd2Str
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bytes2String
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils.str2Bcd
@@ -207,14 +208,12 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         else extractTags()
 
 
-        when (ac.type) {
+        return when (ac.type) {
             ACType.AC_TC,
             ACType.AC_AAC,
             ACType.AC_ARQC -> ac.type
+            else -> startTransactionResult
         }
-
-
-        return startTransactionResult
     }
 
     fun completeContactEmvTransaction(): Int {
@@ -380,16 +379,24 @@ class EmvImplementation(private val pinCallback: PinCallback) {
     }
 
     private fun extractTags() {
-        val tags = listOf(ICCData.CRYPTOGRAM_INFO_DATA, ICCData.ISSUER_APP_DATA, ICCData.TERMINAL_VERIFICATION_RESULT,
-                ICCData.CARD_HOLDER_VERIFICATION_RESULT, ICCData.AMOUNT)
-
         logger.log("---------------------------------------------")
-        for (tag in tags) {
+        for (tag in REQUEST_TAGS) {
             val tlv = getTlv(tag.tag)
             val str = tlv?.let { bcd2Str(it) }
             logger.log("tag: ${tag.name}, hex: $str")
         }
         logger.log("---------------------------------------------")
+    }
+
+    internal fun getIccData(): String {
+        val tagValues: MutableList<Pair<Int, ByteArray?>> = mutableListOf()
+
+        for (tag in REQUEST_TAGS) {
+            val tlv = getTlv(tag.tag)
+            tagValues.add(Pair(tag.tag, tlv))
+        }
+
+        return EmvUtils.buildIccString(tagValues)
     }
 
 }
