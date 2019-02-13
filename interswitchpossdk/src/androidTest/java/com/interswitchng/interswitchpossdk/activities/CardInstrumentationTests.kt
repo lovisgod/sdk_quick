@@ -43,9 +43,6 @@ class CardInstrumentationTests: BaseTestActivity() {
         onView(withId(R.id.cardPin)).perform(typeText("4444"))
 
         WaitUtils.waitTime(1500)
-        onView(withId(R.id.btnSubmitPin)).perform(click())
-
-        WaitUtils.waitTime(1500)
         WaitUtils.cleanupWaitTime()
     }
 }

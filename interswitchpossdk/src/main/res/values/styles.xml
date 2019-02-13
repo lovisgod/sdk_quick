@@ -1,21 +1,57 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light" />
 
-    <style name="AppTheme.NoActionBar">
+    <style name="ISW" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@color/iswColorMainBackground</item>
+        <item name="colorPrimary">@color/iswColorPrimary</item>
+        <item name="colorPrimaryDark">@color/iswColorPrimaryDark</item>
+    </style>
+
+    <style name="ISW.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="ISW.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="ISW.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.PaymentOption">
-        <item name="android:background">?attr/selectableItemBackground</item>
+    <style name="ISW.PaymentContent">
+        <item name="android:layout_marginRight">@dimen/content_margin</item>
+        <item name="android:layout_marginLeft">@dimen/content_margin</item>
         <item name="android:padding">10dp</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
+    </style>
+
+    <style name="ISW.PaymentOption" parent="ISW.PaymentContent">
+        <item name="android:background">@drawable/bg_card_shadow</item>
+        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
+        <item name="android:layout_marginBottom">@dimen/content_small_margin</item>
+        <item name="android:padding">@dimen/content_padding</item>
+    </style>
+
+    <style name="ISW.PaymentText" parent="ISW.PaymentContent">
+        <item name="android:textSize">@dimen/content_text_size</item>
+        <item name="android:textColor">@color/iswColorTextSecondary</item>
+        <item name="android:focusable">false</item>
+        <item name="android:clickable">false</item>
+    </style>
+
+
+    <style name="ISW.QrCode">
+        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:layout_marginBottom">32dp</item>
+        <item name="android:layout_marginRight">18dp</item>
+        <item name="android:layout_marginLeft">18dp</item>
+    </style>
+
+    <style name="ISW.QrCode.Content">
+        <item name="android:background">@drawable/bg_card_shadow</item>
+    </style>
+
+    <style name="ISW.Progress" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@android:color/black</item>
     </style>
 
     <public />

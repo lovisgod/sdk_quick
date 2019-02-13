@@ -1,14 +1,17 @@
 package com.interswitchng.interswitchpossdk.mockservices
 
 import android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
-import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
-import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
-import com.interswitchng.interswitchpossdk.shared.models.response.Bank
-import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 internal class MockPayableService private constructor(
         private val qr: ((SimpleResponseHandler<CodeResponse?>) -> Unit)?,
@@ -74,8 +77,10 @@ internal class MockPayableService private constructor(
         }).start()
     }
 
-    override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback) {
-        Thread(Runnable {
+    override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
+        val executor = Executors.newSingleThreadScheduledExecutor()
+
+        executor.execute {
             Thread.sleep(defaultTime)
             val response = Transaction(3380867, 5000, "XeAAoeCX8dklyjbBMDg5wysiA", "00", "566", false, "011", 50, null)
 
@@ -83,7 +88,9 @@ internal class MockPayableService private constructor(
                 if (paymentStatus != null) paymentStatus.invoke(callback)
                 else callback.onTransactionCompleted(response)
             }
-        }).start()
+        }
+
+        return executor
     }
 
     class Builder {

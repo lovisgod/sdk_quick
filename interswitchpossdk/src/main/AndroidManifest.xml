@@ -6,21 +6,47 @@
 
     <application>
         <activity
-            android:name=".modules.ussdqr.UssdActivity"
-            android:label="@string/title_activity_ussd"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MainActivity"
             android:label="IswPos"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+        <activity
+            android:name=".modules.ussdqr.UssdActivity"
+            android:label="USSD"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.ussdqr.QrCodeActivity"
             android:label="QR Code"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".modules.card.CardActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+        <activity
+            android:name=".modules.card.CardActivity"
             android:label="Card"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+        <activity
+            android:name=".modules.paycode.PayCodeActivity"
+            android:label="Pay Code"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+        <activity
+            android:name=".shared.activities.TransactionReceiptActivity"
+            android:label="Transaction Approved"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+        <activity
+            android:name=".modules.settings.SettingsActivity"
+            android:label="Settings"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
     </application>
 
 </manifest>

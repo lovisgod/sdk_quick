@@ -1,3 +1,9 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="content_margin">16dp</dimen>
+    <dimen name="content_padding">16dp</dimen>
+    <dimen name="corner_radius">5dp</dimen>
+    <dimen name="elevation">5dp</dimen>
+    <dimen name="content_small_margin">10dp</dimen>
+    <dimen name="content_text_size">18sp</dimen>
+    <dimen name="payment_icon_length">64dp</dimen>
 </resources>

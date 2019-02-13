@@ -7,7 +7,7 @@
     <string name="title_qr_code">QR Code</string>
     <string name="title_pay_code">Pay Code</string>
     <string name="description_qr_code_image">QR Code Image</string>
-    <string name="title_processing_payment">Processing Payment</string>
+    <string name="title_processing_payment">Generating Code</string>
     <string name="title_loading">Loading…</string>
     <string name="title_get_bank_code">get bank code</string>
     <string name="title_print_receipt">Print Receipt</string>
@@ -24,4 +24,24 @@
     <string name="ISW_USSD_QR_BASE_URL">http:://url:has:not:been:set</string>
     <string name="label_insert_card">Insert your card</string>
     <string name="enter_pin">Enter Pin</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_change_payment">Change Payment</string>
+    <string name="amount">Amount: %1$s</string>
+    <string name="hint_qr_code">Please scan QR code to pay using your banking app</string>
+    <string name="hint_transaction_success">Your transaction was successful</string>
+    <string name="action_close">Close</string>
+    <string name="hint_account_type">Select account type</string>
+    <string name="title_savings">Savings</string>
+    <string name="title_current">Current</string>
+    <string name="action_download_all">Download All</string>
+    <string name="title_downloading_keys">Downloading Keys…</string>
+    <string name="title_date">downloaded: %1s</string>
+    <string name="title_download_terminal_configuration">Download Terminal Configuration</string>
+    <string name="title_download_keys">Download Keys</string>
+    <string name="title_terminal_config_downloaded">Terminal Config Donwloaded</string>
+    <string name="title_keys_downloaded">Keys Downloaded</string>
+    <string name="title_terminal_id">Terminal ID</string>
+    <string name="title_error_downloading_terminal_config">Error Downloading Terminal Configuration</string>
+    <string name="title_error_downloading_keys">Error downloading keys</string>
+    <string name="title_downloading_terminal_config">Downloading Terminal Config</string>
 </resources>

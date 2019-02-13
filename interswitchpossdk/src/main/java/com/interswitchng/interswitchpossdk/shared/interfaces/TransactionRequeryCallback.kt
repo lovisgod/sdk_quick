@@ -1,6 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.interfaces
 
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 
 internal interface TransactionRequeryCallback {
 

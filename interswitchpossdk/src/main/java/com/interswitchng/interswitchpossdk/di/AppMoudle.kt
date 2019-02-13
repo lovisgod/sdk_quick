@@ -1,18 +1,16 @@
 package com.interswitchng.interswitchpossdk.di
 
-import com.interswitch.posinterface.posshim.CardService
-import com.interswitch.posinterface.posshim.PosInterface
-import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
-import com.interswitchng.interswitchpossdk.shared.interfaces.IUserService
-import com.interswitchng.interswitchpossdk.shared.interfaces.POSDevice
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
-import com.interswitchng.interswitchpossdk.shared.services.POSDeviceService
+import com.interswitchng.interswitchpossdk.shared.interfaces.*
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.*
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
-import com.interswitchng.interswitchpossdk.shared.services.SharePreferenceManager
+import com.interswitchng.interswitchpossdk.shared.services.storage.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.IsoServiceImpl
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.tcp.NibssIsoSocket
+import com.interswitchng.interswitchpossdk.shared.services.storage.KeyValueStore
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -28,10 +26,31 @@ private val serviceModule = module {
     single { IswPos.getInstance() }
     single<Payable>  { PayableService(get()) }
     single<IUserService> { UserService() }
-    single<POSDevice> { POSDeviceService(get()) }
     single { SharePreferenceManager(androidContext()) }
-    single { CardService.getInstance(androidContext()) }
-    single<PosInterface> { PosInterface.getInstance(androidContext(), get()) }
+    single<IKeyValueStore> { KeyValueStore(get()) }
+    factory<IsoService> { IsoServiceImpl (androidContext(), get(), get()) }
+    factory<IsoSocket> {
+        val resource = androidContext().resources
+        val serverIp = resource.getString(R.string.nibss_ip)
+        val port = resource.getInteger(R.integer.nibss_port)
+        // try getting terminal info
+        val store: IKeyValueStore = get()
+        val terminalInfo = TerminalInfo.get(store)
+        // get timeout based on terminal info
+        val timeout = terminalInfo?.serverTimeoutInSec  ?: resource.getInteger(R.integer.timeout)
+
+        return@factory NibssIsoSocket(serverIp, port, timeout * 1000)
+    }
+
+    // TODO remove this
+//    single<POSDevice>(override = true) {
+//        object : POSDevice {
+//            override fun attachCallback(callback: CardInsertedCallback) {}
+//            override fun detachCallback(callback: CardInsertedCallback) {}
+//            override fun printSlip(slip: List<PrintObject>) {}
+//            override fun checkPin(string: String) {}
+//        }
+//    }
 }
 
 private val networkModule = module {
@@ -84,6 +103,11 @@ private val networkModule = module {
         return@single retrofit.create(IHttpService::class.java)
     }
 
+    // TODO remove dependency
+    single {
+        val retrofit: Retrofit = get()
+        return@single retrofit.create(PaymentInitiator::class.java)
+    }
 
 }
 

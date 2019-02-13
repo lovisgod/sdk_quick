@@ -27,6 +27,10 @@ internal class Simple<R>(private val call: Call<R>) {
             }
 
             override fun onResponse(call: Call<R>?, response: Response<R>?) {
+                val hasError = response?.code() in 400..505
+                if (hasError) {
+                    val error = response?.errorBody()?.string()
+                }
                 responseHandler(response?.body(), null)
             }
 

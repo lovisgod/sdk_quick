@@ -1,13 +1,16 @@
 package com.interswitchng.interswitchpossdk.shared.services
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
-import com.interswitchng.interswitchpossdk.shared.interfaces.Payable
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
-import com.interswitchng.interswitchpossdk.shared.models.request.CodeRequest
-import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
-import com.interswitchng.interswitchpossdk.shared.models.response.Bank
-import com.interswitchng.interswitchpossdk.shared.models.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 internal class PayableService(private val httpService: IHttpService): Payable {
 
@@ -23,13 +26,20 @@ internal class PayableService(private val httpService: IHttpService): Payable {
         httpService.getUssdCode(request).process(callback)
     }
 
-    override fun checkPayment(status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback) {
+    override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
+        val executor = Executors.newSingleThreadScheduledExecutor()
+
         var hasResponse = false
-        Thread(Runnable {
+        executor.execute {
             var secs = 1L
             var elapsedTime = secs
             while (!hasResponse) {
-                httpService.getTransactionStatus(status.merchantCode, status.reference).test { transaction, throwable ->
+                val call = when(type) {
+                    PaymentType.USSD -> httpService.getUssdTransactionStatus(status.merchantCode, status.reference)
+                    else -> httpService.getQrTransactionStatus(status.merchantCode, status.reference)
+                }
+
+                call.test { transaction, throwable ->
                     when {
                         throwable != null -> {
                             secs = 0
@@ -66,6 +76,8 @@ internal class PayableService(private val httpService: IHttpService): Payable {
                 elapsedTime += nextDuration
                 if (!hasResponse) Thread.sleep(nextDuration)
             }
-        }).start()
+        }
+
+        return executor
     }
 }

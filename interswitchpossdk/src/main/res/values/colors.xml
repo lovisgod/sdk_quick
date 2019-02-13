@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="iswColorPrimary">#00bbe3</color>
+    <color name="iswColorPrimaryDark">#004361</color>
+    <color name="iswColorMainBackground">#eaecef</color>
+    <color name="iswColorTextPrimary">@android:color/white</color>
+    <color name="iswColorTextSecondary">#004563</color>
+    <color name="iswColorSecondaryIcon">#dfdfdf</color>
+    <color name="iswColorQrCodeBackground">#f8f8f9</color>
+    <color name="iswTextColorDark">#363636</color>
+    <color name="iswTextColorSuccess">#00c530</color>
     <color name="deep_blue_01">#004570</color>
     <color name="deep_blue">#00365b</color>
     <color name="light_blue">#cbecff</color>

@@ -1,6 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.errors
 
-internal class DeviceError(val errorMessage: String, val errorCode: Int) {
+class DeviceError(val errorMessage: String, val errorCode: Int) {
 
     companion object {
         const val ERR_INVALID_PIN = 1

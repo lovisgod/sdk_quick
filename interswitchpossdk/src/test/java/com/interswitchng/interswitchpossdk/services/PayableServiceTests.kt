@@ -2,9 +2,9 @@ package com.interswitchng.interswitchpossdk.services
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
-import com.interswitchng.interswitchpossdk.shared.models.request.TransactionStatus
-import com.interswitchng.interswitchpossdk.shared.models.response.Bank
-import com.interswitchng.interswitchpossdk.shared.models.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.utilities.Simple
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
@@ -12,6 +12,7 @@ import com.nhaarman.mockitokotlin2.*
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Test
+import java.util.concurrent.Executors
 
 class PayableServiceTests {
 
@@ -194,6 +195,24 @@ class PayableServiceTests {
 
         verify(httpService, times(1)).getBanks()
         verify(callback, times(1)).invoke(any(), anyOrNull())
+    }
+
+    @Test
+    fun testExecutor() {
+        val scheduler = Executors.newSingleThreadScheduledExecutor()
+
+        println(Thread.activeCount())
+        scheduler.execute {
+            println("before sleep")
+            Thread.sleep(5000)
+            println("after sleep")
+        }
+
+        Thread.sleep(3000)
+        scheduler.shutdownNow()
+        Thread.sleep(3000)
+
+        assertEquals(1, Thread.activeCount())
     }
 
 

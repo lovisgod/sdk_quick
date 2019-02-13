@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:textSize="@dimen/content_text_size"
+            android:textColor="@android:color/black"
+            android:text="@string/title_choose_payment" />
+
+
+        <LinearLayout
+            android:id="@+id/cardPayment"
+            style="@style/ISW.PaymentOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/payment_icon_length"
+                android:layout_height="@dimen/payment_icon_length"
+                android:padding="5dp"
+                android:src="@drawable/acost" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/ISW.PaymentText"
+                android:layout_gravity="center_vertical"
+                android:text="@string/title_card" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:tint="@color/iswColorSecondaryIcon"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ussdPayment"
+            style="@style/ISW.PaymentOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/payment_icon_length"
+                android:layout_height="@dimen/payment_icon_length"
+                android:padding="5dp"
+                android:src="@drawable/abusiness_plan" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/ISW.PaymentText"
+                android:layout_gravity="center_vertical"
+                android:text="@string/title_ussd" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:tint="@color/iswColorSecondaryIcon"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/qrPayment"
+            style="@style/ISW.PaymentOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/payment_icon_length"
+                android:layout_height="@dimen/payment_icon_length"
+                android:padding="5dp"
+                android:src="@drawable/adebt" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/ISW.PaymentText"
+                android:layout_gravity="center_vertical"
+                android:text="@string/title_qr_code" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:tint="@color/iswColorSecondaryIcon"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/payCodePayment"
+            style="@style/ISW.PaymentOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/payment_icon_length"
+                android:layout_height="@dimen/payment_icon_length"
+                android:padding="5dp"
+                android:src="@drawable/agrowth" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/ISW.PaymentText"
+                android:layout_gravity="center_vertical"
+                android:text="@string/title_pay_code" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="5dp"
+                android:tint="@color/iswColorSecondaryIcon"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

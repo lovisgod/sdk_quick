@@ -1,16 +1,21 @@
 package com.interswitchng.interswitchpossdkdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.igweze.ebi.paxemvcontact.services.POSDeviceService;
+import com.igweze.ebi.paxemvcontact.activities.PinInputActivity;
+import com.igweze.ebi.paxemvcontact.posshim.CardService;
+import com.igweze.ebi.paxemvcontact.posshim.PosInterface;
 import com.interswitchng.interswitchpossdk.IswPos;
-import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration;
+
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -24,38 +29,47 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void configureTerminal() {
-        String alias = "000007";
-        String terminalId = "2069018M";
-        String merchantId = "IBP000000001384";
-        String merchantLocation = "AIRTEL NETWORKS LIMITED PH MALL";
-        // String currencyCode = "566";
-        // String posGeoCode = "0023400000000056";
-        String terminalType = "PAX";
-        String uniqueId = "280-820-589";
-        String merchantCode = "MX5882";
+        PosInterface.setDalInstance(getApplicationContext());
+        CardService cardService = CardService.getInstance(getApplicationContext());
+        PosInterface.getInstance(cardService);
+        POSDeviceService deviceService = POSDeviceService.create();
 
-        POSConfiguration config = new POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation, merchantCode);
-
-        IswPos.configureTerminal(getApplication(), config);
+        // configure terminal
+        IswPos.configureTerminal(getApplication(), deviceService);
     }
 
     private void setupUI() {
         final EditText amount = findViewById(R.id.amount);
         final AppCompatButton button = findViewById(R.id.btnSubmitAmount);
 
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                String enteredAmount = amount.getText().toString();
-                if (enteredAmount.isEmpty()) {
-                    Toast.makeText(DemoActivity.this, "Amount value is required", Toast.LENGTH_LONG).show();
-                } else {
-                    // trigger payment
-                   IswPos.getInstance().initiatePayment(Integer.valueOf(enteredAmount));
-                }
+        button.setOnClickListener(v -> {
+            String enteredAmount = amount.getText().toString();
+            if (enteredAmount.isEmpty()) {
+                Toast.makeText(DemoActivity.this, "Amount value is required", Toast.LENGTH_LONG).show();
+            } else {
+                // trigger payment
+                IswPos.getInstance().initiatePayment(Integer.valueOf(enteredAmount));
             }
         });
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.demo_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.terminal_config) {
+            IswPos.showSettingsScreen();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

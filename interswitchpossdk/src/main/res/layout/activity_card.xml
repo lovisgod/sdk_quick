@@ -1,78 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".modules.card.CardActivity">
+    android:layout_height="match_parent">
 
 
-    <LinearLayout
-        android:id="@+id/insertCardContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center"
-        android:visibility="gone">
+    <include layout="@layout/content_toolbar" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="@string/label_insert_card" />
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/insert_credit_card" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/insertPinContainer"
+    <TextView
+        android:id="@+id/amountText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        tools:visibility="visible">
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:padding="15dp"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="amount: 50,000" />
 
-        <TextView
-            android:id="@+id/cardNumber"
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        tools:context=".modules.card.CardActivity">
+
+
+        <LinearLayout
+            android:id="@+id/accountOptionsContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_marginBottom="15dp"
-            tools:text="card: xxxx-xxxx-xxxx-1239"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/iswColorMainBackground">
+
+            <include layout="@layout/content_account_options" />
+
+        </LinearLayout>
 
 
-        <com.interswitchng.interswitchpossdk.modules.card.PinEditText
-            android:id="@+id/cardPin"
+        <LinearLayout
+            android:id="@+id/insertCardContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:cursorVisible="false"
-            android:digits="0123456789"
-            android:inputType="numberPassword"
-            android:maxLength="4"
-            android:textIsSelectable="false"
-            android:textSize="20sp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            tools:text="44445"
-            />
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:background="@color/iswColorMainBackground">
 
-        <Button
-            android:id="@+id/btnSubmitPin"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_insert_card"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/insert_credit_card" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/insertPinContainer"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:text="Submit"
-            />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/iswColorMainBackground">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/cardNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:textSize="15sp"
+                tools:text="card: xxxx-xxxx-xxxx-1239" />
 
-</FrameLayout>
+
+            <com.interswitchng.interswitchpossdk.modules.card.PinEditText
+                android:id="@+id/cardPin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:cursorVisible="false"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="4"
+                android:textIsSelectable="false"
+                android:clickable="false"
+                android:textSize="20sp"
+                tools:text="44445" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/blankContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/iswColorMainBackground" />
+
+    </FrameLayout>
+</LinearLayout>

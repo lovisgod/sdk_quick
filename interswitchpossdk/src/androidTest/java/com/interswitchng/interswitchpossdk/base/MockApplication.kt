@@ -2,7 +2,10 @@ package com.interswitchng.interswitchpossdk.base
 
 import android.app.Application
 import com.interswitchng.interswitchpossdk.IswPos
-import com.interswitchng.interswitchpossdk.shared.models.POSConfiguration
+import com.interswitchng.interswitchpossdk.mockservices.EmvTransactionImpl
+import com.interswitchng.interswitchpossdk.mockservices.MockPOSDevice
+import com.interswitchng.interswitchpossdk.mockservices.Printer
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
 class MockApplication: Application() {
@@ -23,11 +26,16 @@ class MockApplication: Application() {
 
         val config = POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation, merchantCode)
 
-        IswPos.configureTerminal(this, config)
 
-        if (shouldMock)
+        // setup device for terminal
+        val device = MockPOSDevice(EmvTransactionImpl(), Printer())
+        IswPos.configureTerminal(this, device)
+
+        // load mock modules based on runner arguments
+        if (shouldMock) {
             // override existing modules
             loadKoinModules(mockAppModules)
+        }
     }
 
     companion object {
