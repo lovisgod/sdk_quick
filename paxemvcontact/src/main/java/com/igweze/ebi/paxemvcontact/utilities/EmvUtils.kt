@@ -1,6 +1,7 @@
 package com.igweze.ebi.paxemvcontact.utilities
 
 import android.util.Log
+import com.igweze.ebi.paxemvcontact.emv.ICCData
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 import java.util.*
@@ -210,16 +211,23 @@ object EmvUtils {
 
 
     @JvmStatic
-    fun buildIccString(tagValues: List<Pair<Int, ByteArray?>>): String {
+    fun buildIccString(tagValues: List<Pair<ICCData, ByteArray?>>): String {
         var hex = ""
 
         for (tagValue in tagValues) {
             tagValue.second?.apply {
-                val tag = Integer.toHexString(tagValue.first).toUpperCase()
-                val length = Integer.toHexString(size)
+                val tag = Integer.toHexString(tagValue.first.tag).toUpperCase()
+                var value = bcd2Str(this)
+                var length = Integer.toHexString(size)
+
+                // truncate tag value if it exceeds max length
+                if (value.length > tagValue.first.max) {
+                    value = value.substring(0 until tagValue.first.max)
+                    length = Integer.toHexString(tagValue.first.max)
+                }
+
                 // prepend 0 based on value length
                 val lengthStr = (if (length.length > 1) length else "0$length").toUpperCase()
-                val value = bcd2Str(this)
                 hex = "$hex$tag$lengthStr$value"
             }
         }

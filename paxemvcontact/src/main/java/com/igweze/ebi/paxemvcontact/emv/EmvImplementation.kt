@@ -389,11 +389,11 @@ class EmvImplementation(private val pinCallback: PinCallback) {
     }
 
     internal fun getIccData(): String {
-        val tagValues: MutableList<Pair<Int, ByteArray?>> = mutableListOf()
+        val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
 
         for (tag in REQUEST_TAGS) {
             val tlv = getTlv(tag.tag)
-            tagValues.add(Pair(tag.tag, tlv))
+            tagValues.add(Pair(tag, tlv))
         }
 
         return EmvUtils.buildIccString(tagValues)
