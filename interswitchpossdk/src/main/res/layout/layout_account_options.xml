@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,25 +43,15 @@
             android:id="@+id/cardPayment"
             android:background="@drawable/bg_square_">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_card"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:id="@+id/iv_card"
-                android:layout_centerVertical="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:text="Card"
+                android:text="Default Account"
                 android:textColor="@color/deep_blue"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_toEndOf="@+id/iv_card"
-                android:layout_toRightOf="@+id/iv_card"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"/>
             <ImageView
@@ -83,25 +72,14 @@
             android:id="@+id/qrPayment"
             android:background="@drawable/bg_square_">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_card"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:id="@+id/iv_qr"
-                android:layout_centerVertical="true"/>
-
             <TextView
                 android:layout_width="wrap_content"
-                android:text="QR"
+                android:text="Savings Account"
                 android:textColor="@color/deep_blue"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_toEndOf="@+id/iv_qr"
-                android:layout_toRightOf="@+id/iv_qr"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"/>
             <ImageView
@@ -122,25 +100,14 @@
             android:id="@+id/payCodePayment"
             android:background="@drawable/bg_square_">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_paycode"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:id="@+id/iv_paycode"
-                android:layout_centerVertical="true"/>
-
             <TextView
                 android:layout_width="wrap_content"
-                android:text="PayCode"
+                android:text="Current Account"
                 android:textColor="@color/deep_blue"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_toEndOf="@+id/iv_paycode"
-                android:layout_toRightOf="@+id/iv_paycode"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"/>
             <ImageView
@@ -154,43 +121,5 @@
                 android:layout_centerVertical="true"/>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp"
-            android:id="@+id/ussdPayment"
-            android:background="@drawable/bg_square_">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_ussd"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:id="@+id/iv_ussd"
-                android:layout_centerVertical="true"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="USSD"
-                android:textColor="@color/deep_blue"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_toEndOf="@+id/iv_ussd"
-                android:layout_toRightOf="@+id/iv_ussd"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"/>
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_f"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
-        </RelativeLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

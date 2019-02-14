@@ -44,4 +44,18 @@
     <string name="title_error_downloading_terminal_config">Error Downloading Terminal Configuration</string>
     <string name="title_error_downloading_keys">Error downloading keys</string>
     <string name="title_downloading_terminal_config">Downloading Terminal Config</string>
+    <string name="label_help">Help</string>
+    <string name="label_merchant_info">Merchant Info</string>
+    <string name="label_setting">Settings</string>
+    <string name="label_reports">Reports</string>
+    <string name="label_history">History</string>
+    <string name="label_transaction">Transactions</string>
+    <string name="label_menu">MENU</string>
+    <string name="label_app_title">SmartPos</string>
+    <string name="select_bank">Select Bank</string>
+    <string name="receiving_payment">Receiving Payment</string>
+    <string name="naira_">₦</string>
+    <string name="dummy_price">678,910.99</string>
+    <string name="dummy_ussd">*888*765*98#</string>
+    <string name="pay_ussd_instruction">Dial the USSD code on your Mobile phone to pay</string>
 </resources>

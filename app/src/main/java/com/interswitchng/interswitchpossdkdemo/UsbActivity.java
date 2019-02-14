@@ -17,17 +17,7 @@ public class UsbActivity extends AppCompatActivity {
         setContentView(R.layout.activity_usb);
 
         manager = new PosUsbManager(this);
-        manager.setUsbManagerErrorCallback(throwable -> {
 
-            log("Error => " + throwable);
-            return null;
-        });
-
-        manager.setUsbManagerMessageCallback(s -> {
-
-            log("New Message => " + s);
-            return null;
-        });
     }
 
     private void log(String m) {
