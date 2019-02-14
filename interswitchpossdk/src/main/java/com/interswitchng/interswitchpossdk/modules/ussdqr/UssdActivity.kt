@@ -23,7 +23,7 @@ import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.activity_ussd.*
-import kotlinx.android.synthetic.main.layout_amount.*
+import kotlinx.android.synthetic.main.content_amount.*
 import org.koin.android.ext.android.inject
 import java.text.NumberFormat
 

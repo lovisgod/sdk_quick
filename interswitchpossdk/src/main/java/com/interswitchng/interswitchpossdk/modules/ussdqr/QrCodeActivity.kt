@@ -12,6 +12,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest.Companion.QR_FORMAT_RAW
@@ -21,7 +22,9 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.resp
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.activity_qr_code.*
+import kotlinx.android.synthetic.main.content_amount.*
 import org.koin.android.ext.android.inject
 import java.text.NumberFormat
 
@@ -60,8 +63,11 @@ class QrCodeActivity : BaseActivity() {
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
         amountText.text = getString(R.string.amount, amount)
+        paymentHint.text = getString(R.string.hint_qr_code)
+        changePaymentMethod.setOnClickListener {
+            showPaymentOptions(BottomSheetOptionsDialog.QR)
+        }
 
-        val request = CodeRequest.from(instance.config, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
 
         dialog.show()
 
@@ -69,6 +75,7 @@ class QrCodeActivity : BaseActivity() {
             qrCodeImage.setImageBitmap(qrBitmap)
             dialog.dismiss()
         } else {
+            val request = CodeRequest.from(instance.config, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
             // initiate qr payment
             paymentService.initiateQrPayment(request) { response, throwable ->
                 if (throwable != null) handleError(throwable)
@@ -98,7 +105,7 @@ class QrCodeActivity : BaseActivity() {
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-//            posDevice.printReceipt(printSlip)
+            posDevice.printer.printSlip(printSlip, UserType.Customer)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
         }

@@ -9,10 +9,4 @@
         <item name="android:padding">@dimen/content_padding</item>
     </style>
 
-    <style name="ISW.QrCode.Content">
-        <item name="android:backgroundTint">#f8f8f9</item>
-        <item name="android:background">@drawable/bg_card</item>
-        <item name="android:elevation">@dimen/elevation</item>
-    </style>
-
 </resources>

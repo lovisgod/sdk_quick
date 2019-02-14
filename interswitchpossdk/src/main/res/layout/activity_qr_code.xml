@@ -1,46 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".modules.ussdqr.QrCodeActivity">
 
-    <LinearLayout
+    <include layout="@layout/content_toolbar" />
+
+    <include
+        android:id="@+id/amountLayout"
+        layout="@layout/content_amount" />
+
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        tools:context=".modules.ussdqr.QrCodeActivity">
 
-        <include layout="@layout/content_toolbar" />
-
-        <android.support.constraint.ConstraintLayout
-            style="@style/ISW.QrCode.Content"
+        <LinearLayout
+            android:id="@+id/mockButtonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="0dp"
-            tools:context=".modules.ussdqr.QrCodeActivity">
-
-            <TextView
-                android:id="@+id/amountText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:padding="15dp"
-                android:textColor="@color/iswTextColorDark"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/amount" />
-
-            <TextView
-                android:id="@+id/hintText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:padding="5dp"
-                android:text="@string/hint_qr_code"
-                android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/amountText" />
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/content_padding"
+            android:paddingTop="@dimen/content_small_padding">
 
             <ImageView
                 android:id="@+id/qrCodeImage"
@@ -51,64 +38,108 @@
                 android:contentDescription="@string/description_qr_code_image"
                 android:scaleType="center"
                 android:src="@drawable/placeholder"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hintText" />
-
-
-            <TextView
-                android:id="@+id/textMessage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/title_transaction_approved"
-                android:textSize="24sp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+
             <LinearLayout
-                android:id="@+id/mockButtonsContainer"
+                android:id="@+id/changePaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:layout_marginTop="@dimen/content_small_margin"
-                android:padding="@dimen/content_small_margin"
-                android:background="@drawable/bg_card_bottom_half_card"
-                app:layout_constraintTop_toBottomOf="@+id/qrCodeImage">
+                android:gravity="center"
+                android:layout_margin="@dimen/content_margin"
+                android:paddingTop="@dimen/content_small_padding"
+                android:paddingBottom="@dimen/content_small_padding"
+                android:paddingLeft="@dimen/content_padding"
+                android:paddingRight="@dimen/content_padding"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/initiateButton"
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:tint="@color/iswColorTextSecondary"
+                    android:layout_marginRight="@dimen/content_small_padding"
+                    android:layout_marginLeft="@dimen/content_small_padding"
+                    android:src="@drawable/ic_swap"
+                    />
+
+                <TextView
+                    style="@style/ISW.SecondaryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="Confirm Payment"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="@android:color/holo_green_dark"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/qrCodeImage" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/printCodeButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="Print Code"
-                    android:textColor="@android:color/white"
-                    app:backgroundTint="@android:color/holo_blue_dark"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/qrCodeImage" />
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/action_change_payment"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_medium" />
 
 
             </LinearLayout>
 
 
-        </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/initiateButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/content_margin"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
-    </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_action_button"
+                    android:gravity="center"
+                    android:padding="@dimen/content_padding"
+                    android:text="CONFIRM PAYMENT"
+                    android:textColor="@color/iswColorTextSecondary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </android.support.constraint.ConstraintLayout>
 
 
-</android.support.v4.widget.NestedScrollView>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/printCodeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/content_margin"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+
+                <TextView
+                    android:id="@+id/printUssdText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_action_button"
+                    android:padding="@dimen/content_padding"
+                    android:text="PRINT USSD"
+                    android:textColor="@color/iswColorTextSecondary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/content_margin"
+                    android:layout_marginRight="@dimen/content_margin"
+                    android:src="@drawable/ic_action_arrow_next"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/printUssdText"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>
