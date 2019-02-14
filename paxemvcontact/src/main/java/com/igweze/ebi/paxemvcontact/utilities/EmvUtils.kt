@@ -221,8 +221,9 @@ object EmvUtils {
                 var length = Integer.toHexString(size)
 
                 // truncate tag value if it exceeds max length
-                if (value.length > tagValue.first.max) {
-                    value = value.substring(0 until tagValue.first.max)
+                if (size > tagValue.first.max) {
+                    val expectedLength = 2 * tagValue.first.max // hex is double the length
+                    value = value.substring(0 until expectedLength)
                     length = Integer.toHexString(tagValue.first.max)
                 }
 
