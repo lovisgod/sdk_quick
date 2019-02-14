@@ -50,7 +50,7 @@
         android:layout_marginBottom="@dimen/content_margin"
         android:background="@drawable/bg_solid_primary"
         android:text="@string/title_print_receipt"
-        android:textColor="@color/iswColorTextPrimary"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

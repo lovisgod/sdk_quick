@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/iswColorPrimary"
-    android:theme="@style/ISW.AppBarOverlay"
-    app:popupTheme="@style/ISW.PopupOverlay" />
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/iswColorPrimary"
+        android:theme="@style/ISW.AppBarOverlay"
+        app:popupTheme="@style/ISW.PopupOverlay" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ISW.Subtitle"
+        android:textColor="@android:color/white"
+        android:text="@string/receiving_payment"
+        android:background="@color/iswColorPrimaryDark"
+        />
+
+</LinearLayout>
+

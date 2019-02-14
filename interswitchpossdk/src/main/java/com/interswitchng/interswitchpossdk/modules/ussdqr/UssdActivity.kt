@@ -12,14 +12,18 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_USSD
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
+import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.activity_ussd.*
+import kotlinx.android.synthetic.main.layout_amount.*
 import org.koin.android.ext.android.inject
 import java.text.NumberFormat
 
@@ -58,15 +62,18 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     private fun setupUI() {
 
-        val amount = NumberFormat.getInstance().format(paymentInfo.amount)
+        val amount = DisplayUtils.getAmountString(paymentInfo.amount)
         amountText.text = getString(R.string.amount, amount)
 
         loadBanks()
+
+        paymentHint.text = "Loading Banks"
         banks.onItemSelectedListener = this
-        btnGetCode.setOnClickListener { _ ->
-            showGetCodeButton(false)
-            getBankCode()
+        changePaymentMethod.setOnClickListener {
+            showPaymentOptions(BottomSheetOptionsDialog.USSD)
         }
+
+        showMockButtons(false)
 
     }
 
@@ -78,7 +85,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 bankCodes = mutableMapOf(firstItem to "")
                 allBanks?.map { bankCodes.put(it.name, it.code) }
                 val bankNames = bankCodes.keys.toList()
-                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, bankNames) }
+                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.list_item_bank, bankNames) }
             }
         }
     }
@@ -129,7 +136,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-//            posDevice.printReceipt(printSlip)
+            posDevice.printer.printSlip(printSlip, UserType.Customer)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
         }
@@ -152,13 +159,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         Toast.makeText(this, throwable.localizedMessage, Toast.LENGTH_LONG).show()
     }
 
-
-    private fun showGetCodeButton(shouldShow: Boolean) {
-        val visibility = if (shouldShow) View.VISIBLE else View.GONE
-        btnGetCode.visibility = visibility
-        btnGetCode.isEnabled = shouldShow
-    }
-
     private fun showMockButtons(shouldShow: Boolean) {
         val visibility = if (shouldShow) View.VISIBLE else View.GONE
         mockButtonsContainer.visibility = visibility
@@ -167,11 +167,13 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         if (firstItem == banks.selectedItem) {
             selectedItem = ""
-            showGetCodeButton(false)
+            paymentHint.text = "Choose a bank to get a USSD code"
         } else {
             selectedItem = parent.getItemAtPosition(pos).toString()
             Toast.makeText(parent.context, "You have selected : $selectedItem", Toast.LENGTH_LONG).show()
-            showGetCodeButton(true)
+            getBankCode()
+
+            paymentHint.text = getString(R.string.pay_ussd_instruction)
         }
 
         // stop any polling

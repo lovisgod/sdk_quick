@@ -1,104 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".modules.ussdqr.QrCodeActivity">
 
     <include layout="@layout/content_toolbar" />
 
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
+        style="@style/ISW.Subtitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp"
-        tools:context=".modules.ussdqr.QrCodeActivity">
-
+        android:layout_height="wrap_content"
+        android:background="@color/iswTextColorSecondaryLight"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/amountText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:padding="15dp"
-            android:textSize="20sp"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="amount: 50,000" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/content_small_padding"
+            android:paddingTop="@dimen/content_small_padding"
+            android:textSize="14sp"
+            android:text="@string/select_bank"
+            android:textColor="@android:color/white" />
 
+            <!--style="@style/ISW.Spinner"-->
         <Spinner
             android:id="@+id/banks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:padding="15dp"
-            app:layout_constraintTop_toBottomOf="@id/amountText"/>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:entries="@array/com_google_android_gms_fonts_certs"
+            tools:listitem="@layout/list_item_bank"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/layout_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:id="@+id/ussdText"
+        style="@style/ISW.Ussd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/content_margin"
+        android:layout_marginLeft="@dimen/content_margin"
+        android:gravity="center"
+        app:fontFamily="@font/roboto_bold"
+        tools:text="@string/dummy_ussd" />
+
+    <LinearLayout
+        android:id="@+id/changePaymentMethod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="@dimen/content_margin"
+        android:paddingTop="@dimen/content_small_padding"
+        android:paddingBottom="@dimen/content_small_padding"
+        android:paddingLeft="@dimen/content_padding"
+        android:paddingRight="@dimen/content_padding"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:tint="@color/iswColorTextSecondary"
+            android:layout_marginRight="@dimen/content_small_padding"
+            android:layout_marginLeft="@dimen/content_small_padding"
+            android:src="@drawable/ic_swap"
+            />
 
         <TextView
-            android:id="@+id/ussdText"
-            android:layout_width="match_parent"
+            style="@style/ISW.SecondaryText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:padding="15dp"
-            android:textSize="30sp"
-            app:layout_constraintTop_toBottomOf="@+id/banks"
-            tools:text="@string/app_name" />
+            android:layout_gravity="center_vertical"
+            android:text="@string/action_change_payment"
+            android:textSize="16sp"
+            android:fontFamily="@font/roboto_medium" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btnGetCode"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="25dp"
-            android:enabled="false"
-            android:text="@string/title_get_bank_code"
-            android:textColor="@android:color/white"
-            android:visibility="gone"
-            app:backgroundTint="@android:color/holo_blue_bright"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ussdText"
-            tools:visibility="visible" />
+
+    </LinearLayout>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".modules.ussdqr.QrCodeActivity">
 
         <LinearLayout
             android:id="@+id/mockButtonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/ussdText">
+            android:paddingTop="@dimen/content_small_padding"
+            android:paddingBottom="@dimen/content_padding"
+            android:orientation="vertical">
 
-            <android.support.v7.widget.AppCompatButton
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/initiateButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:text="Confirm Payment"
-                android:textColor="@android:color/white"
-                app:backgroundTint="@android:color/holo_green_dark"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ussdText" />
+                android:layout_margin="@dimen/content_margin"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
-            <android.support.v7.widget.AppCompatButton
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_action_button"
+                    android:padding="@dimen/content_padding"
+                    android:text="CONFIRM PAYMENT"
+                    android:gravity="center"
+                    android:textColor="@color/iswColorTextSecondary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </android.support.constraint.ConstraintLayout>
+
+
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/printCodeButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:text="Print Code"
-                android:textColor="@android:color/white"
-                app:backgroundTint="@android:color/holo_blue_dark"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ussdText" />
+                android:layout_margin="@dimen/content_margin"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
+
+                <TextView
+                    android:id="@+id/printUssdText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_action_button"
+                    android:padding="@dimen/content_padding"
+                    android:text="PRINT USSD"
+                    android:textColor="@color/iswColorTextSecondary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/content_margin"
+                    android:layout_marginRight="@dimen/content_margin"
+                    android:src="@drawable/ic_action_arrow_next"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/printUssdText"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>

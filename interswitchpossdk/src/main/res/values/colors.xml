@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="iswColorPrimary">#00bbe3</color>
-    <color name="iswColorPrimaryDark">#004361</color>
+    <color name="iswColorPrimary">#004570</color>
+    <color name="iswColorPrimaryDark">#00365b</color>
     <color name="iswColorMainBackground">#eaecef</color>
-    <color name="iswColorTextPrimary">@android:color/white</color>
-    <color name="iswColorTextSecondary">#004563</color>
+    <color name="iswColorTextSecondary">#FF00425F</color>
     <color name="iswColorSecondaryIcon">#dfdfdf</color>
     <color name="iswColorQrCodeBackground">#f8f8f9</color>
     <color name="iswTextColorDark">#363636</color>
-    <color name="iswTextColorSuccess">#00c530</color>
-    <color name="deep_blue_01">#004570</color>
-    <color name="deep_blue">#00365b</color>
-    <color name="light_blue">#cbecff</color>
+    <color name="iswTextColorSuccess">#85e95d</color>
+
+
+
+    <color name="iswTextColorSecondary">#004570</color>
+    <color name="iswTextColorSecondaryDark">#00365b</color>
+    <color name="iswColorHighlight">#FFCBECFF</color>
     <color name="light_green">#85e95d</color>
-    <color name="white">#fff</color>
-    <color name="text_color_light_blue">#00b0f8</color>
+    <color name="iswTextColorSecondaryLight">#00b0f8</color>
 </resources>

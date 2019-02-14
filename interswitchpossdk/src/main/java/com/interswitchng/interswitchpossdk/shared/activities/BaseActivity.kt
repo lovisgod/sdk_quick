@@ -11,6 +11,7 @@ import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.card.CardActivity
 import com.interswitchng.interswitchpossdk.modules.paycode.PayCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
+import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
@@ -64,15 +65,21 @@ abstract class BaseActivity : AppCompatActivity() {
                     is QrCodeActivity -> BottomSheetOptionsDialog.QR
                     is PayCodeActivity -> BottomSheetOptionsDialog.PAYCODE
                     is CardActivity -> BottomSheetOptionsDialog.CARD
-                    else -> BottomSheetOptionsDialog.USSD
+                    is UssdActivity -> BottomSheetOptionsDialog.USSD
+                    else -> BottomSheetOptionsDialog.NONE
                 }
-                val info: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
-                val optionsDialog: BottomSheetOptionsDialog = BottomSheetOptionsDialog.newInstance(exclude, info)
-                optionsDialog.show(supportFragmentManager, optionsDialog.tag)
-                true
+
+                return showPaymentOptions(exclude)
             }
             else -> false
         }
+    }
+
+    protected fun showPaymentOptions(exclude: String): Boolean {
+        val info: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
+        val optionsDialog: BottomSheetOptionsDialog = BottomSheetOptionsDialog.newInstance(exclude, info)
+        optionsDialog.show(supportFragmentManager, optionsDialog.tag)
+        return true
     }
 
     fun setupToolbar(title: String) {
@@ -119,6 +126,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun onTransactionSuccessful(transaction: Transaction) {
         val intent = Intent(this, TransactionReceiptActivity::class.java).apply {
+            putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
             putExtra(TransactionReceiptActivity.KEY_TRANSACTION_AMOUNT, transaction.amount)
         }
         // TODO put parcelable transaction

@@ -54,5 +54,44 @@
         <item name="colorAccent">@android:color/black</item>
     </style>
 
+    <style name="ISW.Subtitle">
+        <item name="android:paddingRight">@dimen/content_small_padding</item>
+        <item name="android:paddingTop">@dimen/content_small_padding</item>
+        <item name="android:paddingBottom">@dimen/content_small_padding</item>
+        <item name="android:paddingLeft">@dimen/content_padding</item>
+    </style>
+
+    <style name="ISW.Spinner" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/bg_spinner_drop_down</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="ISW.SecondaryText">
+        <item name="android:textColor">@color/iswColorTextSecondary</item>
+    </style>
+
+    <style name="ISW.Hint" parent="ISW.SecondaryText">
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.11</item>
+        <item name="android:paddingTop">@dimen/content_small_padding</item>
+        <item name="android:paddingBottom">@dimen/content_small_padding</item>
+        <item name="android:paddingRight">50dp</item>
+        <item name="android:paddingLeft">50dp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+
+        <style name="ISW.Ussd" parent="ISW.SecondaryText">
+            <item name="android:fontFamily">@font/roboto_bold</item>
+            <item name="android:layout_marginTop">@dimen/content_small_margin</item>
+            <item name="android:textSize">32sp</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:lineSpacingMultiplier">1.19</item>
+        </style>
+
+
     <public />
 </resources>

@@ -4,7 +4,13 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
         <activity
             android:name=".MainActivity"
             android:label="IswPos"
@@ -47,6 +53,10 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

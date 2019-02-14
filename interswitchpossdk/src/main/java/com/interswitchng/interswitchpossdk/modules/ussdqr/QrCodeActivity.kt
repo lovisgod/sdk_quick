@@ -19,6 +19,7 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.requ
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
+import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_qr_code.*
 import org.koin.android.ext.android.inject
@@ -57,7 +58,7 @@ class QrCodeActivity : BaseActivity() {
         val paymentInfo: PaymentInfo = intent.getParcelableExtra(KEY_PAYMENT_INFO)
 
         // set the amount
-        val amount = NumberFormat.getInstance().format(paymentInfo.amount)
+        val amount = DisplayUtils.getAmountString(paymentInfo.amount)
         amountText.text = getString(R.string.amount, amount)
 
         val request = CodeRequest.from(instance.config, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)

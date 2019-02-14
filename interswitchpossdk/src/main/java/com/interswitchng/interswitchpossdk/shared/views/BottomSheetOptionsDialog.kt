@@ -31,10 +31,11 @@ class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
                 USSD -> ussdPayment
                 CARD -> cardPayment
                 PAYCODE -> payCodePayment
-                else -> qrPayment
+                QR -> qrPayment
+                else -> null
             }
 
-            view.visibility = View.GONE
+            view?.visibility = View.GONE
 
             DisplayUtils.setupPaymentOptions(this@BottomSheetOptionsDialog.view!!, getParcelable(Constants.KEY_PAYMENT_INFO)!!)
 
@@ -47,6 +48,8 @@ class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
         const val QR = "qr"
         const val PAYCODE = "pay_code"
         const val CARD = "card"
+        const val NONE = "none"
+
         fun newInstance(excludedOption: String, info: PaymentInfo) = BottomSheetOptionsDialog().apply {
             arguments = Bundle().apply {
                 putString(KEY_EXCLUDED_OPTION, excludedOption)

@@ -1,13 +1,12 @@
 package com.interswitchng.interswitchpossdk.shared.utilities
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.card.CardActivity
 import com.interswitchng.interswitchpossdk.modules.paycode.PayCodeActivity
@@ -16,11 +15,12 @@ import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.views.TweakableOutlineProvider
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-object DisplayUtils {
+internal object DisplayUtils {
 
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
@@ -50,12 +50,28 @@ object DisplayUtils {
         return dateFormat.format(date)
     }
 
+
+    /**
+     * This method converts interger amount notation to string (e.g. 1000 -> 1,000.00)
+     *
+     * @param amount A value in integer representing the transaction amount
+     * @return A string representation of the decimal notation for the amount
+     */
+    fun getAmountString(amount: Int): String {
+
+        val numberFormat = NumberFormat.getInstance()
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 2
+
+        return numberFormat.format(amount)
+    }
+
     fun setupPaymentOptions(root: View, info: PaymentInfo) {
         val context = root.context
-        val ussdPayment = root.findViewById<LinearLayout>(R.id.ussdPayment)
-        val qrPayment = root.findViewById<LinearLayout>(R.id.qrPayment)
-        val cardPayment = root.findViewById<LinearLayout>(R.id.cardPayment)
-        val payCodePayment = root.findViewById<LinearLayout>(R.id.payCodePayment)
+        val ussdPayment = root.findViewById<RelativeLayout>(R.id.ussdPayment)
+        val qrPayment = root.findViewById<RelativeLayout>(R.id.qrPayment)
+        val cardPayment = root.findViewById<RelativeLayout>(R.id.cardPayment)
+        val payCodePayment = root.findViewById<RelativeLayout>(R.id.payCodePayment)
 
         ussdPayment.setOnClickListener {
             val ussdIntent = Intent(context, UssdActivity::class.java)

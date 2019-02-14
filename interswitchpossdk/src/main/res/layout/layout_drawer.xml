@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/deep_blue_01">
+    android:background="@color/iswTextColorSecondary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,13 +19,13 @@
             android:paddingRight="32dp"
             android:paddingEnd="32dp"
             android:paddingBottom="16dp"
-            android:background="@color/deep_blue">
+            android:background="@color/iswTextColorSecondaryDark">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_app_title"
-                android:textColor="@color/white"/>
+                android:textColor="@android:color/white"/>
         </LinearLayout>
 
         <TextView
@@ -39,11 +39,11 @@
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:textColor="@color/text_color_light_blue"/>
+            android:textColor="@color/iswTextColorSecondaryLight"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/text_color_light_blue"/>
+            android:background="@color/iswTextColorSecondaryLight"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
             android:text="@string/label_transaction"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -70,7 +70,7 @@
             android:textSize="18sp"
             android:layout_marginTop="5dp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -84,7 +84,7 @@
             android:textSize="18sp"
             android:layout_marginTop="5dp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -98,7 +98,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="5dp"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -112,7 +112,7 @@
             android:textSize="18sp"
             android:layout_marginTop="5dp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"/>
 
         <TextView
@@ -126,7 +126,7 @@
             android:layout_marginTop="5dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"/>
     </LinearLayout>
 

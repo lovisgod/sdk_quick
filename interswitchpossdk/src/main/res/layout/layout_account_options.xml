@@ -3,7 +3,7 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,14 +27,14 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginRight="32dp"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/text_color_light_blue"
+                android:textColor="@color/iswTextColorSecondaryLight"
                 android:text="Select Customer's preferred payment option"/>
         </FrameLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/light_blue"
+            android:background="@color/iswColorHighlight"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"/>
         <RelativeLayout
@@ -47,7 +47,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:text="Default Account"
-                android:textColor="@color/deep_blue"
+                android:textColor="@color/iswTextColorSecondaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginStart="16dp"
@@ -57,7 +57,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_f"
+                android:src="@drawable/ic_action_arrow_next"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_alignParentEnd="true"
@@ -75,7 +75,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:text="Savings Account"
-                android:textColor="@color/deep_blue"
+                android:textColor="@color/iswTextColorSecondaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginStart="16dp"
@@ -85,7 +85,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_f"
+                android:src="@drawable/ic_action_arrow_next"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_alignParentEnd="true"
@@ -103,7 +103,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:text="Current Account"
-                android:textColor="@color/deep_blue"
+                android:textColor="@color/iswTextColorSecondaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginStart="16dp"
@@ -113,7 +113,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_f"
+                android:src="@drawable/ic_action_arrow_next"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_alignParentEnd="true"

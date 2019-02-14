@@ -14,6 +14,7 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
+import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_card.*
 import kotlinx.android.synthetic.main.content_account_options.*
@@ -42,7 +43,7 @@ class CardActivity : BaseActivity() {
         setupToolbar("Card")
 
         // set the amount
-        val amount = NumberFormat.getInstance().format(paymentInfo.amount)
+        val amount = DisplayUtils.getAmountString(paymentInfo.amount)
         amountText.text = getString(R.string.amount, amount)
     }
 
