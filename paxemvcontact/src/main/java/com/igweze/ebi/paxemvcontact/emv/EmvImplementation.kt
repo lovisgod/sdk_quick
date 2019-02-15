@@ -105,7 +105,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
             merchName = terminalInfo.merchantNameAndLocation.toByteArray()
             termId = terminalInfo.terminalId.toByteArray()
             merchId = terminalInfo.merchantId.toByteArray()
-            forceOnline = 0
+            forceOnline = 1
             terminalType = 34
             exCapability = str2Bcd("E000F0A001")
         }
@@ -389,11 +389,11 @@ class EmvImplementation(private val pinCallback: PinCallback) {
     }
 
     internal fun getIccData(): String {
-        val tagValues: MutableList<Pair<Int, ByteArray?>> = mutableListOf()
+        val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
 
         for (tag in REQUEST_TAGS) {
             val tlv = getTlv(tag.tag)
-            tagValues.add(Pair(tag.tag, tlv))
+            tagValues.add(Pair(tag, tlv))
         }
 
         return EmvUtils.buildIccString(tagValues)

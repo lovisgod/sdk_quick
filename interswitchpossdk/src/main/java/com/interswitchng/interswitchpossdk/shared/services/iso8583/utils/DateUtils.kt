@@ -6,9 +6,9 @@ import java.util.*
 internal object DateUtils {
 
     @JvmField
-    val timeAndDateFormatter = SimpleDateFormat("MMddhhmmss", Locale.getDefault()) // field 7
+    val timeAndDateFormatter = SimpleDateFormat("MMddHHmmss", Locale.getDefault()) // field 7
     @JvmField
-    val timeFormatter = SimpleDateFormat("hhmmss", Locale.getDefault()) // field 12
+    val timeFormatter = SimpleDateFormat("HHmmss", Locale.getDefault()) // field 12
     @JvmField
     val dateFormatter = SimpleDateFormat("MMdd", Locale.getDefault()) // field 13
     @JvmField

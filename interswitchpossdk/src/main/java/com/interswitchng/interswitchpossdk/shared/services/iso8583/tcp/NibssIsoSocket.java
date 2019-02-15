@@ -81,12 +81,7 @@ public class NibssIsoSocket implements IsoSocket {
     @Override
     public boolean open() {
         try {
-
-            try {
-                socket = (SSLSocket) factory.createSocket(serverIp, serverPort);
-            } catch (IOException e) {
-                logEx(e);
-            }
+            socket = (SSLSocket) factory.createSocket(serverIp, serverPort);
             socket.setSoTimeout(timeout);
             return true;
         } catch (IOException ex) {
