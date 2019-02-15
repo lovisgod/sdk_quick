@@ -94,7 +94,7 @@ class QrCodeActivity : BaseActivity() {
         initiateButton.isEnabled = true
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
-            mockButtonsContainer.visibility = View.GONE
+            initiateButton.isClickable = false
             val payment = PaymentRequest(4077131215677, request.amount.toInt(), 566, 623222, response.transactionReference!!)
             initiator.initiateQr(payment).process { s, t ->
                 if (t != null) logger.log(t.localizedMessage)
@@ -108,9 +108,11 @@ class QrCodeActivity : BaseActivity() {
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
+            printCodeButton.isClickable = false
             posDevice.printer.printSlip(printSlip, UserType.Customer)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
+            printCodeButton.isClickable = false
         }
     }
 

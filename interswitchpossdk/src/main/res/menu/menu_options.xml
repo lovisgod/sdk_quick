@@ -4,9 +4,10 @@
 
     <item android:id="@+id/changePaymentMethod"
         android:title="@string/action_change_payment"
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_swap"
+        android:actionLayout="@layout/menu_item_change_method"
+        app:showAsAction="always"
         />
-
 
     <item android:id="@+id/cancelPayment"
         android:title="@string/action_cancel" />

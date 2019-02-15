@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".modules.ussdqr.QrCodeActivity">
+    tools:context=".modules.ussdqr.UssdActivity">
 
     <include layout="@layout/content_toolbar" />
 
@@ -35,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             tools:entries="@array/com_google_android_gms_fonts_certs"
-            tools:listitem="@layout/list_item_bank"
+            tools:listitem="@layout/list_item_spinner_option"
             android:layout_weight="1" />
 
     </LinearLayout>

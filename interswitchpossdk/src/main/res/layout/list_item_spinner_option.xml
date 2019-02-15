@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ISW.Bold"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:ellipsize="end"
+    android:fontFamily="@font/roboto_black"
+    android:maxLines="1"
     android:padding="@dimen/content_small_padding"
     android:textColor="@color/iswColorTextSecondary"
-    android:maxLines="1"
-    android:ellipsize="end"
     android:textSize="14sp"
-    tools:text="@string/select_bank"
-    />
+    tools:text="@string/select_bank" />

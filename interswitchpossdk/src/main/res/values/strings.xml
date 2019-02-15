@@ -62,4 +62,14 @@
     <string name="title_status">Status</string>
     <string name="title_paid">Paid</string>
     <string name="title_failed">Failed</string>
+    <string name="title_select_account">Select Account</string>
+    <string name="title_continue">Continue</string>
+
+    <string-array name="account_types">
+        <item name="acount_hint">Choose Account</item>
+        <item name="default_account">Default Account</item>
+        <item name="savings_account">Savings Account</item>
+        <item name="current_account">Current Account</item>
+        <item name="credit_account">Credit Account</item>
+    </string-array>
 </resources>

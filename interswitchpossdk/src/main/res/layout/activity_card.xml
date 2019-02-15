@@ -9,17 +9,39 @@
 
     <include layout="@layout/content_toolbar" />
 
-    <TextView
-        android:id="@+id/amountText"
+    <LinearLayout
+        style="@style/ISW.Subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:padding="15dp"
-        android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="amount: 50,000" />
+        android:background="@color/iswTextColorSecondaryLight"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/content_small_padding"
+            android:paddingTop="@dimen/content_small_padding"
+            android:textSize="14sp"
+            android:clickable="false"
+            android:enabled="false"
+            android:text="@string/title_select_account"
+            android:textColor="@android:color/white" />
+
+        <Spinner
+            android:id="@+id/accountOptions"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_item_spinner_option"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/content_amount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -29,35 +51,18 @@
 
 
         <LinearLayout
-            android:id="@+id/accountOptionsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@color/iswColorMainBackground">
-
-            <include layout="@layout/content_account_options" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
             android:id="@+id/insertCardContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:background="@color/iswColorMainBackground">
+            android:background="@android:color/white">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/label_insert_card"
-                android:textSize="18sp" />
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/insert_credit_card" />
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/insert_card" />
 
         </LinearLayout>
 
@@ -66,15 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/iswColorMainBackground">
-
-            <TextView
-                android:id="@+id/cardNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:textSize="15sp"
-                tools:text="card: xxxx-xxxx-xxxx-1239" />
+            tools:visibility="gone"
+            android:background="@android:color/white">
 
 
             <com.interswitchng.interswitchpossdk.modules.card.PinEditText
@@ -95,12 +93,58 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/continueButtonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom"
+            android:background="@android:color/white">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/continueButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/content_margin"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+
+                <TextView
+                    android:id="@+id/printUssdText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_action_button"
+                    android:padding="@dimen/content_padding"
+                    android:text="@string/title_continue"
+                    android:textColor="@color/iswColorTextSecondary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/content_margin"
+                    android:layout_marginRight="@dimen/content_margin"
+                    android:src="@drawable/ic_action_arrow_next"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/printUssdText"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/blankContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/iswColorMainBackground" />
+            tools:visibility="gone"
+            android:background="@android:color/white" />
 
     </FrameLayout>
+
 </LinearLayout>

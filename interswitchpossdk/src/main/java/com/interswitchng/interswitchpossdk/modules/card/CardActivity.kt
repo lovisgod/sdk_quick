@@ -2,6 +2,10 @@ package com.interswitchng.interswitchpossdk.modules.card
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.card.model.CardTransactionState
 import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
@@ -22,16 +26,20 @@ import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_card.*
-import kotlinx.android.synthetic.main.content_account_options.*
+import kotlinx.android.synthetic.main.content_amount.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
-class CardActivity : BaseActivity() {
+class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     private val logger by lazy { Logger.with("CardActivity") }
 
     private val emvCallback by lazy { CardCallback() }
     private val emv by lazy { posDevice.getEmvCardTransaction() }
+
+    // get strings of first item
+    private val firstItem = "Choose Account"
+    private var selectedItem = ""
 
     private val isoService: IsoService by inject()
     private val store: IKeyValueStore by inject()
@@ -63,12 +71,11 @@ class CardActivity : BaseActivity() {
     }
 
     private fun setupUI() {
-        savingsAccount.setOnClickListener {
-            accountType = AccountType.Savings
-            startTransaction()
-        }
-        currentAccount.setOnClickListener {
-            accountType = AccountType.Current
+        accountOptions.onItemSelectedListener = this
+        accountOptions.adapter = ArrayAdapter.createFromResource(this, R.array.account_types, R.layout.list_item_spinner_option)
+        continueButton.setOnClickListener {
+            continueButton.isEnabled = false
+            continueButton.isClickable = false
             startTransaction()
         }
     }
@@ -91,6 +98,16 @@ class CardActivity : BaseActivity() {
 
             runOnUiThread {
                 dialog.dismiss()
+                // enable user select account options
+                // only after detecting card
+                paymentHint.text = getString(R.string.hint_account_type)
+                accountOptions.isClickable = true
+                accountOptions.isEnabled = true
+                // prevent user from clicking continue
+                // until account type is selected
+                continueButton.isEnabled = false
+                continueButton.isClickable = false
+                // show continue button container
                 showContainer(CardTransactionState.ChooseAccountType)
             }
 
@@ -123,7 +140,7 @@ class CardActivity : BaseActivity() {
     private fun showContainer(state: CardTransactionState) {
         val container = when(state) {
             CardTransactionState.ShowInsertCard -> insertCardContainer
-            CardTransactionState.ChooseAccountType -> accountOptionsContainer
+            CardTransactionState.ChooseAccountType -> continueButtonContainer
             CardTransactionState.EnterPin -> insertPinContainer
             CardTransactionState.Default -> blankContainer
         }
@@ -140,6 +157,7 @@ class CardActivity : BaseActivity() {
     }
 
     private fun processOnline() {
+        // TODO refactor this function [extremely ugly!!]
         TerminalInfo.get(store)?.let { terminalInfo ->
             val emv = emv.getTransactionInfo()
 
@@ -178,6 +196,33 @@ class CardActivity : BaseActivity() {
             }
         } ?: toast("No terminal info, found on device")
     }
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+        if (firstItem == accountOptions.selectedItem) {
+            selectedItem = ""
+            paymentHint.text = getString(R.string.hint_account_type)
+            // disable continue button
+            continueButton.isClickable = false
+            continueButton.isEnabled = false
+        } else {
+            selectedItem = parent.getItemAtPosition(pos).toString()
+            accountType = when {
+                selectedItem.contains("Savings") -> AccountType.Savings
+                selectedItem.contains("Current") -> AccountType.Current
+                selectedItem.contains("Credit") -> AccountType.Credit
+                else -> AccountType.Default
+            }
+
+            Toast.makeText(parent.context, "You have selected : $selectedItem", Toast.LENGTH_LONG).show()
+            // enable continue button
+            continueButton.isClickable = true
+            continueButton.isEnabled = true
+        }
+    }
+
+    override fun onNothingSelected(arg: AdapterView<*>) {}
+
+
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? = transactionResult
 

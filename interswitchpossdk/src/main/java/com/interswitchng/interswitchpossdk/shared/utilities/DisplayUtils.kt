@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.util.DisplayMetrics
 import android.view.View
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.card.CardActivity
@@ -64,50 +65,5 @@ internal object DisplayUtils {
         numberFormat.maximumFractionDigits = 2
 
         return numberFormat.format(amount)
-    }
-
-    fun setupPaymentOptions(root: View, info: PaymentInfo) {
-        val context = root.context
-        val ussdPayment = root.findViewById<RelativeLayout>(R.id.ussdPayment)
-        val qrPayment = root.findViewById<RelativeLayout>(R.id.qrPayment)
-        val cardPayment = root.findViewById<RelativeLayout>(R.id.cardPayment)
-        val payCodePayment = root.findViewById<RelativeLayout>(R.id.payCodePayment)
-
-        ussdPayment.setOnClickListener {
-            val ussdIntent = Intent(context, UssdActivity::class.java)
-            ussdIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            ussdIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(ussdIntent)
-        }
-
-        qrPayment.setOnClickListener {
-            val qrIntent = Intent(context, QrCodeActivity::class.java)
-            qrIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            qrIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(qrIntent)
-        }
-
-        cardPayment.setOnClickListener {
-            val cardIntent = Intent(context, CardActivity::class.java)
-            cardIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            cardIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(cardIntent)
-        }
-
-        payCodePayment.setOnClickListener {
-            val payCodeIntent = Intent(context, PayCodeActivity::class.java)
-            payCodeIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            payCodeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(payCodeIntent)
-        }
-
-        // set outline provider for lollipop or later
-        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val outlineProvider = TweakableOutlineProvider()
-            ussdPayment.outlineProvider = outlineProvider
-            qrPayment.outlineProvider = outlineProvider
-            cardPayment.outlineProvider = outlineProvider
-            payCodePayment.outlineProvider = outlineProvider
-        }
     }
 }

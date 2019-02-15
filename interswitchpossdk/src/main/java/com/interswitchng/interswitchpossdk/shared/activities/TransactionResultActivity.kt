@@ -99,7 +99,7 @@ class TransactionResultActivity : BaseActivity() {
         Alerter.create(this)
                 .setTitle(getString(R.string.title_transaction_successful))
                 .setText(getString(R.string.title_transaction_completed_successfully))
-                .setDismissable(false)
+                .setDismissable(true)
                 .setBackgroundColorRes(android.R.color.holo_green_light)
                 .setDuration(3 * 1000)
                 .show()

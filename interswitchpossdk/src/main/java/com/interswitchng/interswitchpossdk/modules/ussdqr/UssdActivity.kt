@@ -7,7 +7,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
@@ -30,7 +29,6 @@ import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.activity_ussd.*
 import kotlinx.android.synthetic.main.content_amount.*
 import org.koin.android.ext.android.inject
-import java.text.NumberFormat
 import java.util.*
 
 
@@ -86,7 +84,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 bankCodes = mutableMapOf(firstItem to "")
                 allBanks?.map { bankCodes.put(it.name, it.code) }
                 val bankNames = bankCodes.keys.toList()
-                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.list_item_bank, bankNames) }
+                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.list_item_spinner_option, bankNames) }
             }
         }
     }
