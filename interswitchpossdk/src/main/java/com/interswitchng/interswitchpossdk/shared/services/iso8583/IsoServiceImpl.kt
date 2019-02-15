@@ -10,6 +10,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoSocket
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.*
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.dateFormatter
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter
@@ -18,7 +19,6 @@ import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
 import java.io.UnsupportedEncodingException
-import java.security.SecureRandom
 import java.text.ParseException
 import java.util.*
 
@@ -185,7 +185,7 @@ internal class IsoServiceImpl(
         return false
     }
 
-    override fun initiatePurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo) {
+    override fun initiatePurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
@@ -220,7 +220,7 @@ internal class IsoServiceImpl(
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
-                if (pinKey.isEmpty()) return
+                if (pinKey.isEmpty()) return null
 
                 val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
                 message.setValue(52, pinData)
@@ -259,11 +259,18 @@ internal class IsoServiceImpl(
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
+
+            // return response
+            return responseMsg.message.let {
+                val code = it.getObjectValue<String>(39)
+                val script = it.getObjectValue<String>(128)
+                return@let TransactionResponse(code, stan, script)
+            }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
+            return null
         }
-
     }
 
     private fun getNextStan(): String {

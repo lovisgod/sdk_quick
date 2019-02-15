@@ -1,5 +1,6 @@
 package com.interswitchng.interswitchpossdk.models
 
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionInfo
@@ -7,6 +8,7 @@ import com.interswitchng.interswitchpossdk.shared.models.printslips.info.Transac
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
 import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.CardSlip
 import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.TransactionSlip
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +19,7 @@ class TransactionSlipsTest {
 
 
 
-    private lateinit var config: POSConfiguration
+    private lateinit var config: TerminalInfo
     private lateinit var status: TransactionStatus
     private lateinit var info: TransactionInfo
     private lateinit var txnSlip: TransactionSlip
@@ -45,6 +47,7 @@ class TransactionSlipsTest {
 
         val now = Date()
         info = TransactionInfo(
+                paymentType = PaymentType.Card,
                 stan = "000120",
                 dateTime = formatter.format(now),
                 amount = amount,
@@ -56,7 +59,7 @@ class TransactionSlipsTest {
                 cardType = "VISA CARD"
         )
 
-        config = POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation, merchantCode, merchantName)
+        config = TerminalInfo(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation, 230, 12)
 
         status = TransactionStatus(responseMessage = "Transaction Approved", responseCode = "00", AID = "A0000000031010", telephone = "08031234273")
 
@@ -65,8 +68,7 @@ class TransactionSlipsTest {
 
     @Test
     fun `should format terminal info correctly`() {
-        val merchantName = "merchant name: \n${config.merchantName}\n".toUpperCase()
-        val location = "merchant location: \n${config.merchantLocation}\n".toUpperCase()
+        val merchantName = "merchant name: \n${config.merchantNameAndLocation}\n".toUpperCase()
         val terminalID = "terminal id: \n${config.terminalId}\n".toUpperCase()
 
         val actualValues = txnSlip.getTerminalInfo()
@@ -75,7 +77,6 @@ class TransactionSlipsTest {
         val actualTerminalID = (actualValues[2] as PrintObject.Data).value
 
         assertEquals(merchantName, actualMerchantName)
-        assertEquals(location, actualLocation)
         assertEquals(terminalID, actualTerminalID)
     }
 

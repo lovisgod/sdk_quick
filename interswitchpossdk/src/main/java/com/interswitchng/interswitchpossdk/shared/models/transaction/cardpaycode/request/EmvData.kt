@@ -5,4 +5,5 @@ data class EmvData(
     val cardPIN: String,
     val cardPAN: String,
     val cardTrack2: String,
+    val AID: String,
     val icc: String)

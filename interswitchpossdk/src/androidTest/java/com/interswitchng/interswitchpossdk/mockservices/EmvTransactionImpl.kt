@@ -4,7 +4,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTrans
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
-import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult
 
 class EmvTransactionImpl: EmvCardTransaction {
     override fun setEmvCallback(callback: EmvCallback) {
@@ -19,7 +19,7 @@ class EmvTransactionImpl: EmvCardTransaction {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun startTransaction(): TransactionResult {
+    override fun startTransaction(): EmvResult {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

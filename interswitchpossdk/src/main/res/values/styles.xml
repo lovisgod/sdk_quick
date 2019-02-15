@@ -66,11 +66,19 @@
 
     <style name="ISW.SecondaryText">
         <item name="android:textColor">@color/iswColorTextSecondary</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="ISW.Hint" parent="ISW.SecondaryText">
+
+
+    <style name="ISW.Regular" parent="ISW.SecondaryText">
+        <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">14sp</item>
+    </style>
+
+
+    <style name="ISW.Hint" parent="ISW.Regular">
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:lineSpacingMultiplier">1.11</item>
         <item name="android:paddingTop">@dimen/content_small_padding</item>
         <item name="android:paddingBottom">@dimen/content_small_padding</item>
@@ -80,13 +88,30 @@
     </style>
 
 
-        <style name="ISW.Ussd" parent="ISW.SecondaryText">
-            <item name="android:fontFamily">@font/roboto_bold</item>
-            <item name="android:layout_marginTop">@dimen/content_small_margin</item>
-            <item name="android:textSize">32sp</item>
-            <item name="android:textStyle">bold</item>
-            <item name="android:lineSpacingMultiplier">1.19</item>
-        </style>
+    <style name="ISW.Bold" parent="ISW.SecondaryText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+
+    <style name="ISW.BoldLarge" parent="ISW.Bold">
+        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:lineSpacingMultiplier">1.19</item>
+    </style>
+
+    <style name="ISW.RegularLarge" parent="ISW.Regular">
+        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:lineSpacingMultiplier">1.19</item>
+    </style>
+
+    <style name="ISW.StatusContainer">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingLeft">32dp</item>
+    </style>
 
 
     <public />

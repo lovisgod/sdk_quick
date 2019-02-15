@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_primary_light"
             android:padding="2dp"
-            android:text="@string/naira_"
+            android:text="@string/currency_naira"
             android:textColor="@color/iswTextColorSecondaryDark"
             android:textSize="20sp"
             android:textStyle="bold"

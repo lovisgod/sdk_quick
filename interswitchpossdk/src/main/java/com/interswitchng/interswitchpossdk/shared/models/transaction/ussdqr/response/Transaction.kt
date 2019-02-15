@@ -16,4 +16,13 @@ internal class Transaction (
     fun isCompleted(): Boolean = responseCode == CodeResponse.OK
     fun isPending(): Boolean = responseCode == CodeResponse.PENDING
     fun isSuccessful(): Boolean = isCompleted()
+
+    companion object {
+        fun default(): Transaction {
+            val int = 0
+            val str = ""
+            return Transaction(int, int, str, str, str, false, str, 0, str)
+        }
+
+    }
 }

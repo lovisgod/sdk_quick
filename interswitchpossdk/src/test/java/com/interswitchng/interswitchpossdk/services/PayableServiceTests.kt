@@ -2,6 +2,7 @@ package com.interswitchng.interswitchpossdk.services
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
@@ -37,12 +38,12 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
+            on(mock.getQrTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
         val threadCountBeforeServiceCall = Thread.activeCount()
         val service = PayableService(httpService)
-        service.checkPayment(status, 3000, transactionStatusCallback)
+        service.checkPayment(PaymentType.QR, status, 3000, transactionStatusCallback)
         val threadCountDuringServiceCall = Thread.activeCount()
         assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
 
@@ -75,13 +76,13 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
+            on(mock.getQrTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
 
         val service = PayableService(httpService)
         val threadCountBeforeServiceCall = Thread.activeCount()
-        service.checkPayment(status, 3000, transactionStatusCallback)
+        service.checkPayment(PaymentType.QR, status, 3000, transactionStatusCallback)
         val threadCountDuringServiceCall = Thread.activeCount()
         assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
 
@@ -113,12 +114,12 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
+            on(mock.getUssdTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
         val service = PayableService(httpService)
         val threadCountBeforeServiceCall = Thread.activeCount()
-        service.checkPayment(status, 6000, transactionStatusCallback)
+        service.checkPayment(PaymentType.USSD, status, 6000, transactionStatusCallback)
 
 
         Thread.sleep(7500)
@@ -156,13 +157,13 @@ class PayableServiceTests {
         }
 
         val httpService: IHttpService = mock {
-            on(mock.getTransactionStatus(any(), any())) doReturn simpleResponse
+            on(mock.getUssdTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
 
         val service = PayableService(httpService)
         val threadCountBeforeServiceCall = Thread.activeCount()
-        service.checkPayment(status, 3000, transactionStatusCallback)
+        service.checkPayment(PaymentType.USSD, status, 3000, transactionStatusCallback)
         val threadCountDuringServiceCall = Thread.activeCount()
         assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
 

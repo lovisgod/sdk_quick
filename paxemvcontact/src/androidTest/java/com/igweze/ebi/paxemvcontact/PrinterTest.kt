@@ -13,7 +13,6 @@ import com.igweze.ebi.paxemvcontact.posshim.CardService
 import com.igweze.ebi.paxemvcontact.posshim.PosInterface
 import com.igweze.ebi.paxemvcontact.services.POSDeviceService
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType
-import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 
 
 @RunWith(AndroidJUnit4::class)
@@ -55,7 +54,7 @@ class PrinterTest {
         val now = Date()
         val info = TransactionInfo(
                 stan = "000120",
-                dateTime = DisplayUtils.getIsoString(now),
+                dateTime = now.toString(),
                 amount = amount,
                 cardPan = pan,
                 cardExpiry = expiry,

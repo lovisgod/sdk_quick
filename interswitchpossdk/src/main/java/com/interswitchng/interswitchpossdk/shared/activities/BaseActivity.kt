@@ -18,6 +18,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
@@ -82,11 +83,13 @@ abstract class BaseActivity : AppCompatActivity() {
         return true
     }
 
-    fun setupToolbar(title: String) {
+    override fun onResume() {
+        super.onResume()
         setSupportActionBar(toolbar)
-        toolbar.title = title
     }
 
+
+    // for Qr and USSD only
     fun checkTransactionStatus(status: TransactionStatus) {
         Alerter.create(this)
                 .setTitle(getString(R.string.title_transaction_in_progress))
@@ -109,13 +112,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun completePayment() {
         Alerter.clearCurrent(this)
-
-        onTransactionSuccessful(transactionResponse)
-    }
-
-    protected fun printReciept() {
-        val msg = "You have printed receipt"
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+        showTransactionResult(transactionResponse)
     }
 
     protected fun stopPolling() {
@@ -123,14 +120,29 @@ abstract class BaseActivity : AppCompatActivity() {
         pollingExecutor?.shutdownNow()
     }
 
+    internal fun showTransactionResult(transaction: Transaction) {
+        val result = getTransactionResult(transaction)
+        // only show result activity if result is non-null
+        result?.let {
+            val resultIntent = Intent(this, TransactionResultActivity::class.java).apply {
+                putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
+                putExtra(TransactionResultActivity.KEY_TRANSACTION_RESULT, it)
+            }
 
-    private fun onTransactionSuccessful(transaction: Transaction) {
-        val intent = Intent(this, TransactionReceiptActivity::class.java).apply {
-            putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
-            putExtra(TransactionReceiptActivity.KEY_TRANSACTION_AMOUNT, transaction.amount)
+            startActivity(resultIntent)
         }
-        // TODO put parcelable transaction
-        startActivity(intent)
+    }
+
+
+
+    protected fun toast(message: String) {
+        runOnUiThread { Toast.makeText(this, message, Toast.LENGTH_LONG).show() }
+    }
+
+    internal abstract fun getTransactionResult(transaction: Transaction): TransactionResult?
+
+    override fun onBackPressed() {
+        // do nothing
     }
 
 
@@ -188,11 +200,4 @@ abstract class BaseActivity : AppCompatActivity() {
 
     }
 
-    protected fun toast(message: String) {
-        runOnUiThread { Toast.makeText(this, message, Toast.LENGTH_LONG).show() }
-    }
-
-    override fun onBackPressed() {
-        // do nothing
-    }
 }

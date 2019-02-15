@@ -1,11 +1,11 @@
 package com.interswitchng.interswitchpossdk.shared.models.printslips.slips
 
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
 
-internal abstract class TransactionSlip(private val posConfig: POSConfiguration, private val status: TransactionStatus) {
+internal abstract class TransactionSlip(private val terminal: TerminalInfo, private val status: TransactionStatus) {
 
     protected fun pairString(title: String, value: String, hasNewLine: Boolean = false, isUpperCase: Boolean = true, stringConfig: PrintStringConfiguration = PrintStringConfiguration()): PrintObject {
         // get title formatted
@@ -36,11 +36,10 @@ internal abstract class TransactionSlip(private val posConfig: POSConfiguration,
     }
 
     internal fun getTerminalInfo(): List<PrintObject> {
-        val merchantName = pairString("merchant name", posConfig.merchantName, true)
-        val merchantLocation = pairString("merchant location", posConfig.merchantLocation, true)
-        val terminalId = pairString("Terminal Id", posConfig.terminalId)
+        val merchantName = pairString("merchant", terminal.merchantNameAndLocation)
+        val terminalId = pairString("Terminal Id", terminal.terminalId)
 
-        return listOf(merchantName, merchantLocation, terminalId, PrintObject.Line())
+        return listOf(merchantName, terminalId, PrintObject.Line())
     }
 
 
@@ -56,4 +55,6 @@ internal abstract class TransactionSlip(private val posConfig: POSConfiguration,
 
 
     internal abstract fun getTransactionInfo(): List<PrintObject>
+
+    internal fun getSlipItems() = getTerminalInfo() + getTransactionInfo() + getTransactionStatus()
 }

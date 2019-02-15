@@ -14,11 +14,16 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest.Companion.QR_FORMAT_RAW
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_QR
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
@@ -27,6 +32,7 @@ import kotlinx.android.synthetic.main.activity_qr_code.*
 import kotlinx.android.synthetic.main.content_amount.*
 import org.koin.android.ext.android.inject
 import java.text.NumberFormat
+import java.util.*
 
 
 class QrCodeActivity : BaseActivity() {
@@ -45,9 +51,6 @@ class QrCodeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_qr_code)
-
-        // setup toolbar
-        setupToolbar("QR Code")
     }
 
     override fun onStart() {
@@ -112,7 +115,7 @@ class QrCodeActivity : BaseActivity() {
     }
 
     private fun handleResponse(request: CodeRequest, response: CodeResponse) {
-        when(response.responseCode) {
+        when (response.responseCode) {
             CodeResponse.OK -> {
                 qrBitmap = response.getBitmap(this)
                 val bitmap = PrintObject.BitMap(qrBitmap!!)
@@ -140,6 +143,26 @@ class QrCodeActivity : BaseActivity() {
 
     private fun handleError(throwable: Throwable) {
         // handle error
+    }
+
+    override fun getTransactionResult(transaction: Transaction): TransactionResult? {
+        val now = Date()
+        val responseMsg = IsoUtils.getIsoResult(transaction.responseCode)?.second
+                ?: transaction.responseDescription
+                ?: "Error"
+
+        return TransactionResult(
+                paymentType = PaymentType.QR,
+                dateTime = DisplayUtils.getIsoString(now),
+                amount = DisplayUtils.getAmountString(paymentInfo.amount),
+                type = TransactionType.Purchase,
+                authorizationCode = transaction.responseCode,
+                responseMessage = responseMsg,
+                responseCode = transaction.responseCode,
+                cardPan = "", cardExpiry = "", cardType = "",
+                stan = "", pinStatus = "", AID = "",
+                telephone = ""
+        )
     }
 
 }

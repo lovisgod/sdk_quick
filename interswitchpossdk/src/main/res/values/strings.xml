@@ -27,6 +27,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_change_payment">Change Payment</string>
     <string name="amount">%1$s</string>
+    <string name="currency_amount">₦ %1$s</string>
     <string name="hint_qr_code">Please scan QR code to pay using your banking app</string>
     <string name="hint_transaction_success">Your transaction was successful</string>
     <string name="action_close">Close</string>
@@ -54,8 +55,11 @@
     <string name="label_app_title">SmartPos</string>
     <string name="select_bank">Select Bank</string>
     <string name="receiving_payment">Receiving Payment</string>
-    <string name="naira_">₦</string>
+    <string name="currency_naira">₦</string>
     <string name="dummy_price">678,910.99</string>
     <string name="dummy_ussd">*888*765*98#</string>
     <string name="pay_ussd_instruction">Dial the USSD code on your Mobile phone to pay</string>
+    <string name="title_status">Status</string>
+    <string name="title_paid">Paid</string>
+    <string name="title_failed">Failed</string>
 </resources>

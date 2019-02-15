@@ -1,5 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.models.printslips.slips
 
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
@@ -7,7 +8,7 @@ import com.interswitchng.interswitchpossdk.shared.models.printslips.info.Transac
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
 import java.text.NumberFormat
 
-internal class CardSlip(config: POSConfiguration, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(config, status) {
+internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(terminal, status) {
 
     override fun getTransactionInfo(): List<PrintObject> {
         val numberFormat = NumberFormat.getInstance()

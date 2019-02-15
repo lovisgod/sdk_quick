@@ -17,11 +17,12 @@ class PaymentInfo: Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
+            parcel.readString(),
             parcel.readString())
 
 
-    internal constructor(amount: Int, stan: String, bankCode: String): this(amount, stan) {
-        this.bankCode = bankCode
+    constructor(amount: Int, stan: String?, bankCode: String?): this(amount, stan) {
+        this.bankCode = bankCode  ?: ""
     }
 
 

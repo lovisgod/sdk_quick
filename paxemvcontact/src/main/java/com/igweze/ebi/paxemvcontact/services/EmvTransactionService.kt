@@ -1,16 +1,12 @@
 package com.igweze.ebi.paxemvcontact.services
 
 import android.os.SystemClock
-import com.igweze.ebi.paxemvcontact.emv.EmvImplementation
-import com.igweze.ebi.paxemvcontact.emv.EmvResult
-import com.igweze.ebi.paxemvcontact.emv.POSDevice
-import com.igweze.ebi.paxemvcontact.emv.PinCallback
+import com.igweze.ebi.paxemvcontact.emv.*
 import com.igweze.ebi.paxemvcontact.utilities.EmvUtils
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTransaction
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
 import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
-import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.pax.dal.IPed
@@ -21,6 +17,7 @@ import com.pax.dal.exceptions.EPedDevException
 import com.pax.dal.exceptions.PedDevException
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.RetCode
+import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult as CoreEmvResult
 
 
 class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPinListener {
@@ -64,13 +61,13 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
         if (resultMsg != null) emvCallback?.onTransactionCancelled(resultMsg.errCode, resultMsg.errMsg)
     }
 
-    override fun startTransaction(): TransactionResult {
+    override fun startTransaction(): CoreEmvResult {
         val result = emvImpl.startContactEmvTransaction()
 
         return when (result) {
-            ACType.AC_TC -> emvImpl.completeContactEmvTransaction().let { TransactionResult.OFFLINE_APPROVED }
-            ACType.AC_ARQC -> logger.log("online should be processed").let { TransactionResult.ONLINE_REQUIRED } //processOnline()
-            else -> logger.log("offline declined").let { TransactionResult.OFFLINE_DENIED }
+            ACType.AC_TC -> emvImpl.completeContactEmvTransaction().let { CoreEmvResult.OFFLINE_APPROVED }
+            ACType.AC_ARQC -> logger.log("online should be processed").let { CoreEmvResult.ONLINE_REQUIRED } //processOnline()
+            else -> logger.log("offline declined").let { CoreEmvResult.OFFLINE_DENIED }
         }
     }
 
@@ -102,8 +99,8 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
             val expiry = strTrack2.split("D")[1].substring(0, 4)
 
             val icc = emvImpl.getIccData()
-
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc)
+            val aid = EmvUtils.bcd2Str(emvImpl.getTlv(0x9F06)!!)
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid)
         }
     }
 

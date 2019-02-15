@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".shared.activities.TransactionResultActivity">
+
+    <LinearLayout
+        android:id="@+id/transactionResultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/ISW.StatusContainer"
+        android:background="@color/iswColorPrimaryDark"
+        >
+
+        <ImageView
+            android:id="@+id/statusImage"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="@dimen/content_small_padding"
+            android:layout_marginLeft="@dimen/content_small_padding"
+            tools:src="@drawable/ic_error"
+            tools:tint="@color/iswTextColorError"
+            android:layout_marginBottom="@dimen/content_margin"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ISW.Bold"
+            android:text="@string/title_status"
+            android:textColor="@color/iswTextColorSecondaryLight"
+            />
+
+        <TextView
+            android:id="@+id/transactionResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ISW.RegularLarge"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="@dimen/content_margin"
+            tools:text="Error"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/paymentStatusContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/ISW.StatusContainer"
+        tools:background="@color/iswTextColorError">
+
+
+        <TextView
+            android:id="@+id/paymentStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ISW.Bold"
+            android:text="@string/title_failed"
+            />
+
+        <TextView
+            android:id="@+id/amountText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ISW.BoldLarge"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/iswTextColorSecondaryDark"
+            tools:text="N6,230,300.00"
+            />
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ISW.Regular"
+        android:text="Need A Receipt?"
+        android:paddingTop="@dimen/content_padding"
+        android:paddingBottom="@dimen/content_small_padding"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@color/iswTextColorSecondaryLight"
+        />
+
+
+    <Button
+        android:id="@+id/printBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="@dimen/content_margin"
+        android:layout_marginTop="@dimen/content_small_margin"
+        android:background="@drawable/bg_solid_primary"
+        android:text="@string/title_print_receipt"
+        style="@style/ISW.Bold"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_horizontal"
+        />
+
+
+    <Button
+        android:id="@+id/closeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/action_close"
+        android:textColor="@color/iswColorPrimaryDark"
+        style="@style/ISW.Bold"
+        android:textAllCaps="true"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/bg_outline"
+        android:layout_gravity="center_horizontal"
+        />
+
+</LinearLayout>

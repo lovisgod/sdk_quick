@@ -1,5 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.models.printslips.slips
 
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
@@ -7,7 +8,7 @@ import com.interswitchng.interswitchpossdk.shared.models.printslips.info.Transac
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
 import java.text.NumberFormat
 
-internal class UssdQrSlip(config: POSConfiguration, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(config, status) {
+internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(terminal, status) {
 
 
     override fun getTransactionInfo(): List<PrintObject> {
@@ -17,14 +18,6 @@ internal class UssdQrSlip(config: POSConfiguration, status: TransactionStatus, p
         numberFormat.maximumFractionDigits = 2
 
         val txnAmount = numberFormat.format(info.amount.toDouble())
-
-        val pan = run {
-            val length = info.cardPan.length
-            val firstFour = info.cardPan.substring(0..3)
-            val middle = "*".repeat(length - 8)
-            val lastFour = info.cardPan.substring(length - 4 until length)
-            return@run  "$firstFour$middle$lastFour"
-        }
 
         val stan = pairString("stan", info.stan)
         val date = pairString("date", info.dateTime)

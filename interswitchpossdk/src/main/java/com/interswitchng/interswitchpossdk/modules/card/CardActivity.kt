@@ -9,38 +9,41 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import kotlinx.android.synthetic.main.activity_card.*
 import kotlinx.android.synthetic.main.content_account_options.*
 import org.koin.android.ext.android.inject
-import java.text.NumberFormat
+import java.util.*
 
 class CardActivity : BaseActivity() {
 
     private val logger by lazy { Logger.with("CardActivity") }
 
-    private val printer by lazy { posDevice.printer }
     private val emvCallback by lazy { CardCallback() }
     private val emv by lazy { posDevice.getEmvCardTransaction() }
 
     private val isoService: IsoService by inject()
     private val store: IKeyValueStore by inject()
     private lateinit var accountType: AccountType
+    private lateinit var transactionResult: TransactionResult
+    private var pinOk = false
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_card)
-
-        // setup toolbar
-        setupToolbar("Card")
 
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
@@ -100,9 +103,9 @@ class CardActivity : BaseActivity() {
             val result = emv.startTransaction()
 
             when (result) {
-                TransactionResult.OFFLINE_APPROVED -> emv.completeTransaction()
-                TransactionResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
-                TransactionResult.OFFLINE_DENIED -> {
+                EmvResult.OFFLINE_APPROVED -> emv.completeTransaction()
+                EmvResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
+                EmvResult.OFFLINE_DENIED -> {
                     toast("Transaction Declined")
                     showContainer(CardTransactionState.Default)
                 }
@@ -141,13 +144,42 @@ class CardActivity : BaseActivity() {
             val emv = emv.getTransactionInfo()
 
             if (emv != null) {
-                val transactionInfo = TransactionInfo.fromEmv(emv, paymentInfo.amount, PurchaseType.Card, accountType)
-                isoService.initiatePurchase(terminalInfo, transactionInfo)
+                val txnInfo = TransactionInfo.fromEmv(emv, paymentInfo.amount, PurchaseType.Card, accountType)
+                val response = isoService.initiatePurchase(terminalInfo, txnInfo)
+                val txn = Transaction.default()
+
+                val now = Date()
+                response?.let {
+
+                    val responseMsg = IsoUtils.getIsoResultMsg(it.code) ?: "Unknown Error"
+                    val pinStatus = when{
+                        pinOk || it.code == "00" -> "PIN Verified"
+                        else -> "PIN Unverified"
+                    }
+
+                    transactionResult = TransactionResult(
+                            paymentType = PaymentType.Card,
+                            dateTime = DisplayUtils.getIsoString(now),
+                            amount = DisplayUtils.getAmountString(paymentInfo.amount),
+                            type = TransactionType.Purchase,
+                            authorizationCode = response.code,
+                            responseMessage = responseMsg,
+                            responseCode = response.code,
+                            cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = "",
+                            stan = response.stan, pinStatus = pinStatus, AID = emv.AID,
+                            telephone = "08031150978")
+
+                    // show transaction result screen
+                    showTransactionResult(txn)
+                } ?: toast("Unable to process Transaction")
+
             } else {
                 toast("Unable to get icc")
             }
         } ?: toast("No terminal info, found on device")
     }
+
+    override fun getTransactionResult(transaction: Transaction): TransactionResult? = transactionResult
 
     internal inner class CardCallback : EmvCallback {
 
@@ -171,6 +203,7 @@ class CardActivity : BaseActivity() {
         }
 
         override fun showPinOk() {
+            pinOk = true
             runOnUiThread { toast("Pin Input ok") }
         }
 

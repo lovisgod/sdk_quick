@@ -1,7 +1,124 @@
 package com.interswitchng.interswitchpossdk.shared.models.transaction
 
-enum class TransactionResult(val code: Int) {
-    OFFLINE_DENIED(0), // AC_AAC = 0
-    OFFLINE_APPROVED(1), // AC_TC = 1
-    ONLINE_REQUIRED(2) // AC_ARQC = 2
+import android.os.Parcel
+import android.os.Parcelable
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionInfo
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
+import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.CardSlip
+import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.TransactionSlip
+import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.UssdQrSlip
+
+internal data class TransactionResult(
+         val paymentType: PaymentType,
+         val stan: String,
+         val dateTime: String,
+         val amount: String,
+         val type: TransactionType,
+         val cardPan: String,
+         val cardType: String,
+         val cardExpiry: String,
+         val authorizationCode: String,
+         val pinStatus: String,
+         val responseMessage: String,
+         val responseCode: String,
+         val AID: String,
+         val telephone: String): Parcelable {
+
+
+    constructor(parcel: Parcel) : this(
+            getPaymentType(parcel.readInt()),
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            getTransactionType(parcel.readInt()),
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!)
+
+
+    fun getSlip(terminal: TerminalInfo): TransactionSlip {
+        return when (paymentType) {
+            PaymentType.USSD, PaymentType.QR -> UssdQrSlip(terminal, getTransactionStatus(), getTransactionInfo())
+            PaymentType.Card, PaymentType.PayCode -> CardSlip(terminal, getTransactionStatus(), getTransactionInfo())
+        }
+    }
+
+
+    /// function to extract
+    /// print slip transaction info
+     fun getTransactionInfo() =
+            TransactionInfo(
+                    paymentType,
+                    stan,
+                    dateTime,
+                    amount,
+                    type,
+                    cardPan,
+                    cardType,
+                    cardExpiry,
+                    authorizationCode,
+                    pinStatus)
+
+
+    /// function to extract
+    /// print slip transaction status
+     fun getTransactionStatus() =
+            TransactionStatus(
+                    responseMessage,
+                    responseCode,
+                    AID,
+                    telephone)
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(paymentType.ordinal)
+        parcel.writeString(stan)
+        parcel.writeString(dateTime)
+        parcel.writeString(amount)
+        parcel.writeInt(type.ordinal)
+        parcel.writeString(cardPan)
+        parcel.writeString(cardType)
+        parcel.writeString(cardExpiry)
+        parcel.writeString(authorizationCode)
+        parcel.writeString(pinStatus)
+        parcel.writeString(responseMessage)
+        parcel.writeString(responseCode)
+        parcel.writeString(AID)
+        parcel.writeString(telephone)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<TransactionResult> {
+        override fun createFromParcel(parcel: Parcel): TransactionResult {
+            return TransactionResult(parcel)
+        }
+
+        override fun newArray(size: Int): Array<TransactionResult?> {
+            return arrayOfNulls(size)
+        }
+
+         fun getPaymentType(ordinal: Int): PaymentType {
+            return when (ordinal) {
+                PaymentType.Card.ordinal -> PaymentType.Card
+                PaymentType.QR.ordinal -> PaymentType.QR
+                PaymentType.USSD.ordinal -> PaymentType.USSD
+                else -> PaymentType.PayCode
+            }
+        }
+
+         fun getTransactionType(ordinal: Int): TransactionType {
+            return TransactionType.Purchase
+        }
+    }
+
 }

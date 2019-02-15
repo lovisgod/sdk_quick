@@ -42,7 +42,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
-            android:name=".shared.activities.TransactionReceiptActivity"
+            android:name=".shared.activities.TransactionResultActivity"
             android:label="Transaction Approved"
             android:noHistory="true"
             android:screenOrientation="portrait"
