@@ -62,6 +62,7 @@
             android:layout_height="wrap_content"
             style="@style/ISW.Bold"
             android:text="@string/isw_title_failed"
+            tools:textColor="@android:color/white"
             />
 
         <TextView
@@ -72,6 +73,7 @@
             android:layout_marginTop="0dp"
             android:textColor="@color/iswTextColorSecondaryDark"
             tools:text="N6,230,300.00"
+            tools:textColor="@android:color/white"
             />
 
     </LinearLayout>

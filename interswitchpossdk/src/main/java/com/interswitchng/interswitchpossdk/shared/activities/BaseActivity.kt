@@ -76,7 +76,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun showPaymentOptions(exclude: String): Boolean {
+    private fun showPaymentOptions(exclude: String): Boolean {
         val info: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
         val optionsDialog: BottomSheetOptionsDialog = BottomSheetOptionsDialog.newInstance(exclude, info)
         optionsDialog.show(supportFragmentManager, optionsDialog.tag)
@@ -91,6 +91,18 @@ abstract class BaseActivity : AppCompatActivity() {
 
     // for Qr and USSD only
     fun checkTransactionStatus(status: TransactionStatus) {
+        // show progress alert
+        showProgressAlert()
+        // check payment status and timeout after 5 minutes
+        val seconds = resources.getInteger(R.integer.poolingTime)
+        val paymentType = when (this) {
+            is QrCodeActivity -> PaymentType.QR
+            else -> PaymentType.USSD
+        }
+        pollingExecutor = payableService.checkPayment(paymentType, status, seconds.toLong(), TransactionStatusCallback())
+    }
+
+    protected fun showProgressAlert() {
         Alerter.create(this)
                 .setTitle(getString(R.string.isw_title_transaction_in_progress))
                 .setText(getString(R.string.isw_title_checking_transaction_status))
@@ -100,14 +112,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 .setBackgroundColorRes(android.R.color.darker_gray)
                 .setProgressColorRes(android.R.color.white)
                 .show()
-
-        // check payment status and timeout after 5 minutes
-        val seconds = resources.getInteger(R.integer.poolingTime)
-        val paymentType = when (this) {
-            is QrCodeActivity -> PaymentType.QR
-            else -> PaymentType.USSD
-        }
-        pollingExecutor = payableService.checkPayment(paymentType, status, seconds.toLong(), TransactionStatusCallback())
     }
 
     private fun completePayment() {

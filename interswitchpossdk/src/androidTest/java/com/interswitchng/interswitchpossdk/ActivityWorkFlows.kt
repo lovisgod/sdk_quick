@@ -31,7 +31,7 @@ class ActivityWorkFlows: BaseTestActivity() {
 
         onView(withId(R.id.qrPayment)).perform(click())
 
-        onView(withText(R.string.isw_title_processing_payment)).check(matches(isDisplayed()))
+        onView(withText(R.string.isw_title_generating_code)).check(matches(isDisplayed()))
 
         WaitUtils.waitTime(25000)
         onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))

@@ -30,8 +30,8 @@ class TransactionResultActivity : BaseActivity() {
 
         // setup UI
         setupUI()
-        // show success notification
-        showSuccessNotification()
+        // show alert notification
+        showNotification()
     }
 
     private fun setupUI() {
@@ -70,6 +70,12 @@ class TransactionResultActivity : BaseActivity() {
         val status = if (isSuccessful) R.string.isw_title_paid else R.string.isw_title_failed
         paymentStatus.text = getString(status)
 
+        // set payment text colors
+        val statusColorInt = if (isSuccessful) R.color.iswTextColorSecondaryDark else android.R.color.white
+        val statusColor = ContextCompat.getColor(this, statusColorInt)
+        paymentStatus.setTextColor(statusColor)
+        amountText.setTextColor(statusColor)
+
         // set payment status container bg
         val colorInt = if (isSuccessful) R.color.iswTextColorSecondaryLight else R.color.iswTextColorError
         paymentStatusContainer.setBackgroundColor(ContextCompat.getColor(this, colorInt))
@@ -93,14 +99,26 @@ class TransactionResultActivity : BaseActivity() {
     }
 
 
-    private fun showSuccessNotification() {
+    private fun showNotification() {
         Alerter.clearCurrent(this)
+        val isSuccessful = result.responseCode == "00"
+        val title =
+                if (isSuccessful) R.string.isw_title_transaction_successful
+                else R.string.isw_title_transaction_failed
+
+        val text =
+                if (isSuccessful)  R.string.isw_title_transaction_completed_successfully
+                else R.string.isw_title_transaction_error
+
+        val background =
+                if (isSuccessful) R.color.iswTextColorSuccess
+                else R.color.iswTextColorError
 
         Alerter.create(this)
-                .setTitle(getString(R.string.isw_title_transaction_successful))
-                .setText(getString(R.string.isw_title_transaction_completed_successfully))
+                .setTitle(getString(title))
+                .setText(getString(text))
                 .setDismissable(true)
-                .setBackgroundColorRes(android.R.color.holo_green_light)
+                .setBackgroundColorRes(background)
                 .setDuration(3 * 1000)
                 .show()
     }

@@ -9,7 +9,7 @@ internal object DialogUtils {
     fun getLoadingDialog(context: Context): AlertDialog {
         return AlertDialog.Builder(context)
                 .setCancelable(false)
-                .setTitle(R.string.isw_title_processing_payment)
+                .setTitle(R.string.isw_title_generating_code)
                 .setMessage(R.string.isw_title_loading)
                 .create()
     }

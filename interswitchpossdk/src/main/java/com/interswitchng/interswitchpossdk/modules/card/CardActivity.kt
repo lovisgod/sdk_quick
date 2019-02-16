@@ -156,6 +156,15 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     }
 
     private fun processOnline() {
+        runOnUiThread {
+            // change hint text
+            paymentHint.text = getString(R.string.isw_title_processing_transaction)
+            // hide other layouts: show default screen
+            showContainer(CardTransactionState.Default)
+            // show transaction progress alert
+            showProgressAlert()
+        }
+
         // TODO refactor this function [extremely ugly!!]
         TerminalInfo.get(store)?.let { terminalInfo ->
             val emv = emv.getTransactionInfo()

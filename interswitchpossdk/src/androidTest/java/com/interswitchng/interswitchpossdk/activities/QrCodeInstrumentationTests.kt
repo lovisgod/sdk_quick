@@ -33,7 +33,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
     fun should_show_qr_code_image() {
         activityRule.launchActivity(intent)
 
-        onView(withText(R.string.isw_title_processing_payment)).check(matches(isDisplayed()))
+        onView(withText(R.string.isw_title_generating_code)).check(matches(isDisplayed()))
 
         WaitUtils.waitTime(2000)
         onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))
