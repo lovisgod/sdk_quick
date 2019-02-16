@@ -9,7 +9,6 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.Transaction
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.activity_pay_code.*
-import java.text.NumberFormat
 
 class PayCodeActivity : BaseActivity() {
 
@@ -23,7 +22,7 @@ class PayCodeActivity : BaseActivity() {
 
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
-        amountText.text = getString(R.string.amount, amount)
+        amountText.text = getString(R.string.isw_amount, amount)
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {

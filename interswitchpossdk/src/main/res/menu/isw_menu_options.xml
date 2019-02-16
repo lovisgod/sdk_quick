@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/changePaymentMethod"
-        android:title="@string/action_change_payment"
+        android:title="@string/isw_action_change_payment"
         android:icon="@drawable/ic_swap"
-        android:actionLayout="@layout/menu_item_change_method"
+        android:actionLayout="@layout/isw_menu_item_change_method"
         app:showAsAction="always"
         />
 
     <item android:id="@+id/cancelPayment"
-        android:title="@string/action_cancel" />
+        android:title="@string/isw_action_cancel" />
 
 </menu>

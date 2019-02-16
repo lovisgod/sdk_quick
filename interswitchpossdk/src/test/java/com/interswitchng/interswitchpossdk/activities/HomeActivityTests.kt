@@ -5,7 +5,7 @@ import org.junit.Test
 import android.content.Intent
 import android.widget.LinearLayout
 import androidx.test.core.app.ApplicationProvider
-import com.interswitchng.interswitchpossdk.MainActivity
+import com.interswitchng.interswitchpossdk.modules.home.HomeActivity
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
@@ -19,9 +19,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 
 @RunWith(RobolectricTestRunner::class)
-class MainActivityTests {
+class HomeActivityTests {
 
-    private lateinit var activity: MainActivity
+    private lateinit var activity: HomeActivity
 
     @Before
     fun setup() {
@@ -29,7 +29,7 @@ class MainActivityTests {
         val mainIntent = Intent().apply {
             putExtra(KEY_PAYMENT_INFO, parcel)
         }
-        activity = Robolectric.buildActivity(MainActivity::class.java, mainIntent).create().get()
+        activity = Robolectric.buildActivity(HomeActivity::class.java, mainIntent).create().get()
     }
 
 

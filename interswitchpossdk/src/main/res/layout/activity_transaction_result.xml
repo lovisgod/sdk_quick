@@ -20,18 +20,18 @@
             android:id="@+id/statusImage"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginRight="@dimen/content_small_padding"
-            android:layout_marginLeft="@dimen/content_small_padding"
+            android:layout_marginRight="@dimen/isw_content_small_padding"
+            android:layout_marginLeft="@dimen/isw_content_small_padding"
             tools:src="@drawable/ic_error"
             tools:tint="@color/iswTextColorError"
-            android:layout_marginBottom="@dimen/content_margin"
+            android:layout_marginBottom="@dimen/isw_content_margin"
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/ISW.Bold"
-            android:text="@string/title_status"
+            android:text="@string/isw_title_status"
             android:textColor="@color/iswTextColorSecondaryLight"
             />
 
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             style="@style/ISW.RegularLarge"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="@dimen/content_margin"
+            android:layout_marginBottom="@dimen/isw_content_margin"
             tools:text="Error"
             />
 
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/ISW.Bold"
-            android:text="@string/title_failed"
+            android:text="@string/isw_title_failed"
             />
 
         <TextView
@@ -83,8 +83,8 @@
         android:layout_height="wrap_content"
         style="@style/ISW.Regular"
         android:text="Need A Receipt?"
-        android:paddingTop="@dimen/content_padding"
-        android:paddingBottom="@dimen/content_small_padding"
+        android:paddingTop="@dimen/isw_content_padding"
+        android:paddingBottom="@dimen/isw_content_small_padding"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         />
@@ -104,10 +104,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
-        android:layout_marginBottom="@dimen/content_margin"
-        android:layout_marginTop="@dimen/content_small_margin"
+        android:layout_marginBottom="@dimen/isw_content_margin"
+        android:layout_marginTop="@dimen/isw_content_small_margin"
         android:background="@drawable/bg_solid_primary"
-        android:text="@string/title_print_receipt"
+        android:text="@string/isw_title_print_receipt"
         style="@style/ISW.Bold"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
@@ -120,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:text="@string/action_close"
+        android:text="@string/isw_action_close"
         android:textColor="@color/iswColorPrimaryDark"
         style="@style/ISW.Bold"
         android:textAllCaps="true"

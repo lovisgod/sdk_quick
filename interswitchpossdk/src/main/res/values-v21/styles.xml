@@ -3,10 +3,10 @@
 
     <style name="ISW.PaymentOption" parent="ISW.PaymentContent">
         <item name="android:background">@drawable/bg_card</item>
-        <item name="android:elevation">@dimen/elevation</item>
-        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
-        <item name="android:layout_marginBottom">@dimen/content_small_margin</item>
-        <item name="android:padding">@dimen/content_padding</item>
+        <item name="android:elevation">@dimen/isw_elevation</item>
+        <item name="android:layout_marginTop">@dimen/isw_content_small_margin</item>
+        <item name="android:layout_marginBottom">@dimen/isw_content_small_margin</item>
+        <item name="android:padding">@dimen/isw_content_padding</item>
     </style>
 
 </resources>

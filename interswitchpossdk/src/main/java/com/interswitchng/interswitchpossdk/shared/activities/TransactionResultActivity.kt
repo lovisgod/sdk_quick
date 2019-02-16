@@ -40,7 +40,7 @@ class TransactionResultActivity : BaseActivity() {
 
         // set amount text view
         val amountStr = DisplayUtils.getAmountString(paymentInfo.amount)
-        amountText.text = getString(R.string.currency_amount, amountStr)
+        amountText.text = getString(R.string.isw_currency_amount, amountStr)
 
         // setup transaction status
         setupTransactionStatus(result)
@@ -55,7 +55,7 @@ class TransactionResultActivity : BaseActivity() {
 
         // set transaction status message
         val transactionStatus =
-                if (isSuccessful) getString(R.string.title_transaction_successful)
+                if (isSuccessful) getString(R.string.isw_title_transaction_successful)
                 else IsoUtils.getIsoResult(result.responseCode)?.second
 
         transactionResult.text = transactionStatus
@@ -67,7 +67,7 @@ class TransactionResultActivity : BaseActivity() {
         statusImage.setColorFilter(ContextCompat.getColor(this, imageColor))
 
         // set payment status
-        val status = if (isSuccessful) R.string.title_paid else R.string.title_failed
+        val status = if (isSuccessful) R.string.isw_title_paid else R.string.isw_title_failed
         paymentStatus.text = getString(status)
 
         // set payment status container bg
@@ -97,8 +97,8 @@ class TransactionResultActivity : BaseActivity() {
         Alerter.clearCurrent(this)
 
         Alerter.create(this)
-                .setTitle(getString(R.string.title_transaction_successful))
-                .setText(getString(R.string.title_transaction_completed_successfully))
+                .setTitle(getString(R.string.isw_title_transaction_successful))
+                .setText(getString(R.string.isw_title_transaction_completed_successfully))
                 .setDismissable(true)
                 .setBackgroundColorRes(android.R.color.holo_green_light)
                 .setDuration(3 * 1000)

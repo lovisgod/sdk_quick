@@ -17,8 +17,8 @@
     <style name="ISW.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ISW.PaymentContent">
-        <item name="android:layout_marginRight">@dimen/content_margin</item>
-        <item name="android:layout_marginLeft">@dimen/content_margin</item>
+        <item name="android:layout_marginRight">@dimen/isw_content_margin</item>
+        <item name="android:layout_marginLeft">@dimen/isw_content_margin</item>
         <item name="android:padding">10dp</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
@@ -26,13 +26,13 @@
 
     <style name="ISW.PaymentOption" parent="ISW.PaymentContent">
         <item name="android:background">@drawable/bg_card_shadow</item>
-        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
-        <item name="android:layout_marginBottom">@dimen/content_small_margin</item>
-        <item name="android:padding">@dimen/content_padding</item>
+        <item name="android:layout_marginTop">@dimen/isw_content_small_margin</item>
+        <item name="android:layout_marginBottom">@dimen/isw_content_small_margin</item>
+        <item name="android:padding">@dimen/isw_content_padding</item>
     </style>
 
     <style name="ISW.PaymentText" parent="ISW.PaymentContent">
-        <item name="android:textSize">@dimen/content_text_size</item>
+        <item name="android:textSize">@dimen/isw_content_text_size</item>
         <item name="android:textColor">@color/iswColorTextSecondary</item>
         <item name="android:focusable">false</item>
         <item name="android:clickable">false</item>
@@ -51,10 +51,10 @@
     </style>
 
     <style name="ISW.Subtitle">
-        <item name="android:paddingRight">@dimen/content_small_padding</item>
-        <item name="android:paddingTop">@dimen/content_small_padding</item>
-        <item name="android:paddingBottom">@dimen/content_small_padding</item>
-        <item name="android:paddingLeft">@dimen/content_padding</item>
+        <item name="android:paddingRight">@dimen/isw_content_small_padding</item>
+        <item name="android:paddingTop">@dimen/isw_content_small_padding</item>
+        <item name="android:paddingBottom">@dimen/isw_content_small_padding</item>
+        <item name="android:paddingLeft">@dimen/isw_content_padding</item>
     </style>
 
     <style name="ISW.Spinner" parent="android:Widget.Spinner">
@@ -80,8 +80,8 @@
     <style name="ISW.Hint" parent="ISW.Regular">
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:lineSpacingMultiplier">1.11</item>
-        <item name="android:paddingTop">@dimen/content_small_padding</item>
-        <item name="android:paddingBottom">@dimen/content_small_padding</item>
+        <item name="android:paddingTop">@dimen/isw_content_small_padding</item>
+        <item name="android:paddingBottom">@dimen/isw_content_small_padding</item>
         <item name="android:paddingRight">50dp</item>
         <item name="android:paddingLeft">50dp</item>
         <item name="android:gravity">center_horizontal</item>
@@ -93,15 +93,20 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
+    <style name="ISW.Black" parent="ISW.Bold">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_black</item>
+    </style>
+
 
     <style name="ISW.BoldLarge" parent="ISW.Bold">
-        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
+        <item name="android:layout_marginTop">@dimen/isw_content_small_margin</item>
         <item name="android:textSize">36sp</item>
         <item name="android:lineSpacingMultiplier">1.19</item>
     </style>
 
     <style name="ISW.RegularLarge" parent="ISW.Regular">
-        <item name="android:layout_marginTop">@dimen/content_small_margin</item>
+        <item name="android:layout_marginTop">@dimen/isw_content_small_margin</item>
         <item name="android:textSize">36sp</item>
         <item name="android:lineSpacingMultiplier">1.19</item>
     </style>
@@ -113,6 +118,4 @@
         <item name="android:paddingLeft">32dp</item>
     </style>
 
-
-    <public />
 </resources>

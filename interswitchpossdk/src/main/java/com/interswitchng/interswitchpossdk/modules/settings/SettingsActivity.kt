@@ -9,7 +9,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueSt
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.content_toolbar.*
+import kotlinx.android.synthetic.main.isw_content_toolbar.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -58,7 +58,7 @@ class SettingsActivity : AppCompatActivity() {
                 btnDownloadKeys.visibility = View.GONE
 
                 // set the text of keys
-                tvKeys.text = getString(R.string.title_downloading_keys)
+                tvKeys.text = getString(R.string.isw_title_downloading_keys)
                 // show progress bar
                 progressKeyDownload.visibility = View.VISIBLE
                 // hide download date
@@ -82,7 +82,7 @@ class SettingsActivity : AppCompatActivity() {
                 btnDownloadTerminalConfig.visibility = View.GONE
 
                 // set the text of terminal config
-                tvTerminalInfo.text = getString(R.string.title_downloading_terminal_config)
+                tvTerminalInfo.text = getString(R.string.isw_title_downloading_terminal_config)
                 // show progress bar
                 progressTerminalDownload.visibility = View.VISIBLE
                 // hide download date
@@ -101,23 +101,23 @@ class SettingsActivity : AppCompatActivity() {
         if (terminalDate != -1L) {
             val date = Date(terminalDate)
             val dateStr = DisplayUtils.getIsoString(date)
-            tvTerminalInfoDate.text = getString(R.string.title_date, dateStr)
-            tvTerminalInfo.text = getString(R.string.title_terminal_config_downloaded)
+            tvTerminalInfoDate.text = getString(R.string.isw_title_date, dateStr)
+            tvTerminalInfo.text = getString(R.string.isw_title_terminal_config_downloaded)
         } else {
             val message = "No terminal configuration"
-            tvTerminalInfoDate.text = getString(R.string.title_date, message)
-            tvTerminalInfo.text = getString(R.string.title_download_terminal_configuration)
+            tvTerminalInfoDate.text = getString(R.string.isw_title_date, message)
+            tvTerminalInfo.text = getString(R.string.isw_title_download_terminal_configuration)
         }
 
         if (keysDate != -1L) {
             val date = Date(terminalDate)
             val dateStr = DisplayUtils.getIsoString(date)
-            tvKeyDate.text = getString(R.string.title_date, dateStr)
-            tvKeys.text = getString(R.string.title_keys_downloaded)
+            tvKeyDate.text = getString(R.string.isw_title_date, dateStr)
+            tvKeys.text = getString(R.string.isw_title_keys_downloaded)
         } else {
             val message = "No keys"
-            tvKeyDate.text = getString(R.string.title_date, message)
-            tvKeys.text = getString(R.string.title_download_keys)
+            tvKeyDate.text = getString(R.string.isw_title_date, message)
+            tvKeys.text = getString(R.string.isw_title_download_keys)
         }
     }
 
@@ -158,16 +158,16 @@ class SettingsActivity : AppCompatActivity() {
 
             // set the texts
             val dateStr = DisplayUtils.getIsoString(date)
-            tvKeyDate.text = getString(R.string.title_date, dateStr)
-            tvKeys.text = getString(R.string.title_keys_downloaded)
+            tvKeyDate.text = getString(R.string.isw_title_date, dateStr)
+            tvKeys.text = getString(R.string.isw_title_keys_downloaded)
 
             // set the drawable and color
             btnDownloadKeys.setImageResource(R.drawable.ic_check)
             btnDownloadKeys.setColorFilter(android.R.color.holo_green_dark)
         } else {
             val message = "No keys downloaded"
-            tvKeyDate.text = getString(R.string.title_date, message)
-            tvKeys.text = getString(R.string.title_error_downloading_keys)
+            tvKeyDate.text = getString(R.string.isw_title_date, message)
+            tvKeys.text = getString(R.string.isw_title_error_downloading_keys)
 
             // set the drawable and color
             btnDownloadKeys.setImageResource(R.drawable.ic_error)
@@ -193,16 +193,16 @@ class SettingsActivity : AppCompatActivity() {
 
             // set the texts
             val dateStr = DisplayUtils.getIsoString(date)
-            tvTerminalInfoDate.text = getString(R.string.title_date, dateStr)
-            tvTerminalInfo.text = getString(R.string.title_terminal_config_downloaded)
+            tvTerminalInfoDate.text = getString(R.string.isw_title_date, dateStr)
+            tvTerminalInfo.text = getString(R.string.isw_title_terminal_config_downloaded)
 
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.ic_check)
             btnDownloadTerminalConfig.setColorFilter(android.R.color.holo_green_dark)
         } else {
             val message = "No terminal configuration"
-            tvTerminalInfoDate.text = getString(R.string.title_date, message)
-            tvTerminalInfo.text = getString(R.string.title_error_downloading_terminal_config)
+            tvTerminalInfoDate.text = getString(R.string.isw_title_date, message)
+            tvTerminalInfo.text = getString(R.string.isw_title_error_downloading_terminal_config)
 
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.ic_warning)

@@ -7,7 +7,7 @@
     android:ellipsize="end"
     android:fontFamily="@font/roboto_black"
     android:maxLines="1"
-    android:padding="@dimen/content_small_padding"
+    android:padding="@dimen/isw_content_small_padding"
     android:textColor="@color/iswColorTextSecondary"
     android:textSize="14sp"
-    tools:text="@string/select_bank" />
+    tools:text="@string/isw_select_bank" />

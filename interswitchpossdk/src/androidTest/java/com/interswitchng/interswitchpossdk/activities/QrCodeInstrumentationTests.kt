@@ -33,7 +33,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
     fun should_show_qr_code_image() {
         activityRule.launchActivity(intent)
 
-        onView(withText(R.string.title_processing_payment)).check(matches(isDisplayed()))
+        onView(withText(R.string.isw_title_processing_payment)).check(matches(isDisplayed()))
 
         WaitUtils.waitTime(2000)
         onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))
@@ -59,7 +59,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
         activityRule.launchActivity(intent)
 
         WaitUtils.waitTime(3000)
-        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -70,7 +70,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
 
         WaitUtils.waitTime(1000)
         WaitUtils.cleanupWaitTime()
-        onView(withText(R.string.title_transaction_completed_successfully)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_transaction_completed_successfully)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -100,7 +100,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
         activityRule.launchActivity(intent)
 
         WaitUtils.waitTime( 500)
-        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -131,7 +131,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
         activityRule.launchActivity(intent)
 
         WaitUtils.waitTime( 500)
-        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -139,7 +139,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
         }
 
         WaitUtils.waitTime(1000)
-        onView(withText(R.string.content_transaction_in_progress_time_out)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_content_transaction_in_progress_time_out)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 

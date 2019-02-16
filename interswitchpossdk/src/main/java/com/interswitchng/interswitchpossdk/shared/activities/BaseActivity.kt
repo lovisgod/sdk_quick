@@ -23,7 +23,7 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.requ
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
-import kotlinx.android.synthetic.main.content_toolbar.*
+import kotlinx.android.synthetic.main.isw_content_toolbar.*
 import org.koin.android.ext.android.inject
 import java.util.concurrent.ExecutorService
 
@@ -50,7 +50,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_options, menu)
+        menuInflater.inflate(R.menu.isw_menu_options, menu)
         return true
     }
 
@@ -92,8 +92,8 @@ abstract class BaseActivity : AppCompatActivity() {
     // for Qr and USSD only
     fun checkTransactionStatus(status: TransactionStatus) {
         Alerter.create(this)
-                .setTitle(getString(R.string.title_transaction_in_progress))
-                .setText(getString(R.string.title_checking_transaction_status))
+                .setTitle(getString(R.string.isw_title_transaction_in_progress))
+                .setText(getString(R.string.isw_title_checking_transaction_status))
                 .enableProgress(true)
                 .setDismissable(false)
                 .enableInfiniteDuration(true)
@@ -172,7 +172,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
             // change notification to error notification
             Alerter.create(this@BaseActivity)
-                    .setTitle(getString(R.string.title_transaction_error))
+                    .setTitle(getString(R.string.isw_title_transaction_error))
                     .setText(message)
                     .setIcon(R.drawable.ic_error)
                     .setDismissable(false)
@@ -189,8 +189,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
             // change notification to error notification
             Alerter.create(this@BaseActivity)
-                    .setTitle(getString(R.string.title_transaction_timeout))
-                    .setText(getString(R.string.content_transaction_in_progress_time_out))
+                    .setTitle(getString(R.string.isw_title_transaction_timeout))
+                    .setText(getString(R.string.isw_content_transaction_in_progress_time_out))
                     .setIcon(R.drawable.ic_warning)
                     .setDismissable(false)
                     .setBackgroundColorRes(android.R.color.holo_orange_dark)

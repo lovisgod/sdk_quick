@@ -55,7 +55,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
-        amountText.text = getString(R.string.amount, amount)
+        amountText.text = getString(R.string.isw_amount, amount)
     }
 
     override fun onStart() {
@@ -72,7 +72,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     private fun setupUI() {
         accountOptions.onItemSelectedListener = this
-        accountOptions.adapter = ArrayAdapter.createFromResource(this, R.array.account_types, R.layout.list_item_spinner_option)
+        accountOptions.adapter = ArrayAdapter.createFromResource(this, R.array.isw_account_types, R.layout.list_item_spinner_option)
         continueButton.setOnClickListener {
             continueButton.isEnabled = false
             continueButton.isClickable = false
@@ -100,7 +100,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 dialog.dismiss()
                 // enable user select account options
                 // only after detecting card
-                paymentHint.text = getString(R.string.hint_account_type)
+                paymentHint.text = getString(R.string.isw_hint_account_type)
                 accountOptions.isClickable = true
                 accountOptions.isEnabled = true
                 // prevent user from clicking continue
@@ -200,7 +200,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         if (firstItem == accountOptions.selectedItem) {
             selectedItem = ""
-            paymentHint.text = getString(R.string.hint_account_type)
+            paymentHint.text = getString(R.string.isw_hint_account_type)
             // disable continue button
             continueButton.isClickable = false
             continueButton.isEnabled = false

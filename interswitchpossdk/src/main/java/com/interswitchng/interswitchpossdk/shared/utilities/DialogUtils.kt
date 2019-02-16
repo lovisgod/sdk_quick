@@ -9,8 +9,8 @@ object DialogUtils {
     fun getLoadingDialog(context: Context): AlertDialog {
         return AlertDialog.Builder(context)
                 .setCancelable(false)
-                .setTitle(R.string.title_processing_payment)
-                .setMessage(R.string.title_loading)
+                .setTitle(R.string.isw_title_processing_payment)
+                .setMessage(R.string.isw_title_loading)
                 .create()
     }
 }

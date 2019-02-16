@@ -7,6 +7,7 @@ import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.interswitchng.interswitchpossdk.base.BaseTestActivity
+import com.interswitchng.interswitchpossdk.modules.home.HomeActivity
 import com.interswitchng.interswitchpossdk.utils.WaitUtils
 import org.junit.Before
 import org.junit.Rule
@@ -17,7 +18,7 @@ import org.junit.runner.RunWith
 class ActivityWorkFlows: BaseTestActivity() {
 
     @Rule @JvmField
-    val activityRule = ActivityTestRule(MainActivity::class.java, true, false)
+    val activityRule = ActivityTestRule(HomeActivity::class.java, true, false)
 
     @Before
     fun setup() {
@@ -30,7 +31,7 @@ class ActivityWorkFlows: BaseTestActivity() {
 
         onView(withId(R.id.qrPayment)).perform(click())
 
-        onView(withText(R.string.title_processing_payment)).check(matches(isDisplayed()))
+        onView(withText(R.string.isw_title_processing_payment)).check(matches(isDisplayed()))
 
         WaitUtils.waitTime(25000)
         onView(withId(R.id.qrCodeImage)).check(matches(isDisplayed()))

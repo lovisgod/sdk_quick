@@ -1,12 +1,10 @@
 package com.interswitchng.interswitchpossdk.activities
 
-import android.app.Application
 import android.app.Instrumentation
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.interswitchng.interswitchpossdk.IswPos
-import com.interswitchng.interswitchpossdk.MainActivity
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
+import com.interswitchng.interswitchpossdk.modules.home.HomeActivity
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -16,7 +14,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class IswPosInstrumentationTests {
 
-    private val monitor = Instrumentation.ActivityMonitor(MainActivity::class.java.simpleName, null, true)
+    private val monitor = Instrumentation.ActivityMonitor(HomeActivity::class.java.simpleName, null, true)
 
     @Before
     fun setup() {
@@ -32,7 +30,7 @@ class IswPosInstrumentationTests {
         val mainActivity = monitor.waitForActivityWithTimeout(10 * 1000) // wait for 10 seconds
 
         assertNotNull("activity is null", mainActivity)
-        assertTrue("activity created is not MainActivity", mainActivity is MainActivity)
+        assertTrue("activity created is not MainActivity", mainActivity is HomeActivity)
     }
 
 }

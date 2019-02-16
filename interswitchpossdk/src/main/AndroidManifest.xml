@@ -12,7 +12,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".modules.home.HomeActivity"
             android:label="IswPos"
             android:noHistory="true"
             android:screenOrientation="portrait"

@@ -62,7 +62,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private fun setupUI() {
 
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
-        amountText.text = getString(R.string.amount, amount)
+        amountText.text = getString(R.string.isw_amount, amount)
 
         loadBanks()
 
@@ -172,7 +172,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             Toast.makeText(parent.context, "You have selected : $selectedItem", Toast.LENGTH_LONG).show()
             getBankCode()
 
-            paymentHint.text = getString(R.string.pay_ussd_instruction)
+            paymentHint.text = getString(R.string.isw_pay_ussd_instruction)
         }
 
         // stop any polling

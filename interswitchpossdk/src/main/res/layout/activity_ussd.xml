@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context=".modules.ussdqr.UssdActivity">
 
-    <include layout="@layout/content_toolbar" />
+    <include layout="@layout/isw_content_toolbar" />
 
 
     <LinearLayout
@@ -23,10 +23,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingBottom="@dimen/content_small_padding"
-            android:paddingTop="@dimen/content_small_padding"
+            android:paddingBottom="@dimen/isw_content_small_padding"
+            android:paddingTop="@dimen/isw_content_small_padding"
             android:textSize="14sp"
-            android:text="@string/select_bank"
+            android:text="@string/isw_select_bank"
             android:textColor="@android:color/white" />
 
             <!--style="@style/ISW.Spinner"-->
@@ -51,11 +51,11 @@
         style="@style/ISW.BoldLarge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/content_margin"
-        android:layout_marginLeft="@dimen/content_margin"
+        android:layout_marginRight="@dimen/isw_content_margin"
+        android:layout_marginLeft="@dimen/isw_content_margin"
         android:gravity="center"
         app:fontFamily="@font/roboto_bold"
-        tools:text="@string/dummy_ussd" />
+        tools:text="@string/isw_dummy_ussd" />
 
     <LinearLayout
         android:id="@+id/changePaymentMethod"
@@ -63,11 +63,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_margin="@dimen/content_margin"
-        android:paddingTop="@dimen/content_small_padding"
-        android:paddingBottom="@dimen/content_small_padding"
-        android:paddingLeft="@dimen/content_padding"
-        android:paddingRight="@dimen/content_padding"
+        android:layout_margin="@dimen/isw_content_margin"
+        android:paddingTop="@dimen/isw_content_small_padding"
+        android:paddingBottom="@dimen/isw_content_small_padding"
+        android:paddingLeft="@dimen/isw_content_padding"
+        android:paddingRight="@dimen/isw_content_padding"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true">
@@ -76,8 +76,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:tint="@color/iswColorTextSecondary"
-            android:layout_marginRight="@dimen/content_small_padding"
-            android:layout_marginLeft="@dimen/content_small_padding"
+            android:layout_marginRight="@dimen/isw_content_small_padding"
+            android:layout_marginLeft="@dimen/isw_content_small_padding"
             android:src="@drawable/ic_swap"
             />
 
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/action_change_payment"
+            android:text="@string/isw_action_change_payment"
             android:textSize="16sp"
             android:fontFamily="@font/roboto_medium" />
 
@@ -103,15 +103,15 @@
             android:id="@+id/mockButtonsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/content_small_padding"
-            android:paddingBottom="@dimen/content_padding"
+            android:paddingTop="@dimen/isw_content_small_padding"
+            android:paddingBottom="@dimen/isw_content_padding"
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/initiateButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
+                android:layout_margin="@dimen/isw_content_margin"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true">
@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_action_button"
-                    android:padding="@dimen/content_padding"
+                    android:padding="@dimen/isw_content_padding"
                     android:text="CONFIRM PAYMENT"
                     android:gravity="center"
                     android:textColor="@color/iswColorTextSecondary"
@@ -135,7 +135,7 @@
                 android:id="@+id/printCodeButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/content_margin"
+                android:layout_margin="@dimen/isw_content_margin"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true">
@@ -146,7 +146,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_action_button"
-                    android:padding="@dimen/content_padding"
+                    android:padding="@dimen/isw_content_padding"
                     android:text="PRINT USSD"
                     android:textColor="@color/iswColorTextSecondary"
                     android:textSize="18sp"
@@ -155,8 +155,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/content_margin"
-                    android:layout_marginRight="@dimen/content_margin"
+                    android:layout_marginLeft="@dimen/isw_content_margin"
+                    android:layout_marginRight="@dimen/isw_content_margin"
                     android:src="@drawable/ic_action_arrow_next"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/printUssdText"

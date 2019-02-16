@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="14dp"
     android:paddingBottom="14dp"
-    android:text="@string/action_change_payment"
+    android:text="@string/isw_action_change_payment"
     android:drawableLeft="@drawable/ic_swap"
     android:drawableStart="@drawable/ic_swap"
     android:background="?attr/selectableItemBackground"

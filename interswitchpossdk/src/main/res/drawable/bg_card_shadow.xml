@@ -6,7 +6,7 @@
                 android:startColor="@android:color/transparent"
                 android:endColor="#44141414"
                 android:angle="-90"/>
-            <corners android:radius="@dimen/corner_radius" />
+            <corners android:radius="@dimen/isw_corner_radius" />
             <padding android:top="1dp"
                 android:left="1dp"
                 android:right="1dp"
@@ -17,7 +17,7 @@
     <item>
         <shape
             android:shape="rectangle">
-            <corners android:radius="@dimen/corner_radius" />
+            <corners android:radius="@dimen/isw_corner_radius" />
             <solid android:color="@android:color/white"/>
             <padding
                 android:bottom="4dp"

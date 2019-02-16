@@ -89,7 +89,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
         startWorkflow()
 
         WaitUtils.waitTime(3000)
-        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -100,7 +100,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
 
         WaitUtils.waitTime(1000)
         WaitUtils.cleanupWaitTime()
-        onView(withText(R.string.title_transaction_completed_successfully)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_transaction_completed_successfully)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -130,7 +130,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
         startWorkflow()
 
         WaitUtils.waitTime( 500)
-        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -161,7 +161,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
         startWorkflow()
 
         WaitUtils.waitTime( 500)
-        onView(withText(R.string.title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -169,7 +169,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
         }
 
         WaitUtils.waitTime(1000)
-        onView(withText(R.string.content_transaction_in_progress_time_out)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_content_transaction_in_progress_time_out)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 

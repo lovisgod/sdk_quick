@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <include layout="@layout/content_toolbar" />
+    <include layout="@layout/isw_content_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:maxLength="8"
-            android:hint="@string/title_terminal_id"
+            android:hint="@string/isw_title_terminal_id"
             tools:text="210239CB"
             android:textSize="22sp"
             android:inputType="textCapCharacters" />
@@ -33,7 +33,7 @@
             android:id="@+id/btnDownloadParameters"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/action_download_all"
+            android:text="@string/isw_action_download_all"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             android:textColor="@android:color/white"
@@ -50,10 +50,10 @@
             android:id="@+id/tvKeys"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:padding="@dimen/content_padding"
+            android:padding="@dimen/isw_content_padding"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="@string/title_download_keys"
+            tools:text="@string/isw_title_download_keys"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnDownloadKeys"
             />
@@ -63,10 +63,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:paddingRight="@dimen/content_padding"
-            android:paddingEnd="@dimen/content_padding"
-            android:paddingLeft="@dimen/content_padding"
-            android:paddingStart="@dimen/content_padding"
+            android:paddingRight="@dimen/isw_content_padding"
+            android:paddingEnd="@dimen/isw_content_padding"
+            android:paddingLeft="@dimen/isw_content_padding"
+            android:paddingStart="@dimen/isw_content_padding"
             app:layout_constraintBottom_toBottomOf="@+id/tvKeys"
             tools:text="Mon 23, 2018" />
 
@@ -88,8 +88,8 @@
             style="@style/ISW.Progress"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="@dimen/content_padding"
-            android:layout_marginEnd="@dimen/content_padding"
+            android:layout_marginStart="@dimen/isw_content_padding"
+            android:layout_marginEnd="@dimen/isw_content_padding"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -111,10 +111,10 @@
             android:id="@+id/tvTerminalInfo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:padding="@dimen/content_padding"
+            android:padding="@dimen/isw_content_padding"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="@string/title_download_terminal_configuration"
+            tools:text="@string/isw_title_download_terminal_configuration"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnDownloadTerminalConfig"
             />
@@ -124,10 +124,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:paddingRight="@dimen/content_padding"
-            android:paddingEnd="@dimen/content_padding"
-            android:paddingLeft="@dimen/content_padding"
-            android:paddingStart="@dimen/content_padding"
+            android:paddingRight="@dimen/isw_content_padding"
+            android:paddingEnd="@dimen/isw_content_padding"
+            android:paddingLeft="@dimen/isw_content_padding"
+            android:paddingStart="@dimen/isw_content_padding"
             app:layout_constraintBottom_toBottomOf="@+id/tvTerminalInfo"
             tools:text="Mon 23, 2018" />
 
@@ -150,8 +150,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:indeterminateOnly="true"
-            android:layout_marginStart="@dimen/content_padding"
-            android:layout_marginEnd="@dimen/content_padding"
+            android:layout_marginStart="@dimen/isw_content_padding"
+            android:layout_marginEnd="@dimen/isw_content_padding"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

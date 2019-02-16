@@ -106,8 +106,8 @@ class SettingsActivityTests {
         // confirm that correct icon is being displayed
         assertEquals(activity.getDrawable(R.drawable.ic_error)?.alpha, keyButton.drawable.alpha)
         // confirm correct error messages are being displayed
-        assertEquals(activity.getString(R.string.title_error_downloading_keys), keyText.text)
-        assertEquals(activity.getString(R.string.title_date, "No keys downloaded"), keyDateText.text)
+        assertEquals(activity.getString(R.string.isw_title_error_downloading_keys), keyText.text)
+        assertEquals(activity.getString(R.string.isw_title_date, "No keys downloaded"), keyDateText.text)
     }
 
     @Test
@@ -145,8 +145,8 @@ class SettingsActivityTests {
         // confirm that correct icon is being displayed
         assertEquals(activity.getDrawable(R.drawable.ic_error)?.alpha, terminalButton.drawable.alpha)
         // confirm error messages
-        assertEquals(activity.getString(R.string.title_error_downloading_terminal_config), terminalText.text)
-        assertEquals(activity.getString(R.string.title_date, "No terminal configuration"), terminalDateText.text)
+        assertEquals(activity.getString(R.string.isw_title_error_downloading_terminal_config), terminalText.text)
+        assertEquals(activity.getString(R.string.isw_title_date, "No terminal configuration"), terminalDateText.text)
     }
 
 
@@ -169,7 +169,7 @@ class SettingsActivityTests {
         // confirm that progress is not visible
         assertEquals(keyProgress.visibility, View.GONE)
         // confirm the text visible
-        assertEquals(keyText.text, activity.getString(R.string.title_download_keys))
+        assertEquals(keyText.text, activity.getString(R.string.isw_title_download_keys))
         // confirm that last download is visible
         assertEquals(keyDateText.visibility, View.VISIBLE)
 
@@ -184,7 +184,7 @@ class SettingsActivityTests {
         // confirm that progress now visible
         assertEquals(keyProgress.visibility, View.VISIBLE)
         // confirm the text being shown
-        assertEquals(keyText.text, activity.getString(R.string.title_downloading_keys))
+        assertEquals(keyText.text, activity.getString(R.string.isw_title_downloading_keys))
         // confirm that last download is not visible
         assertEquals(keyDateText.visibility, View.GONE)
         Thread.sleep(5000)
@@ -197,7 +197,7 @@ class SettingsActivityTests {
         // confirm that changes are reverted
         assertEquals(keyButton.visibility, View.VISIBLE)
         assertEquals(keyProgress.visibility, View.GONE)
-        assertEquals(keyText.text, activity.getString(R.string.title_keys_downloaded))
+        assertEquals(keyText.text, activity.getString(R.string.isw_title_keys_downloaded))
         assertEquals(keyDateText.visibility, View.VISIBLE)
     }
 
@@ -221,7 +221,7 @@ class SettingsActivityTests {
         // confirm that progress is not visible
         assertEquals(terminalProgress.visibility, View.GONE)
         // confirm the text visible
-        assertEquals(terminalText.text, activity.getString(R.string.title_download_terminal_configuration))
+        assertEquals(terminalText.text, activity.getString(R.string.isw_title_download_terminal_configuration))
         // confirm that last download is visible
         assertEquals(terminalDateText.visibility, View.VISIBLE)
 
@@ -236,7 +236,7 @@ class SettingsActivityTests {
         // confirm that progress now visible
         assertEquals(terminalProgress.visibility, View.VISIBLE)
         // confirm the text being shown
-        assertEquals(terminalText.text, activity.getString(R.string.title_downloading_terminal_config))
+        assertEquals(terminalText.text, activity.getString(R.string.isw_title_downloading_terminal_config))
         // confirm that last download is not visible
         assertEquals(terminalDateText.visibility, View.GONE)
         Thread.sleep(5000)
@@ -250,7 +250,7 @@ class SettingsActivityTests {
         // confirm that changes are reverted
         assertEquals(terminalButton.visibility, View.VISIBLE)
         assertEquals(terminalProgress.visibility, View.GONE)
-        assertEquals(terminalText.text, activity.getString(R.string.title_terminal_config_downloaded))
+        assertEquals(terminalText.text, activity.getString(R.string.isw_title_terminal_config_downloaded))
         assertEquals(terminalDateText.visibility, View.VISIBLE)
     }
 }

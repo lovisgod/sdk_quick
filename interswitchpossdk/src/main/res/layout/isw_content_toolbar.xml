@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         style="@style/ISW.Subtitle"
         android:textColor="@android:color/white"
-        android:text="@string/receiving_payment"
+        android:text="@string/isw_receiving_payment"
         android:background="@color/iswColorPrimaryDark"
         />
 

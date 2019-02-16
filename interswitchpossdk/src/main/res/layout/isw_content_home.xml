@@ -1,230 +1,253 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <LinearLayout
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:background="@color/iswColorHighlight"
         android:orientation="vertical"
-        android:background="@color/iswColorHighlight">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/dateTextViewTransactionsType"
-                android:text="Monday, January 13"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:id="@+id/companyNameTextView"
-                android:textStyle="normal"
-                android:textColor="@color/iswTextColorSecondaryDark"
-                android:text="Boma n Daughters Ltd."
-                android:layout_below="@+id/dateTextViewTransactionsType"/>
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/dateTextViewTransactionsType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monday, January 13" />
+
+        <TextView
+            android:id="@+id/companyNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dateTextViewTransactionsType"
+            android:text="Boma n Daughters Ltd."
+            android:textColor="@color/iswTextColorSecondaryDark"
+            android:textSize="20sp"
+            android:textStyle="normal" />
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/bg_square_"
-            android:src="@drawable/ic_action_lock"
-            android:padding="3dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
-        </RelativeLayout>
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_square_"
+            android:padding="3dp"
+            android:src="@drawable/ic_action_lock" />
+    </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingEnd="16dp"
+        android:background="@color/iswTextColorSecondaryDark"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:text="Select Transaction Type"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:background="@color/iswTextColorSecondaryDark"
-        android:text="Select Transaction Type"/>
+        android:textStyle="bold" />
 
     <LinearLayout
+        android:id="@+id/makePurchase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_margin="16dp"
         android:background="@drawable/bg_square"
-        android:layout_margin="16dp">
+        android:orientation="vertical">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:text="Make Payment"
                 android:textColor="@color/iswTextColorSecondaryDark"
-                android:text="Make Payment"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
-                android:layout_gravity="center_vertical|right|end"/>
+                android:layout_gravity="center_vertical|right|end"
+                android:src="@drawable/ic_action_arrow_next" />
         </FrameLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/iswTextColorSecondary"/>
+            android:background="@color/iswTextColorSecondary" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/iswColorHighlight"
+            android:paddingBottom="5dp"
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="5dp"
             android:text="Pay for items purchased"
-            android:paddingLeft="16dp"
-            android:paddingStart="16dp"
-            android:paddingRight="16dp"
-            android:paddingEnd="16dp"
-            android:textColor="@color/iswTextColorSecondaryDark"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:background="@color/iswColorHighlight"/>
+            android:textColor="@color/iswTextColorSecondaryDark" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:background="@drawable/bg_square"
-        android:layout_marginLeft="16dp">
+        android:orientation="vertical">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:text="Transfer Money"
                 android:textColor="@color/iswTextColorSecondaryDark"
-                android:text="Transfer Money"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
-                android:layout_gravity="center_vertical|right|end"/>
+                android:layout_gravity="center_vertical|right|end"
+                android:src="@drawable/ic_action_arrow_next" />
         </FrameLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/iswTextColorSecondary"/>
+            android:background="@color/iswTextColorSecondary" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/iswColorHighlight"
+            android:paddingBottom="5dp"
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="5dp"
             android:text="Transfer funds from one account to other"
-            android:paddingLeft="16dp"
-            android:paddingStart="16dp"
-            android:paddingRight="16dp"
-            android:paddingEnd="16dp"
-            android:textColor="@color/iswTextColorSecondaryDark"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:background="@color/iswColorHighlight"/>
+            android:textColor="@color/iswTextColorSecondaryDark" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_square"
-        android:layout_marginLeft="16dp">
+        android:orientation="vertical">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:text="Bill Payments"
                 android:textColor="@color/iswTextColorSecondaryDark"
-                android:text="Bill Payments"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
-                android:layout_gravity="center_vertical|right|end"/>
+                android:layout_gravity="center_vertical|right|end"
+                android:src="@drawable/ic_action_arrow_next" />
         </FrameLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/iswTextColorSecondary"/>
+            android:background="@color/iswTextColorSecondary" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/iswColorHighlight"
+            android:paddingBottom="5dp"
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="5dp"
             android:text="Pay for electricity, toll, tax and other bills"
-            android:paddingLeft="16dp"
-            android:paddingStart="16dp"
-            android:paddingRight="16dp"
-            android:paddingEnd="16dp"
-            android:textColor="@color/iswTextColorSecondaryDark"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:background="@color/iswColorHighlight"/>
+            android:textColor="@color/iswTextColorSecondaryDark" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/bg_square"
-        android:layout_marginLeft="16dp">
+        android:orientation="vertical">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:text="Cash Out"
                 android:textColor="@color/iswTextColorSecondaryDark"
-                android:text="Cash Out"/>
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
-                android:layout_gravity="center_vertical|right|end"/>
+                android:layout_gravity="center_vertical|right|end"
+                android:src="@drawable/ic_action_arrow_next" />
         </FrameLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/iswTextColorSecondary"/>
+            android:background="@color/iswTextColorSecondary" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Make cash withdrawal from this terminal"
-            android:paddingLeft="16dp"
-            android:paddingStart="16dp"
-            android:paddingRight="16dp"
-            android:paddingEnd="16dp"
-            android:textColor="@color/iswTextColorSecondaryDark"
-            android:paddingTop="5dp"
+            android:background="@color/iswColorHighlight"
             android:paddingBottom="5dp"
-            android:background="@color/iswColorHighlight"/>
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="5dp"
+            android:text="Make cash withdrawal from this terminal"
+            android:textColor="@color/iswTextColorSecondaryDark" />
     </LinearLayout>
 </LinearLayout>

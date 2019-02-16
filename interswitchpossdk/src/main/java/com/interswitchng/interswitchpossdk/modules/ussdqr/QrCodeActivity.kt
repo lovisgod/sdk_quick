@@ -31,7 +31,6 @@ import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.activity_qr_code.*
 import kotlinx.android.synthetic.main.content_amount.*
 import org.koin.android.ext.android.inject
-import java.text.NumberFormat
 import java.util.*
 
 
@@ -65,8 +64,8 @@ class QrCodeActivity : BaseActivity() {
 
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
-        amountText.text = getString(R.string.amount, amount)
-        paymentHint.text = getString(R.string.hint_qr_code)
+        amountText.text = getString(R.string.isw_amount, amount)
+        paymentHint.text = getString(R.string.isw_hint_qr_code)
         changePaymentMethod.setOnClickListener {
             showPaymentOptions(BottomSheetOptionsDialog.QR)
         }

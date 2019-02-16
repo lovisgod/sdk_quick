@@ -8,7 +8,7 @@
     tools:context=".modules.paycode.PayCodeActivity">
 
 
-    <include layout="@layout/content_toolbar" />
+    <include layout="@layout/isw_content_toolbar" />
 
     <TextView
         android:id="@+id/amountText"

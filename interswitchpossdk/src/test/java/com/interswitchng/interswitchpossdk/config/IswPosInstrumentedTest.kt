@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import com.interswitchng.interswitchpossdk.IswPos
-import com.interswitchng.interswitchpossdk.MainActivity
+import com.interswitchng.interswitchpossdk.modules.home.HomeActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.nhaarman.mockitokotlin2.mock
@@ -23,11 +23,11 @@ class IswPosInstrumentedTest {
         val payment: PaymentInfo = mock()
         IswPos.configureTerminal(app, mock())
 
-        val expectedIntent = Intent(app, MainActivity::class.java).apply {
+        val expectedIntent = Intent(app, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(KEY_PAYMENT_INFO, payment)
         }
-        val expectedIntent2 = Intent(app, MainActivity::class.java).apply {
+        val expectedIntent2 = Intent(app, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(KEY_PAYMENT_INFO, payment)
         }
