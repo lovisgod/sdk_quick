@@ -61,13 +61,13 @@ class IswPos private constructor(private val app: Application, internal val devi
                 }
 
                 // add app context
-                val appContext = module {
+                val appContext = module(override = true) {
                     single { app.applicationContext }
                     single { device }
                 }
 
                 // set up koin
-                val modules = appModules + activityModules + appContext
+                val modules = listOf(appContext) + appModules + activityModules
                 loadKoinModules(modules)
 
                 // set configured

@@ -17,11 +17,10 @@ internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, pri
         numberFormat.minimumFractionDigits = 2
         numberFormat.maximumFractionDigits = 2
 
-        val txnAmount = numberFormat.format(info.amount.toDouble())
 
         val stan = pairString("stan", info.stan)
         val date = pairString("date", info.dateTime)
-        val amount = pairString("amount", txnAmount)
+        val amount = pairString("amount", info.amount)
         val authCode = pairString("authentication code", info.authorizationCode)
         val pinStatus = pairString("", info.pinStatus)
 

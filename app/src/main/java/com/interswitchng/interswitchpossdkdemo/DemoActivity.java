@@ -29,9 +29,11 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void configureTerminal() {
-        PosInterface.setDalInstance(getApplicationContext());
-        CardService cardService = CardService.getInstance(getApplicationContext());
-        PosInterface.getInstance(cardService);
+        if (!BuildConfig.DEBUG) {
+            PosInterface.setDalInstance(getApplicationContext());
+            CardService cardService = CardService.getInstance(getApplicationContext());
+            PosInterface.getInstance(cardService);
+        }
         POSDeviceService deviceService = POSDeviceService.create();
 
         // configure terminal

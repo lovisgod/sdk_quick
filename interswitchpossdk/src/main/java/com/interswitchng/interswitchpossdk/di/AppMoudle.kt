@@ -1,10 +1,20 @@
 package com.interswitchng.interswitchpossdk.di
 
+import android.widget.Toast
+import com.interswitchng.interswitchpossdk.BuildConfig
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.*
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTransaction
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.IPrinter
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.*
+import com.interswitchng.interswitchpossdk.shared.models.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
+import com.interswitchng.interswitchpossdk.shared.models.core.UserType
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
+import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.storage.SharePreferenceManager
 import com.interswitchng.interswitchpossdk.shared.services.UserService
@@ -24,11 +34,11 @@ const val AUTH_INTERCEPTOR = "auth_interceptor"
 
 private val serviceModule = module {
     single { IswPos.getInstance() }
-    single<Payable>  { PayableService(get()) }
+    single<Payable> { PayableService(get()) }
     single<IUserService> { UserService() }
     single { SharePreferenceManager(androidContext()) }
     single<IKeyValueStore> { KeyValueStore(get()) }
-    factory<IsoService> { IsoServiceImpl (androidContext(), get(), get()) }
+    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
     factory<IsoSocket> {
         val resource = androidContext().resources
         val serverIp = resource.getString(R.string.nibss_ip)
@@ -37,20 +47,38 @@ private val serviceModule = module {
         val store: IKeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
         // get timeout based on terminal info
-        val timeout = terminalInfo?.serverTimeoutInSec  ?: resource.getInteger(R.integer.timeout)
+        val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.timeout)
 
         return@factory NibssIsoSocket(serverIp, port, timeout * 1000)
     }
 
     // TODO remove this
-//    single<POSDevice>(override = true) {
-//        object : POSDevice {
-//            override fun attachCallback(callback: CardInsertedCallback) {}
-//            override fun detachCallback(callback: CardInsertedCallback) {}
-//            override fun printSlip(slip: List<PrintObject>) {}
-//            override fun checkPin(string: String) {}
-//        }
-//    }
+    if (BuildConfig.DEBUG) {
+        single<POSDevice>(override = true) {
+            object : POSDevice {
+                override val printer: IPrinter
+                    get() = object : IPrinter {
+                        override fun printSlip(slip: List<PrintObject>, user: UserType) {
+                            val context = androidContext()
+                            Toast.makeText(context, "Printing Slip", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                override fun getEmvCardTransaction(): EmvCardTransaction {
+                    return object : EmvCardTransaction {
+                        override fun setEmvCallback(callback: EmvCallback) {}
+                        override fun removeEmvCallback(callback: EmvCallback) {}
+                        override fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {}
+                        override fun startTransaction(): EmvResult = EmvResult.OFFLINE_APPROVED
+                        override fun getCardDetail(): CardDetail = CardDetail("", "")
+                        override fun completeTransaction() {}
+                        override fun cancelTransaction() {}
+                        override fun getTransactionInfo(): EmvData? = null
+                    }
+                }
+            }
+        }
+    }
 }
 
 private val networkModule = module {
@@ -67,7 +95,7 @@ private val networkModule = module {
         val userManager: IUserService = get()
         return@single Interceptor { chain ->
             val request = chain.request().newBuilder()
-                    .addHeader("Content-type", "application/json" )
+                    .addHeader("Content-type", "application/json")
                     .addHeader("Authorization", "Bearer ${userManager.getToken()}")
                     .build()
 
