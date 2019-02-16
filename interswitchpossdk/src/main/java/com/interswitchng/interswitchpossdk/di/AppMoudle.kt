@@ -57,8 +57,9 @@ private val networkModule = module {
 
     factory {
         OkHttpClient.Builder()
-                .connectTimeout(60L, TimeUnit.SECONDS)
-                .readTimeout(60L, TimeUnit.SECONDS)
+                .connectTimeout(40, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
     }
 
     // retrofit interceptor for authentication

@@ -119,6 +119,21 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
 
         // notify callback of card detected
         emvCallback?.onCardDetected()
+        // watch for card removal
+        startWatchingCard()
+    }
+
+    private fun startWatchingCard() {
+        Thread {
+            // try and detect card
+            while (true) {
+                // check if card cannot be detected
+                if (!POSDevice.dal.icc.detect(0x00)) break
+                Thread.sleep(300)
+            }
+            // notify callback of card removal
+            emvCallback?.onCardRemoved()
+        }.start()
     }
 
     override fun getPinResult(panBlock: String) = pinResult

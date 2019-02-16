@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".modules.card.CardActivity">
 
 
     <include layout="@layout/isw_content_toolbar" />
@@ -33,21 +34,21 @@
             android:id="@+id/accountOptions"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            tools:listitem="@layout/list_item_spinner_option"
+            android:clickable="false"
+            tools:listitem="@layout/isw_spinner_item_label"
             android:layout_weight="1" />
 
     </LinearLayout>
 
     <include
-        layout="@layout/content_amount"
+        layout="@layout/isw_content_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        tools:context=".modules.card.CardActivity">
+        android:padding="16dp">
 
 
         <LinearLayout
@@ -71,7 +72,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:visibility="gone"
             android:background="@android:color/white">
 
 
@@ -142,7 +142,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:visibility="gone"
             android:background="@android:color/white" />
 
     </FrameLayout>

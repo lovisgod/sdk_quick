@@ -13,7 +13,7 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.resp
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.tapadoo.alerter.Alerter
-import kotlinx.android.synthetic.main.activity_transaction_result.*
+import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
 import org.koin.android.ext.android.inject
 
 class TransactionResultActivity : BaseActivity() {
@@ -24,7 +24,7 @@ class TransactionResultActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_transaction_result)
+        setContentView(R.layout.isw_activity_transaction_result)
 
         result = intent.getParcelableExtra(KEY_TRANSACTION_RESULT)
 

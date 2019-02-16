@@ -8,8 +8,7 @@ import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
-import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.android.synthetic.main.isw_content_toolbar.*
+import kotlinx.android.synthetic.main.isw_activity_settings.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -20,7 +19,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.isw_activity_settings)
 
         setSupportActionBar(toolbar)
     }
@@ -35,15 +34,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-
-        btnDownloadParameters.setOnClickListener {
-            btnDownloadParameters.isEnabled = false
-
-            // click other buttons
-            btnDownloadKeys.performClick()
-            btnDownloadTerminalConfig.performClick()
-        }
-
         // set up buttons
         btnDownloadKeys.setOnClickListener {
             // validate that a terminal id is present

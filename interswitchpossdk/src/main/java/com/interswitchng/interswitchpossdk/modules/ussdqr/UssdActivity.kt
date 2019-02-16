@@ -26,8 +26,8 @@ import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
-import kotlinx.android.synthetic.main.activity_ussd.*
-import kotlinx.android.synthetic.main.content_amount.*
+import kotlinx.android.synthetic.main.isw_activity_ussd.*
+import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -39,6 +39,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     private var ussdCode: String? = null
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
+    private val alert by lazy { DialogUtils.getAlertDialog(this) }
     private val logger by lazy { Logger.with("USSD") }
 
     // get strings of first item
@@ -51,7 +52,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_ussd)
+        setContentView(R.layout.isw_activity_ussd)
     }
 
     override fun onStart() {
@@ -66,14 +67,9 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
         loadBanks()
 
-        paymentHint.text = "Loading Banks"
+        paymentHint.text = "Loading Banks..."
         banks.onItemSelectedListener = this
-        changePaymentMethod.setOnClickListener {
-            showPaymentOptions(BottomSheetOptionsDialog.USSD)
-        }
-
         showMockButtons(false)
-
     }
 
     private fun loadBanks() {
@@ -84,7 +80,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 bankCodes = mutableMapOf(firstItem to "")
                 allBanks?.map { bankCodes.put(it.name, it.code) }
                 val bankNames = bankCodes.keys.toList()
-                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.list_item_spinner_option, bankNames) }
+                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.isw_spinner_item_label, bankNames) }
             }
         }
     }
@@ -106,9 +102,11 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
             // initiate ussd payment
             paymentService.initiateUssdPayment(request) { response, throwable ->
-                // handle error or response
-                if (throwable != null) handleError(throwable)
-                else response?.apply { runOnUiThread { handleResponse(request, this) } }
+                runOnUiThread {
+                    // handle error or response
+                    if (throwable != null) handleError(throwable)
+                    else response?.apply { handleResponse(request, this) }
+                }
             }
 
         }
@@ -120,12 +118,13 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         mockButtonsContainer.visibility = View.VISIBLE
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
-            mockButtonsContainer.visibility = View.GONE
-
+            initiateButton.isClickable = false
             val payment = PaymentRequest(4077131215677, request.amount.toInt(), 566, 623222, response.transactionReference!!)
             initiator.initiateQr(payment).process { s, t ->
                 if (t != null) logger.log(t.localizedMessage)
                 else logger.log(s!!)
+                initiateButton.isEnabled = true
+                initiateButton.isClickable = true
             }
 
             // check transaction status
@@ -142,20 +141,38 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     }
 
     private fun handleResponse(request: CodeRequest, response: CodeResponse) {
-        ussdCode = response.bankShortCode ?: response.defaultShortCode
-        ussdCode?.apply {
-            ussdText.text = this
-            printSlip.add(PrintObject.Data( this))
-        }
-        dialog.dismiss()
+        when (response.responseCode) {
+            CodeResponse.OK -> {
 
-        // TODO remove mock trigger
-        showMockButtons(request, response)
+                ussdCode = response.bankShortCode ?: response.defaultShortCode
+                ussdCode?.apply {
+                    ussdText.text = this
+                    printSlip.add(PrintObject.Data(this))
+                }
+                dialog.dismiss()
+
+                // TODO remove mock trigger
+                showMockButtons(request, response)
+            }
+            else -> {
+                runOnUiThread {
+                    val errorMessage = "An error occured: ${response.responseDescription}"
+                    toast(errorMessage)
+                    showAlert()
+                }
+            }
+        }
     }
 
     private fun handleError(throwable: Throwable) {
-        // TODO handle error
-        Toast.makeText(this, throwable.localizedMessage, Toast.LENGTH_LONG).show()
+        toast(throwable.localizedMessage)
+        showAlert()
+    }
+
+    private fun showAlert() {
+        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); getBankCode() }
+                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
     private fun showMockButtons(shouldShow: Boolean) {

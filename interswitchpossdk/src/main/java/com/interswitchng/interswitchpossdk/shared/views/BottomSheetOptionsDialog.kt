@@ -14,12 +14,12 @@ import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
-import kotlinx.android.synthetic.main.content_payment_options.*
+import kotlinx.android.synthetic.main.isw_content_payment_options.*
 
 class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.content_bottom_sheet_options, container, false)
+        return inflater.inflate(R.layout.isw_content_bottom_sheet_options, container, false)
     }
 
     override fun onStart() {

@@ -8,13 +8,13 @@ import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
-import kotlinx.android.synthetic.main.activity_pay_code.*
+import kotlinx.android.synthetic.main.isw_activity_pay_code.*
 
 class PayCodeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pay_code)
+        setContentView(R.layout.isw_activity_pay_code)
 
 
         // get payment info

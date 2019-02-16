@@ -67,6 +67,9 @@
     <string name="isw_title_lock_device">Lock Device</string>
     <string name="isw_drawer_close">open</string>
     <string name="isw_drawer_open">close</string>
+    <string name="isw_title_try_again">Try Again</string>
+    <string name="isw_title_cancel">Cancel</string>
+    <string name="isw_hint_insert_card">Insert Card</string>
 
 
     <string-array name="isw_account_types">

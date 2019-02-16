@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="14dp"
-    android:paddingBottom="14dp"
-    android:text="@string/isw_action_change_payment"
-    android:drawableLeft="@drawable/ic_swap"
-    android:drawableStart="@drawable/ic_swap"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true" />
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:layout_margin="@dimen/isw_content_margin"
+    android:paddingTop="@dimen/isw_content_small_padding"
+    android:paddingBottom="@dimen/isw_content_small_padding"
+    android:paddingLeft="@dimen/isw_content_padding"
+    android:paddingRight="@dimen/isw_content_padding"
+    tools:background="@color/iswColorPrimaryDark"
+    >
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="@dimen/isw_content_small_padding"
+        android:layout_marginLeft="@dimen/isw_content_small_padding"
+        android:src="@drawable/ic_swap"
+        />
+
+    <TextView
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/isw_action_change_payment"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_medium" />
+
+
+</LinearLayout>

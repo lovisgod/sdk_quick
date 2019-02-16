@@ -25,8 +25,8 @@ import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtil
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
-import kotlinx.android.synthetic.main.activity_card.*
-import kotlinx.android.synthetic.main.content_amount.*
+import kotlinx.android.synthetic.main.isw_activity_card.*
+import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -51,7 +51,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_card)
+        setContentView(R.layout.isw_activity_card)
 
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
@@ -72,11 +72,15 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     private fun setupUI() {
         accountOptions.onItemSelectedListener = this
-        accountOptions.adapter = ArrayAdapter.createFromResource(this, R.array.isw_account_types, R.layout.list_item_spinner_option)
+        accountOptions.adapter = ArrayAdapter.createFromResource(this, R.array.isw_account_types, R.layout.isw_spinner_item_label)
         continueButton.setOnClickListener {
-            continueButton.isEnabled = false
-            continueButton.isClickable = false
-            startTransaction()
+            if (selectedItem == "") {
+                toast("Choose a valid account type")
+            } else {
+                continueButton.isEnabled = false
+                continueButton.isClickable = false
+                startTransaction()
+            }
         }
     }
 
@@ -102,11 +106,6 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 // only after detecting card
                 paymentHint.text = getString(R.string.isw_hint_account_type)
                 accountOptions.isClickable = true
-                accountOptions.isEnabled = true
-                // prevent user from clicking continue
-                // until account type is selected
-                continueButton.isEnabled = false
-                continueButton.isClickable = false
                 // show continue button container
                 showContainer(CardTransactionState.ChooseAccountType)
             }
@@ -200,10 +199,9 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         if (firstItem == accountOptions.selectedItem) {
             selectedItem = ""
-            paymentHint.text = getString(R.string.isw_hint_account_type)
-            // disable continue button
-            continueButton.isClickable = false
-            continueButton.isEnabled = false
+            // ensure card has been detected first
+            if (accountOptions.isClickable)
+                paymentHint.text = getString(R.string.isw_hint_account_type)
         } else {
             selectedItem = parent.getItemAtPosition(pos).toString()
             accountType = when {
@@ -214,9 +212,6 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             }
 
             Toast.makeText(parent.context, "You have selected : $selectedItem", Toast.LENGTH_LONG).show()
-            // enable continue button
-            continueButton.isClickable = true
-            continueButton.isEnabled = true
         }
     }
 
@@ -229,7 +224,10 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     internal inner class CardCallback : EmvCallback {
 
         override fun showInsertCard() {
-            showContainer(CardTransactionState.ShowInsertCard)
+            runOnUiThread {
+                showContainer(CardTransactionState.ShowInsertCard)
+                paymentHint.text = getString(R.string.isw_hint_insert_card)
+            }
         }
 
         override fun onCardDetected() {

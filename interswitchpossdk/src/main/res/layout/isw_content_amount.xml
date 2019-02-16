@@ -43,6 +43,7 @@
     <TextView
         android:id="@+id/paymentHint"
         style="@style/ISW.Hint"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="@string/isw_pay_ussd_instruction"

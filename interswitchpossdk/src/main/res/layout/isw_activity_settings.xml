@@ -6,41 +6,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <include layout="@layout/isw_content_toolbar" />
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:orientation="horizontal">
+        android:background="@color/iswColorPrimary"
+        android:theme="@style/ISW.AppBarOverlay"
+        app:popupTheme="@style/ISW.PopupOverlay" />
 
-        <EditText
-            android:id="@+id/terminalId"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLength="8"
-            android:hint="@string/isw_title_terminal_id"
-            tools:text="210239CB"
-            android:textSize="22sp"
-            android:inputType="textCapCharacters" />
-
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btnDownloadParameters"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/isw_action_download_all"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:textColor="@android:color/white"
-            app:backgroundTint="@color/iswColorPrimaryDark"
-            />
-
-    </LinearLayout>
+    <EditText
+        android:id="@+id/terminalId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="8"
+        android:hint="@string/isw_title_terminal_id"
+        android:layout_margin="15dp"
+        tools:text="210239CB"
+        android:textSize="22sp"
+        android:inputType="textCapCharacters" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

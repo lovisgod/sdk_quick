@@ -27,9 +27,8 @@ import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtil
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
-import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
-import kotlinx.android.synthetic.main.activity_qr_code.*
-import kotlinx.android.synthetic.main.content_amount.*
+import kotlinx.android.synthetic.main.isw_activity_qr_code.*
+import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -43,13 +42,14 @@ class QrCodeActivity : BaseActivity() {
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
     private val logger by lazy { Logger.with("QR") }
+    private val alert by lazy { DialogUtils.getAlertDialog(this) }
 
     private var qrBitmap: Bitmap? = null
     private val printSlip = mutableListOf<PrintObject>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_qr_code)
+        setContentView(R.layout.isw_activity_qr_code)
     }
 
     override fun onStart() {
@@ -59,17 +59,11 @@ class QrCodeActivity : BaseActivity() {
 
 
     private fun setupImage() {
-        // get payment info
-        val paymentInfo: PaymentInfo = intent.getParcelableExtra(KEY_PAYMENT_INFO)
 
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
         amountText.text = getString(R.string.isw_amount, amount)
         paymentHint.text = getString(R.string.isw_hint_qr_code)
-        changePaymentMethod.setOnClickListener {
-            showPaymentOptions(BottomSheetOptionsDialog.QR)
-        }
-
 
         dialog.show()
 
@@ -84,7 +78,6 @@ class QrCodeActivity : BaseActivity() {
                 else response?.apply { handleResponse(request, this) }
             }
         }
-
     }
 
     private fun showTransactionMocks(request: CodeRequest, response: CodeResponse) {
@@ -98,6 +91,8 @@ class QrCodeActivity : BaseActivity() {
             initiator.initiateQr(payment).process { s, t ->
                 if (t != null) logger.log(t.localizedMessage)
                 else logger.log(s!!)
+                initiateButton.isEnabled = true
+                initiateButton.isClickable = true
             }
 
             // check transaction status
@@ -123,27 +118,33 @@ class QrCodeActivity : BaseActivity() {
                 printSlip.add(bitmap)
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
-                    dialog.dismiss()
-
                     // TODO remove mock trigger
                     showTransactionMocks(request, response)
                 }
             }
-            CodeResponse.SERVER_ERROR -> {
+            else -> {
                 runOnUiThread {
-                    val msg = "An error occured: ${response.responseDescription}"
-                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-                    dialog.dismiss()
+                    val errorMessage = "An error occured: ${response.responseDescription}"
+                    toast(errorMessage)
+                    showAlert()
                 }
             }
-            else -> {
-                // show error message
-            }
         }
+
+        runOnUiThread { dialog.dismiss() }
     }
 
     private fun handleError(throwable: Throwable) {
-        // handle error
+        // TODO handle error
+        toast(throwable.localizedMessage)
+        dialog.dismiss()
+        showAlert()
+    }
+
+    private fun showAlert() {
+        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); setupImage() }
+                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {
