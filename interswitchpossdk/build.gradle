@@ -23,6 +23,10 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField("boolean", "MOCK", "false") // mock device
+        }
+        debug {
+            buildConfigField("boolean", "MOCK", "false") // mock device
         }
     }
 

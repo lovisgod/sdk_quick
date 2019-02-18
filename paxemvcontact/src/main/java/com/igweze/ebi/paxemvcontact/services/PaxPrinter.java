@@ -1,4 +1,4 @@
-package com.igweze.ebi.paxemvcontact.posshim;
+package com.igweze.ebi.paxemvcontact.services;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -8,21 +8,21 @@ import com.pax.dal.entity.EFontTypeAscii;
 import com.pax.dal.entity.EFontTypeExtCode;
 import com.pax.dal.exceptions.PrinterDevException;
 
-public class Printer {
+public class PaxPrinter {
 
-    private static Printer mPrinter;
+    private static PaxPrinter mPaxPrinter;
     private IPrinter printer;
 
-    private Printer() {
-        printer = Holder.getIdal().getPrinter();
+    private PaxPrinter() {
+        printer = POSDeviceService.getDal().getPrinter();
     }
 
 
-    public static Printer getInstance() {
-        if (mPrinter == null) {
-            mPrinter = new Printer();
+    public static PaxPrinter getInstance() {
+        if (mPaxPrinter == null) {
+            mPaxPrinter = new PaxPrinter();
         }
-        return mPrinter;
+        return mPaxPrinter;
     }
 
     public void init() {

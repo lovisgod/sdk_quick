@@ -1,6 +1,5 @@
 package com.igweze.ebi.paxemvcontact.services
 
-import com.igweze.ebi.paxemvcontact.posshim.Printer
 import com.igweze.ebi.paxemvcontact.utilities.StringUtils
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.IPrinter
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType
@@ -19,14 +18,14 @@ object Printer: IPrinter {
     private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_16_24, EFontTypeExtCode.FONT_16_16)
     private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_16_32)
 
-    private val line: String = "-".repeat(SCREEN_LARGE_LENGTH)
+    private val line: String = "-".repeat(SCREEN_NORMAL_LENGTH)
 
     //----------------------------------------------------------
     //      Implementation for ISW Printer interface
     //----------------------------------------------------------
     override fun printSlip(slip: List<PrintObject>, user: UserType) {
         Thread {
-            val printer = Printer.getInstance()
+            val printer = PaxPrinter.getInstance()
 
             // initialize printer
             printer.init()
@@ -56,11 +55,11 @@ object Printer: IPrinter {
         }.start()
     }
 
-    private fun printItem(printer: Printer, item: PrintObject) {
+    private fun printItem(paxPrinter: PaxPrinter, item: PrintObject) {
 
         when (item) {
-            is PrintObject.Line -> printer.printStr(line, null)
-            is PrintObject.BitMap -> printer.printBitmap(item.bitmap)
+            is PrintObject.Line -> paxPrinter.printStr(line, null)
+            is PrintObject.BitMap -> paxPrinter.printBitmap(item.bitmap)
             is PrintObject.Data -> {
                 // get string print config
                 val printConfig = item.config
@@ -71,11 +70,11 @@ object Printer: IPrinter {
                     else -> NORMAL_FONT
                 }
 
-                printer.fontSet(fontSize.first, fontSize.second)
+                paxPrinter.fontSet(fontSize.first, fontSize.second)
 
                 // set gray thickness
-                if (printConfig.isBold) printer.setGray(4)
-                else printer.setGray(1)
+                if (printConfig.isBold || printConfig.isTitle) paxPrinter.setGray(4)
+                else paxPrinter.setGray(2)
 
                 // print string
                 if (printConfig.displayCenter) {
@@ -86,9 +85,9 @@ object Printer: IPrinter {
 
                     val formattedString = StringUtils.center(item.value, screenLength, newLine = true)
 
-                    printer.printStr(formattedString, null)
+                    paxPrinter.printStr(formattedString, null)
                 } else {
-                    printer.printStr(item.value, null)
+                    paxPrinter.printStr(item.value, null)
                 }
             }
 

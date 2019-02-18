@@ -3,32 +3,28 @@ package com.igweze.ebi.paxemvcontact
 import android.os.Looper
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.igweze.ebi.paxemvcontact.models.*
+import com.igweze.ebi.paxemvcontact.services.POSDeviceService
+import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
+import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
-import com.igweze.ebi.paxemvcontact.models.*
-import com.igweze.ebi.paxemvcontact.posshim.CardService
-import com.igweze.ebi.paxemvcontact.posshim.PosInterface
-import com.igweze.ebi.paxemvcontact.services.POSDeviceService
-import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 
 
 @RunWith(AndroidJUnit4::class)
 class PrinterTest {
 
-    private lateinit var cardService: CardService
-    private lateinit var pos: PosInterface
 
+    private lateinit var pos: POSDevice
     private val context = InstrumentationRegistry.getContext().applicationContext
 
     @Before
     fun setup() {
         Looper.prepare()
-        PosInterface.setDalInstance(context)
-        cardService =  CardService.getInstance(context)
-        pos = PosInterface.getInstance(cardService)
+        pos = POSDeviceService.create(context)
 
     }
 
@@ -77,11 +73,9 @@ class PrinterTest {
     @Test
     fun printCardSlip() {
         val slip = getCardSlip()
-        val device = POSDeviceService.create()
+        pos.printer.printSlip(slip, UserType.Customer)
 
-        device.printer.printSlip(slip, UserType.Customer)
-
-        Thread.sleep(3000)
+        Thread.sleep(2000)
     }
 
 }

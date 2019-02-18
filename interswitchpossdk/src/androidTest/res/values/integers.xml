@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="poolingTime">40000</integer>
+    <integer name="iswPollingTime">40000</integer>
 </resources>

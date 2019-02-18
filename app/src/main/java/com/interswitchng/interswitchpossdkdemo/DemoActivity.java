@@ -11,9 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.igweze.ebi.paxemvcontact.services.POSDeviceService;
-import com.igweze.ebi.paxemvcontact.activities.PinInputActivity;
-import com.igweze.ebi.paxemvcontact.posshim.CardService;
-import com.igweze.ebi.paxemvcontact.posshim.PosInterface;
 import com.interswitchng.interswitchpossdk.IswPos;
 
 
@@ -29,13 +26,7 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void configureTerminal() {
-        if (!BuildConfig.DEBUG) {
-            PosInterface.setDalInstance(getApplicationContext());
-            CardService cardService = CardService.getInstance(getApplicationContext());
-            PosInterface.getInstance(cardService);
-        }
-        POSDeviceService deviceService = POSDeviceService.create();
-
+        POSDeviceService deviceService = POSDeviceService.create(getApplicationContext());
         // configure terminal
         IswPos.configureTerminal(getApplication(), deviceService);
     }

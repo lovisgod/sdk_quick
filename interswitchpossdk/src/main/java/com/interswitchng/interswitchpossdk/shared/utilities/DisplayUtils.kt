@@ -37,13 +37,27 @@ internal object DisplayUtils {
     /**
      * This method converts device specific pixels to density independent pixels.
      *
-     * @param px A value in px (pixels) unit. Which we need to convert into db
+     * @param px A value in px (pixels) unit. Which we need to convert into dp
      * @param context Context to get resources and device specific display metrics
      * @return A float value to represent dp equivalent to px value
      */
     fun convertPixelsToDp(px: Float, context: Context): Float {
         return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
+
+    /**
+     * This method converts device specific pixels to density independent pixels.
+     *
+     * @param sp A value in (scalable pixels) unit. Which we need to convert into pixels
+     * @param context Context to get resources and device specific display metrics
+     * @return A float value to represent pixel equivalent to sp value
+     */
+    fun convertSpToPixels(sp: Float, context: Context): Float {
+        val scale = context.resources.displayMetrics.scaledDensity
+        return sp * scale
+    }
+
+
 
     fun getIsoString(date: Date): String {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)

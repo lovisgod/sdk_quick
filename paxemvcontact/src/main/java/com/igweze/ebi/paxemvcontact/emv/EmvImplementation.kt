@@ -28,12 +28,6 @@ class EmvImplementation(private val pinCallback: PinCallback) {
 
     private var amount: Int = 0
 
-    init {
-        // set IDevice implementation
-        DeviceManager.getInstance().setIDevice(DeviceImplNeptune.getInstance())
-    }
-
-
     fun setAmount(amount: Int) {
         this.amount = amount
     }

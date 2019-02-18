@@ -94,7 +94,7 @@ abstract class BaseActivity : AppCompatActivity() {
         // show progress alert
         showProgressAlert()
         // check payment status and timeout after 5 minutes
-        val seconds = resources.getInteger(R.integer.poolingTime)
+        val seconds = resources.getInteger(R.integer.iswPollingTime)
         val paymentType = when (this) {
             is QrCodeActivity -> PaymentType.QR
             else -> PaymentType.USSD

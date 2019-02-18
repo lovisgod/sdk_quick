@@ -4,12 +4,5 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application>
-        <activity android:name=".activities.PinInputActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".activities.PrintActivity"
-                android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-    </application>
-
+    <application></application>
 </manifest>

@@ -23,7 +23,7 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult a
 class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPinListener {
 
     private val logger by lazy { Logger.with("EmvTransactionService") }
-    private val ped by lazy { POSDevice.dal.getPed(EPedType.INTERNAL) }
+    private val ped by lazy { POSDeviceService.dal.getPed(EPedType.INTERNAL) }
 
     private var text = ""
 
@@ -114,7 +114,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
 
         // try and detect card
         while (true) {
-            if (POSDevice.dal.icc.detect(0x00)) break
+            if (POSDeviceService.dal.icc.detect(0x00)) break
         }
 
         // notify callback of card detected
@@ -128,7 +128,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
             // try and detect card
             while (true) {
                 // check if card cannot be detected
-                if (!POSDevice.dal.icc.detect(0x00)) break
+                if (!POSDeviceService.dal.icc.detect(0x00)) break
                 Thread.sleep(300)
             }
             // notify callback of card removal

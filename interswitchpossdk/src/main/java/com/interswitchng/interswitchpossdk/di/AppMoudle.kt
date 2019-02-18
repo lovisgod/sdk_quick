@@ -42,18 +42,18 @@ private val serviceModule = module {
     factory<IsoSocket> {
         val resource = androidContext().resources
         val serverIp = resource.getString(R.string.nibss_ip)
-        val port = resource.getInteger(R.integer.nibss_port)
+        val port = resource.getInteger(R.integer.iswNibssPort)
         // try getting terminal info
         val store: IKeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
         // get timeout based on terminal info
-        val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.timeout)
+        val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.iswTimeout)
 
         return@factory NibssIsoSocket(serverIp, port, timeout * 1000)
     }
 
     // TODO remove this
-    if (BuildConfig.DEBUG) {
+    if (BuildConfig.DEBUG && BuildConfig.MOCK) {
         single<POSDevice>(override = true) {
             object : POSDevice {
                 override val printer: IPrinter
