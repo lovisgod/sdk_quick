@@ -10,6 +10,8 @@ internal interface IsoService {
 
     fun downloadTerminalParameters(terminalId: String): Boolean
 
-    fun initiatePurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+    fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+
+    fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, amount: Int): TransactionResponse?
 
 }

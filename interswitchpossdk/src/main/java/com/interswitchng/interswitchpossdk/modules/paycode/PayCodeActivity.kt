@@ -1,14 +1,21 @@
 package com.interswitchng.interswitchpossdk.modules.paycode
 
 import android.os.Bundle
-import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.shared.Constants
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
+import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.Transaction
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_pay_code.*
+import kotlinx.android.synthetic.main.isw_content_amount.*
+import org.koin.android.ext.android.inject
+import java.util.*
 
 class PayCodeActivity : BaseActivity() {
 
@@ -17,16 +24,71 @@ class PayCodeActivity : BaseActivity() {
         setContentView(R.layout.isw_activity_pay_code)
 
 
-        // get payment info
-        val paymentInfo: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
-
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount)
         amountText.text = getString(R.string.isw_amount, amount)
     }
 
-    override fun getTransactionResult(transaction: Transaction): TransactionResult? {
-        return null
+
+    private val isoService: IsoService by inject()
+    private val store: IKeyValueStore by inject()
+    private lateinit var transactionResult: TransactionResult
+
+    override fun onStart() {
+        super.onStart()
+        setupUI()
     }
+
+    private fun setupUI() {
+        paymentHint.text = "Type in your Pay Code"
+        continueButton.setOnClickListener {
+            continueButton.isEnabled = false
+            continueButton.isClickable = false
+            // start paycode process
+            Thread { processOnline() }.start()
+        }
+    }
+
+    private fun processOnline() {
+        runOnUiThread {
+            // change hint text
+            paymentHint.text = getString(R.string.isw_title_processing_transaction)
+            // show transaction progress alert
+            showProgressAlert()
+        }
+
+        // TODO refactor this function [extremely ugly!!]
+        TerminalInfo.get(store)?.let { terminalInfo ->
+            val code = payCode.text.toString()
+            val response = isoService.initiatePaycodePurchase(terminalInfo, code, paymentInfo.amount * 100)
+            // used default transaction because the
+            // transaction is not processed by isw directly
+            val txn = Transaction.default()
+
+            val now = Date()
+            response?.let {
+
+                val responseMsg = IsoUtils.getIsoResultMsg(it.code) ?: "Unknown Error"
+
+                transactionResult = TransactionResult(
+                        paymentType = PaymentType.Card,
+                        dateTime = DisplayUtils.getIsoString(now),
+                        amount = DisplayUtils.getAmountString(paymentInfo.amount),
+                        type = TransactionType.Purchase,
+                        authorizationCode = response.code,
+                        responseMessage = responseMsg,
+                        responseCode = response.code,
+                        stan = response.stan, pinStatus = "", AID = "", code = "",
+                        cardPan = "", cardExpiry = "", cardType = "",
+                        telephone = "08031150978")
+
+                // show transaction result screen
+                showTransactionResult(txn)
+            } ?: toast("Unable to process Transaction").also { finish() }
+
+        } ?: toast("No terminal info, found on device").also { finish() }
+    }
+
+    override fun getTransactionResult(transaction: Transaction) = transactionResult
 
 }

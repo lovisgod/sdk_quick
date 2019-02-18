@@ -22,6 +22,7 @@ import java.io.StringReader
 import java.io.UnsupportedEncodingException
 import java.text.ParseException
 import java.util.*
+import java.util.concurrent.TimeoutException
 
 internal class IsoServiceImpl(
         private val context: Context,
@@ -186,7 +187,7 @@ internal class IsoServiceImpl(
         return false
     }
 
-    override fun initiatePurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+    override fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
@@ -249,7 +250,8 @@ internal class IsoServiceImpl(
             message.dump(System.out, "request -- ")
 
             // open connection
-            socket.open()
+            val isConnected = socket.open()
+            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
 
             socket.setTimeout(2 * 60000)
             val request = message.message.writeData()
@@ -267,6 +269,84 @@ internal class IsoServiceImpl(
                 val script = it.getObjectValue<String>(128)
                 return@let TransactionResponse(code, stan, script)
             }
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
+        }
+    }
+
+    override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, amount: Int): TransactionResponse? {
+
+        try {
+            val pan = "5061011234567890008"
+            val now = Date()
+            val message = NibssIsoMessage(messageFactory.newMessage(0x200))
+            val processCode = "010000"
+            val stan = getNextStan()
+            val randomReference = "000000$stan"
+
+            message
+                    .setValue(2, pan)
+                    .setValue(3, processCode)
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", amount))
+                    .setValue(7, timeAndDateFormatter.format(now))
+                    .setValue(11, stan)
+                    .setValue(12, timeFormatter.format(now))
+                    .setValue(13, dateFormatter.format(now))
+                    .setValue(18, terminalInfo.merchantCategoryCode)
+                    .setValue(22, "051")
+                    .setValue(23, "001")
+                    .setValue(25, "00")
+                    .setValue(26, "06")
+                    .setValue(28, "C00000000")
+                    .setValue(37, randomReference)
+                    .setValue(40, "601")
+                    .setValue(41, terminalInfo.terminalId)
+                    .setValue(42, terminalInfo.merchantId)
+                    .setValue(43, terminalInfo.merchantNameAndLocation)
+                    .setValue(49, terminalInfo.currencyCode)
+                    .setValue(59, "90")
+
+            message.message.removeFields(14, 32, 35, 52, 55)
+
+            message.setValue(123, "511101511344101")
+
+
+            // set message hash
+            val bytes = message.message.writeData()
+            val length = bytes.size
+            val temp = ByteArray(length - 64)
+            if (length >= 64) {
+                System.arraycopy(bytes, 0, temp, 0, length - 64)
+            }
+
+            val sessionKey = store.getString(KEY_SESSION_KEY, "")
+            val hashValue = IsoUtils.getMac(sessionKey, temp) //SHA256
+            message.setValue(128, hashValue)
+            message.dump(System.out, "request -- ")
+
+            // open connection
+            val isConnected = socket.open()
+            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
+
+            socket.setTimeout(2 * 60000)
+            val request = message.message.writeData()
+            val response = socket.sendReceive(request)
+            // close connection
+            socket.close()
+
+            val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
+            responseMsg.dump(System.out, "")
+
+
+            // return response
+            return responseMsg.message.let {
+                val responseCode = it.getObjectValue<String>(39)
+                val script = it.getObjectValue<String>(128)
+                return@let TransactionResponse(responseCode, stan, script)
+            }
+
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()

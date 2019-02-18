@@ -171,7 +171,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
             if (emv != null) {
                 val txnInfo = TransactionInfo.fromEmv(emv, paymentInfo.amount, PurchaseType.Card, accountType)
-                val response = isoService.initiatePurchase(terminalInfo, txnInfo)
+                val response = isoService.initiateCardPurchase(terminalInfo, txnInfo)
                 // used default transaction because the
                 // transaction is not processed by isw directly
                 val txn = Transaction.default()
