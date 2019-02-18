@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionInfo
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
@@ -53,7 +54,7 @@ internal data class TransactionResult(
         return when (paymentType) {
             PaymentType.USSD, PaymentType.QR -> {
                 val code = when (paymentType) {
-                    PaymentType.USSD -> PrintObject.Data(code)
+                    PaymentType.USSD -> PrintObject.Data("$code\n", PrintStringConfiguration(isBold = true, isTitle = true))
                     else -> CodeResponse.getBitmap(context, code)?.let { PrintObject.BitMap(it) }
                 }
                 UssdQrSlip(terminal, getTransactionStatus(), getTransactionInfo(), code)

@@ -252,6 +252,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
         override fun showEnterPin() {
             showContainer(CardTransactionState.EnterPin)
+            runOnUiThread { paymentHint.text = getString(R.string.isw_hint_input_pin) }
         }
 
         override fun setPinText(text: String) {

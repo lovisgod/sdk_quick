@@ -13,6 +13,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
 import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
@@ -123,8 +124,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             initiator.initiateQr(payment).process { s, t ->
                 if (t != null) logger.log(t.localizedMessage)
                 else logger.log(s!!)
-                initiateButton.isEnabled = true
-                initiateButton.isClickable = true
             }
 
             // check transaction status
@@ -147,7 +146,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 ussdCode = response.bankShortCode ?: response.defaultShortCode
                 ussdCode?.apply {
                     ussdText.text = this
-                    printSlip.add(PrintObject.Data(this))
+                    printSlip.add(PrintObject.Data("code \n $this\n", PrintStringConfiguration(isBold = true, isTitle = true)))
                 }
                 dialog.dismiss()
 
@@ -219,6 +218,11 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 stan = "", pinStatus = "", AID = "", code = ussdCode!!,
                 telephone = "08031140978"
         )
+    }
+
+    override fun onCheckError() {
+        initiateButton.isEnabled = true
+        initiateButton.isClickable = true
     }
 
 }

@@ -72,6 +72,7 @@
     <string name="isw_hint_insert_card">Insert Card</string>
     <string name="isw_title_transaction_failed">Transaction Failed</string>
     <string name="isw_title_processing_transaction">Processing Transaction</string>
+    <string name="isw_hint_input_pin">Input your PIN</string>
 
 
     <string-array name="isw_account_types">

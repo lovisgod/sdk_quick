@@ -52,8 +52,11 @@ class TransactionResultActivity : BaseActivity() {
 
         // print user's copy slip
         printSlip?.apply {
-            if (result.responseCode != IsoUtils.TIMEOUT_CODE)
+            if (result.responseCode != IsoUtils.TIMEOUT_CODE) {
                 posDevice.printer.printSlip(getSlipItems(), UserType.Customer)
+                // set flag to true
+                hasPrintedCustomerCopy = true
+            }
         }
     }
 

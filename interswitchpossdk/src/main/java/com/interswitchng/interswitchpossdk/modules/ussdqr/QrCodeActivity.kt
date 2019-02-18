@@ -92,8 +92,6 @@ class QrCodeActivity : BaseActivity() {
             initiator.initiateQr(payment).process { s, t ->
                 if (t != null) logger.log(t.localizedMessage)
                 else logger.log(s!!)
-                initiateButton.isEnabled = true
-                initiateButton.isClickable = true
             }
 
             // check transaction status
@@ -167,6 +165,12 @@ class QrCodeActivity : BaseActivity() {
                 stan = "", pinStatus = "", AID = "",
                 code = qrData!!, telephone = "08031140978"
         )
+    }
+
+
+    override fun onCheckError() {
+        initiateButton.isEnabled = true
+        initiateButton.isClickable = true
     }
 
 }

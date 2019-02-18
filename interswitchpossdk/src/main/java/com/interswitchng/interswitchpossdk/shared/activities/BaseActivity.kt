@@ -149,6 +149,9 @@ abstract class BaseActivity : AppCompatActivity() {
         // do nothing
     }
 
+    open fun onCheckError() {
+        // do nothing
+    }
 
     // class that provides implementation for transaction status callbacks
     private inner class TransactionStatusCallback: TransactionRequeryCallback {
@@ -179,10 +182,12 @@ abstract class BaseActivity : AppCompatActivity() {
                     .setTitle(getString(R.string.isw_title_transaction_error))
                     .setText(message)
                     .setIcon(R.drawable.ic_error)
-                    .setDismissable(false)
+                    .setDismissable(true)
                     .setBackgroundColorRes(android.R.color.holo_red_dark)
                     .setDuration(15 * 1000)
                     .show()
+
+            onCheckError()
         }
 
         override fun onTransactionTimeOut() = runOnUiThread {
@@ -196,10 +201,12 @@ abstract class BaseActivity : AppCompatActivity() {
                     .setTitle(getString(R.string.isw_title_transaction_timeout))
                     .setText(getString(R.string.isw_content_transaction_in_progress_time_out))
                     .setIcon(R.drawable.ic_warning)
-                    .setDismissable(false)
+                    .setDismissable(true)
                     .setBackgroundColorRes(android.R.color.holo_orange_dark)
                     .setDuration(15 * 1000)
                     .show()
+
+            onCheckError()
         }
 
     }
