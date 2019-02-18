@@ -21,6 +21,8 @@ class TransactionResultActivity : BaseActivity() {
     private val store: IKeyValueStore by inject()
     private var printSlip: TransactionSlip? = null
     private lateinit var result: TransactionResult
+    private var hasPrintedMerchantCopy = false
+    private var hasPrintedCustomerCopy = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,7 @@ class TransactionResultActivity : BaseActivity() {
 
     private fun setupUI() {
 
-        printSlip = TerminalInfo.get(store)?.let { result.getSlip(it) }
+        printSlip = TerminalInfo.get(store)?.let { result.getSlip(this, it) }
 
         // set amount text view
         val amountStr = DisplayUtils.getAmountString(paymentInfo.amount)
@@ -47,11 +49,17 @@ class TransactionResultActivity : BaseActivity() {
 
         // setup buttons
         setupButtons()
+
+        // print user's copy slip
+        printSlip?.apply {
+            if (result.responseCode != IsoUtils.TIMEOUT_CODE)
+                posDevice.printer.printSlip(getSlipItems(), UserType.Customer)
+        }
     }
 
     private fun setupTransactionStatus(result: TransactionResult) {
         // check if transaction is successful
-        val isSuccessful = result.responseCode == "00"
+        val isSuccessful = result.responseCode == IsoUtils.OK
 
         // set transaction status message
         val transactionStatus =
@@ -89,7 +97,18 @@ class TransactionResultActivity : BaseActivity() {
             printBtn.isEnabled = false
 
             // print slip
-            printSlip?.apply { posDevice.printer.printSlip(getSlipItems(), UserType.Customer) }
+            printSlip?.apply {
+                if (!hasPrintedCustomerCopy) {
+                    posDevice.printer.printSlip(getSlipItems(), UserType.Customer)
+                    // set flag to true
+                    hasPrintedCustomerCopy = true
+                } else {
+                    posDevice.printer.printSlip(getSlipItems(), UserType.Merchant)
+                    // set flag to true
+                    hasPrintedMerchantCopy = true
+                }
+
+            }
             Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
             printBtn.isClickable = true
             printBtn.isEnabled = true
@@ -107,7 +126,7 @@ class TransactionResultActivity : BaseActivity() {
                 else R.string.isw_title_transaction_failed
 
         val text =
-                if (isSuccessful)  R.string.isw_title_transaction_completed_successfully
+                if (isSuccessful) R.string.isw_title_transaction_completed_successfully
                 else R.string.isw_title_transaction_error
 
         val background =

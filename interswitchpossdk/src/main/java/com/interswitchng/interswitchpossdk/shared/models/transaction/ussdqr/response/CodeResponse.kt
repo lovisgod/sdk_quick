@@ -24,7 +24,17 @@ data class CodeResponse(
 
     @Throws(WriterException::class)
     internal fun getBitmap(context: Context, lengthInDp: Int = 240): Bitmap? {
-        return qrCodeData?.let {
+        return qrCodeData?.let { getBitmap(context, it, lengthInDp)}
+    }
+
+
+    companion object {
+        internal const val OK = "00"
+        internal const val PENDING = "Z0"
+        internal const val BAD_REQUEST = "10400"
+        internal const val SERVER_ERROR = "10500"
+
+        internal fun getBitmap(context: Context, qrCodeData: String, lengthInDp: Int = 240): Bitmap? {
 
             try {
                 // colors
@@ -35,7 +45,7 @@ data class CodeResponse(
                 val length = DisplayUtils.convertDpToPixel(lengthInDp.toFloat(), context).toInt()
 
                 // create bitmap matrix
-                val bitMatrix: BitMatrix = MultiFormatWriter().encode(it, BarcodeFormat.QR_CODE, length, length, null)
+                val bitMatrix: BitMatrix = MultiFormatWriter().encode(qrCodeData, BarcodeFormat.QR_CODE, length, length, null)
 
                 // get matrix dimensions
                 val bitMatrixWidth = bitMatrix.width
@@ -70,13 +80,5 @@ data class CodeResponse(
                 return null
             }
         }
-    }
-
-
-    companion object {
-        internal const val OK = "00"
-        internal const val PENDING = "Z0"
-        internal const val BAD_REQUEST = "10400"
-        internal const val SERVER_ERROR = "10500"
     }
 }

@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_action_button"
                     android:padding="@dimen/isw_content_padding"
-                    android:text="PRINT USSD"
+                    android:text="PRINT QR CODE"
                     android:textColor="@color/iswColorTextSecondary"
                     android:textSize="18sp"
                     android:textStyle="bold" />

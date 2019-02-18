@@ -172,6 +172,8 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             if (emv != null) {
                 val txnInfo = TransactionInfo.fromEmv(emv, paymentInfo.amount, PurchaseType.Card, accountType)
                 val response = isoService.initiatePurchase(terminalInfo, txnInfo)
+                // used default transaction because the
+                // transaction is not processed by isw directly
                 val txn = Transaction.default()
 
                 val now = Date()
@@ -192,17 +194,19 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                             responseMessage = responseMsg,
                             responseCode = response.code,
                             cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = "",
-                            stan = response.stan, pinStatus = pinStatus, AID = emv.AID,
+                            stan = response.stan, pinStatus = pinStatus, AID = emv.AID, code = "",
                             telephone = "08031150978")
+
+                    // TODO complete transaction using response from server
 
                     // show transaction result screen
                     showTransactionResult(txn)
-                } ?: toast("Unable to process Transaction")
+                } ?: toast("Unable to process Transaction").also { finish() }
 
             } else {
-                toast("Unable to get icc")
+                toast("Unable to get icc").also { finish() }
             }
-        } ?: toast("No terminal info, found on device")
+        } ?: toast("No terminal info, found on device").also { finish() }
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {

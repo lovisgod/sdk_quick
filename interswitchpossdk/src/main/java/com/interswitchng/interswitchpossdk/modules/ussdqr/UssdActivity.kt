@@ -216,8 +216,8 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 responseMessage = responseMsg,
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = "",
-                stan = "", pinStatus = "", AID = "",
-                telephone = ""
+                stan = "", pinStatus = "", AID = "", code = ussdCode!!,
+                telephone = "08031140978"
         )
     }
 

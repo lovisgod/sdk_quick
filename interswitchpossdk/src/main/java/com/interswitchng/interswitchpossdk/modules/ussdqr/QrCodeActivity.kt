@@ -44,6 +44,7 @@ class QrCodeActivity : BaseActivity() {
     private val logger by lazy { Logger.with("QR") }
     private val alert by lazy { DialogUtils.getAlertDialog(this) }
 
+    private var qrData: String? = null
     private var qrBitmap: Bitmap? = null
     private val printSlip = mutableListOf<PrintObject>()
 
@@ -113,6 +114,7 @@ class QrCodeActivity : BaseActivity() {
     private fun handleResponse(request: CodeRequest, response: CodeResponse) {
         when (response.responseCode) {
             CodeResponse.OK -> {
+                qrData = response.qrCodeData
                 qrBitmap = response.getBitmap(this)
                 val bitmap = PrintObject.BitMap(qrBitmap!!)
                 printSlip.add(bitmap)
@@ -163,7 +165,7 @@ class QrCodeActivity : BaseActivity() {
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = "",
                 stan = "", pinStatus = "", AID = "",
-                telephone = ""
+                code = qrData!!, telephone = "08031140978"
         )
     }
 

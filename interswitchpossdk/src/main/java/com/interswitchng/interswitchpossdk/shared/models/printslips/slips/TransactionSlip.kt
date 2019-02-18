@@ -4,8 +4,10 @@ import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils
 
 internal abstract class TransactionSlip(private val terminal: TerminalInfo, private val status: TransactionStatus) {
+    protected val line = PrintObject.Line()
 
     protected fun pairString(title: String, value: String, hasNewLine: Boolean = false, isUpperCase: Boolean = true, stringConfig: PrintStringConfiguration = PrintStringConfiguration()): PrintObject {
         // get title formatted
@@ -39,18 +41,26 @@ internal abstract class TransactionSlip(private val terminal: TerminalInfo, priv
         val merchantName = pairString("merchant", terminal.merchantNameAndLocation)
         val terminalId = pairString("Terminal Id", terminal.terminalId)
 
-        return listOf(merchantName, terminalId, PrintObject.Line())
+        return listOf(merchantName, terminalId, line)
     }
 
 
     internal fun getTransactionStatus(): List<PrintObject> {
         val responseMsg = pairString("", status.responseMessage, stringConfig = PrintStringConfiguration(isTitle = true, displayCenter = true))
-        val responseCode = pairString("response code", status.responseCode)
-        val aid = pairString("AID", status.AID)
-        val tel = pairString("TEL", status.telephone)
-        val line = PrintObject.Line()
+        val printList = mutableListOf(responseMsg)
 
-        return listOf(responseMsg, responseCode, aid, tel,  line)
+        if (status.responseCode.isNotEmpty() && status.responseCode != IsoUtils.TIMEOUT_CODE) {
+            val responseCode = pairString("response code", status.responseCode)
+            printList.add(responseCode)
+        }
+
+        if (status.AID.isNotEmpty()) {
+            val aid = pairString("AID", status.AID)
+            printList.add(aid)
+        }
+
+        val tel = pairString("TEL", status.telephone)
+        return printList + listOf(tel, line)
     }
 
 

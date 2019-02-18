@@ -8,7 +8,7 @@ import com.interswitchng.interswitchpossdk.shared.models.printslips.info.Transac
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
 import java.text.NumberFormat
 
-internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(terminal, status) {
+internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo, private val code: PrintObject?): TransactionSlip(terminal, status) {
 
 
     override fun getTransactionInfo(): List<PrintObject> {
@@ -21,17 +21,20 @@ internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, pri
         val stan = pairString("stan", info.stan)
         val date = pairString("date", info.dateTime)
         val amount = pairString("amount", info.amount)
-        val authCode = pairString("authentication code", info.authorizationCode)
-        val pinStatus = pairString("", info.pinStatus)
-
+        val codeTitle = pairString("code","", hasNewLine = true)
 
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
         val txnType = pairString("", info.type.toString(), stringConfig = typeConfig)
 
+        val halfList = listOf(txnType, stan, date, line, amount, line)
+        val fullList = when(code) {
+            null -> halfList
+            else -> halfList + codeTitle + code + line
+        }
 
-        val line = PrintObject.Line()
         // return transaction info of slip
-        return listOf(txnType, stan, date, line, amount, line, authCode, pinStatus, line)
+        return fullList
+
     }
 
 }

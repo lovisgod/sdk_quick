@@ -15,6 +15,7 @@ import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.*
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.dateFormatter
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter
 import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.DateUtils.timeFormatter
+import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtils.TIMEOUT_CODE
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
@@ -269,7 +270,7 @@ internal class IsoServiceImpl(
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
-            return null
+            return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
         }
     }
 

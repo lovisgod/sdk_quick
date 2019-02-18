@@ -1,14 +1,17 @@
 package com.interswitchng.interswitchpossdk.shared.models.transaction
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
+import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionInfo
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionStatus
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
 import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.CardSlip
 import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.TransactionSlip
 import com.interswitchng.interswitchpossdk.shared.models.printslips.slips.UssdQrSlip
+import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
 
 internal data class TransactionResult(
          val paymentType: PaymentType,
@@ -24,6 +27,7 @@ internal data class TransactionResult(
          val responseMessage: String,
          val responseCode: String,
          val AID: String,
+         val code: String,
          val telephone: String): Parcelable {
 
 
@@ -41,12 +45,19 @@ internal data class TransactionResult(
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
+            parcel.readString()!!,
             parcel.readString()!!)
 
 
-    fun getSlip(terminal: TerminalInfo): TransactionSlip {
+    fun getSlip(context: Context, terminal: TerminalInfo): TransactionSlip {
         return when (paymentType) {
-            PaymentType.USSD, PaymentType.QR -> UssdQrSlip(terminal, getTransactionStatus(), getTransactionInfo())
+            PaymentType.USSD, PaymentType.QR -> {
+                val code = when (paymentType) {
+                    PaymentType.USSD -> PrintObject.Data(code)
+                    else -> CodeResponse.getBitmap(context, code)?.let { PrintObject.BitMap(it) }
+                }
+                UssdQrSlip(terminal, getTransactionStatus(), getTransactionInfo(), code)
+            }
             PaymentType.Card, PaymentType.PayCode -> CardSlip(terminal, getTransactionStatus(), getTransactionInfo())
         }
     }
@@ -91,6 +102,7 @@ internal data class TransactionResult(
         parcel.writeString(responseMessage)
         parcel.writeString(responseCode)
         parcel.writeString(AID)
+        parcel.writeString(code)
         parcel.writeString(telephone)
     }
 

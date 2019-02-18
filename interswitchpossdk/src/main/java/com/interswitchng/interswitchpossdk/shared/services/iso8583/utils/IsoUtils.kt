@@ -67,6 +67,9 @@ internal object IsoUtils {
         return getIsoResult(code)?.second
     }
 
+    internal const val OK: String = "00"
+
+    internal const val TIMEOUT_CODE = "0x0x0"
 
     private val resultMap = mapOf(
             "00" to "Transaction Approved",
@@ -155,10 +158,7 @@ internal object IsoUtils {
             "C1" to "PIN Change failed",
             "C2" to "PIN Unblock failed",
             "D1" to "MAC Error",
-            "E1" to "Prepay error"
+            "E1" to "Prepay error",
+            TIMEOUT_CODE to "Read Timeout Error"
     )
-
-
-
-
 }
