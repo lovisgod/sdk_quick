@@ -1,11 +1,11 @@
-package com.igweze.ebi.paxemvcontact.emv;
+package com.interswitchng.smartpos.emv.pax.emv;
 
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.igweze.ebi.paxemvcontact.services.POSDeviceService;
-import com.igweze.ebi.paxemvcontact.utilities.TickTimer;
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
+import com.interswitchng.smartpos.emv.pax.utilities.TickTimer;
 import com.pax.dal.IDAL;
 import com.pax.dal.IIcc;
 import com.pax.dal.IMag;
@@ -51,9 +51,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.igweze.ebi.paxemvcontact.utilities.EmvUtils.bcd2Str;
-import static com.igweze.ebi.paxemvcontact.utilities.EmvUtils.str2Bcd;
-
+import static com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bcd2Str;
+import static com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd;
 
 
 /**
