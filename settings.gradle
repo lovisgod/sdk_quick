@@ -1,1 +1,1 @@
-include ':app', ':interswitchpossdk', ':paxemvcontact'
+include ':app', ':interswitchpossdk', ':paxemvcontact', ':smart-pos-usb'
