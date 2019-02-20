@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.usb
+package com.interswitchng.smartpos.usb.services
 
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector
 import java.io.BufferedReader
@@ -38,6 +38,9 @@ class UsbConnectionManager: UsbConnector {
         send(message)
         return receive()
     }
+
+    // function to check if connection is open
+    override fun isOpen() = mClientSocket != null
 
     // create server and listen for client(USB) connection
     override fun open(): Boolean {

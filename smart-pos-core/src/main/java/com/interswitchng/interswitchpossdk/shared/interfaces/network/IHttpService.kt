@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.interfaces
+package com.interswitchng.interswitchpossdk.shared.interfaces.network
 
 import com.interswitchng.interswitchpossdk.shared.Constants.TILL_BANKS_END_POINT
 import com.interswitchng.interswitchpossdk.shared.Constants.TILL_CODE_END_POINT

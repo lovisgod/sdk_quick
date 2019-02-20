@@ -1,6 +1,8 @@
 package com.interswitchng.interswitchpossdkdemo;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.interswitchng.interswitchpossdk.IswPos;
 import com.interswitchng.interswitchpossdk.shared.errors.NotConfiguredException;
+import com.interswitchng.interswitchpossdk.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
 
 
@@ -30,8 +33,9 @@ public class DemoActivity extends AppCompatActivity {
 
     private void configureTerminal() {
         POSDeviceService deviceService = POSDeviceService.create(getApplicationContext());
+        POSConfig config = new POSConfig("MX5882");
         // configure terminal
-        IswPos.configureTerminal(getApplication(), deviceService);
+        IswPos.configureTerminal(getApplication(), deviceService, config);
     }
 
     private void setupUI() {
@@ -51,7 +55,6 @@ public class DemoActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
 
@@ -64,12 +67,19 @@ public class DemoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.terminal_config) {
-            IswPos.showSettingsScreen();
+            IswPos.showSettingsScreen(); // show settings for terminal configuration
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            // handle success
+        } else {
+            // else handle error
+        }
+    }
 }

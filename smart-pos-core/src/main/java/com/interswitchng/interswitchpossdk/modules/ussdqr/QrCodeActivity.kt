@@ -100,7 +100,7 @@ class QrCodeActivity : BaseActivity() {
             }
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true

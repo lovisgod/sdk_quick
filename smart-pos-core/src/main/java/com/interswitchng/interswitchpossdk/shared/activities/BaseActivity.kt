@@ -15,7 +15,7 @@ import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
-import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
+import com.interswitchng.interswitchpossdk.shared.interfaces.network.TransactionRequeryCallback
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType

@@ -1,8 +1,8 @@
 package com.interswitchng.smartpos.usb.interfaces
 
-import com.interswitchng.smartpos.usb.ResponseListener
+import com.interswitchng.smartpos.usb.services.ResponseListener
 
-interface UsbConnector {
+internal interface UsbConnector {
 
     fun open(): Boolean
 
@@ -17,4 +17,6 @@ interface UsbConnector {
     fun sendAsync(message: String)
 
     fun receiveAsync(listener: ResponseListener)
+
+    fun isOpen(): Boolean
 }

@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.adapter
 
 import com.interswitchng.interswitchpossdk.Utilities
-import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
+import com.interswitchng.interswitchpossdk.shared.interfaces.network.IHttpService
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleAdapterFactory
 import com.nhaarman.mockitokotlin2.mock
 import okhttp3.mockwebserver.MockResponse

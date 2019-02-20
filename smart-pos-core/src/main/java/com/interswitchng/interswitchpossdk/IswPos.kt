@@ -12,6 +12,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
+import com.interswitchng.interswitchpossdk.shared.models.core.POSConfig
 import org.koin.dsl.module.module
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.loadKoinModules
@@ -19,9 +20,7 @@ import org.koin.standalone.inject
 import java.util.*
 
 
-class IswPos private constructor(private val app: Application, internal val device: POSDevice) {
-
-    internal val merchantCode = "MX5882"
+class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
     fun initiatePayment(amount: Int) {
@@ -39,25 +38,27 @@ class IswPos private constructor(private val app: Application, internal val devi
 
     }
 
+    companion object {
 
-    companion object: KoinComponent {
+        private object Container: KoinComponent
+        private val container = Container
+
         private const val KEY_STAN = "stan"
         private lateinit var INSTANCE: IswPos
         private var isSetup = false
 
-
-        private val store: IKeyValueStore by inject()
+        private val store: IKeyValueStore by container.inject()
 
         internal fun isConfigured () = TerminalInfo.get(store) != null
 
         @JvmStatic
-        fun configureTerminal(app: Application, device: POSDevice) {
+        fun configureTerminal(app: Application, device: POSDevice, config: POSConfig) {
 
             if (!isSetup) {
 
                 // prevent multiple threads from creating instance
                 synchronized(this) {
-                    INSTANCE = IswPos(app, device)
+                    INSTANCE = IswPos(app, device, config)
                 }
 
                 // add app context
@@ -69,6 +70,9 @@ class IswPos private constructor(private val app: Application, internal val devi
                 // set up koin
                 val modules = listOf(appContext) + appModules + activityModules
                 loadKoinModules(modules)
+
+                // setup usb connector if exists
+                config.usbConnector?.configure(app)
 
                 // set setup flag
                 isSetup = true

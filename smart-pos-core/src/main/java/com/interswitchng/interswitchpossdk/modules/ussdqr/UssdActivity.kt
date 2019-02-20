@@ -131,7 +131,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             }
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true

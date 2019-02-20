@@ -3,7 +3,10 @@ package com.interswitchng.smartpos.usb
 import android.app.Service
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector
 import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_START_SERVICE
@@ -15,21 +18,17 @@ class UsbService: Service() {
     // flag to check if service has been started
     private var mServiceIsStarted = false
 
+    private val mainHandler = Handler(Looper.getMainLooper())
+
     private val logger = Logger.with(UsbService::class.toString())
     private val usbConnector: UsbConnector by inject()
 
     override fun onBind(intent: Intent): IBinder? = null
 
-    override fun onCreate() {
-        super.onCreate()
-        // Todo establish comms with client
-        usbConnector.open()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         logger.log("OnDestroy Synchronization service")
-        usbConnector.close()
+        if (usbConnector.isOpen()) usbConnector.close()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -59,6 +58,9 @@ class UsbService: Service() {
             if (isPreAndroidO) NotificationUtil.PreO.createNotification(this)
             else NotificationUtil.O.createNotification(this)
 
+            // start receiving commands
+            startReceivingCommands()
+
             // set flag for started service
             mServiceIsStarted = true
         }
@@ -69,11 +71,28 @@ class UsbService: Service() {
     private fun stopSynchronization(): Int {
         if (mServiceIsStarted) {
             logger.log("Stopping Synchronization service")
+            mServiceIsStarted = false
             stopForeground(true)
             stopSelf()
-            mServiceIsStarted = false
         }
 
         return START_NOT_STICKY
+    }
+
+    private fun startReceivingCommands() {
+        Thread {
+            usbConnector.open()
+            makeToast("A connection has been made!!!")
+
+            while (mServiceIsStarted) {
+                // receive message
+                val message = usbConnector.receive()
+                makeToast(message)
+            }
+        }.start()
+    }
+
+    private fun makeToast(msg: String) {
+        mainHandler.post { Toast.makeText(this, msg, Toast.LENGTH_LONG).show() }
     }
 }

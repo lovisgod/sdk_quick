@@ -5,6 +5,7 @@ import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.mockservices.EmvTransactionImpl
 import com.interswitchng.interswitchpossdk.mockservices.MockPOSDevice
 import com.interswitchng.interswitchpossdk.mockservices.Printer
+import com.interswitchng.interswitchpossdk.shared.models.core.POSConfig
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
 class MockApplication: Application() {
@@ -26,7 +27,8 @@ class MockApplication: Application() {
 
         // setup device for terminal
         val device = MockPOSDevice(EmvTransactionImpl(), Printer())
-        IswPos.configureTerminal(this, device)
+        val config = POSConfig(merchantCode)
+        IswPos.configureTerminal(this, device, config)
 
         // load mock modules based on runner arguments
         if (shouldMock) {

@@ -6,6 +6,7 @@ import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.di.activityModules
 import com.interswitchng.interswitchpossdk.di.appModules
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
+import com.interswitchng.interswitchpossdk.shared.models.core.POSConfig
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.After
 import org.junit.Assert.assertNotNull
@@ -36,9 +37,11 @@ class DependencyGraphTest: KoinTest {
     @Test
     fun `check that dependency was setup after configuring IswPos`() {
         val app: Application = mock()
-        val config: POSDevice = mock()
+        val device: POSDevice = mock()
+        val config: POSConfig = mock()
 
-        IswPos.configureTerminal(app, config)
+
+        IswPos.configureTerminal(app, device, config)
         val isw: IswPos = get()
 
         assertNotNull(isw)

@@ -5,11 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
-import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_START_SERVICE
-import com.interswitchng.smartpos.usb.utils.Constants.KEY_SERVICE_COMMAND
 import org.koin.standalone.KoinComponent
 
 class BootReceiver : BroadcastReceiver(), KoinComponent {
@@ -33,27 +30,12 @@ class BootReceiver : BroadcastReceiver(), KoinComponent {
             logger.log("Starting Usb Service from BootReceiver")
 
             // start service with intent
-            startUsbService(context)
+            UsbConfig.startUsbService(context)
 
             // show message for started service
             Toast.makeText(context, "usb service started", Toast.LENGTH_LONG).show()
             logger.log("Services started")
         }
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.O)
-    private fun startUsbService(context: Context) {
-        // create intent to start service
-        val intent = Intent(context, UsbService::class.java).apply {
-            putExtra(KEY_SERVICE_COMMAND, COMMAND_START_SERVICE)
-        }
-
-        // check build version to determine what type of notification to build
-        val isPreAndroidO = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1
-
-        // start service
-        if (isPreAndroidO) context.startService(intent)
-        else ContextCompat.startForegroundService(context, intent)
     }
 }

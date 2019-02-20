@@ -1,8 +1,8 @@
 package com.interswitchng.interswitchpossdk.shared.services
 
-import com.interswitchng.interswitchpossdk.shared.interfaces.IHttpService
+import com.interswitchng.interswitchpossdk.shared.interfaces.network.IHttpService
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
-import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
+import com.interswitchng.interswitchpossdk.shared.interfaces.network.TransactionRequeryCallback
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus

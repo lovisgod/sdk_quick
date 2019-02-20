@@ -9,6 +9,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTrans
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.IPrinter
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.*
+import com.interswitchng.interswitchpossdk.shared.interfaces.network.IHttpService
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType

@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.modules.home.HomeActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
+import com.interswitchng.interswitchpossdk.shared.models.core.POSConfig
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert.assertEquals
@@ -21,7 +22,8 @@ class IswPosInstrumentedTest {
     fun should_start_main_activity_when_payment_is_initiated() {
         val app: Application =  ApplicationProvider.getApplicationContext()
         val payment: PaymentInfo = mock()
-        IswPos.configureTerminal(app, mock())
+        val config: POSConfig = mock()
+        IswPos.configureTerminal(app, mock(), config)
 
         val expectedIntent = Intent(app, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
