@@ -7,53 +7,53 @@ import com.interswitchng.interswitchpossdk.di.appModules
 import com.interswitchng.interswitchpossdk.modules.home.HomeActivity
 import com.interswitchng.interswitchpossdk.modules.settings.SettingsActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
+import com.interswitchng.interswitchpossdk.shared.errors.NotConfiguredException
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import org.koin.dsl.module.module
+import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.loadKoinModules
-
+import org.koin.standalone.inject
+import java.util.*
 
 
 class IswPos private constructor(private val app: Application, internal val device: POSDevice) {
 
-    internal val config: POSConfiguration
+    internal val merchantCode = "MX5882"
 
-    init {
-        // set terminal parameters
-        // TODO setup asynchronously
-        val alias = "000007"
-        val terminalId = "2069018M"
-        val merchantId = "IBP000000001384"
-        val merchantLocation = "AIRTEL NETWORKS LIMITED PH MALL"
-        // String currencyCode = "566";
-        // String posGeoCode = "0023400000000056";
-        val terminalType = "PAX"
-        val uniqueId = "280-820-589"
-        val merchantCode = "MX5882"
-        config = POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation, merchantCode)
-    }
-
+    @Throws(NotConfiguredException::class)
     fun initiatePayment(amount: Int) {
-        val stan = "005609"
+
+        if (!isConfigured()) throw NotConfiguredException()
+
+        val stan = getNextStan()
         val paymentInfo = PaymentInfo(amount, stan)
         val intent = Intent(app, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         intent.putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
         app.startActivity(intent)
+
+
     }
 
-    companion object {
 
-        private var isConfigured = false
-
+    companion object: KoinComponent {
+        private const val KEY_STAN = "stan"
         private lateinit var INSTANCE: IswPos
+        private var isSetup = false
+
+
+        private val store: IKeyValueStore by inject()
+
+        internal fun isConfigured () = TerminalInfo.get(store) != null
 
         @JvmStatic
         fun configureTerminal(app: Application, device: POSDevice) {
 
-            if (!isConfigured) {
+            if (!isSetup) {
 
                 // prevent multiple threads from creating instance
                 synchronized(this) {
@@ -70,10 +70,21 @@ class IswPos private constructor(private val app: Application, internal val devi
                 val modules = listOf(appContext) + appModules + activityModules
                 loadKoinModules(modules)
 
-                // set configured
-                isConfigured = true
+                // set setup flag
+                isSetup = true
             }
         }
+
+
+        internal fun getNextStan(): String {
+            var stan = store.getNumber(KEY_STAN, 0)
+
+            val newStan = if (stan > 999999) 0 else ++stan
+            store.saveNumber(KEY_STAN, newStan)
+
+            return String.format(Locale.getDefault(), "%06d", newStan)
+        }
+
 
         @JvmStatic
         fun showSettingsScreen() {

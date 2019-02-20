@@ -1,9 +1,9 @@
 package com.interswitchng.interswitchpossdk.shared.interfaces.device
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
-import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
-import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
 
 interface EmvCardTransaction {

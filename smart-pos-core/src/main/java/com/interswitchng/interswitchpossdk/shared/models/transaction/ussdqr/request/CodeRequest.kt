@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request
 
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import java.util.*
 
@@ -27,16 +27,16 @@ internal data class CodeRequest(
         internal const val QR_FORMAT_RAW = "RAW"
         internal const val QR_FORMAT_FULL = "FULL"
 
-        internal fun from(config: POSConfiguration, paymentInfo: PaymentInfo, transactionType: String, qrFormat: String? = null) = CodeRequest (
-                alias = config.alias,
+        internal fun from(terminalInfo: TerminalInfo, paymentInfo: PaymentInfo, transactionType: String, qrFormat: String? = null) = CodeRequest (
+                alias = "000007", // TODO replace with -> terminalInfo.merchantId,
                 amount = "${paymentInfo.amount * 100}",
                 bankCode = paymentInfo.bankCode,
                 date = DisplayUtils.getIsoString(Date()),
                 stan = paymentInfo.stan,
-                terminalId = config.terminalId,
+                terminalId = terminalInfo.terminalId,
                 transactionType = transactionType,
                 qrFormat = qrFormat,
-                additionalInformation = TransactionInfo.from(config, paymentInfo)
+                additionalInformation = TransactionInfo.from(terminalInfo, paymentInfo)
         )
     }
 }

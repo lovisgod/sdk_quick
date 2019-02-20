@@ -10,7 +10,7 @@ import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
@@ -26,7 +26,6 @@ import com.interswitchng.interswitchpossdk.shared.services.iso8583.utils.IsoUtil
 import com.interswitchng.interswitchpossdk.shared.utilities.DialogUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.DisplayUtils
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
-import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_ussd.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
@@ -61,9 +60,14 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         setupUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog.dismiss()
+    }
+
     private fun setupUI() {
 
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount)
+        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
         amountText.text = getString(R.string.isw_amount, amount)
 
         loadBanks()
@@ -97,7 +101,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
             // create payment info with bank code
             val paymentInfoPrime = PaymentInfo(paymentInfo.amount, paymentInfo.stan, bankCode)
-            val request = CodeRequest.from(instance.config, paymentInfoPrime, TRANSACTION_USSD)
+            val request = CodeRequest.from(terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
 
             dialog.show()
 
@@ -127,7 +131,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             }
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.merchantCode))
         }
 
         printCodeButton.isEnabled = true

@@ -25,7 +25,7 @@ class PayCodeActivity : BaseActivity() {
 
 
         // set the amount
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount)
+        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
         amountText.text = getString(R.string.isw_amount, amount)
     }
 
@@ -60,7 +60,7 @@ class PayCodeActivity : BaseActivity() {
         // TODO refactor this function [extremely ugly!!]
         TerminalInfo.get(store)?.let { terminalInfo ->
             val code = payCode.text.toString()
-            val response = isoService.initiatePaycodePurchase(terminalInfo, code, paymentInfo.amount * 100)
+            val response = isoService.initiatePaycodePurchase(terminalInfo, code, paymentInfo)
             // used default transaction because the
             // transaction is not processed by isw directly
             val txn = Transaction.default()

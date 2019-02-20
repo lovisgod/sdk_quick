@@ -10,7 +10,7 @@ import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.runner.RunWith

@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.models
+package com.interswitchng.interswitchpossdk.shared.models.transaction
 
 import android.os.Parcel
 import android.os.Parcelable

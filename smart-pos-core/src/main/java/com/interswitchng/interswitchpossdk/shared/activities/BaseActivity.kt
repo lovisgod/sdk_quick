@@ -16,7 +16,8 @@ import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.TransactionRequeryCallback
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request.TransactionStatus
@@ -24,6 +25,7 @@ import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.resp
 import com.interswitchng.interswitchpossdk.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import java.util.concurrent.ExecutorService
 
@@ -31,7 +33,11 @@ abstract class BaseActivity : AppCompatActivity() {
 
     internal val posDevice: POSDevice by inject()
     private val payableService: Payable by inject()
+
     protected val instance: IswPos by inject()
+    protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
+
+
     private lateinit var transactionResponse: Transaction
     private var pollingExecutor: ExecutorService? = null
 

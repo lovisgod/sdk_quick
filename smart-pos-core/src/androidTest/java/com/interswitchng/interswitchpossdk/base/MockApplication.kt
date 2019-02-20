@@ -5,7 +5,6 @@ import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.mockservices.EmvTransactionImpl
 import com.interswitchng.interswitchpossdk.mockservices.MockPOSDevice
 import com.interswitchng.interswitchpossdk.mockservices.Printer
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
 class MockApplication: Application() {
@@ -23,8 +22,6 @@ class MockApplication: Application() {
         val terminalType = "PAX"
         val uniqueId = "280-820-589"
         val merchantCode = "MX5882"
-
-        val config = POSConfiguration(alias, terminalId, merchantId, terminalType, uniqueId, merchantLocation, merchantCode)
 
 
         // setup device for terminal

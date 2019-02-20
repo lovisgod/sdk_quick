@@ -1,6 +1,7 @@
 package com.interswitchng.interswitchpossdk.shared.services.iso8583
 
 import android.content.Context
+import com.interswitchng.interswitchpossdk.IswPos.Companion.getNextStan
 import com.interswitchng.interswitchpossdk.R
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PIN_KEY
@@ -8,6 +9,7 @@ import com.interswitchng.interswitchpossdk.shared.Constants.KEY_SESSION_KEY
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoSocket
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -22,7 +24,6 @@ import java.io.StringReader
 import java.io.UnsupportedEncodingException
 import java.text.ParseException
 import java.util.*
-import java.util.concurrent.TimeoutException
 
 internal class IsoServiceImpl(
         private val context: Context,
@@ -193,7 +194,7 @@ internal class IsoServiceImpl(
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "00" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
-            val stan = getNextStan()
+            val stan = transaction.stan
             val randomReference = "000000$stan"
 
             message
@@ -276,22 +277,21 @@ internal class IsoServiceImpl(
         }
     }
 
-    override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, amount: Int): TransactionResponse? {
+    override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, paymentInfo: PaymentInfo): TransactionResponse? {
 
         try {
             val pan = "5061011234567890008"
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "010000"
-            val stan = getNextStan()
-            val randomReference = "000000$stan"
+            val randomReference = "000000${paymentInfo.stan}"
 
             message
                     .setValue(2, pan)
                     .setValue(3, processCode)
-                    .setValue(4, String.format(Locale.getDefault(), "%012d", amount))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", paymentInfo.amount))
                     .setValue(7, timeAndDateFormatter.format(now))
-                    .setValue(11, stan)
+                    .setValue(11, paymentInfo.stan)
                     .setValue(12, timeFormatter.format(now))
                     .setValue(13, dateFormatter.format(now))
                     .setValue(18, terminalInfo.merchantCategoryCode)
@@ -344,7 +344,7 @@ internal class IsoServiceImpl(
             return responseMsg.message.let {
                 val responseCode = it.getObjectValue<String>(39)
                 val script = it.getObjectValue<String>(128)
-                return@let TransactionResponse(responseCode, stan, script)
+                return@let TransactionResponse(responseCode, paymentInfo.stan, script)
             }
 
         } catch (e: Exception) {
@@ -354,18 +354,7 @@ internal class IsoServiceImpl(
         }
     }
 
-    private fun getNextStan(): String {
-        var stan = store.getNumber(KEY_STAN, 0)
-
-        val newStan = if (stan > 999999) 0 else ++stan
-        store.saveNumber(KEY_STAN, newStan)
-
-        return String.format(Locale.getDefault(), "%06d", newStan)
-    }
-
-
     companion object {
-        private const val KEY_STAN = "stan"
         private const val SRCI = 53
 
     }

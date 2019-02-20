@@ -9,11 +9,11 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTrans
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.IPrinter
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.*
-import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
-import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.interswitchpossdk.shared.services.PayableService
 import com.interswitchng.interswitchpossdk.shared.services.storage.SharePreferenceManager

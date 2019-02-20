@@ -5,8 +5,7 @@ import com.interswitchng.interswitchpossdk.IswPos
 import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.interswitchpossdk.shared.utilities.SimpleResponseHandler
 import com.nhaarman.mockitokotlin2.any
@@ -37,9 +36,7 @@ class QrCodeActivityTests {
 
     @Before
     fun setup() {
-        val nothing = ""
-        val posConfiguration = POSConfiguration.default()
-        instance = mock { on(mock.config).thenReturn(posConfiguration) }
+        instance = mock()
     }
 
     @Test

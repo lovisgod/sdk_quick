@@ -13,7 +13,7 @@ import com.interswitchng.interswitchpossdk.modules.paycode.PayCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
 import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
 import com.interswitchng.interswitchpossdk.shared.Constants
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import kotlinx.android.synthetic.main.isw_content_payment_options.*
 
 class BottomSheetOptionsDialog : BottomSheetDialogFragment() {

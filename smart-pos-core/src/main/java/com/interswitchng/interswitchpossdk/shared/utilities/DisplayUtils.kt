@@ -1,21 +1,7 @@
 package com.interswitchng.interswitchpossdk.shared.utilities
 
 import android.content.Context
-import android.content.Intent
-import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.util.DisplayMetrics
-import android.view.View
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.modules.card.CardActivity
-import com.interswitchng.interswitchpossdk.modules.paycode.PayCodeActivity
-import com.interswitchng.interswitchpossdk.modules.ussdqr.QrCodeActivity
-import com.interswitchng.interswitchpossdk.modules.ussdqr.UssdActivity
-import com.interswitchng.interswitchpossdk.shared.Constants
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
-import com.interswitchng.interswitchpossdk.shared.views.TweakableOutlineProvider
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*

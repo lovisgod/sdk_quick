@@ -4,7 +4,7 @@ import android.content.Intent
 import com.interswitchng.interswitchpossdk.shared.Constants
 import com.interswitchng.interswitchpossdk.shared.activities.TransactionResultActivity
 import com.interswitchng.interswitchpossdk.shared.activities.TransactionResultActivity.Companion.KEY_TRANSACTION_RESULT
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult

@@ -41,7 +41,7 @@ class TransactionResultActivity : BaseActivity() {
         printSlip = TerminalInfo.get(store)?.let { result.getSlip(this, it) }
 
         // set amount text view
-        val amountStr = DisplayUtils.getAmountString(paymentInfo.amount)
+        val amountStr = DisplayUtils.getAmountString(paymentInfo.amount / 100)
         amountText.text = getString(R.string.isw_currency_amount, amountStr)
 
         // setup transaction status

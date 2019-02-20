@@ -14,7 +14,7 @@ import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueSt
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.IsoService
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
-import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentType
 import com.interswitchng.interswitchpossdk.shared.models.transaction.TransactionResult
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.AccountType
@@ -54,7 +54,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         setContentView(R.layout.isw_activity_card)
 
         // set the amount
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount)
+        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
         amountText.text = getString(R.string.isw_amount, amount)
     }
 
@@ -170,7 +170,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             val emv = emv.getTransactionInfo()
 
             if (emv != null) {
-                val txnInfo = TransactionInfo.fromEmv(emv, paymentInfo.amount, PurchaseType.Card, accountType)
+                val txnInfo = TransactionInfo.fromEmv(emv, paymentInfo, PurchaseType.Card, accountType)
                 val response = isoService.initiateCardPurchase(terminalInfo, txnInfo)
                 // used default transaction because the
                 // transaction is not processed by isw directly

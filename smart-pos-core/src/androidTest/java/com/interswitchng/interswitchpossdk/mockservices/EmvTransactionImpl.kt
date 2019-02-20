@@ -2,9 +2,9 @@ package com.interswitchng.interswitchpossdk.mockservices
 
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTransaction
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
-import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
-import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.EmvResult
 
 class EmvTransactionImpl: EmvCardTransaction {
     override fun setEmvCallback(callback: EmvCallback) {

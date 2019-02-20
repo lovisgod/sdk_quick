@@ -7,11 +7,10 @@ import android.view.View
 import android.widget.Toast
 import com.interswitchng.interswitchpossdk.shared.activities.BaseActivity
 import com.interswitchng.interswitchpossdk.R
-import com.interswitchng.interswitchpossdk.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.Payable
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentInitiator
 import com.interswitchng.interswitchpossdk.shared.interfaces.PaymentRequest
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.interswitchpossdk.shared.models.core.UserType
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionType
@@ -36,6 +35,7 @@ import java.util.*
 class QrCodeActivity : BaseActivity() {
 
     private val paymentService: Payable by inject()
+    private val store: IKeyValueStore by inject()
 
     // TODO remove reference
     private val initiator: PaymentInitiator by inject()
@@ -58,11 +58,16 @@ class QrCodeActivity : BaseActivity() {
         setupImage()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog.dismiss()
+    }
+
 
     private fun setupImage() {
 
         // set the amount
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount)
+        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
         amountText.text = getString(R.string.isw_amount, amount)
         paymentHint.text = getString(R.string.isw_hint_qr_code)
 
@@ -72,7 +77,7 @@ class QrCodeActivity : BaseActivity() {
             qrCodeImage.setImageBitmap(qrBitmap)
             dialog.dismiss()
         } else {
-            val request = CodeRequest.from(instance.config, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
+            val request = CodeRequest.from(terminalInfo, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
             // initiate qr payment
             paymentService.initiateQrPayment(request) { response, throwable ->
                 if (throwable != null) handleError(throwable)
@@ -95,7 +100,7 @@ class QrCodeActivity : BaseActivity() {
             }
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.merchantCode))
         }
 
         printCodeButton.isEnabled = true

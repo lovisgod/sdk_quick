@@ -1,17 +1,20 @@
 package com.interswitchng.interswitchpossdkdemo;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.igweze.ebi.paxemvcontact.services.POSDeviceService;
+
 import com.interswitchng.interswitchpossdk.IswPos;
+import com.interswitchng.interswitchpossdk.shared.errors.NotConfiguredException;
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
 
 
 public class DemoActivity extends AppCompatActivity {
@@ -40,8 +43,12 @@ public class DemoActivity extends AppCompatActivity {
             if (enteredAmount.isEmpty()) {
                 Toast.makeText(DemoActivity.this, "Amount value is required", Toast.LENGTH_LONG).show();
             } else {
-                // trigger payment
-                IswPos.getInstance().initiatePayment(Integer.valueOf(enteredAmount));
+                try {
+                    // trigger payment
+                    IswPos.getInstance().initiatePayment(Integer.valueOf(enteredAmount) * 100);
+                } catch (NotConfiguredException e) {
+                    Log.d("DEMO", e.getMessage());
+                }
             }
         });
 

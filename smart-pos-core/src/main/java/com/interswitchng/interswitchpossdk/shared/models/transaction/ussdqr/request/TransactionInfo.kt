@@ -1,7 +1,7 @@
 package com.interswitchng.interswitchpossdk.shared.models.transaction.ussdqr.request
 
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
-import com.interswitchng.interswitchpossdk.shared.models.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.transaction.PaymentInfo
+import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 
 internal data class TransactionInfo(
         val currencyCode: String,
@@ -14,13 +14,13 @@ internal data class TransactionInfo(
 
     companion object {
 
-        internal fun from(config: POSConfiguration, paymentInfo: PaymentInfo) = TransactionInfo (
-                currencyCode = "",
-                merchantId = config.merchantId,
-                merchantLocation = config.merchantLocation,
-                posGeoCode = "",
-                terminalType = config.terminalType,
-                uniqueId = config.uniqueId
+        internal fun from(terminalInfo: TerminalInfo, paymentInfo: PaymentInfo) = TransactionInfo (
+                currencyCode = terminalInfo.currencyCode,
+                merchantId = terminalInfo.merchantId,
+                merchantLocation = terminalInfo.merchantNameAndLocation,
+                posGeoCode = terminalInfo.countryCode,
+                terminalType = "Android",
+                uniqueId = paymentInfo.stan
         )
     }
 }

@@ -5,7 +5,7 @@ import com.interswitchng.smartpos.emv.pax.emv.*
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTransaction
 import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
-import com.interswitchng.interswitchpossdk.shared.models.CardDetail
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
 import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.interswitchpossdk.shared.utilities.Logger
@@ -17,7 +17,7 @@ import com.pax.dal.exceptions.EPedDevException
 import com.pax.dal.exceptions.PedDevException
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.RetCode
-import com.interswitchng.interswitchpossdk.shared.models.transaction.EmvResult as CoreEmvResult
+import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
 
 class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPinListener {

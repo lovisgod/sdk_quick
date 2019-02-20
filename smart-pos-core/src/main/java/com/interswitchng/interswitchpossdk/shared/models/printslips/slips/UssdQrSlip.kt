@@ -1,7 +1,6 @@
 package com.interswitchng.interswitchpossdk.shared.models.printslips.slips
 
 import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.POSConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
 import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.interswitchpossdk.shared.models.printslips.info.TransactionInfo

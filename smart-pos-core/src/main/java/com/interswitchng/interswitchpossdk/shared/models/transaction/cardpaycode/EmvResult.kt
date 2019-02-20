@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdk.shared.models.transaction
+package com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode
 
 enum class EmvResult(val code: Int) {
     OFFLINE_DENIED(0), // AC_AAC = 0
