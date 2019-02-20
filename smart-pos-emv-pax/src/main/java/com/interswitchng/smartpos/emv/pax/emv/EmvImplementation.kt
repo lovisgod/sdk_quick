@@ -88,7 +88,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         EMVCallback.EMVSetCallback()
 
 
-        // get default parameters
+        // getResult default parameters
         EMVCallback.EMVGetParameter(emvParameters)
 
         // configure other parameters
@@ -107,7 +107,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         // set configured parameters
         EMVCallback.EMVSetParameter(emvParameters)
 
-        // get kernel MCK default parameters
+        // getResult kernel MCK default parameters
         EMVCallback.EMVGetMCKParam(mckParameters)
         // configure MCK parameters
         mckParameters.apply {
@@ -172,7 +172,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         else extractTags()
 
 
-        // get authentication results
+        // getResult authentication results
         val errorCode = ByteArray(10)
         val debugInfoResult = EMVCallback.EMVGetDebugInfo(0, errorCode)
 

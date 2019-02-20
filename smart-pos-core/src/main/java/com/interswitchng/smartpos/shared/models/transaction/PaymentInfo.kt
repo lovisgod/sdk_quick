@@ -3,7 +3,7 @@ package com.interswitchng.smartpos.shared.models.transaction
 import android.os.Parcel
 import android.os.Parcelable
 
-class PaymentInfo: Parcelable {
+internal class PaymentInfo: Parcelable {
 
     internal val amount: Int
     internal val stan: String

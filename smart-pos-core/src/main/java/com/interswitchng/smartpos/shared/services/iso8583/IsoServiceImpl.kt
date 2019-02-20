@@ -98,20 +98,20 @@ internal class IsoServiceImpl(
     }
 
     override fun downloadKey(terminalId: String): Boolean {
-        // get clear key
+        // getResult clear key
         val cms = context.getString(R.string.cms)
 
-        // get master key & save
+        // getResult master key & save
         val isDownloaded = makeKeyCall(terminalId, "9A0000", cms)?.let { masterKey ->
             store.saveString(KEY_MASTER_KEY, masterKey)
 
-            // get pin key & save
+            // getResult pin key & save
             val isSessionSaved = makeKeyCall(terminalId, "9B0000", masterKey)?.let { sessionKey ->
                 store.saveString(KEY_SESSION_KEY, sessionKey)
                 true
             }
 
-            // get pin key & save
+            // getResult pin key & save
             val isPinSaved = makeKeyCall(terminalId, "9G0000", masterKey)?.let { pinKey ->
                 store.saveString(KEY_PIN_KEY, pinKey)
                 true
@@ -171,7 +171,7 @@ internal class IsoServiceImpl(
             responseMessage.dump(System.out, "parameter response ---- ")
 
 
-            // get string formatted terminal info
+            // getResult string formatted terminal info
             val terminalDataString = responseMessage.message.getField<String>(62).value
             logger.log("Terminal Data String => $terminalDataString")
 

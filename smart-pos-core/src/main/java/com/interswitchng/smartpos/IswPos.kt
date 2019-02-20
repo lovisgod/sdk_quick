@@ -1,11 +1,16 @@
 package com.interswitchng.smartpos
 
+import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import com.interswitchng.smartpos.di.activityModules
 import com.interswitchng.smartpos.di.appModules
+import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
+import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.settings.SettingsActivity
+import com.interswitchng.smartpos.modules.ussdqr.QrCodeActivity
+import com.interswitchng.smartpos.modules.ussdqr.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -13,6 +18,8 @@ import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.POSConfig
+import com.interswitchng.smartpos.shared.models.core.PurchaseResult
+import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import org.koin.dsl.module.module
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.loadKoinModules
@@ -23,31 +30,44 @@ import java.util.*
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
-    fun initiatePayment(amount: Int) {
+    fun initiatePayment(activity: Activity, amount: Int, paymentType: PaymentType?) {
 
         if (!isConfigured()) throw NotConfiguredException()
 
         val stan = getNextStan()
+
+        // getResult the activity class object
+        val typeClass = when (paymentType) {
+            PaymentType.PayCode -> PayCodeActivity::class.java
+            PaymentType.QR -> QrCodeActivity::class.java
+            PaymentType.USSD -> UssdActivity::class.java
+            PaymentType.Card -> CardActivity::class.java
+            else ->  HomeActivity::class.java
+        }
+        // create payment info for purchase request
         val paymentInfo = PaymentInfo(amount, stan)
-        val intent = Intent(app, HomeActivity::class.java).apply {
+        // create intent with payment info and flags
+        val intent = Intent(app, typeClass).apply {
+            putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
-        intent.putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
-        app.startActivity(intent)
 
-
+        // start activity
+        activity.startActivityForResult(intent, CODE_PURCHASE)
     }
 
     companion object {
+        // code used to start purchase request
+        const val CODE_PURCHASE: Int = 23849
+        // purchase result information
+        private const val KEY_PURCHASE_RESULT = "purchase_result_key"
 
         private object Container: KoinComponent
-        private val container = Container
-
         private const val KEY_STAN = "stan"
         private lateinit var INSTANCE: IswPos
         private var isSetup = false
+        private val store: IKeyValueStore by Container.inject()
 
-        private val store: IKeyValueStore by container.inject()
 
         internal fun isConfigured () = TerminalInfo.get(store) != null
 
@@ -102,5 +122,7 @@ class IswPos private constructor(private val app: Application, internal val devi
         @JvmStatic
         fun getInstance(): IswPos = INSTANCE
 
+        @JvmStatic
+        fun getResult(data: Intent): PurchaseResult = data.getParcelableExtra(KEY_PURCHASE_RESULT)
     }
 }

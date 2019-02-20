@@ -18,6 +18,8 @@ import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
+import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
+import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
 
 
 public class DemoActivity extends AppCompatActivity {
@@ -49,7 +51,7 @@ public class DemoActivity extends AppCompatActivity {
             } else {
                 try {
                     // trigger payment
-                    IswPos.getInstance().initiatePayment(Integer.valueOf(enteredAmount) * 100);
+                    IswPos.getInstance().initiatePayment(this, Integer.valueOf(enteredAmount) * 100, PaymentType.Card);
                 } catch (NotConfiguredException e) {
                     Log.d("DEMO", e.getMessage());
                 }
@@ -78,6 +80,10 @@ public class DemoActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             // handle success
+            if (data != null) {
+                PurchaseResult result = IswPos.getResult(data);
+                Log.d("Demo", "" + result);
+            }
         } else {
             // else handle error
         }

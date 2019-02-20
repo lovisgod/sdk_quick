@@ -47,7 +47,7 @@ data class CodeResponse(
                 // create bitmap matrix
                 val bitMatrix: BitMatrix = MultiFormatWriter().encode(qrCodeData, BarcodeFormat.QR_CODE, length, length, null)
 
-                // get matrix dimensions
+                // getResult matrix dimensions
                 val bitMatrixWidth = bitMatrix.width
                 val bitMatrixHeight = bitMatrix.height
 

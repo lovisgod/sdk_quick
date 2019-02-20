@@ -42,7 +42,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private val alert by lazy { DialogUtils.getAlertDialog(this) }
     private val logger by lazy { Logger.with("USSD") }
 
-    // get strings of first item
+    // getResult strings of first item
     private val firstItem = "Choose a bank"
     private var selectedItem = ""
     // container for banks and bank-codes
@@ -186,7 +186,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
         if (firstItem == banks.selectedItem) {
             selectedItem = ""
-            paymentHint.text = "Choose a bank to get a USSD code"
+            paymentHint.text = "Choose a bank to getResult a USSD code"
         } else {
             selectedItem = parent.getItemAtPosition(pos).toString()
             Toast.makeText(parent.context, "You have selected : $selectedItem", Toast.LENGTH_LONG).show()

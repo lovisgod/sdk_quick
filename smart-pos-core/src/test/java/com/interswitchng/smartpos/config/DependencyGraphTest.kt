@@ -28,7 +28,7 @@ class DependencyGraphTest: KoinTest {
             single { mock<Context>() }
         }
 
-        // get all modules
+        // getResult all modules
         val moduleList = appModules + activityModules + appContext
 
         checkModules(moduleList)

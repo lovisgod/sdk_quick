@@ -13,5 +13,4 @@ object Constants {
     internal const val KEY_MASTER_KEY = "master_key"
     internal const val KEY_SESSION_KEY = "session_key"
     internal const val KEY_PIN_KEY = "pin_key"
-
 }

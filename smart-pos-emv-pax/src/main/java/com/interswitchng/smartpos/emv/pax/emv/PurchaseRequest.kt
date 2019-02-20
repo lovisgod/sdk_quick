@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.emv.pax.emv
 
 import com.solab.iso8583.IsoMessage
 
-data class PurchaseRequest(
+internal data class PurchaseRequest(
         val pan: DataElement,
         val processCode: DataElement,
         val txnAmount: DataElement,

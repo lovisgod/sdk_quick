@@ -41,7 +41,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private lateinit var transactionResponse: Transaction
     private var pollingExecutor: ExecutorService? = null
 
-    // get payment info
+    // getResult payment info
     internal lateinit var paymentInfo: PaymentInfo
 
 
@@ -174,7 +174,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         override fun onTransactionError(transaction: Transaction?, throwable: Throwable?) = runOnUiThread {
-            // get error message
+            // getResult error message
             val message = throwable?.message
                     ?: transaction?.responseDescription
                     ?: "An error occurred, please try again"

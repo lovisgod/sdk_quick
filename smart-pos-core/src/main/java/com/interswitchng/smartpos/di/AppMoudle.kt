@@ -47,7 +47,7 @@ private val serviceModule = module {
         // try getting terminal info
         val store: IKeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
-        // get timeout based on terminal info
+        // getResult timeout based on terminal info
         val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.iswTimeout)
 
         return@factory NibssIsoSocket(serverIp, port, timeout * 1000)
@@ -112,10 +112,10 @@ private val networkModule = module {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(SimpleAdapterFactory.create())
 
-        // get the okhttp client for the retrofit
+        // getResult the okhttp client for the retrofit
         val clientBuilder: OkHttpClient.Builder = get()
 
-        // get auth interceptor for client
+        // getResult auth interceptor for client
         val authInterceptor: Interceptor = get(AUTH_INTERCEPTOR)
         // add auth interceptor for max services
         clientBuilder.addInterceptor(authInterceptor)

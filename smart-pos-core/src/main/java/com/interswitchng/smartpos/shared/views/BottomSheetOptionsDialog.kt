@@ -92,7 +92,7 @@ class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
         const val CARD = "card"
         const val NONE = "none"
 
-        fun newInstance(excludedOption: String = NONE, info: PaymentInfo) = BottomSheetOptionsDialog().apply {
+        internal fun newInstance(excludedOption: String = NONE, info: PaymentInfo) = BottomSheetOptionsDialog().apply {
             arguments = Bundle().apply {
                 putString(KEY_EXCLUDED_OPTION, excludedOption)
                 putParcelable(Constants.KEY_PAYMENT_INFO, info)

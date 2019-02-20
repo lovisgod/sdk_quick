@@ -37,7 +37,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private val emvCallback by lazy { CardCallback() }
     private val emv by lazy { posDevice.getEmvCardTransaction() }
 
-    // get strings of first item
+    // getResult strings of first item
     private val firstItem = "Choose Account"
     private var selectedItem = ""
 
@@ -204,7 +204,7 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 } ?: toast("Unable to process Transaction").also { finish() }
 
             } else {
-                toast("Unable to get icc").also { finish() }
+                toast("Unable to getResult icc").also { finish() }
             }
         } ?: toast("No terminal info, found on device").also { finish() }
     }
