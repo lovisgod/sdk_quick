@@ -1,8 +1,8 @@
 package com.interswitchng.com.app.usb
 
 import android.app.Application
-import com.interswitchng.interswitchpossdk.IswPos
-import com.interswitchng.interswitchpossdk.shared.models.core.POSConfig
+import com.interswitchng.smartpos.IswPos
+import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService
 import com.interswitchng.smartpos.usb.UsbConfig
 

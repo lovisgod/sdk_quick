@@ -3,12 +3,12 @@ package com.interswitchng.smartpos.emv.pax.services
 import android.os.SystemClock
 import com.interswitchng.smartpos.emv.pax.emv.*
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
-import com.interswitchng.interswitchpossdk.shared.interfaces.device.EmvCardTransaction
-import com.interswitchng.interswitchpossdk.shared.interfaces.library.EmvCallback
-import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.CardDetail
-import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
-import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.request.EmvData
-import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
+import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
+import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.dal.IPed
 import com.pax.dal.entity.EKeyCode
 import com.pax.dal.entity.EPedType
@@ -17,7 +17,7 @@ import com.pax.dal.exceptions.EPedDevException
 import com.pax.dal.exceptions.PedDevException
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.RetCode
-import com.interswitchng.interswitchpossdk.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
 
 class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPinListener {

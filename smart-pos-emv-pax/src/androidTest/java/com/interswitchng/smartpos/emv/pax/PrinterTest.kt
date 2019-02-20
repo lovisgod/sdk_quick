@@ -5,9 +5,9 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.igweze.ebi.paxemvcontact.models.*
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService
-import com.interswitchng.interswitchpossdk.shared.interfaces.device.POSDevice
-import com.interswitchng.interswitchpossdk.shared.models.core.UserType
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
+import com.interswitchng.smartpos.shared.models.core.UserType
+import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

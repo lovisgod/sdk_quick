@@ -9,7 +9,7 @@ import android.support.v4.content.ContextCompat
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector
 import com.interswitchng.smartpos.usb.services.UsbConnectionManager
 import com.interswitchng.smartpos.usb.utils.Constants
-import com.interswitchng.interswitchpossdk.shared.interfaces.library.UsbConnector as UsbCoreConnector
+import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector as UsbCoreConnector
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.loadKoinModules
 

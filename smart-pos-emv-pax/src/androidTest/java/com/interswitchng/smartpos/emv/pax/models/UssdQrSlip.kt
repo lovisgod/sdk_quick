@@ -1,6 +1,6 @@
 package com.igweze.ebi.paxemvcontact.models
 
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
+import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 
 internal class UssdQrSlip(config: POSConfiguration, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(config, status) {
 

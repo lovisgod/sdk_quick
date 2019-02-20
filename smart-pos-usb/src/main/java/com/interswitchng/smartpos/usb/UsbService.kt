@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.widget.Toast
-import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector
 import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_START_SERVICE
 import com.interswitchng.smartpos.usb.utils.Constants.KEY_SERVICE_COMMAND

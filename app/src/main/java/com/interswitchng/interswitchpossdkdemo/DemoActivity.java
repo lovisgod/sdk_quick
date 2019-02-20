@@ -14,9 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-import com.interswitchng.interswitchpossdk.IswPos;
-import com.interswitchng.interswitchpossdk.shared.errors.NotConfiguredException;
-import com.interswitchng.interswitchpossdk.shared.models.core.POSConfig;
+import com.interswitchng.smartpos.IswPos;
+import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
+import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
 
 

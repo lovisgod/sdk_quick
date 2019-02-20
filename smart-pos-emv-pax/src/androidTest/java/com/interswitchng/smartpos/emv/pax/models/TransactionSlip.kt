@@ -1,7 +1,7 @@
 package com.igweze.ebi.paxemvcontact.models
 
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintObject
-import com.interswitchng.interswitchpossdk.shared.models.posconfig.PrintStringConfiguration
+import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
+import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 
 internal abstract class TransactionSlip(private val posConfig: POSConfiguration, private val status: TransactionStatus) {
 

@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
-import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.utilities.Logger
 import org.koin.standalone.KoinComponent
 
 class BootReceiver : BroadcastReceiver(), KoinComponent {

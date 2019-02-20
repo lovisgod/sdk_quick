@@ -6,8 +6,8 @@ import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bcd2Str
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
 import java.util.*
-import com.interswitchng.interswitchpossdk.shared.models.TerminalInfo
-import com.interswitchng.interswitchpossdk.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.EMV_APPLIST
 import com.pax.jemv.clcommon.OnlineResult

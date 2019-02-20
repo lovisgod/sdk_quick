@@ -75,7 +75,7 @@
             android:background="@android:color/white">
 
 
-            <com.interswitchng.interswitchpossdk.modules.card.PinEditText
+            <com.interswitchng.smartpos.modules.card.PinEditText
                 android:id="@+id/cardPin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
