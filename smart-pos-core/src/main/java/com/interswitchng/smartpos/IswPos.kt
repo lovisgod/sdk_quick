@@ -49,7 +49,6 @@ class IswPos private constructor(private val app: Application, internal val devi
         // create intent with payment info and flags
         val intent = Intent(app, typeClass).apply {
             putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
         // start activity

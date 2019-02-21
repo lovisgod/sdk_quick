@@ -147,10 +147,11 @@ abstract class BaseActivity : AppCompatActivity() {
         val result = getTransactionResult(transaction)
         // only show result activity if result is non-null
         result?.let {
-            val resultIntent = Intent(this, TransactionResultActivity::class.java).apply {
-                putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
-                putExtra(TransactionResultActivity.KEY_TRANSACTION_RESULT, it)
-            }
+            val resultIntent = Intent(this, TransactionResultActivity::class.java)
+                    .putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
+                    .putExtra(TransactionResultActivity.KEY_TRANSACTION_RESULT, it)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
             startActivity(resultIntent)
         }

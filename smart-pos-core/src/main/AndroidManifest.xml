@@ -20,36 +20,42 @@
         <activity
             android:name=".modules.ussdqr.UssdActivity"
             android:label="USSD"
+            android:launchMode="singleTop"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.ussdqr.QrCodeActivity"
             android:label="QR Code"
+            android:launchMode="singleTop"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.card.CardActivity"
             android:label="Card"
+            android:launchMode="singleTop"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.paycode.PayCodeActivity"
             android:label="Pay Code"
+            android:launchMode="singleTop"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".shared.activities.TransactionResultActivity"
-            android:label="Transaction Approved"
+            android:label="Transaction Result"
+            android:launchMode="singleTop"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
             android:name=".modules.settings.SettingsActivity"
             android:label="Settings"
+            android:launchMode="singleTop"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
