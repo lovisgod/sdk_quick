@@ -150,10 +150,10 @@ abstract class BaseActivity : AppCompatActivity() {
             val resultIntent = Intent(this, TransactionResultActivity::class.java)
                     .putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
                     .putExtra(TransactionResultActivity.KEY_TRANSACTION_RESULT, it)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    .addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
 
             startActivity(resultIntent)
+            finish()
         }
     }
 

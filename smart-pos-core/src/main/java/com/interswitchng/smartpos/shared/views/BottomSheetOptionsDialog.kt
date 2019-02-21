@@ -43,30 +43,30 @@ class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
 
     private fun setupUI(info: PaymentInfo) {
         val context = requireActivity()
-        val flag = Intent.FLAG_ACTIVITY_NEW_TASK
+        val startActivity = { intent: Intent ->
+            intent.putExtra(Constants.KEY_PAYMENT_INFO, info)
+            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
+            context.startActivity(intent)
+        }
 
         ussdPayment.setOnClickListener {
             val ussdIntent = Intent(context, UssdActivity::class.java)
-            ussdIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            context.startActivity(ussdIntent)
+            startActivity(ussdIntent)
         }
 
         qrPayment.setOnClickListener {
             val qrIntent = Intent(context, QrCodeActivity::class.java)
-            qrIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            context.startActivity(qrIntent)
+            startActivity(qrIntent)
         }
 
         cardPayment.setOnClickListener {
             val cardIntent = Intent(context, CardActivity::class.java)
-            cardIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            context.startActivity(cardIntent)
+            startActivity(cardIntent)
         }
 
         payCodePayment.setOnClickListener {
             val payCodeIntent = Intent(context, PayCodeActivity::class.java)
-            payCodeIntent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            context.startActivity(payCodeIntent)
+            startActivity(payCodeIntent)
         }
 
         closeBtn.setOnClickListener { dismiss() }
