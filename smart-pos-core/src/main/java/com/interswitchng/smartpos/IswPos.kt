@@ -16,7 +16,7 @@ import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
@@ -124,5 +124,7 @@ class IswPos private constructor(private val app: Application, internal val devi
 
         @JvmStatic
         fun getResult(data: Intent): PurchaseResult = data.getParcelableExtra(KEY_PURCHASE_RESULT)
+
+        internal fun setResult(data: Intent, result: PurchaseResult): Intent = data.putExtra(KEY_PURCHASE_RESULT, result)
     }
 }

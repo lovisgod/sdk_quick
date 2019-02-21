@@ -1,11 +1,15 @@
 package com.interswitchng.smartpos.shared.activities
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
+import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.printslips.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
@@ -117,7 +121,10 @@ class TransactionResultActivity : BaseActivity() {
             printBtn.isEnabled = true
         }
 
-        closeBtn.setOnClickListener { finish() }
+        closeBtn.setOnClickListener {
+            setResult()
+            finish()
+        }
     }
 
 
@@ -143,6 +150,17 @@ class TransactionResultActivity : BaseActivity() {
                 .setBackgroundColorRes(background)
                 .setDuration(3 * 1000)
                 .show()
+    }
+
+    private fun setResult() {
+        val purchaseResult = PurchaseResult(result.responseCode, result.responseMessage, result.stan)
+        val intent = IswPos.setResult(Intent(), purchaseResult)
+        setResult(Activity.RESULT_OK, intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        setResult()
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? = null

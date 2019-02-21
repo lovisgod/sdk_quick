@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.shared.models
+package com.interswitchng.smartpos.shared.models.core
 
 import com.google.gson.Gson
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore

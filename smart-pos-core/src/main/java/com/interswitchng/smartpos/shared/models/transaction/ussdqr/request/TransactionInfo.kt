@@ -1,7 +1,7 @@
 package com.interswitchng.smartpos.shared.models.transaction.ussdqr.request
 
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 
 internal data class TransactionInfo(
         val currencyCode: String,

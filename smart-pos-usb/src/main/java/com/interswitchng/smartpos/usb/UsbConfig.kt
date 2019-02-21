@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.v4.content.ContextCompat
+import com.interswitchng.smartpos.shared.models.core.PurchaseResult
+import com.interswitchng.smartpos.usb.interfaces.MessageListener
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector
 import com.interswitchng.smartpos.usb.services.UsbConnectionManager
 import com.interswitchng.smartpos.usb.utils.Constants
@@ -13,11 +15,16 @@ import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector as UsbC
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
-object UsbConfig: UsbCoreConnector {
+class UsbConfig(private val messageListener: MessageListener) : UsbCoreConnector {
+
+    internal lateinit var app: Application
 
     override fun configure(app: Application) {
+        this.app = app
+
         val module = module {
-            single<UsbConnector>{ UsbConnectionManager() }
+            single<UsbConnector> { UsbConnectionManager() }
+            single { messageListener }
         }
 
         loadKoinModules(module)
@@ -26,19 +33,31 @@ object UsbConfig: UsbCoreConnector {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.O)
-    internal fun startUsbService(context: Context) {
-        // create intent to start service
-        val intent = Intent(context, UsbService::class.java).apply {
-            putExtra(Constants.KEY_SERVICE_COMMAND, Constants.COMMAND_START_SERVICE)
+    fun handleResult(result: PurchaseResult) {
+        val intent = Intent(app, UsbService::class.java).apply {
+            putExtra(Constants.KEY_MESSAGE_RESULT, result)
+            putExtra(Constants.KEY_SERVICE_COMMAND, Constants.COMMAND_PROCESS_RESULT)
         }
-
-        // check build version to determine what type of notification to build
-        val isPreAndroidO = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1
-
-        // start service
-        if (isPreAndroidO) context.startService(intent)
-        else ContextCompat.startForegroundService(context, intent)
+        app.startService(intent)
     }
 
+    companion object {
+
+
+        @TargetApi(Build.VERSION_CODES.O)
+        internal fun startUsbService(context: Context) {
+            // create intent to start service
+            val intent = Intent(context, UsbService::class.java).apply {
+                putExtra(Constants.KEY_SERVICE_COMMAND, Constants.COMMAND_START_SERVICE)
+            }
+
+            // check build version to determine what type of notification to build
+            val isPreAndroidO = Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1
+
+            // start service
+            if (isPreAndroidO) context.startService(intent)
+            else ContextCompat.startForegroundService(context, intent)
+        }
+
+    }
 }

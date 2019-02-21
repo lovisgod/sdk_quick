@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat
 import com.interswitchng.smartpos.usb.BuildConfig
 import com.interswitchng.smartpos.usb.R
 import com.interswitchng.smartpos.usb.UsbService
+import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_RESTART_COMMUNICATION
 import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_STOP_SERVICE
 import com.interswitchng.smartpos.usb.utils.Constants.KEY_SERVICE_COMMAND
 
@@ -28,6 +29,12 @@ object NotificationUtil {
     private fun getStopServicePI(context: Service): PendingIntent {
         val iStopService = Intent(context, UsbService::class.java).apply { putExtra(KEY_SERVICE_COMMAND, COMMAND_STOP_SERVICE) }
         return PendingIntent.getService(context, getRandomNumber(), iStopService, 0)
+    }
+
+    /** PendingIntent to restart service usb communication.  */
+    private fun getRestartCommunicationPI(context: Service): PendingIntent {
+        val iRestartCommunication = Intent(context, UsbService::class.java).apply { putExtra(KEY_SERVICE_COMMAND, COMMAND_RESTART_COMMUNICATION) }
+        return PendingIntent.getService(context, getRandomNumber(), iRestartCommunication, 0)
     }
 
 
@@ -47,11 +54,16 @@ object NotificationUtil {
                     .setSmallIcon(SMALL_ICON)
                     .setStyle(NotificationCompat.BigTextStyle())
 
+
+            val restartAction = getRestartAction(context)
+            builder.addAction(restartAction)
+
             if (BuildConfig.DEBUG) {
                 // Action to stop the service.
                 val stopAction = getStopAction(context)
                 builder.addAction(stopAction)
             }
+
 
             context.startForeground(ONGOING_NOTIFICATION_ID, builder.build())
         }
@@ -77,6 +89,9 @@ object NotificationUtil {
         fun createNotification(context: Service) {
             val channelId = createChannel(context)
             val builder = buildNotification(context, channelId)
+
+            val restartAction = getRestartAction(context)
+            builder.addAction(restartAction)
 
             if (BuildConfig.DEBUG) {
                 // Action to stop the service.
@@ -110,6 +125,11 @@ object NotificationUtil {
 
     private fun getStopAction(context: Service): NotificationCompat.Action {
         return NotificationCompat.Action.Builder(0, getNotificationStopActionText(context), getStopServicePI(context)).build()
+    }
+
+    private fun getRestartAction(context: Service): NotificationCompat.Action {
+        val restartText = context.getString(R.string.notification_reconnect_text)
+        return NotificationCompat.Action.Builder(0, restartText, getRestartCommunicationPI(context)).build()
     }
 
     private fun getNotificationStopActionText(context: Service): String {

@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -16,8 +17,9 @@ import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
 import com.interswitchng.smartpos.shared.interfaces.network.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
@@ -48,6 +50,17 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopPolling()
+
+        if (::transactionResponse.isInitialized) {
+            val result = getTransactionResult(transactionResponse)?.let {
+                val purchaseResult = PurchaseResult(it.responseCode, it.responseMessage, it.stan)
+                val intent = IswPos.setResult(Intent(), purchaseResult)
+                // set result as ok with result intent
+                setResult(Activity.RESULT_OK, intent)
+
+            } ?: setResult(Activity.RESULT_CANCELED) // else set result as cancelled
+        }
+        else setResult(Activity.RESULT_CANCELED) // else set result as cancelled
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

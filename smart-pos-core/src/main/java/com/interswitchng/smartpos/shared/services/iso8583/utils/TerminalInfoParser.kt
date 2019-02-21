@@ -1,6 +1,6 @@
 package com.interswitchng.smartpos.shared.services.iso8583.utils
 
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import java.util.ArrayList
 
 internal object TerminalInfoParser {

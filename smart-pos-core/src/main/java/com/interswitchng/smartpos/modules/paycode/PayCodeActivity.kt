@@ -5,7 +5,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printslips.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult

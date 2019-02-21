@@ -3,7 +3,7 @@ package com.interswitchng.smartpos.shared.models.transaction
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printslips.info.TransactionInfo

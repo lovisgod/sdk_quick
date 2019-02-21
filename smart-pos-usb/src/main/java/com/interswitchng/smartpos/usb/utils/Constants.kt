@@ -1,8 +1,13 @@
 package com.interswitchng.smartpos.usb.utils
 
-object Constants {
+internal object Constants {
 
-    internal const val KEY_SERVICE_COMMAND = "start_service"
-    internal const val COMMAND_STOP_SERVICE = 0
-    internal const val COMMAND_START_SERVICE = 1
+    const val KEY_MESSAGE_RESULT = "purchase_result"
+    const val KEY_SERVICE_COMMAND = "start_service"
+
+
+    const val COMMAND_STOP_SERVICE = 0
+    const val COMMAND_START_SERVICE = 1
+    const val COMMAND_PROCESS_RESULT = 4
+    const val COMMAND_RESTART_COMMUNICATION = 12
 }

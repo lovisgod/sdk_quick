@@ -1,6 +1,6 @@
 package com.interswitchng.smartpos.models
 
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.printslips.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printslips.info.TransactionStatus

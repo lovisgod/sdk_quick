@@ -7,9 +7,17 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.widget.Toast
+import com.google.gson.Gson
+import com.interswitchng.smartpos.shared.models.core.PurchaseResult
+import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.interswitchng.smartpos.usb.interfaces.MessageListener
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector
+import com.interswitchng.smartpos.usb.models.Request
+import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_PROCESS_RESULT
+import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_RESTART_COMMUNICATION
 import com.interswitchng.smartpos.usb.utils.Constants.COMMAND_START_SERVICE
+import com.interswitchng.smartpos.usb.utils.Constants.KEY_MESSAGE_RESULT
 import com.interswitchng.smartpos.usb.utils.Constants.KEY_SERVICE_COMMAND
 import com.interswitchng.smartpos.usb.utils.NotificationUtil
 import org.koin.android.ext.android.inject
@@ -19,9 +27,11 @@ class UsbService: Service() {
     private var mServiceIsStarted = false
 
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val gson by lazy { Gson() }
 
-    private val logger = Logger.with(UsbService::class.toString())
+    private val logger = Logger.with("UsbService")
     private val usbConnector: UsbConnector by inject()
+    private val usbMessageListener: MessageListener by inject()
 
     override fun onBind(intent: Intent): IBinder? = null
 
@@ -36,10 +46,14 @@ class UsbService: Service() {
         // evaluate start command
         return intent.extras!!.let  {
             val command = it.get(KEY_SERVICE_COMMAND) as Int
+            val result: PurchaseResult = intent.getParcelableExtra(KEY_MESSAGE_RESULT)
+
             logger.log("Received command $command")
             // respond to service command
             return@let when(command) {
                 COMMAND_START_SERVICE -> startSynchronization()
+                COMMAND_PROCESS_RESULT -> processPurchaseResult(result)
+                COMMAND_RESTART_COMMUNICATION -> startReceivingCommands().let { START_STICKY }
                 else -> stopSynchronization()
             }
         }
@@ -88,8 +102,19 @@ class UsbService: Service() {
                 // receive message
                 val message = usbConnector.receive()
                 makeToast(message)
+                val request = gson.fromJson(message, Request::class.java)
+                // notify listener of message
+                usbMessageListener.onMessageReceived(PaymentType.Card, request.amount)
             }
         }.start()
+    }
+
+    private fun processPurchaseResult(result: PurchaseResult): Int {
+        if (usbConnector.isOpen()) {
+            val message = gson.toJson(result)
+            usbConnector.sendAsync(message)
+        }
+        return START_STICKY
     }
 
     private fun makeToast(msg: String) {

@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.config
 
+import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -24,6 +25,7 @@ class IswPosInstrumentedTest {
         val payment: PaymentInfo = mock()
         val config: POSConfig = mock()
         IswPos.configureTerminal(app, mock(), config)
+        val activity: Activity =  mock()
 
         val expectedIntent = Intent(app, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -34,10 +36,9 @@ class IswPosInstrumentedTest {
             putExtra(KEY_PAYMENT_INFO, payment)
         }
 
-        IswPos.getInstance().initiatePayment(5000)
+        IswPos.getInstance().initiatePayment(activity, 5000, null)
         val actual = Shadows.shadowOf(app).nextStartedActivity
 
-        val isSame = expectedIntent2 == expectedIntent
 
         assertEquals("Main Activity was not lunched", expectedIntent.component, actual.component)
     }

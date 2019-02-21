@@ -6,7 +6,7 @@ import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
-import com.interswitchng.smartpos.shared.models.TerminalInfo
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.dal.IPed
