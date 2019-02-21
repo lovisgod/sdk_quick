@@ -46,13 +46,13 @@ class UsbService: Service() {
         // evaluate start command
         return intent.extras!!.let  {
             val command = it.get(KEY_SERVICE_COMMAND) as Int
-            val result: PurchaseResult = intent.getParcelableExtra(KEY_MESSAGE_RESULT)
+            val result: PurchaseResult? = intent.getParcelableExtra(KEY_MESSAGE_RESULT)
 
             logger.log("Received command $command")
             // respond to service command
             return@let when(command) {
                 COMMAND_START_SERVICE -> startSynchronization()
-                COMMAND_PROCESS_RESULT -> processPurchaseResult(result)
+                COMMAND_PROCESS_RESULT -> processPurchaseResult(result!!)
                 COMMAND_RESTART_COMMUNICATION -> startReceivingCommands().let { START_STICKY }
                 else -> stopSynchronization()
             }
@@ -104,7 +104,9 @@ class UsbService: Service() {
                 makeToast(message)
                 val request = gson.fromJson(message, Request::class.java)
                 // notify listener of message
-                usbMessageListener.onMessageReceived(PaymentType.Card, request.amount)
+                if (request != null) {
+                    usbMessageListener.onMessageReceived(PaymentType.Card, request.amount)
+                }
             }
         }.start()
     }

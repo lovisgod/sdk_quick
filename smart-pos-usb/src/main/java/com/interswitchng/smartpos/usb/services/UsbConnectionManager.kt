@@ -18,10 +18,7 @@ class UsbConnectionManager: UsbConnector {
     // connected client socket
     private var mClientSocket: Socket? = null
 
-    companion object {
-
-        const val LISTENING_PORT = 39300
-    }
+    companion object { const val LISTENING_PORT = 39300 }
 
     // read data from socket's inputstream
     override fun receive(): String {
@@ -29,7 +26,7 @@ class UsbConnectionManager: UsbConnector {
         val inputStream = mClientSocket?.getInputStream() ?: return ""
         val reader = BufferedReader(InputStreamReader(inputStream))
 
-        return reader.readLine()
+        return reader.readLine() ?: ""
     }
 
     // send message, then wait for response

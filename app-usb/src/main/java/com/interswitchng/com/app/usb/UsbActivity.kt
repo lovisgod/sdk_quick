@@ -5,8 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService
+import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.usb.UsbConfig
@@ -21,11 +25,33 @@ class UsbActivity : AppCompatActivity() , MessageListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_usb)
 
+        try {
+            val deviceService = POSDeviceService.create(this)
+            val config = POSConfig("MX5882").with(usbConfig)
+            // configure terminal
+            IswPos.configureTerminal(application, deviceService, config)
+        } catch (ex: NotConfiguredException) {
+            Toast.makeText(this, "Terminal not configured, use menu to configure terminal", Toast.LENGTH_LONG).show()
+        }
+    }
 
-        val deviceService = POSDeviceService.create(this)
-        val config = POSConfig("MX5882").with(usbConfig)
-        // configure terminal
-        IswPos.configureTerminal(application, deviceService, config)
+    override fun onResume() {
+        super.onResume()
+        usbConfig.startService(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_options, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.terminal_config) {
+            IswPos.showSettingsScreen() // show settings for terminal configuration
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onMessageReceived(paymentType: PaymentType, amount: Int) {
@@ -44,4 +70,6 @@ class UsbActivity : AppCompatActivity() , MessageListener {
             // else handle error
         }
     }
+
+
 }

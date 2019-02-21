@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">app-usb</string>
+    <string name="terminal_configuration">Terminal Configuration</string>
 </resources>

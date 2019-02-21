@@ -32,6 +32,8 @@ class UsbConfig(private val messageListener: MessageListener) : UsbCoreConnector
         startUsbService(app)
     }
 
+    fun startService(context: Context) = startUsbService(context)
+
 
     fun handleResult(result: PurchaseResult) {
         val intent = Intent(app, UsbService::class.java).apply {
