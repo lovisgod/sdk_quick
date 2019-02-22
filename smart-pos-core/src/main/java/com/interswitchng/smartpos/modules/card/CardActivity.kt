@@ -30,20 +30,16 @@ import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
-class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
+class CardActivity : BaseActivity() {
 
     private val logger by lazy { Logger.with("CardActivity") }
 
     private val emvCallback by lazy { CardCallback() }
     private val emv by lazy { posDevice.getEmvCardTransaction() }
 
-    // getResult strings of first item
-    private val firstItem = "Choose Account"
-    private var selectedItem = ""
-
     private val isoService: IsoService by inject()
     private val store: IKeyValueStore by inject()
-    private lateinit var accountType: AccountType
+    private val accountType = AccountType.Default
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false
 
@@ -60,7 +56,6 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onStart() {
         super.onStart()
-        setupUI()
         setupTransaction()
     }
 
@@ -70,19 +65,6 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         emv.cancelTransaction()
     }
 
-    private fun setupUI() {
-        accountOptions.onItemSelectedListener = this
-        accountOptions.adapter = ArrayAdapter.createFromResource(this, R.array.isw_account_types, R.layout.isw_spinner_item_label)
-        continueButton.setOnClickListener {
-            if (selectedItem == "") {
-                toast("Choose a valid account type")
-            } else {
-                continueButton.isEnabled = false
-                continueButton.isClickable = false
-                startTransaction()
-            }
-        }
-    }
 
     private fun setupTransaction() {
         Thread {
@@ -97,18 +79,10 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                     1200, 1200)
 
             // setup card transaction
-            // todo change amount to kobo
             emv.setupTransaction(paymentInfo.amount, terminalInfo)
 
-            runOnUiThread {
-                dialog.dismiss()
-                // enable user select account options
-                // only after detecting card
-                paymentHint.text = getString(R.string.isw_hint_account_type)
-                accountOptions.isClickable = true
-                // show continue button container
-                showContainer(CardTransactionState.ChooseAccountType)
-            }
+            runOnUiThread { dialog.dismiss() }
+            startTransaction()
 
         }.start()
     }
@@ -139,7 +113,6 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private fun showContainer(state: CardTransactionState) {
         val container = when(state) {
             CardTransactionState.ShowInsertCard -> insertCardContainer
-            CardTransactionState.ChooseAccountType -> continueButtonContainer
             CardTransactionState.EnterPin -> insertPinContainer
             CardTransactionState.Default -> blankContainer
         }
@@ -208,28 +181,6 @@ class CardActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
             }
         } ?: toast("No terminal info, found on device").also { finish() }
     }
-
-    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-        if (firstItem == accountOptions.selectedItem) {
-            selectedItem = ""
-            // ensure card has been detected first
-            if (accountOptions.isClickable)
-                paymentHint.text = getString(R.string.isw_hint_account_type)
-        } else {
-            selectedItem = parent.getItemAtPosition(pos).toString()
-            accountType = when {
-                selectedItem.contains("Savings") -> AccountType.Savings
-                selectedItem.contains("Current") -> AccountType.Current
-                selectedItem.contains("Credit") -> AccountType.Credit
-                else -> AccountType.Default
-            }
-
-            Toast.makeText(parent.context, "You have selected : $selectedItem", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    override fun onNothingSelected(arg: AdapterView<*>) {}
-
 
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? = transactionResult
