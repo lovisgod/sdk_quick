@@ -32,7 +32,7 @@ import org.koin.android.ext.android.inject
 import java.util.*
 
 
-class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
+class UssdActivity : BaseActivity() {
 
     private val paymentService: Payable by inject()
     private val initiator: PaymentInitiator by inject()
@@ -73,8 +73,7 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         loadBanks()
 
         paymentHint.text = "Loading Banks..."
-        banks.onItemSelectedListener = this
-        showMockButtons(false)
+        banks.text = getString(R.string.isw_select_bank)
     }
 
     private fun loadBanks() {
@@ -85,7 +84,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 bankCodes = mutableMapOf(firstItem to "")
                 allBanks?.map { bankCodes.put(it.name, it.code) }
                 val bankNames = bankCodes.keys.toList()
-                runOnUiThread { banks.adapter = ArrayAdapter(this, R.layout.isw_spinner_item_label, bankNames) }
             }
         }
     }
@@ -120,7 +118,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
     private fun showMockButtons(request: CodeRequest, response: CodeResponse) {
         // TODO remove mock trigger
         initiateButton.isEnabled = true
-        mockButtonsContainer.visibility = View.VISIBLE
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
@@ -156,6 +153,8 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
 
                 // TODO remove mock trigger
                 showMockButtons(request, response)
+                // check transaction status
+                checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
             }
             else -> {
                 runOnUiThread {
@@ -177,31 +176,6 @@ class UssdActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
     }
-
-    private fun showMockButtons(shouldShow: Boolean) {
-        val visibility = if (shouldShow) View.VISIBLE else View.GONE
-        mockButtonsContainer.visibility = visibility
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-        if (firstItem == banks.selectedItem) {
-            selectedItem = ""
-            paymentHint.text = "Choose a bank to getResult a USSD code"
-        } else {
-            selectedItem = parent.getItemAtPosition(pos).toString()
-            Toast.makeText(parent.context, "You have selected : $selectedItem", Toast.LENGTH_LONG).show()
-            getBankCode()
-
-            paymentHint.text = getString(R.string.isw_pay_ussd_instruction)
-        }
-
-        // stop any polling
-        stopPolling()
-        showMockButtons(false)
-    }
-
-    override fun onNothingSelected(arg: AdapterView<*>) {}
-
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {
         val now = Date()

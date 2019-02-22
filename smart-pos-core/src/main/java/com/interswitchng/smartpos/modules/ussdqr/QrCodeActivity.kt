@@ -126,6 +126,9 @@ class QrCodeActivity : BaseActivity() {
                     // TODO remove mock trigger
                     showTransactionMocks(request, response)
                 }
+
+                // check transaction status
+                checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
             }
             else -> {
                 runOnUiThread {
@@ -176,6 +179,7 @@ class QrCodeActivity : BaseActivity() {
     override fun onCheckError() {
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
+        super.onCheckError()
     }
 
 }
