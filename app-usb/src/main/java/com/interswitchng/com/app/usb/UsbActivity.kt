@@ -29,7 +29,7 @@ class UsbActivity : AppCompatActivity() , MessageListener {
             val deviceService = POSDeviceService.create(this)
             val config = POSConfig("MX5882").with(usbConfig)
             // configure terminal
-            IswPos.configureTerminal(application, deviceService, config)
+            IswPos.setupTerminal(application, deviceService, config)
         } catch (ex: NotConfiguredException) {
             Toast.makeText(this, "Terminal not configured, use menu to configure terminal", Toast.LENGTH_LONG).show()
         }

@@ -37,7 +37,7 @@ public class DemoActivity extends AppCompatActivity {
         POSDeviceService deviceService = POSDeviceService.create(getApplicationContext());
         POSConfig config = new POSConfig("MX5882");
         // configure terminal
-        IswPos.configureTerminal(getApplication(), deviceService, config);
+        IswPos.setupTerminal(getApplication(), deviceService, config);
     }
 
     private void setupUI() {

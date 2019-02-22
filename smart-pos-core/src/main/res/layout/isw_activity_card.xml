@@ -63,7 +63,7 @@
             <ImageView
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/insert_card" />
+                android:src="@drawable/ic_insert_card" />
 
         </LinearLayout>
 
@@ -72,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            tools:visibility="gone"
             android:background="@android:color/white">
 
 
@@ -100,6 +101,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="bottom"
+            tools:visibility="gone"
             android:background="@android:color/white">
 
             <android.support.constraint.ConstraintLayout
@@ -142,6 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            tools:visibility="gone"
             android:background="@android:color/white" />
 
     </FrameLayout>

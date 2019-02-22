@@ -41,7 +41,7 @@ class DependencyGraphTest: KoinTest {
         val config: POSConfig = mock()
 
 
-        IswPos.configureTerminal(app, device, config)
+        IswPos.setupTerminal(app, device, config)
         val isw: IswPos = get()
 
         assertNotNull(isw)

@@ -28,7 +28,7 @@ class MockApplication: Application() {
         // setup device for terminal
         val device = MockPOSDevice(EmvTransactionImpl(), Printer())
         val config = POSConfig(merchantCode)
-        IswPos.configureTerminal(this, device, config)
+        IswPos.setupTerminal(this, device, config)
 
         // load mock modules based on runner arguments
         if (shouldMock) {

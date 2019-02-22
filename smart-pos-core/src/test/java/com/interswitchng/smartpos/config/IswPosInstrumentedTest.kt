@@ -24,7 +24,7 @@ class IswPosInstrumentedTest {
         val app: Application =  ApplicationProvider.getApplicationContext()
         val payment: PaymentInfo = mock()
         val config: POSConfig = mock()
-        IswPos.configureTerminal(app, mock(), config)
+        IswPos.setupTerminal(app, mock(), config)
         val activity: Activity =  mock()
 
         val expectedIntent = Intent(app, HomeActivity::class.java).apply {

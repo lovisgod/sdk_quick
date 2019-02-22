@@ -17,7 +17,7 @@ class IswPosTest {
         val app: Application = mock()
         val device: POSDevice = mock()
         val config: POSConfig = mock()
-        IswPos.configureTerminal(app, device, config)
+        IswPos.setupTerminal(app, device, config)
     }
 
     @Test

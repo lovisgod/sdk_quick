@@ -71,7 +71,7 @@ class IswPos private constructor(private val app: Application, internal val devi
         internal fun isConfigured () = TerminalInfo.get(store) != null
 
         @JvmStatic
-        fun configureTerminal(app: Application, device: POSDevice, config: POSConfig) {
+        fun setupTerminal(app: Application, device: POSDevice, config: POSConfig) {
 
             if (!isSetup) {
 
@@ -102,6 +102,7 @@ class IswPos private constructor(private val app: Application, internal val devi
         internal fun getNextStan(): String {
             var stan = store.getNumber(KEY_STAN, 0)
 
+            // compute and save new stan
             val newStan = if (stan > 999999) 0 else ++stan
             store.saveNumber(KEY_STAN, newStan)
 
