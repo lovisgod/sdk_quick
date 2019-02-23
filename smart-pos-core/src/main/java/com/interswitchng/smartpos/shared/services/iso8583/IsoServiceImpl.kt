@@ -214,7 +214,7 @@ internal class IsoServiceImpl(
                     .setValue(28, "C00000000")
                     .setValue(35, transaction.cardTrack2)
                     .setValue(37, randomReference)
-                    .setValue(40, "601")
+                    .setValue(40, transaction.src)
                     .setValue(41, terminalInfo.terminalId)
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)

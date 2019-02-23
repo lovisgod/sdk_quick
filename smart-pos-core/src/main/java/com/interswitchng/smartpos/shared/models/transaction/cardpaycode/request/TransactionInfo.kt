@@ -8,6 +8,7 @@ internal data class TransactionInfo(
         val cardPAN: String,
         val cardTrack2: String,
         val icc: String,
+        val src: String, // service restriction code
         val amount: Int,
         val stan: String,
         val purchaseType: PurchaseType,
@@ -21,6 +22,7 @@ internal data class TransactionInfo(
                 cardPIN =  emv.cardPIN,
                 cardTrack2 =  emv.cardTrack2,
                 icc = emv.icc,
+                src = emv.src,
                 amount = paymentInfo.amount,
                 stan = paymentInfo.stan,
                 purchaseType = purchaseType,

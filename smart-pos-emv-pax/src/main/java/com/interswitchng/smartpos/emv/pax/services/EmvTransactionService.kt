@@ -88,19 +88,20 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
         // get track2 data
         return emvImpl.getTrack2()?.let {
             // get pinData (only for online PIN)
-            var carPin = pinData ?: ""
+            val carPin = pinData ?: ""
 
             // get track 2 string
-            var track2data = EmvUtils.bcd2Str(it)
+            val track2data = EmvUtils.bcd2Str(it)
 
             // extract pan and expiry
-            var strTrack2 = track2data.split("F")[0]
+            val strTrack2 = track2data.split("F")[0]
             val pan = strTrack2.split("D")[0]
             val expiry = strTrack2.split("D")[1].substring(0, 4)
+            val src = strTrack2.split("D")[1].substring(4, 7)
 
             val icc = emvImpl.getIccData()
             val aid = EmvUtils.bcd2Str(emvImpl.getTlv(0x9F06)!!)
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid)
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src)
         }
     }
 
