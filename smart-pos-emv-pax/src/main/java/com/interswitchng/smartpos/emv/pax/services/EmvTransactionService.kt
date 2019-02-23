@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.dal.IPed
 import com.pax.dal.entity.EKeyCode
@@ -65,8 +66,8 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
         val result = emvImpl.startContactEmvTransaction()
 
         return when (result) {
-            ACType.AC_TC -> emvImpl.completeContactEmvTransaction().let { CoreEmvResult.OFFLINE_APPROVED }
-            ACType.AC_ARQC -> logger.log("online should be processed").let { CoreEmvResult.ONLINE_REQUIRED } //processOnline()
+            ACType.AC_TC -> logger.log("offline process approved").let { CoreEmvResult.OFFLINE_APPROVED }
+            ACType.AC_ARQC -> logger.log("online should be processed").let { CoreEmvResult.ONLINE_REQUIRED }
             else -> logger.log("offline declined").let { CoreEmvResult.OFFLINE_DENIED }
         }
     }
@@ -75,8 +76,14 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
         return CardDetail("", "")
     }
 
-    override fun completeTransaction() {
+    override fun completeTransaction(response: TransactionResponse): CoreEmvResult {
+        val result = emvImpl.completeContactEmvTransaction(response)
 
+
+        return when (result) {
+            ACType.AC_TC -> logger.log("online response approved").let { CoreEmvResult.OFFLINE_APPROVED }
+            else -> logger.log("online response declined").let { CoreEmvResult.OFFLINE_DENIED }
+        }
     }
 
     override fun cancelTransaction() {

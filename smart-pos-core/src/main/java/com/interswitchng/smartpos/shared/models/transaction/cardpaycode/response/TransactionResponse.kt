@@ -1,7 +1,8 @@
 package com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 
-internal data class TransactionResponse(
-        val code: String,
+data class TransactionResponse(
+        val responseCode: String, // response code
+        val authCode: String, // authorization code
         val stan: String,
         val scripts: String
 )

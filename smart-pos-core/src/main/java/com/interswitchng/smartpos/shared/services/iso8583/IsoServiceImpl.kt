@@ -252,9 +252,9 @@ internal class IsoServiceImpl(
 
             // open connection
             val isConnected = socket.open()
-            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
+            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
 
-            socket.setTimeout(2 * 60000)
+
             val request = message.message.writeData()
             val response = socket.sendReceive(request)
             // close connection
@@ -266,14 +266,15 @@ internal class IsoServiceImpl(
 
             // return response
             return responseMsg.message.let {
+                val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
-                val script = it.getObjectValue<String>(128)
-                return@let TransactionResponse(code, stan, script)
+                val scripts = it.getObjectValue<String>(55)
+                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
-            return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
+            return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
     }
 
@@ -301,16 +302,15 @@ internal class IsoServiceImpl(
                     .setValue(26, "06")
                     .setValue(28, "C00000000")
                     .setValue(37, randomReference)
-                    .setValue(40, "601")
                     .setValue(41, terminalInfo.terminalId)
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
                     .setValue(59, "90")
+                    .setValue(123, "511101511344101")
 
-            message.message.removeFields(14, 32, 35, 52, 55)
+            message.message.removeFields(14, 32, 35, 40,  52, 55)
 
-            message.setValue(123, "511101511344101")
 
 
             // set message hash
@@ -328,9 +328,8 @@ internal class IsoServiceImpl(
 
             // open connection
             val isConnected = socket.open()
-            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
+            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
 
-            socket.setTimeout(2 * 60000)
             val request = message.message.writeData()
             val response = socket.sendReceive(request)
             // close connection
@@ -342,15 +341,15 @@ internal class IsoServiceImpl(
 
             // return response
             return responseMsg.message.let {
+                val empty = ""
                 val responseCode = it.getObjectValue<String>(39)
-                val script = it.getObjectValue<String>(128)
-                return@let TransactionResponse(responseCode, paymentInfo.stan, script)
+                return@let TransactionResponse(responseCode, authCode = empty, stan = paymentInfo.stan, scripts = empty)
             }
 
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
-            return TransactionResponse(TIMEOUT_CODE, stan = "", scripts = "")
+            return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
     }
 

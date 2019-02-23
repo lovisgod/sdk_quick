@@ -68,16 +68,16 @@ class PayCodeActivity : BaseActivity() {
             val now = Date()
             response?.let {
 
-                val responseMsg = IsoUtils.getIsoResultMsg(it.code) ?: "Unknown Error"
+                val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
 
                 transactionResult = TransactionResult(
                         paymentType = PaymentType.Card,
                         dateTime = DisplayUtils.getIsoString(now),
                         amount = DisplayUtils.getAmountString(paymentInfo.amount),
                         type = TransactionType.Purchase,
-                        authorizationCode = response.code,
+                        authorizationCode = response.authCode,
                         responseMessage = responseMsg,
-                        responseCode = response.code,
+                        responseCode = response.responseCode,
                         stan = response.stan, pinStatus = "", AID = "", code = "",
                         cardPan = "", cardExpiry = "", cardType = "",
                         telephone = "08031150978")

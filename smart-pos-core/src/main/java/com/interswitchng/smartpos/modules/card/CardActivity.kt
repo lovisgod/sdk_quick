@@ -2,10 +2,6 @@ package com.interswitchng.smartpos.modules.card
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Toast
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
@@ -93,9 +89,8 @@ class CardActivity : BaseActivity() {
             val result = emv.startTransaction()
 
             when (result) {
-                EmvResult.OFFLINE_APPROVED -> emv.completeTransaction()
                 EmvResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
-                EmvResult.OFFLINE_DENIED -> {
+                else -> {
                     toast("Transaction Declined")
                     showContainer(CardTransactionState.Default)
                 }
@@ -140,10 +135,10 @@ class CardActivity : BaseActivity() {
 
         // TODO refactor this function [extremely ugly!!]
         TerminalInfo.get(store)?.let { terminalInfo ->
-            val emv = emv.getTransactionInfo()
+            val emvData = emv.getTransactionInfo()
 
-            if (emv != null) {
-                val txnInfo = TransactionInfo.fromEmv(emv, paymentInfo, PurchaseType.Card, accountType)
+            if (emvData != null) {
+                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
                 val response = isoService.initiateCardPurchase(terminalInfo, txnInfo)
                 // used default transaction because the
                 // transaction is not processed by isw directly
@@ -152,9 +147,9 @@ class CardActivity : BaseActivity() {
                 val now = Date()
                 response?.let {
 
-                    val responseMsg = IsoUtils.getIsoResultMsg(it.code) ?: "Unknown Error"
+                    val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
                     val pinStatus = when{
-                        pinOk || it.code == "00" -> "PIN Verified"
+                        pinOk || it.responseCode == IsoUtils.OK -> "PIN Verified"
                         else -> "PIN Unverified"
                     }
 
@@ -163,14 +158,27 @@ class CardActivity : BaseActivity() {
                             dateTime = DisplayUtils.getIsoString(now),
                             amount = DisplayUtils.getAmountString(paymentInfo.amount),
                             type = TransactionType.Purchase,
-                            authorizationCode = response.code,
+                            authorizationCode = response.authCode,
                             responseMessage = responseMsg,
-                            responseCode = response.code,
+                            responseCode = response.responseCode,
                             cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = "",
-                            stan = response.stan, pinStatus = pinStatus, AID = emv.AID, code = "",
+                            stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
                             telephone = "08031150978")
 
-                    // TODO complete transaction using response from server
+                    // complete transaction by applying scripts
+                    // only when responseCode is 'OK'
+                    if(it.responseCode == IsoUtils.OK) {
+                        val completionResult = emv.completeTransaction(it)
+
+                        when (completionResult) {
+                            EmvResult.OFFLINE_APPROVED -> logger.log("online has been approved")
+                            else -> {
+                                toast("Transaction Declined")
+                                showContainer(CardTransactionState.Default)
+                            }
+                        }
+
+                    }
 
                     // show transaction result screen
                     showTransactionResult(txn)

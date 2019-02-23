@@ -7,6 +7,7 @@ import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
 import java.util.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.EMV_APPLIST
@@ -210,18 +211,21 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         }
     }
 
-    fun completeContactEmvTransaction(): Int {
-        val authCode = "123456".toByteArray()
+    fun completeContactEmvTransaction(response: TransactionResponse): Int {
+        val authCode = response.authCode.toByteArray()
+        val responseCode = response.responseCode.toByteArray()
 
         EMVCallback.EMVSetTLVData(0x89, authCode, 6)
-        EMVCallback.EMVSetTLVData(0x8A, "00".toByteArray(), 2)
+        EMVCallback.EMVSetTLVData(0x8A, responseCode, 2)
 
-        val script = str2Bcd("9F1804AABBCCDD86098424000004AABBCCDD86098418000004AABBCCDD86098416000004AABBCCDD")
-        val response = OnlineResult.ONLINE_APPROVE
+        val script = str2Bcd(response.scripts)
+        val responseResult = OnlineResult.ONLINE_APPROVE
         val ac = ACType()
 
-        val completionResult = EMVCallback.EMVCompleteTrans(response, script, script.size, ac)
+
+        val completionResult = EMVCallback.EMVCompleteTrans(responseResult, script, script.size, ac)
         if (completionResult != RetCode.EMV_OK) return completionResult.also { logger.logErr("Complete Transaction Error: code: $completionResult") }
+        logger.log("AC_Type = ${ac.type}")
 
 
         val datalist = com.pax.jemv.clcommon.ByteArray(5)
@@ -229,16 +233,16 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         logger.log("TLV - TVR 0x95: ${bcd2Str(datalist.data)}")
 
         EMVCallback.EMVGetTLVData(0x9B, datalist)
-        logger.log("TLV - TVR 0x9B: ${bcd2Str(datalist.data)}")
-
-        logger.log("AC_Type = ${ac.type}")
-
-        // TODO remove from demo
-        ac.type = ACType.AC_TC
-        if (ac.type == ACType.AC_TC) return TransactionResult.EMV_ONLINE_APPROVED
+        logger.log("TLV - TVR 0x9B: ${bcd2Str(datalist.data, 2)}")
 
 
-        return completionResult
+
+        return when (ac.type) {
+            ACType.AC_TC,
+            ACType.AC_AAC,
+            ACType.AC_ARQC -> ac.type
+            else -> completionResult
+        }
     }
 
     fun enterPin(isOnline: Boolean, offlineTriesLeft: Int, pan: String) {
