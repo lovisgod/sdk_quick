@@ -17,6 +17,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.*
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.dateFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeFormatter
+import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.yearAndMonthFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.TIMEOUT_CODE
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
@@ -283,35 +284,52 @@ internal class IsoServiceImpl(
     override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, paymentInfo: PaymentInfo): TransactionResponse? {
 
         try {
-            val pan = "5061011234567890008"
+            val pan = generatePan(code)
+            val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "010000"
             val randomReference = "000000${paymentInfo.stan}"
+            val date = dateFormatter.format(now)
+            val src = "501"
+
+            // format track 2
+            val expiry = yearAndMonthFormatter.format(now)
+            val track2 = "${pan}D$expiry"
+
+            // format icc data
+            val authorizedAmountTLV = String.format("9F02%02d%s", amount.length / 2, amount)
+            val transactionDateTLV = String.format("9A%02d%s", date.length / 2, date)
+            val iccData = "9F260831BDCBC7CFF6253B9F2701809F10120110A50003020000000000000000000000FF9F3704F435D8A29F3602052795050880000000" +
+            "${transactionDateTLV}9C0100${authorizedAmountTLV}5F2A020566820238009F1A0205669F34034103029F3303E0F8C89F3501229F0306000000000000"
 
             message
                     .setValue(2, pan)
                     .setValue(3, processCode)
-                    .setValue(4, String.format(Locale.getDefault(), "%012d", paymentInfo.amount))
+                    .setValue(4, amount)
                     .setValue(7, timeAndDateFormatter.format(now))
                     .setValue(11, paymentInfo.stan)
                     .setValue(12, timeFormatter.format(now))
-                    .setValue(13, dateFormatter.format(now))
+                    .setValue(13, date)
+                    .setValue(14, expiry)
                     .setValue(18, terminalInfo.merchantCategoryCode)
                     .setValue(22, "051")
                     .setValue(23, "001")
                     .setValue(25, "00")
                     .setValue(26, "06")
                     .setValue(28, "C00000000")
+                    .setValue(35, track2)
                     .setValue(37, randomReference)
+                    .setValue(40, src)
                     .setValue(41, terminalInfo.terminalId)
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
-                    .setValue(59, "90")
+                    .setValue(55, iccData)
+                    .setValue(59, "00") //""90")
                     .setValue(123, "511101511344101")
 
-            message.message.removeFields(14, 32, 35, 40,  52, 55)
+            message.message.removeFields( 32,  52)
 
 
 
@@ -353,6 +371,10 @@ internal class IsoServiceImpl(
             e.printStackTrace()
             return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
+    }
+
+    private fun generatePan(code: String): String {
+        return "5061011234567890008"
     }
 
     companion object {
