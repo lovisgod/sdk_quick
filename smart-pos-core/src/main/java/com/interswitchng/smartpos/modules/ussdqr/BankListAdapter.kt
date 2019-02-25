@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 
@@ -38,12 +39,24 @@ internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerVie
 
     inner class BankViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
+        private val context by lazy { view.context }
         private val nameTextView by lazy { view.findViewById<TextView>(R.id.bankNameTextView) }
         private val bankImageView by lazy { view.findViewById<ImageView>(R.id.bankImageView) }
         private val isSelectedView by lazy { view.findViewById<View>(R.id.bankSelectionIndicator) }
 
 
         fun bind(bank: Bank) {
+            val baseUrl = context.getString(R.string.ISW_IMAGE_BASE_URL)
+            val imageUrl = "${baseUrl}banks/${bank.code}.png"
+
+            // load image
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.isw_bank_placeholder)
+                    .fitCenter()
+                    .into(bankImageView)
+
+
             nameTextView.text = bank.name
             bankImageView.setOnClickListener {
                 tapListener()

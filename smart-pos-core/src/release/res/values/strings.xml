@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ISW_USSD_QR_BASE_URL">https://qa.interswitchng.com/paymentgateway/api/v1/</string>
+    <string name="ISW_USSD_QR_BASE_URL">https://mufasa.interswitchng.com/p/paymentgateway/api/v1/</string>
+    <string name="ISW_IMAGE_BASE_URL">https://mufasa.interswitchng.com/p/paymentgateway/</string>
+
     <string name="cms">A050F63AFF366A4B0588D818D23C6C77</string>
     <string name="nibss_ip">196.6.103.73</string>
 </resources>
