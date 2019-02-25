@@ -1,6 +1,6 @@
 package com.interswitchng.smartpos.shared.models.utils
 
-internal class Disposable {
+class IswDisposable {
 
     var isDisposed = false
 

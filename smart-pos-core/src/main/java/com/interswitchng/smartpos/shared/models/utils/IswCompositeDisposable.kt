@@ -2,11 +2,11 @@ package com.interswitchng.smartpos.shared.models.utils
 
 import java.util.*
 
-internal class CompositeDisposable {
+class IswCompositeDisposable {
 
-    private val disposables = Stack<Disposable>()
+    private val disposables = Stack<IswDisposable>()
 
-    fun add(disposable: Disposable) {
+    fun add(disposable: IswDisposable) {
         disposables.push(disposable)
     }
 

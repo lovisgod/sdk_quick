@@ -21,6 +21,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
@@ -63,7 +64,7 @@ class CardActivity : BaseActivity() {
 
 
     private fun setupTransaction() {
-        Thread {
+       val disposable =  ThreadUtils.createExecutor {
 
             // attach callback for emv transaction
             emv.setEmvCallback(emvCallback)
@@ -80,11 +81,13 @@ class CardActivity : BaseActivity() {
             runOnUiThread { dialog.dismiss() }
             startTransaction()
 
-        }.start()
+        }
+
+        disposables.add(disposable)
     }
 
     private fun startTransaction() {
-        Thread {
+       val disposable = ThreadUtils.createExecutor {
             // start card transaction
             val result = emv.startTransaction()
 
@@ -95,8 +98,9 @@ class CardActivity : BaseActivity() {
                     showContainer(CardTransactionState.Default)
                 }
             }
+        }
 
-        }.start()
+        disposables.add(disposable)
     }
 
     private fun showLoader(title: String = "Processing", message: String) {

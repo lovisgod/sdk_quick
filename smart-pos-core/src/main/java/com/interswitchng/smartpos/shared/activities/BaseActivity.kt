@@ -24,6 +24,7 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
+import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
@@ -38,6 +39,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected val instance: IswPos by inject()
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
+    protected val disposables = IswCompositeDisposable()
 
 
     private lateinit var transactionResponse: Transaction
@@ -49,11 +51,15 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // stop network polling
         stopPolling()
+        // dispose all threads
+        disposables.dispose()
 
+        // process results
         if (::transactionResponse.isInitialized) {
-            val result = getTransactionResult(transactionResponse)?.let {
-                val purchaseResult = PurchaseResult(it.responseCode, it.responseMessage, it.stan)
+            getTransactionResult(transactionResponse)?.apply {
+                val purchaseResult = PurchaseResult(responseCode, responseMessage, stan)
                 val intent = IswPos.setResult(Intent(), purchaseResult)
                 // set result as ok with result intent
                 setResult(Activity.RESULT_OK, intent)

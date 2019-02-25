@@ -10,7 +10,9 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
+import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import com.interswitchng.smartpos.usb.interfaces.MessageListener
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector
 import com.interswitchng.smartpos.usb.models.Request
@@ -30,6 +32,7 @@ class UsbService: Service() {
     private val gson by lazy { Gson() }
 
     private val logger = Logger.with("UsbService")
+    private val disposables = IswCompositeDisposable()
     private val usbConnector: UsbConnector by inject()
     private val usbMessageListener: MessageListener by inject()
 
@@ -37,6 +40,7 @@ class UsbService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        disposables.dispose()
         logger.log("OnDestroy Synchronization service")
         if (usbConnector.isOpen()) usbConnector.close()
     }
@@ -94,11 +98,12 @@ class UsbService: Service() {
     }
 
     private fun startReceivingCommands() {
-        Thread {
+
+        val disposable = ThreadUtils.createExecutor {
             usbConnector.open()
             makeToast("A connection has been made!!!")
 
-            while (mServiceIsStarted) {
+            while (mServiceIsStarted && !it.isDisposed) {
                 // receive message
                 val message = usbConnector.receive()
                 makeToast(message)
@@ -108,7 +113,9 @@ class UsbService: Service() {
                     usbMessageListener.onMessageReceived(PaymentType.Card, request.amount)
                 }
             }
-        }.start()
+        }
+
+        disposables.add(disposable)
     }
 
     private fun processPurchaseResult(result: PurchaseResult): Int {

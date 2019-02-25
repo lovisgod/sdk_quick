@@ -2,13 +2,13 @@ package com.interswitchng.smartpos.shared.utilities
 
 import android.os.Handler
 import android.os.Looper
-import com.interswitchng.smartpos.shared.models.utils.Disposable
+import com.interswitchng.smartpos.shared.models.utils.IswDisposable
 
-internal object ThreadUtils {
+object ThreadUtils {
 
-    fun createExecutor(task: (Disposable) -> Unit): Disposable {
+    fun createExecutor(task: (IswDisposable) -> Unit): IswDisposable {
         // create a disposable
-        val disposable = Disposable()
+        val disposable = IswDisposable()
         // create a thread
         val thread = Thread {
             // run task using disposable

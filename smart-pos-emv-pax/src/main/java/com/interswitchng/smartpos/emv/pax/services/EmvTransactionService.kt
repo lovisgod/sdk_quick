@@ -9,7 +9,9 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDeta
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
+import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import com.pax.dal.IPed
 import com.pax.dal.entity.EKeyCode
 import com.pax.dal.entity.EPedType
@@ -25,6 +27,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
 
     private val logger by lazy { Logger.with("EmvTransactionService") }
     private val ped by lazy { POSDeviceService.dal.getPed(EPedType.INTERNAL) }
+    private val disposables = IswCompositeDisposable()
 
     private var text = ""
 
@@ -87,6 +90,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
     }
 
     override fun cancelTransaction() {
+        disposables.dispose()
         ped.setInputPinListener(null) // remove the pin pad
         emvCallback = null
     }
@@ -132,16 +136,18 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
     }
 
     private fun startWatchingCard() {
-        Thread {
+        val disposable = ThreadUtils.createExecutor {
             // try and detect card
-            while (true) {
+            while (!it.isDisposed) {
                 // check if card cannot be detected
                 if (!POSDeviceService.dal.icc.detect(0x00)) break
-                Thread.sleep(300)
+                Thread.sleep(1000)
             }
             // notify callback of card removal
             emvCallback?.onCardRemoved()
-        }.start()
+        }
+
+        disposables.add(disposable)
     }
 
     override fun getPinResult(panBlock: String) = pinResult

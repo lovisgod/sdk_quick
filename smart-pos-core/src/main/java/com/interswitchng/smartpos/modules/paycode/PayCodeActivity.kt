@@ -12,6 +12,7 @@ import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlinx.android.synthetic.main.isw_activity_pay_code.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
@@ -45,7 +46,8 @@ class PayCodeActivity : BaseActivity() {
             continueButton.isEnabled = false
             continueButton.isClickable = false
             // start paycode process
-            Thread { processOnline() }.start()
+            val disposable = ThreadUtils.createExecutor { processOnline() }
+            disposables.add(disposable)
         }
     }
 

@@ -8,7 +8,9 @@ import android.widget.Toast
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
+import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlinx.android.synthetic.main.isw_activity_settings.*
 import org.koin.android.ext.android.inject
 import java.util.*
@@ -17,6 +19,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private val store: IKeyValueStore by inject()
     private val isoService: IsoService by inject()
+
+    private val disposables = IswCompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,22 +130,24 @@ class SettingsActivity : AppCompatActivity() {
 
 
     private fun downloadKeys(terminalId: String) {
-        Thread {
+        val disposable = ThreadUtils.createExecutor {
             // download keys and update ui
             val isSuccessful = isoService.downloadKey(terminalId)
-            runOnUiThread {
-                keysDownloaded(isSuccessful)
-            }
-        }.start()
+            runOnUiThread { keysDownloaded(isSuccessful) }
+        }
+
+        disposables.add(disposable)
     }
 
     private fun downloadTerminalConfig(terminalId: String) {
-        Thread {
+        val disposable = ThreadUtils.createExecutor {
             val isSuccessful = isoService.downloadTerminalParameters(terminalId)
             runOnUiThread {
                 terminalConfigDownloaded(isSuccessful)
             }
-        }.start()
+        }
+
+        disposables.add(disposable)
     }
 
     private fun keysDownloaded(isSuccessful: Boolean) {
