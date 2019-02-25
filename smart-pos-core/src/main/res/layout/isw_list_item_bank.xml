@@ -1,38 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="10dp">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:scaleType="fitCenter"
-            android:id="@+id/bankImageView"
-            tools:src="@drawable/gtb"/>
-
-        <View
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@color/iswTransparent"
-            android:visibility="gone"
-            android:id="@+id/bankSelectionIndicator"/>
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/bankImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="fitCenter"
+        android:padding="@dimen/isw_content_small_padding"
+        android:layout_margin="@dimen/isw_content_small_margin"
+        android:background="@drawable/isw_bg_card"
+        tools:src="@drawable/gtb" />
 
     <TextView
+        android:id="@+id/bankNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        tools:text="GT Bank"
-        android:textSize="12sp"
-        android:id="@+id/bankNameTextView"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:layout_gravity="center_horizontal"/>
+        android:gravity="center"
+        android:textSize="12sp"
+        tools:text="GT Bank" />
 </LinearLayout>

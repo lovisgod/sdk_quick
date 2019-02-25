@@ -1,5 +1,8 @@
 package com.interswitchng.smartpos.modules.ussdqr
 
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +12,8 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.views.TweakableOutlineProvider
 
 internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerView.Adapter<BankListAdapter.BankViewHolder>() {
 
@@ -42,7 +47,6 @@ internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerVie
         private val context by lazy { view.context }
         private val nameTextView by lazy { view.findViewById<TextView>(R.id.bankNameTextView) }
         private val bankImageView by lazy { view.findViewById<ImageView>(R.id.bankImageView) }
-        private val isSelectedView by lazy { view.findViewById<View>(R.id.bankSelectionIndicator) }
 
 
         fun bind(bank: Bank) {
@@ -58,15 +62,28 @@ internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerVie
 
 
             nameTextView.text = bank.name
+
+            if (bank == selectedBank) {
+                // add tint or elevation
+                val filter: Int = ContextCompat.getColor(context, R.color.iswTransparent)
+                if (SDK_INT < Build.VERSION_CODES.LOLLIPOP) bankImageView.setColorFilter(filter)
+                else bankImageView.apply {
+                    elevation = context.resources.getDimension(R.dimen.isw_elevation)
+                    outlineProvider = TweakableOutlineProvider()
+                }
+            } else {
+                // remove tint or elevation
+                val filter: Int = ContextCompat.getColor(context, android.R.color.transparent)
+                if (SDK_INT < Build.VERSION_CODES.LOLLIPOP) bankImageView.setColorFilter(filter)
+                else bankImageView.elevation = 0f
+            }
+
             bankImageView.setOnClickListener {
                 tapListener()
                 val prev = banks.indexOf(selectedBank)
                 selectedBank = bank
                 notifyItemsChanged(prev, adapterPosition)
             }
-
-            val bankSelectedState = if (bank == selectedBank) View.VISIBLE else View.GONE
-            isSelectedView.visibility = bankSelectedState
         }
     }
 }

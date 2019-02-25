@@ -2,7 +2,7 @@
 <resources>
 
     <style name="ISW.PaymentOption" parent="ISW.PaymentContent">
-        <item name="android:background">@drawable/isw_bg_card</item>
+        <item name="android:background">@drawable/isw_bg_card_padding</item>
         <item name="android:elevation">@dimen/isw_elevation</item>
         <item name="android:layout_marginTop">@dimen/isw_content_small_margin</item>
         <item name="android:layout_marginBottom">@dimen/isw_content_small_margin</item>
