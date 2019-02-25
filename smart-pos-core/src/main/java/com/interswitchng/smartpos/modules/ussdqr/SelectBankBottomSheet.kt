@@ -2,30 +2,25 @@ package com.interswitchng.smartpos.modules.ussdqr
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.SelectBankCallback
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
-import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import kotlinx.android.synthetic.main.isw_select_bank_bottom_sheet.*
 import org.koin.android.ext.android.inject
 
-class SelectBankBottomSheet: BottomSheetDialogFragment() {
+internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 
     private val paymentService: Payable by inject()
-    private lateinit var adapter: BankListAdapter
-    private val bankLists = ArrayList<Bank>()
     private var callback: SelectBankCallback? = null
-    private val handler = Handler(Looper.getMainLooper())
-
-    companion object {
-        fun newInstance() = SelectBankBottomSheet()
+    private val adapter: BankListAdapter = BankListAdapter {
+        if (proceedSelectBank.visibility != View.VISIBLE)
+            proceedSelectBank.visibility = View.VISIBLE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
@@ -33,19 +28,7 @@ class SelectBankBottomSheet: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUI()
-        loadBanks()
-
-        proceedSelectBank.setOnClickListener {
-
-            if (!::adapter.isInitialized) return@setOnClickListener
-
-            val selectedBank = adapter.getSelectedBank() ?: return@setOnClickListener
-            callback?.onBankSelected(selectedBank)
-
-            dismiss()
-        }
     }
 
     override fun onAttach(context: Context?) {
@@ -53,33 +36,35 @@ class SelectBankBottomSheet: BottomSheetDialogFragment() {
         callback = context as SelectBankCallback
     }
 
-    private fun loadBanks() {
-        paymentService.getBanks { allBanks, throwable ->
-            if (throwable != null) {
-                // TODO handle error
-            } else {
+    private fun setupUI() {
+        rvBankLists.layoutManager = GridLayoutManager(activity, 3)
+        rvBankLists.adapter = adapter
+        closeSheetButton.setOnClickListener { dismiss() }
 
-                allBanks?.let {
-                    it.forEach { bank -> bankLists.add(bank) }
-                    handler.post {
-                        progressBarSelectBank.visibility = View.GONE
-                        adapter.notifyDataSetChanged()
-                    }
-                }
-            }
+        loadBanks()
+
+        proceedSelectBank.setOnClickListener {
+            adapter.selectedBank?.also {
+                // invoke callback with selected bank
+                callback?.onBankSelected(it)
+                dismiss()
+            } ?: toast("Please select a Bank") // else prompt user to select bank
         }
     }
 
-    private fun setupUI() {
+    private fun loadBanks() {
 
-        adapter = BankListAdapter(bankLists)
-        rvBankLists.layoutManager = GridLayoutManager(activity, 3)
-        rvBankLists.adapter = adapter
-
-        adapter.tapListener = { if (proceedSelectBank.visibility != View.VISIBLE) proceedSelectBank.visibility = View.VISIBLE }
-
-        closeSheetButton.setOnClickListener {
-            dismiss()
+        callback?.loadBanks { banks ->
+            adapter.setBanks(banks)
+            progressBarSelectBank.visibility = View.GONE
         }
+    }
+
+    private fun toast(msg: String) {
+        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+    }
+
+    companion object {
+        fun newInstance() = SelectBankBottomSheet()
     }
 }

@@ -9,53 +9,51 @@ import android.widget.TextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 
-class BankListAdapter(private val banks: List<Bank>): RecyclerView.Adapter<BankListAdapter.BankViewHolder>() {
+internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerView.Adapter<BankListAdapter.BankViewHolder>() {
 
-    var tapListener: () -> Unit = {}
+    private var banks: List<Bank> = emptyList()
+    var selectedBank: Bank? = null
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int) =
-            BankViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.isw_bank_view, p0, false))
+    override fun onCreateViewHolder(parent: ViewGroup, type: Int): BankViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.isw_list_item_bank, parent, false)
+        return BankViewHolder(view)
+    }
 
     override fun getItemCount() = banks.size
 
     override fun onBindViewHolder(holder: BankViewHolder, p1: Int) {
-
-        val next = banks[p1]
-        holder.nameTextView.text = next.name
-        val bankSelectedState = if (next.selected) View.VISIBLE else View.GONE
-
-        holder.isSelectedView.visibility = bankSelectedState
-
-        holder.bankImageView.setOnClickListener {
-            selectBank(p1)
-        }
+        val bank = banks[p1]
+        holder.bind(bank)
     }
 
-    private fun selectBank(position: Int) {
-
-        banks.forEach { bank ->
-            bank.selected = false
-        }
-
-        tapListener()
-        banks[position].selected = true
+    fun setBanks(banks: List<Bank>) {
+        this.banks = banks
         notifyDataSetChanged()
     }
 
-    fun getSelectedBank(): Bank? {
-
-        val select = selectBanks()
-        if (select.isEmpty()) return null
-
-        return select.first()
+    private fun notifyItemsChanged(prev: Int, new: Int) {
+        notifyItemChanged(prev)
+        notifyItemChanged(new)
     }
 
-    private fun selectBanks() = banks.filter { bank -> bank.selected }
+    inner class BankViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
-    class BankViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        private val nameTextView by lazy { view.findViewById<TextView>(R.id.bankNameTextView) }
+        private val bankImageView by lazy { view.findViewById<ImageView>(R.id.bankImageView) }
+        private val isSelectedView by lazy { view.findViewById<View>(R.id.bankSelectionIndicator) }
 
-        val nameTextView by lazy { view.findViewById<TextView>(R.id.bankNameTextView) }
-        val bankImageView by lazy { view.findViewById<ImageView>(R.id.bankImageView) }
-        val isSelectedView by lazy { view.findViewById<View>(R.id.bankSelectionIndicator) }
+
+        fun bind(bank: Bank) {
+            nameTextView.text = bank.name
+            bankImageView.setOnClickListener {
+                tapListener()
+                val prev = banks.indexOf(selectedBank)
+                selectedBank = bank
+                notifyItemsChanged(prev, adapterPosition)
+            }
+
+            val bankSelectedState = if (bank == selectedBank) View.VISIBLE else View.GONE
+            isSelectedView.visibility = bankSelectedState
+        }
     }
 }

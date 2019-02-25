@@ -50,7 +50,7 @@ class UssdActivity : BaseActivity(), SelectBankCallback {
 
     private var selectedBank: Bank? = null
     // container for banks and bank-codes
-    private lateinit var bankCodes: MutableMap<String, String>
+    private var allBanks: List<Bank>? = null
     private val printSlip = mutableListOf<PrintObject>()
 
 
@@ -80,18 +80,22 @@ class UssdActivity : BaseActivity(), SelectBankCallback {
         banks.text = getString(R.string.isw_select_bank)
         banks.setOnClickListener {
             val dialog = SelectBankBottomSheet.newInstance()
-            dialog.show(supportFragmentManager, "SelectBankDialog")
+            dialog.show(supportFragmentManager, dialog.tag)
         }
     }
 
-    private fun loadBanks() {
-        paymentService.getBanks { allBanks, throwable ->
+    override fun loadBanks(callback: (List<Bank>) -> Unit) {
+
+        if (allBanks != null) callback(allBanks!!)
+
+        else paymentService.getBanks { allBanks, throwable ->
             if (throwable != null) {
                 // TODO handle error
             } else {
-                bankCodes = mutableMapOf(firstItem to "")
-                allBanks?.map { bankCodes.put(it.name, it.code) }
-                val bankNames = bankCodes.keys.toList()
+                allBanks?.let {
+                    this.allBanks = it
+                    runOnUiThread { callback(it) }
+                }
             }
         }
     }

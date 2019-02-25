@@ -75,7 +75,6 @@
     <string name="isw_hint_input_pin">Input your PIN</string>
     <string name="isw_action_pay">Pay</string>
     <string name="isw_hint_print_qr_code">PRINT QR CODE</string>
-    <string name="isw_dummy_bank_name">GT Bank</string>
 
 
     <string-array name="isw_account_types">

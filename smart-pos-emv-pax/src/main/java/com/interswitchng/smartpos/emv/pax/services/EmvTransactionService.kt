@@ -28,6 +28,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
     private val logger by lazy { Logger.with("EmvTransactionService") }
     private val ped by lazy { POSDeviceService.dal.getPed(EPedType.INTERNAL) }
     private val disposables = IswCompositeDisposable()
+    private var isCancelled = false
 
     private var text = ""
 
@@ -90,6 +91,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
     }
 
     override fun cancelTransaction() {
+        isCancelled = true
         disposables.dispose()
         ped.setInputPinListener(null) // remove the pin pad
         emvCallback = null
@@ -125,7 +127,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
         emvCallback?.showInsertCard()
 
         // try and detect card
-        while (true) {
+        while (!isCancelled) {
             if (POSDeviceService.dal.icc.detect(0x00)) break
         }
 
