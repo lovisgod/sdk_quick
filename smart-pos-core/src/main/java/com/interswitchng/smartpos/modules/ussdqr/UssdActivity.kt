@@ -10,6 +10,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
 import com.interswitchng.smartpos.shared.interfaces.PaymentInitiator
 import com.interswitchng.smartpos.shared.interfaces.PaymentRequest
+import com.interswitchng.smartpos.shared.interfaces.SelectBankCallback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
@@ -20,6 +21,7 @@ import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_USSD
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
@@ -32,7 +34,7 @@ import org.koin.android.ext.android.inject
 import java.util.*
 
 
-class UssdActivity : BaseActivity() {
+class UssdActivity : BaseActivity(), SelectBankCallback {
 
     private val paymentService: Payable by inject()
     private val initiator: PaymentInitiator by inject()
@@ -45,6 +47,8 @@ class UssdActivity : BaseActivity() {
     // getResult strings of first item
     private val firstItem = "Choose a bank"
     private var selectedItem = ""
+
+    private var selectedBank: Bank? = null
     // container for banks and bank-codes
     private lateinit var bankCodes: MutableMap<String, String>
     private val printSlip = mutableListOf<PrintObject>()
@@ -70,10 +74,14 @@ class UssdActivity : BaseActivity() {
         val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
         amountText.text = getString(R.string.isw_amount, amount)
 
-        loadBanks()
+        // loadBanks()
 
         paymentHint.text = "Loading Banks..."
         banks.text = getString(R.string.isw_select_bank)
+        banks.setOnClickListener {
+            val dialog = SelectBankBottomSheet.newInstance()
+            dialog.show(supportFragmentManager, "SelectBankDialog")
+        }
     }
 
     private fun loadBanks() {
@@ -89,29 +97,26 @@ class UssdActivity : BaseActivity() {
     }
 
     private fun getBankCode() {
-        if (selectedItem == "" || selectedItem == firstItem) {
+
+        if (selectedBank == null) {
             Toast.makeText(this, "You have to select a Bank", Toast.LENGTH_LONG).show()
-        } else {
-            // set the selected bank-code for payment
-            val bankCode =
-                    if (bankCodes.containsKey(selectedItem)) bankCodes[selectedItem]!!
-                    else ""
+            return
+        }
 
-            // create payment info with bank code
-            val paymentInfoPrime = PaymentInfo(paymentInfo.amount, paymentInfo.stan, bankCode)
-            val request = CodeRequest.from(terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
+        val bankCode = selectedBank?.code
+        // create payment info with bank code
+        val paymentInfoPrime = PaymentInfo(paymentInfo.amount, paymentInfo.stan, bankCode)
+        val request = CodeRequest.from(terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
 
-            dialog.show()
+        dialog.show()
 
-            // initiate ussd payment
-            paymentService.initiateUssdPayment(request) { response, throwable ->
-                runOnUiThread {
-                    // handle error or response
-                    if (throwable != null) handleError(throwable)
-                    else response?.apply { handleResponse(request, this) }
-                }
+        // initiate ussd payment
+        paymentService.initiateUssdPayment(request) { response, throwable ->
+            runOnUiThread {
+                // handle error or response
+                if (throwable != null) handleError(throwable)
+                else response?.apply { handleResponse(request, this) }
             }
-
         }
     }
 
@@ -203,4 +208,12 @@ class UssdActivity : BaseActivity() {
         initiateButton.isClickable = true
     }
 
+    override fun onBankSelected(bank: Bank) {
+        banks.text = bank.name
+        selectedItem = bank.name
+
+        selectedBank = bank
+
+        getBankCode()
+    }
 }

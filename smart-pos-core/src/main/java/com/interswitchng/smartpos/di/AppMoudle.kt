@@ -16,6 +16,7 @@ import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.PayableService
 import com.interswitchng.smartpos.shared.services.storage.SharePreferenceManager
 import com.interswitchng.smartpos.shared.services.UserService
@@ -67,12 +68,12 @@ private val serviceModule = module {
 
                 override fun getEmvCardTransaction(): EmvCardTransaction {
                     return object : EmvCardTransaction {
+                        override fun completeTransaction(response: TransactionResponse): EmvResult = EmvResult.OFFLINE_APPROVED
                         override fun setEmvCallback(callback: EmvCallback) {}
                         override fun removeEmvCallback(callback: EmvCallback) {}
                         override fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {}
                         override fun startTransaction(): EmvResult = EmvResult.OFFLINE_APPROVED
                         override fun getCardDetail(): CardDetail = CardDetail("", "")
-                        override fun completeTransaction() {}
                         override fun cancelTransaction() {}
                         override fun getTransactionInfo(): EmvData? = null
                     }

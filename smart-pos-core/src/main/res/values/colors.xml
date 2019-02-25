@@ -8,13 +8,11 @@
     <color name="iswColorQrCodeBackground">#f8f8f9</color>
     <color name="iswTextColorDark">#363636</color>
     <color name="iswTextColorSuccess">#85e95d</color>
-
-
-
     <color name="iswTextColorSecondary">#004570</color>
     <color name="iswTextColorSecondaryDark">#00365b</color>
     <color name="iswColorHighlight">#FFCBECFF</color>
     <color name="iswTextColorSecondaryLight">#00b0f8</color>
     <color name="iswTextColorError">#EE312A</color>
-
+    <color name="iswGrey">#80B6B6B6</color>
+    <color name="iswTransparent">#99000000</color>
 </resources>

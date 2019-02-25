@@ -34,7 +34,7 @@ class POSDeviceService private constructor(override val printer: IPrinter, priva
 
         @JvmStatic
         fun create(context: Context): POSDeviceService {
-            val printer: IPrinter = Printer;
+            val printer: IPrinter = Printer
             val factory = { EmvTransactionService() }
             return create(context, printer, factory)
         }

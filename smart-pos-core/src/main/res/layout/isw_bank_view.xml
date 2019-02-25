@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <FrameLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/bankImageView"
+            android:src="@color/iswGrey"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/iswTransparent"
+            android:visibility="gone"
+            android:id="@+id/bankSelectionIndicator"/>
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/isw_dummy_bank_name"
+        android:textSize="16sp"
+        android:id="@+id/bankNameTextView"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal"/>
+</LinearLayout>

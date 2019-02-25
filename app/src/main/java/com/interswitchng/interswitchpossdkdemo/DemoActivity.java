@@ -22,6 +22,7 @@ import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
 
 
+
 public class DemoActivity extends AppCompatActivity {
 
     @Override

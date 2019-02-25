@@ -92,6 +92,8 @@ internal class IsoServiceImpl(
             logger.logErr(e.localizedMessage)
         } catch (e: ParseException) {
             logger.logErr(e.localizedMessage)
+        }catch (e: java.lang.Exception) {
+            logger.logErr(e.localizedMessage)
         }
 
         return null
