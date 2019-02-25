@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.modules.settings
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.smartpos.R
@@ -22,6 +23,8 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.isw_activity_settings)
 
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onStart() {
@@ -31,6 +34,16 @@ class SettingsActivity : AppCompatActivity() {
         setupTexts()
         // setup button listeners
         setupButtons()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        // set back click to go back
+        if (item?.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupButtons() {
