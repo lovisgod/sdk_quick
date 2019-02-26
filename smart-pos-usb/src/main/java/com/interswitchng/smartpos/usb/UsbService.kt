@@ -24,7 +24,7 @@ import com.interswitchng.smartpos.usb.utils.Constants.KEY_SERVICE_COMMAND
 import com.interswitchng.smartpos.usb.utils.NotificationUtil
 import org.koin.android.ext.android.inject
 
-class UsbService: Service() {
+class UsbService : Service() {
     // flag to check if service has been started
     private var mServiceIsStarted = false
 
@@ -40,24 +40,22 @@ class UsbService: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposables.dispose()
         logger.log("OnDestroy Synchronization service")
-        if (usbConnector.isOpen()) usbConnector.close()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         // evaluate start command
-        return intent.extras!!.let  {
+        return intent.extras!!.let {
             val command = it.get(KEY_SERVICE_COMMAND) as Int
             val result: PurchaseResult? = intent.getParcelableExtra(KEY_MESSAGE_RESULT)
 
             logger.log("Received command $command")
             // respond to service command
-            return@let when(command) {
+            return@let when (command) {
                 COMMAND_START_SERVICE -> startSynchronization()
                 COMMAND_PROCESS_RESULT -> processPurchaseResult(result!!)
-                COMMAND_RESTART_COMMUNICATION -> startReceivingCommands().let { START_STICKY }
+                COMMAND_RESTART_COMMUNICATION -> restartCommunication()
                 else -> stopSynchronization()
             }
         }
@@ -90,6 +88,10 @@ class UsbService: Service() {
         if (mServiceIsStarted) {
             logger.log("Stopping Synchronization service")
             mServiceIsStarted = false
+
+            disposables.dispose()
+            if (usbConnector.isOpen()) usbConnector.close()
+
             stopForeground(true)
             stopSelf()
         }
@@ -97,13 +99,33 @@ class UsbService: Service() {
         return START_NOT_STICKY
     }
 
+    private fun restartCommunication(): Int {
+        if (usbConnector.isOpen())
+            usbConnector.close()
+
+        // clear all running threads
+        disposables.dispose()
+
+        startReceivingCommands()
+        return START_STICKY
+    }
     private fun startReceivingCommands() {
 
         val disposable = ThreadUtils.createExecutor {
-            usbConnector.open()
-            makeToast("A connection has been made!!!")
+            makeToast("Establishing communication with PC")
 
-            while (mServiceIsStarted && !it.isDisposed) {
+            val isOpen = usbConnector.open()
+            val toastMessage =
+                    if (isOpen) "A connection has been made!!!"
+                    else "Unable to establish connection to PC"
+
+            makeToast(toastMessage)
+
+            // return early if no connection was made
+            if (!isOpen) return@createExecutor
+
+
+            while (mServiceIsStarted && usbConnector.isOpen() && !it.isDisposed) {
                 // receive message
                 val message = usbConnector.receive()
                 makeToast(message)
@@ -122,6 +144,7 @@ class UsbService: Service() {
         if (usbConnector.isOpen()) {
             val message = gson.toJson(result)
             usbConnector.sendAsync(message)
+            logger.log("purchase result: $message")
         }
         return START_STICKY
     }

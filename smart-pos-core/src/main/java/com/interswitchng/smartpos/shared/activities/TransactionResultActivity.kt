@@ -179,6 +179,7 @@ class TransactionResultActivity : BaseActivity() {
                     showPaymentOptions()
                 }
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                    setResult()
                     finish()
                     dialog.dismiss()
                 }
