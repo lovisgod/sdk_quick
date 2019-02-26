@@ -1,5 +1,7 @@
 package com.interswitchng.smartpos.modules.paycode
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.google.zxing.integration.android.IntentIntegrator
 import com.interswitchng.smartpos.R
@@ -52,7 +54,9 @@ class PayCodeActivity : BaseActivity() {
         }
 
         btnScanCode.setOnClickListener {
-            IntentIntegrator(this).initiateScan()
+            ScanBottomSheet
+                    .newInstance()
+                    .show(supportFragmentManager, ScanBottomSheet.toString())
         }
 
     }
@@ -96,8 +100,6 @@ class PayCodeActivity : BaseActivity() {
 
         } ?: toast("No terminal info, found on device").also { finish() }
     }
-
-
 
     override fun getTransactionResult(transaction: Transaction) = transactionResult
 
