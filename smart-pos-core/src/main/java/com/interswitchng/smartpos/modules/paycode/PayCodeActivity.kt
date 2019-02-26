@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
-class PayCodeActivity : BaseActivity() {
+class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,5 +102,16 @@ class PayCodeActivity : BaseActivity() {
     }
 
     override fun getTransactionResult(transaction: Transaction) = transactionResult
+
+
+    override fun onScanComplete(result: String) {
+        payCode.setText(result)
+        btnContinue.performClick()
+    }
+
+    override fun onScanError(code: Int) {
+        // TODO handle code response
+
+    }
 
 }

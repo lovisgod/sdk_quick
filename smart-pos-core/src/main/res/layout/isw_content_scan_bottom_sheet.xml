@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcodeScannerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:zxing_use_texture_view="false"

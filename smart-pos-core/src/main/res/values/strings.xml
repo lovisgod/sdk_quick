@@ -1,5 +1,5 @@
 <resources>
-    <string name="isw_app_name">InterswitchPosSdk</string>
+    <string name="isw_app_name">Smart POS</string>
     <string name="isw_title_activity_ussd">UssdActivity</string>
     <string name="isw_title_choose_payment">Choose a payment option</string>
     <string name="isw_title_card">Card</string>
@@ -77,6 +77,7 @@
     <string name="isw_hint_print_qr_code">PRINT QR CODE</string>
     <string name="isw_title_email_receipt">Email Receipt</string>
     <string name="isw_hint_scan_code">Scan Code</string>
+    <string name="isw_message_camera_permission">You need to grant access to camera to allow the app scan the Code.</string>
 
 
     <string-array name="isw_account_types">
