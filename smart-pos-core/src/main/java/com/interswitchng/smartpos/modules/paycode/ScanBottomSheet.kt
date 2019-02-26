@@ -3,11 +3,14 @@ package com.interswitchng.smartpos.modules.paycode
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
@@ -15,6 +18,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.DecodeHintType
@@ -35,10 +39,26 @@ internal class ScanBottomSheet : BottomSheetDialogFragment() {
     private var scanResultCallback: ScanResultCallback? = null
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.ISW_FullScreenDialogStyle)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.isw_content_scan_bottom_sheet, container, false)
     }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+        dialog.setOnShowListener {
+            val sheetDialog = it as BottomSheetDialog
+            val bottomSheet: FrameLayout? = sheetDialog.findViewById(android.support.design.R.id.design_bottom_sheet)
+            BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED)
+        }
+
+        return dialog
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,6 +69,9 @@ internal class ScanBottomSheet : BottomSheetDialogFragment() {
         barcodeScannerView.decodeSingle(scanCallback)
 
         beepManager = BeepManager(requireActivity())
+
+        // set close listener
+        closeBtn.setOnClickListener { cancel(CODE_SCAN_CANCELLED) }
     }
 
     override fun onResume() {

@@ -12,4 +12,17 @@
         app:zxing_use_texture_view="false"
         app:zxing_preview_scaling_strategy="centerCrop"/>
 
+
+    <ImageView
+        android:id="@+id/closeBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="@dimen/isw_content_small_padding"
+        android:src="@drawable/ic_action_close"
+        android:tint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/barcodeScannerView"
+        app:layout_constraintTop_toTopOf="@+id/barcodeScannerView"
+        />
+
+
 </android.support.constraint.ConstraintLayout>

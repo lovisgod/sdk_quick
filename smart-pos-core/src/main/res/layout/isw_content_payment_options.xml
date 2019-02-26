@@ -12,26 +12,31 @@
         android:layout_margin="32dp"
         android:orientation="vertical">
 
-        <FrameLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/closeBtn"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_action_close"
-                android:layout_gravity="center_vertical|end|right"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:textSize="18sp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginRight="32dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/iswTextColorSecondaryLight"
                 android:text="Select Customer's preferred payment option"/>
-        </FrameLayout>
+
+            <ImageView
+                android:id="@+id/closeBtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="@dimen/isw_content_small_padding"
+                android:src="@drawable/ic_action_close"/>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

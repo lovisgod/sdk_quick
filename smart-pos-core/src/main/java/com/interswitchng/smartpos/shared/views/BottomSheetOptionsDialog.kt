@@ -1,12 +1,16 @@
 package com.interswitchng.smartpos.shared.views
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialog
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.support.design.widget.BottomSheetDialogFragment
 import android.view.View
+import android.widget.FrameLayout
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
@@ -17,6 +21,19 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import kotlinx.android.synthetic.main.isw_content_payment_options.*
 
 class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
+
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+        dialog.setOnShowListener {
+            val sheetDialog = it as BottomSheetDialog
+            val bottomSheet: FrameLayout? = sheetDialog.findViewById(android.support.design.R.id.design_bottom_sheet)
+            BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED)
+        }
+
+        return dialog
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.isw_content_bottom_sheet_options, container, false)
