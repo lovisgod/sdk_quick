@@ -10,7 +10,7 @@ import com.google.gson.Gson
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.base.BaseTestActivity
 import com.interswitchng.smartpos.mockservices.MockPayableService
-import com.interswitchng.smartpos.modules.ussdqr.QrCodeActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.utils.Utilities

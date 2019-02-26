@@ -19,14 +19,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
-            android:name=".modules.ussdqr.UssdActivity"
+            android:name=".modules.ussdqr.activities.UssdActivity"
             android:label="USSD"
             android:launchMode="singleTop"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
-            android:name=".modules.ussdqr.QrCodeActivity"
+            android:name=".modules.ussdqr.activities.QrCodeActivity"
             android:label="QR Code"
             android:launchMode="singleTop"
             android:noHistory="true"

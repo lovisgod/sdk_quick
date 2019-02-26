@@ -10,8 +10,8 @@ import android.view.View
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.QrCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.UssdActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import kotlinx.android.synthetic.main.isw_content_payment_options.*

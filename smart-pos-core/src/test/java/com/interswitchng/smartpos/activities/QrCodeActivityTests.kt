@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.activities
 
 import android.content.Intent
 import com.interswitchng.smartpos.IswPos
-import com.interswitchng.smartpos.modules.ussdqr.QrCodeActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo

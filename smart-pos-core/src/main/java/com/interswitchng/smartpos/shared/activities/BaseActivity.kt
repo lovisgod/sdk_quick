@@ -11,8 +11,8 @@ import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.QrCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.UssdActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
@@ -101,7 +101,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun showPaymentOptions(exclude: String): Boolean {
+    protected fun showPaymentOptions(exclude: String = BottomSheetOptionsDialog.NONE): Boolean {
         val info: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
         val optionsDialog: BottomSheetOptionsDialog = BottomSheetOptionsDialog.newInstance(exclude, info)
         optionsDialog.show(supportFragmentManager, optionsDialog.tag)

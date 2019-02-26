@@ -15,6 +15,7 @@ import com.interswitchng.smartpos.shared.models.printslips.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
@@ -23,6 +24,12 @@ import org.koin.android.ext.android.inject
 class TransactionResultActivity : BaseActivity() {
 
     private val store: IKeyValueStore by inject()
+    private val alert by lazy {
+        DialogUtils.getAlertDialog(this)
+                .setTitle("An Error Occurred")
+                .setMessage("Would you like to try another payment method?")
+    }
+
     private var printSlip: TransactionSlip? = null
     private lateinit var result: TransactionResult
     private var hasPrintedMerchantCopy = false
@@ -38,6 +45,11 @@ class TransactionResultActivity : BaseActivity() {
         setupUI()
         // show alert notification
         showNotification()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        setResult()
     }
 
     private fun setupUI() {
@@ -56,7 +68,7 @@ class TransactionResultActivity : BaseActivity() {
 
         // print user's copy slip
         printSlip?.apply {
-            if (result.responseCode != IsoUtils.TIMEOUT_CODE) {
+            if (result.responseCode != IsoUtils.TIMEOUT_CODE && result.responseCode != IsoUtils.OK) {
                 posDevice.printer.printSlip(getSlipItems(), UserType.Customer)
                 // set flag to true
                 hasPrintedCustomerCopy = true
@@ -130,7 +142,7 @@ class TransactionResultActivity : BaseActivity() {
 
     private fun showNotification() {
         Alerter.clearCurrent(this)
-        val isSuccessful = result.responseCode == "00"
+        val isSuccessful = result.responseCode == IsoUtils.OK
         val title =
                 if (isSuccessful) R.string.isw_title_transaction_successful
                 else R.string.isw_title_transaction_failed
@@ -148,7 +160,7 @@ class TransactionResultActivity : BaseActivity() {
                 .setText(getString(text))
                 .setDismissable(true)
                 .setBackgroundColorRes(background)
-                .setDuration(3 * 1000)
+                .setDuration(2 * 1000)
                 .show()
     }
 
@@ -158,9 +170,17 @@ class TransactionResultActivity : BaseActivity() {
         setResult(Activity.RESULT_OK, intent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        setResult()
+    private fun showAlert() {
+        alert
+                .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
+                    dialog.dismiss()
+                    showPaymentOptions()
+                }
+                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                    finish()
+                    dialog.dismiss()
+                }
+                .show()
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? = null

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".modules.ussdqr.QrCodeActivity">
+    tools:context=".modules.ussdqr.activities.QrCodeActivity">
 
     <include layout="@layout/isw_content_toolbar" />
 
@@ -18,7 +18,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".modules.ussdqr.QrCodeActivity">
+        tools:context=".modules.ussdqr.activities.QrCodeActivity">
 
         <LinearLayout
             android:id="@+id/mockButtonsContainer"

@@ -9,8 +9,8 @@ import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.settings.SettingsActivity
-import com.interswitchng.smartpos.modules.ussdqr.QrCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.UssdActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice

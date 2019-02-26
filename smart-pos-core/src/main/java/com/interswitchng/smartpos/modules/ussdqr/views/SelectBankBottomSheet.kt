@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.modules.ussdqr
+package com.interswitchng.smartpos.modules.ussdqr.views
 
 import android.content.Context
 import android.os.Bundle
@@ -9,8 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.interfaces.SelectBankCallback
+import com.interswitchng.smartpos.modules.ussdqr.adapters.BankListAdapter
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import kotlinx.android.synthetic.main.isw_select_bank_bottom_sheet.*
 import org.koin.android.ext.android.inject
 
@@ -66,5 +67,11 @@ internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         fun newInstance() = SelectBankBottomSheet()
+    }
+
+    internal interface SelectBankCallback {
+        fun onBankSelected(bank: Bank)
+
+        fun loadBanks(callback: (List<Bank>) -> Unit)
     }
 }

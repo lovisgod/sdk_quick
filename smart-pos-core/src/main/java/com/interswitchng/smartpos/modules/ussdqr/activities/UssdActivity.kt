@@ -1,61 +1,64 @@
-package com.interswitchng.smartpos.modules.ussdqr
+package com.interswitchng.smartpos.modules.ussdqr.activities
 
-
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.ussdqr.views.SelectBankBottomSheet
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
 import com.interswitchng.smartpos.shared.interfaces.PaymentInitiator
 import com.interswitchng.smartpos.shared.interfaces.PaymentRequest
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
+import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printslips.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
-import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.QR_FORMAT_RAW
-import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_QR
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_USSD
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
-import kotlinx.android.synthetic.main.isw_activity_qr_code.*
+import kotlinx.android.synthetic.main.isw_activity_ussd.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
 
-class QrCodeActivity : BaseActivity() {
+class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
     private val paymentService: Payable by inject()
-    private val store: IKeyValueStore by inject()
-
-    // TODO remove reference
     private val initiator: PaymentInitiator by inject()
 
+    private var ussdCode: String? = null
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
-    private val logger by lazy { Logger.with("QR") }
     private val alert by lazy { DialogUtils.getAlertDialog(this) }
+    private val logger by lazy { Logger.with("USSD") }
 
-    private var qrData: String? = null
-    private var qrBitmap: Bitmap? = null
+    // getResult strings of first item
+    private val firstItem = "Choose a bank"
+    private var selectedItem = ""
+
+    private var selectedBank: Bank? = null
+    // container for banks and bank-codes
+    private var allBanks: List<Bank>? = null
     private val printSlip = mutableListOf<PrintObject>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.isw_activity_qr_code)
+        setContentView(R.layout.isw_activity_ussd)
     }
 
     override fun onStart() {
         super.onStart()
-        setupImage()
+        setupUI()
     }
 
     override fun onDestroy() {
@@ -63,31 +66,62 @@ class QrCodeActivity : BaseActivity() {
         dialog.dismiss()
     }
 
+    private fun setupUI() {
 
-    private fun setupImage() {
-
-        // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
         amountText.text = getString(R.string.isw_amount, amount)
-        paymentHint.text = getString(R.string.isw_hint_qr_code)
+
+        // loadBanks()
+
+        paymentHint.text = "Loading Banks..."
+        banks.text = getString(R.string.isw_select_bank)
+        banks.setOnClickListener {
+            val dialog = SelectBankBottomSheet.newInstance()
+            dialog.show(supportFragmentManager, dialog.tag)
+        }
+    }
+
+    override fun loadBanks(callback: (List<Bank>) -> Unit) {
+
+        if (allBanks != null) callback(allBanks!!)
+
+        else paymentService.getBanks { allBanks, throwable ->
+            if (throwable != null) {
+                // TODO handle error
+            } else {
+                allBanks?.let {
+                    this.allBanks = it
+                    runOnUiThread { callback(it) }
+                }
+            }
+        }
+    }
+
+    private fun getBankCode() {
+
+        if (selectedBank == null) {
+            Toast.makeText(this, "You have to select a Bank", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val bankCode = selectedBank?.code
+        // create payment info with bank code
+        val paymentInfoPrime = PaymentInfo(paymentInfo.amount, paymentInfo.stan, bankCode)
+        val request = CodeRequest.from(terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
 
         dialog.show()
 
-        if (qrBitmap != null) {
-            qrCodeImage.setImageBitmap(qrBitmap)
-            dialog.dismiss()
-        } else {
-            val request = CodeRequest.from(terminalInfo, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
-            // initiate qr payment
-            paymentService.initiateQrPayment(request) { response, throwable ->
+        // initiate ussd payment
+        paymentService.initiateUssdPayment(request) { response, throwable ->
+            runOnUiThread {
+                // handle error or response
                 if (throwable != null) handleError(throwable)
                 else response?.apply { handleResponse(request, this) }
             }
         }
     }
 
-    private fun showTransactionMocks(request: CodeRequest, response: CodeResponse) {
-        mockButtonsContainer.visibility = View.VISIBLE
+    private fun showMockButtons(request: CodeRequest, response: CodeResponse) {
         // TODO remove mock trigger
         initiateButton.isEnabled = true
         initiateButton.setOnClickListener {
@@ -106,27 +140,25 @@ class QrCodeActivity : BaseActivity() {
         printCodeButton.isEnabled = true
         printCodeButton.setOnClickListener {
             printCodeButton.isEnabled = false
-            printCodeButton.isClickable = false
             posDevice.printer.printSlip(printSlip, UserType.Customer)
             Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
             printCodeButton.isEnabled = true
-            printCodeButton.isClickable = false
         }
     }
 
     private fun handleResponse(request: CodeRequest, response: CodeResponse) {
         when (response.responseCode) {
             CodeResponse.OK -> {
-                qrData = response.qrCodeData
-                qrBitmap = response.getBitmap(this)
-                val bitmap = PrintObject.BitMap(qrBitmap!!)
-                printSlip.add(bitmap)
-                runOnUiThread {
-                    qrCodeImage.setImageBitmap(qrBitmap)
-                    // TODO remove mock trigger
-                    showTransactionMocks(request, response)
-                }
 
+                ussdCode = response.bankShortCode ?: response.defaultShortCode
+                ussdCode?.apply {
+                    ussdText.text = this
+                    printSlip.add(PrintObject.Data("code \n $this\n", PrintStringConfiguration(isBold = true, isTitle = true)))
+                }
+                dialog.dismiss()
+
+                // TODO remove mock trigger
+                showMockButtons(request, response)
                 // check transaction status
                 checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
             }
@@ -138,31 +170,28 @@ class QrCodeActivity : BaseActivity() {
                 }
             }
         }
-
-        runOnUiThread { dialog.dismiss() }
     }
 
     private fun handleError(throwable: Throwable) {
-        // TODO handle error
         toast(throwable.localizedMessage)
-        dialog.dismiss()
         showAlert()
     }
 
     private fun showAlert() {
-        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); setupImage() }
+        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); getBankCode() }
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {
         val now = Date()
+
         val responseMsg = IsoUtils.getIsoResult(transaction.responseCode)?.second
                 ?: transaction.responseDescription
                 ?: "Error"
 
         return TransactionResult(
-                paymentType = PaymentType.QR,
+                paymentType = PaymentType.USSD,
                 dateTime = DisplayUtils.getIsoString(now),
                 amount = DisplayUtils.getAmountString(paymentInfo.amount),
                 type = TransactionType.Purchase,
@@ -170,16 +199,22 @@ class QrCodeActivity : BaseActivity() {
                 responseMessage = responseMsg,
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = "",
-                stan = paymentInfo.stan, pinStatus = "", AID = "",
-                code = qrData!!, telephone = "08031140978"
+                stan = paymentInfo.stan, pinStatus = "", AID = "", code = ussdCode!!,
+                telephone = "08031140978"
         )
     }
-
 
     override fun onCheckError() {
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
-        super.onCheckError()
     }
 
+    override fun onBankSelected(bank: Bank) {
+        banks.text = bank.name
+        selectedItem = bank.name
+
+        selectedBank = bank
+
+        getBankCode()
+    }
 }

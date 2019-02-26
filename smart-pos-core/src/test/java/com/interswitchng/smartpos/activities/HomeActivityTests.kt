@@ -7,8 +7,8 @@ import android.widget.LinearLayout
 import androidx.test.core.app.ApplicationProvider
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.ussdqr.QrCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.UssdActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
+import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants.KEY_PAYMENT_INFO
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import org.junit.Assert.assertEquals

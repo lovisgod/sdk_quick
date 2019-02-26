@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.modules.ussdqr
+package com.interswitchng.smartpos.modules.ussdqr.adapters
 
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -12,7 +12,6 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.views.TweakableOutlineProvider
 
 internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerView.Adapter<BankListAdapter.BankViewHolder>() {
