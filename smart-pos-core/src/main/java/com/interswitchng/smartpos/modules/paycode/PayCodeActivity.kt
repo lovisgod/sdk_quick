@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.modules.paycode
 
 import android.os.Bundle
+import com.google.zxing.integration.android.IntentIntegrator
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
@@ -42,13 +43,18 @@ class PayCodeActivity : BaseActivity() {
 
     private fun setupUI() {
         paymentHint.text = "Type in your Pay Code"
-        continueButton.setOnClickListener {
-            continueButton.isEnabled = false
-            continueButton.isClickable = false
+        btnContinue.setOnClickListener {
+            btnContinue.isEnabled = false
+            btnContinue.isClickable = false
             // start paycode process
             val disposable = ThreadUtils.createExecutor { processOnline() }
             disposables.add(disposable)
         }
+
+        btnScanCode.setOnClickListener {
+            IntentIntegrator(this).initiateScan()
+        }
+
     }
 
     private fun processOnline() {
@@ -90,6 +96,8 @@ class PayCodeActivity : BaseActivity() {
 
         } ?: toast("No terminal info, found on device").also { finish() }
     }
+
+
 
     override fun getTransactionResult(transaction: Transaction) = transactionResult
 
