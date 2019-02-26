@@ -74,6 +74,8 @@ class TransactionResultActivity : BaseActivity() {
                 hasPrintedCustomerCopy = true
             }
         }
+
+        if (result.responseCode != IsoUtils.OK) showAlert()
     }
 
     private fun setupTransactionStatus(result: TransactionResult) {
