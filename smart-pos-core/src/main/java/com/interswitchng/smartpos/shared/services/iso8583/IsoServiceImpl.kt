@@ -102,7 +102,7 @@ internal class IsoServiceImpl(
 
     override fun downloadKey(terminalId: String): Boolean {
         // getResult clear key
-        val cms = context.getString(R.string.cms)
+        val cms = context.getString(R.string.isw_cms)
 
         // getResult master key & save
         val isDownloaded = makeKeyCall(terminalId, "9A0000", cms)?.let { masterKey ->
@@ -374,7 +374,35 @@ internal class IsoServiceImpl(
     }
 
     private fun generatePan(code: String): String {
-        return "5061011234567890008"
+        val bin = "506101"
+        var binAndCode = "$bin$code"
+        val remainder = 12 - code.length
+        // pad if less than 12
+        if (remainder > 0)
+            binAndCode = "$binAndCode${"0".repeat(remainder)}"
+
+        var nSum = 0
+        var alternate = true
+        for (i in binAndCode.length - 1 downTo 0) {
+
+            var d = binAndCode[i] - '0'
+
+            if (alternate)
+                d *= 2
+
+            // We add two digits to handle
+            // cases that make two digits after
+            // doubling
+            nSum += d / 10
+            nSum += d % 10
+
+            alternate = !alternate
+        }
+
+        val unitDigit = nSum % 10
+        val checkDigit = 10 - unitDigit
+
+        return "$binAndCode$checkDigit"
     }
 
     companion object {

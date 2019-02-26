@@ -17,7 +17,7 @@ class IsoServiceTest {
         val prefMnager = SharePreferenceManager(context)
         val keyValueStore = KeyValueStore(prefMnager)
 
-        val ip = context.resources.getString(R.string.nibss_ip)
+        val ip = context.resources.getString(R.string.isw_nibss_ip)
         val port = context.resources.getInteger(R.integer.iswNibssPort)
         val iso = NibssIsoSocket(ip, port, 6000)
         val isoService = IsoServiceImpl(context, keyValueStore, iso)

@@ -1,22 +1,11 @@
 package com.interswitchng.smartpos.di
 
-import android.widget.Toast
-import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.*
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
-import com.interswitchng.smartpos.shared.interfaces.device.IPrinter
-import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.*
 import com.interswitchng.smartpos.shared.interfaces.network.IHttpService
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.core.UserType
-import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.PayableService
 import com.interswitchng.smartpos.shared.services.storage.SharePreferenceManager
 import com.interswitchng.smartpos.shared.services.UserService
@@ -43,7 +32,7 @@ private val serviceModule = module {
     factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
     factory<IsoSocket> {
         val resource = androidContext().resources
-        val serverIp = resource.getString(R.string.nibss_ip)
+        val serverIp = resource.getString(R.string.isw_nibss_ip)
         val port = resource.getInteger(R.integer.iswNibssPort)
         // try getting terminal info
         val store: IKeyValueStore = get()
