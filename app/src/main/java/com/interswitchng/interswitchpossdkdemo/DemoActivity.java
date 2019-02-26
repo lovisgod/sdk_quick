@@ -16,11 +16,23 @@ import android.widget.Toast;
 
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction;
+import com.interswitchng.smartpos.shared.interfaces.device.IPrinter;
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
+import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
+import com.interswitchng.smartpos.shared.models.core.UserType;
+import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail;
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
 
+import java.util.List;
 
 
 public class DemoActivity extends AppCompatActivity {
@@ -35,10 +47,45 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void configureTerminal() {
-        POSDeviceService deviceService = POSDeviceService.create(getApplicationContext());
+        POSDevice device;
+
+        if (BuildConfig.MOCK) {
+            device = new POSDevice() {
+                @Override
+                public IPrinter getPrinter() {
+                    return (slip, user) -> Toast.makeText(DemoActivity.this, "Printing Slip", Toast.LENGTH_LONG).show();
+                }
+
+
+                @Override
+                public EmvCardTransaction getEmvCardTransaction() {
+                    return  new EmvCardTransaction() {
+                        @Override
+                        public EmvResult completeTransaction(TransactionResponse response) { return EmvResult.OFFLINE_APPROVED; }
+                        @Override
+                        public void setEmvCallback(EmvCallback callback){ }
+                        @Override
+                        public void removeEmvCallback(EmvCallback callback){ }
+                        @Override
+                        public void  setupTransaction(int amount, TerminalInfo terminalInfo){ }
+                        @Override
+                        public EmvResult startTransaction() { return EmvResult.OFFLINE_APPROVED; }
+                        @Override
+                        public CardDetail getCardDetail() { return null; }
+                        @Override
+                        public void  cancelTransaction() { }
+                        @Override
+                        public EmvData getTransactionInfo() { return null; }
+                    };
+                }
+            };
+        } else {
+            device = POSDeviceService.create(getApplicationContext());
+        }
+
         POSConfig config = new POSConfig("MX5882");
         // configure terminal
-        IswPos.setupTerminal(getApplication(), deviceService, config);
+        IswPos.setupTerminal(getApplication(), device, config);
     }
 
     private void setupUI() {

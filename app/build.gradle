@@ -29,9 +29,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.paxConfig
             applicationIdSuffix '.release'
+            buildConfigField("boolean", "MOCK", "false") // mock device
         }
-
         debug {
+            buildConfigField("boolean", "MOCK", "true") // mock device
             applicationIdSuffix '.debug'
         }
     }

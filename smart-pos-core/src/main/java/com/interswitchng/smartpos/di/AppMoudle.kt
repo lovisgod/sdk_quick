@@ -53,34 +53,6 @@ private val serviceModule = module {
 
         return@factory NibssIsoSocket(serverIp, port, timeout * 1000)
     }
-
-    // TODO remove this
-    if (BuildConfig.DEBUG && BuildConfig.MOCK) {
-        single<POSDevice>(override = true) {
-            object : POSDevice {
-                override val printer: IPrinter
-                    get() = object : IPrinter {
-                        override fun printSlip(slip: List<PrintObject>, user: UserType) {
-                            val context = androidContext()
-                            Toast.makeText(context, "Printing Slip", Toast.LENGTH_LONG).show()
-                        }
-                    }
-
-                override fun getEmvCardTransaction(): EmvCardTransaction {
-                    return object : EmvCardTransaction {
-                        override fun completeTransaction(response: TransactionResponse): EmvResult = EmvResult.OFFLINE_APPROVED
-                        override fun setEmvCallback(callback: EmvCallback) {}
-                        override fun removeEmvCallback(callback: EmvCallback) {}
-                        override fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {}
-                        override fun startTransaction(): EmvResult = EmvResult.OFFLINE_APPROVED
-                        override fun getCardDetail(): CardDetail = CardDetail("", "")
-                        override fun cancelTransaction() {}
-                        override fun getTransactionInfo(): EmvData? = null
-                    }
-                }
-            }
-        }
-    }
 }
 
 private val networkModule = module {
