@@ -22,7 +22,7 @@
             android:layout_height="32dp"
             android:layout_marginRight="@dimen/isw_content_small_padding"
             android:layout_marginLeft="@dimen/isw_content_small_padding"
-            tools:src="@drawable/ic_error"
+            tools:src="@drawable/isw_ic_error"
             tools:tint="@color/iswTextColorError"
             android:layout_marginBottom="@dimen/isw_content_margin"
             />
@@ -108,7 +108,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="@dimen/isw_content_margin"
         android:layout_marginTop="@dimen/isw_content_small_margin"
-        android:background="@drawable/bg_solid_primary"
+        android:background="@drawable/isw_bg_solid_primary"
         android:text="@string/isw_title_print_receipt"
         style="@style/ISW.Bold"
         android:textAllCaps="true"
@@ -128,8 +128,9 @@
         android:textAllCaps="true"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
-        android:background="@drawable/bg_outline"
-        android:layout_gravity="center_horizontal" />
+        android:background="@drawable/isw_bg_outline"
+        android:layout_gravity="center_horizontal"
+        />
 
     <Button
         android:id="@+id/closeBtn"
@@ -142,7 +143,7 @@
         android:textAllCaps="true"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
-        android:background="@drawable/bg_outline"
+        android:background="@drawable/isw_bg_outline"
         android:layout_gravity="center_horizontal"
         />
 

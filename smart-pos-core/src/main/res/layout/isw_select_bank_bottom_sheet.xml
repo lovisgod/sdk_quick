@@ -14,7 +14,7 @@
             android:id="@+id/closeSheetButton"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_action_close"
+            android:src="@drawable/isw_ic_close"
             android:layout_gravity="center_vertical|end|right"/>
         <TextView
             android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
         android:layout_marginBottom="16dp"
         android:visibility="gone"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/bg_square_">
+        android:background="@drawable/isw_bg_square_">
 
         <TextView
             android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_action_arrow_next"
+            android:src="@drawable/isw_ic_next"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_alignParentEnd="true"

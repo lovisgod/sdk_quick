@@ -35,9 +35,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/bg_square_"
+            android:background="@drawable/isw_bg_square_"
             android:padding="3dp"
-            android:src="@drawable/ic_action_lock" />
+            android:src="@drawable/isw_ic_lock" />
     </RelativeLayout>
 
     <TextView
@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/bg_square"
+        android:background="@drawable/isw_bg_square"
         android:orientation="vertical">
 
         <FrameLayout
@@ -80,7 +80,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|right|end"
-                android:src="@drawable/ic_action_arrow_next" />
+                android:src="@drawable/isw_ic_next" />
         </FrameLayout>
 
         <View
@@ -109,7 +109,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
-        android:background="@drawable/bg_square"
+        android:background="@drawable/isw_bg_square"
         android:orientation="vertical">
 
         <FrameLayout
@@ -129,7 +129,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|right|end"
-                android:src="@drawable/ic_action_arrow_next" />
+                android:src="@drawable/isw_ic_next" />
         </FrameLayout>
 
         <View
@@ -159,7 +159,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_square"
+        android:background="@drawable/isw_bg_square"
         android:orientation="vertical">
 
         <FrameLayout
@@ -179,7 +179,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|right|end"
-                android:src="@drawable/ic_action_arrow_next" />
+                android:src="@drawable/isw_ic_next" />
         </FrameLayout>
 
         <View
@@ -209,7 +209,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_square"
+        android:background="@drawable/isw_bg_square"
         android:orientation="vertical">
 
         <FrameLayout
@@ -229,7 +229,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical|right|end"
-                android:src="@drawable/ic_action_arrow_next" />
+                android:src="@drawable/isw_ic_next" />
         </FrameLayout>
 
         <View

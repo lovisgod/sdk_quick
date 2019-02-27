@@ -18,7 +18,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="@dimen/isw_content_small_padding"
-        android:src="@drawable/ic_action_close"
+        android:src="@drawable/isw_ic_close"
         android:tint="@android:color/white"
         app:layout_constraintEnd_toEndOf="@+id/barcodeScannerView"
         app:layout_constraintTop_toTopOf="@+id/barcodeScannerView"

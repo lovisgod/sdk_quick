@@ -43,6 +43,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
     private fun setupUI() {
         paymentHint.text = "Type in your Pay Code"
         btnContinue.setOnClickListener {
+            // disable buttons
             btnContinue.isEnabled = false
             btnContinue.isClickable = false
 

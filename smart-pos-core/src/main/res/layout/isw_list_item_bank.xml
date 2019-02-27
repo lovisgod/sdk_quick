@@ -15,7 +15,7 @@
         android:padding="@dimen/isw_content_small_padding"
         android:layout_margin="@dimen/isw_content_small_margin"
         android:background="@drawable/isw_bg_card"
-        tools:src="@drawable/gtb" />
+        tools:src="@drawable/isw_logo_gtb" />
 
     <TextView
         android:id="@+id/bankNameTextView"

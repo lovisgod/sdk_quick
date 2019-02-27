@@ -34,17 +34,16 @@
                 android:layout_width="280dp"
                 android:layout_height="280dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/bg_qr_code_boundry"
+                android:background="@drawable/isw_bg_qr_code_boundary"
                 android:contentDescription="@string/isw_description_qr_code_image"
                 android:scaleType="center"
-                android:src="@drawable/placeholder"
+                android:src="@drawable/isw_bg_placeholder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <LinearLayout
-                android:id="@+id/initiateButton"
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
@@ -58,23 +57,24 @@
                     android:id="@+id/printCodeButton"
                     android:layout_width="64dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_action_button"
+                    android:background="@drawable/isw_bg_solid_primary"
                     android:layout_marginEnd="@dimen/isw_content_margin"
                     android:layout_marginRight="@dimen/isw_content_margin"
                     android:padding="@dimen/isw_content_padding"
                     android:contentDescription="@string/isw_hint_print_qr_code"
-                    android:tint="@color/iswColorTextSecondary"
+                    android:tint="@android:color/white"
                     android:src="@drawable/isw_ic_printer"
                     android:clickable="true"
                     android:focusable="true" />
 
                 <TextView
+                    android:id="@+id/initiateButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_action_button"
+                    android:background="@drawable/isw_bg_action_button"
                     android:gravity="center"
                     android:padding="@dimen/isw_content_padding"
-                    android:text="CONFIRM PAYMENT"
+                    android:text="@string/isw_title_confirm_payment"
                     android:textColor="@color/iswColorTextSecondary"
                     android:textSize="18sp"
                     android:textStyle="bold" />

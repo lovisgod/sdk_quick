@@ -11,7 +11,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_underline_primary_light"
+        android:background="@drawable/isw_bg_underline_primary_light"
         android:padding="@dimen/isw_content_padding">
 
         <TextView

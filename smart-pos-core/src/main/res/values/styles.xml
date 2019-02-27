@@ -25,7 +25,7 @@
     </style>
 
     <style name="ISW.PaymentOption" parent="ISW.PaymentContent">
-        <item name="android:background">@drawable/bg_card_shadow</item>
+        <item name="android:background">@drawable/isw_bg_card_shadow</item>
         <item name="android:layout_marginTop">@dimen/isw_content_small_margin</item>
         <item name="android:layout_marginBottom">@dimen/isw_content_small_margin</item>
         <item name="android:padding">@dimen/isw_content_padding</item>
@@ -57,12 +57,6 @@
         <item name="android:paddingLeft">@dimen/isw_content_padding</item>
     </style>
 
-    <style name="ISW.Spinner" parent="android:Widget.Spinner">
-        <item name="android:background">@drawable/bg_spinner_drop_down</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
-    </style>
 
     <style name="ISW.SecondaryText">
         <item name="android:textColor">@color/iswColorTextSecondary</item>
