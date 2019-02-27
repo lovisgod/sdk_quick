@@ -43,8 +43,12 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
     private fun setupUI() {
         paymentHint.text = "Type in your Pay Code"
         btnContinue.setOnClickListener {
+            // disable buttons
             btnContinue.isEnabled = false
             btnContinue.isClickable = false
+            btnScanCode.isEnabled = false
+            btnScanCode.isClickable = false
+
             // start paycode process
             val disposable = ThreadUtils.createExecutor { processOnline() }
             disposables.add(disposable)
