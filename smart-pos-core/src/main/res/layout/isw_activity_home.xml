@@ -74,7 +74,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/ic_action_lock"
+                android:src="@drawable/isw_ic_lock"
                 android:tint="@color/iswColorPrimaryDark" />
 
         </LinearLayout>

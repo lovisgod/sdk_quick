@@ -54,7 +54,7 @@ internal data class TransactionResult(
         return when (paymentType) {
             PaymentType.USSD, PaymentType.QR -> {
                 val code = when (paymentType) {
-                    PaymentType.USSD -> PrintObject.Data("$code\n", PrintStringConfiguration(isBold = true, isTitle = true))
+                    PaymentType.USSD -> PrintObject.Data(code, PrintStringConfiguration(isBold = true, isTitle = true, displayCenter = true))
                     else -> CodeResponse.getBitmap(context, code)?.let { PrintObject.BitMap(it) }
                 }
                 UssdQrSlip(terminal, getTransactionStatus(), getTransactionInfo(), code)

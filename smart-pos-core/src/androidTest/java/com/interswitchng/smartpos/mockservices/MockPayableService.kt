@@ -35,7 +35,7 @@ internal class MockPayableService private constructor(
 
     private val banksResponse = listOf(Bank(107, "ACCESS BANK PLC", "ABP"),
             Bank(108, "ECOBANK NIGERIA", "ECO"),
-            Bank(103, "GUARANTY TRUST BANK", "gtb"),
+            Bank(103, "GUARANTY TRUST BANK", "isw_logo_gtb"),
             Bank(114, "Skye Bank", "SKYE"))
 
     override fun initiateUssdPayment(request: CodeRequest, callback: SimpleResponseHandler<CodeResponse?>) {

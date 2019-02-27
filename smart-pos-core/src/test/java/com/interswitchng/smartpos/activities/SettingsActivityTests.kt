@@ -104,7 +104,7 @@ class SettingsActivityTests {
         Robolectric.flushForegroundThreadScheduler()
 
         // confirm that correct icon is being displayed
-        assertEquals(activity.getDrawable(R.drawable.ic_error)?.alpha, keyButton.drawable.alpha)
+        assertEquals(activity.getDrawable(R.drawable.isw_ic_error)?.alpha, keyButton.drawable.alpha)
         // confirm correct error messages are being displayed
         assertEquals(activity.getString(R.string.isw_title_error_downloading_keys), keyText.text)
         assertEquals(activity.getString(R.string.isw_title_date, "No keys downloaded"), keyDateText.text)
@@ -143,7 +143,7 @@ class SettingsActivityTests {
 
 
         // confirm that correct icon is being displayed
-        assertEquals(activity.getDrawable(R.drawable.ic_error)?.alpha, terminalButton.drawable.alpha)
+        assertEquals(activity.getDrawable(R.drawable.isw_ic_error)?.alpha, terminalButton.drawable.alpha)
         // confirm error messages
         assertEquals(activity.getString(R.string.isw_title_error_downloading_terminal_config), terminalText.text)
         assertEquals(activity.getString(R.string.isw_title_date, "No terminal configuration"), terminalDateText.text)
@@ -193,7 +193,7 @@ class SettingsActivityTests {
         Robolectric.flushForegroundThreadScheduler()
 
         // confirm that correct icon is being displayed
-        assertEquals(keyButton.drawable.alpha, activity.getDrawable(R.drawable.ic_check)?.alpha)
+        assertEquals(keyButton.drawable.alpha, activity.getDrawable(R.drawable.isw_ic_check)?.alpha)
         // confirm that changes are reverted
         assertEquals(keyButton.visibility, View.VISIBLE)
         assertEquals(keyProgress.visibility, View.GONE)
@@ -246,7 +246,7 @@ class SettingsActivityTests {
 
 
         // confirm that correct icon is being displayed
-        assertEquals(terminalButton.drawable.alpha, activity.getDrawable(R.drawable.ic_check)?.alpha)
+        assertEquals(terminalButton.drawable.alpha, activity.getDrawable(R.drawable.isw_ic_check)?.alpha)
         // confirm that changes are reverted
         assertEquals(terminalButton.visibility, View.VISIBLE)
         assertEquals(terminalProgress.visibility, View.GONE)

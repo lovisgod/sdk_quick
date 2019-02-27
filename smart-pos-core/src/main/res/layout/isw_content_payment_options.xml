@@ -34,7 +34,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:padding="@dimen/isw_content_small_padding"
-                android:src="@drawable/ic_action_close"/>
+                android:src="@drawable/isw_ic_close"/>
 
         </LinearLayout>
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:id="@+id/cardPayment"
-            android:background="@drawable/bg_square_">
+            android:background="@drawable/isw_bg_square_">
 
             <ImageView
                 android:layout_width="24dp"
@@ -74,7 +74,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
+                android:src="@drawable/isw_ic_next"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_alignParentEnd="true"
@@ -87,7 +87,7 @@
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
             android:id="@+id/qrPayment"
-            android:background="@drawable/bg_square_">
+            android:background="@drawable/isw_bg_square_">
 
             <ImageView
                 android:layout_width="24dp"
@@ -113,7 +113,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
+                android:src="@drawable/isw_ic_next"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_alignParentEnd="true"
@@ -126,7 +126,7 @@
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
             android:id="@+id/payCodePayment"
-            android:background="@drawable/bg_square_">
+            android:background="@drawable/isw_bg_square_">
 
             <ImageView
                 android:layout_width="24dp"
@@ -152,7 +152,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
+                android:src="@drawable/isw_ic_next"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_alignParentEnd="true"
@@ -165,7 +165,7 @@
             android:layout_height="70dp"
             android:layout_marginTop="10dp"
             android:id="@+id/ussdPayment"
-            android:background="@drawable/bg_square_">
+            android:background="@drawable/isw_bg_square_">
 
             <ImageView
                 android:layout_width="24dp"
@@ -191,7 +191,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_action_arrow_next"
+                android:src="@drawable/isw_ic_next"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_alignParentEnd="true"

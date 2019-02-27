@@ -171,7 +171,7 @@ class SettingsActivity : AppCompatActivity() {
             tvKeys.text = getString(R.string.isw_title_keys_downloaded)
 
             // set the drawable and color
-            btnDownloadKeys.setImageResource(R.drawable.ic_check)
+            btnDownloadKeys.setImageResource(R.drawable.isw_ic_check)
             btnDownloadKeys.setColorFilter(android.R.color.holo_green_dark)
         } else {
             val message = "No keys downloaded"
@@ -179,7 +179,7 @@ class SettingsActivity : AppCompatActivity() {
             tvKeys.text = getString(R.string.isw_title_error_downloading_keys)
 
             // set the drawable and color
-            btnDownloadKeys.setImageResource(R.drawable.ic_error)
+            btnDownloadKeys.setImageResource(R.drawable.isw_ic_error)
             btnDownloadKeys.setColorFilter(android.R.color.holo_red_dark)
         }
 
@@ -206,7 +206,7 @@ class SettingsActivity : AppCompatActivity() {
             tvTerminalInfo.text = getString(R.string.isw_title_terminal_config_downloaded)
 
             // set the drawable and color
-            btnDownloadTerminalConfig.setImageResource(R.drawable.ic_check)
+            btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_check)
             btnDownloadTerminalConfig.setColorFilter(android.R.color.holo_green_dark)
         } else {
             val message = "No terminal configuration"
@@ -214,7 +214,7 @@ class SettingsActivity : AppCompatActivity() {
             tvTerminalInfo.text = getString(R.string.isw_title_error_downloading_terminal_config)
 
             // set the drawable and color
-            btnDownloadTerminalConfig.setImageResource(R.drawable.ic_warning)
+            btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_warning)
             btnDownloadTerminalConfig.setColorFilter(android.R.color.holo_red_dark)
         }
     }

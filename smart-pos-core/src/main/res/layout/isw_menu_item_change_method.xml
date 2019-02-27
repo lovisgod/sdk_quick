@@ -19,7 +19,7 @@
         android:layout_height="24dp"
         android:layout_marginRight="@dimen/isw_content_small_padding"
         android:layout_marginLeft="@dimen/isw_content_small_padding"
-        android:src="@drawable/ic_swap"
+        android:src="@drawable/isw_ic_swap"
         />
 
     <TextView

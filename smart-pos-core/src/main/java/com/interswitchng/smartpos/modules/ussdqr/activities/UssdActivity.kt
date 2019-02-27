@@ -80,6 +80,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
             val dialog = SelectBankBottomSheet.newInstance()
             dialog.show(supportFragmentManager, dialog.tag)
         }
+        banks.performClick()
     }
 
     override fun loadBanks(callback: (List<Bank>) -> Unit) {

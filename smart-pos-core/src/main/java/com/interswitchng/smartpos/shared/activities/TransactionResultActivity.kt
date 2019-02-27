@@ -89,7 +89,7 @@ class TransactionResultActivity : BaseActivity() {
         transactionResult.text = transactionStatus
 
         // set transaction status icon
-        val imageIcon = if (isSuccessful) R.drawable.ic_check else R.drawable.ic_error
+        val imageIcon = if (isSuccessful) R.drawable.isw_ic_check else R.drawable.isw_ic_error
         val imageColor = if (isSuccessful) android.R.color.white else R.color.iswTextColorError
         statusImage.setImageResource(imageIcon)
         statusImage.setColorFilter(ContextCompat.getColor(this, imageColor))
