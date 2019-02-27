@@ -56,7 +56,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginTop="@dimen/isw_content_margin"
+        android:layout_marginTop="40dp"
         android:background="@color/design_default_color_primary"
         >
 

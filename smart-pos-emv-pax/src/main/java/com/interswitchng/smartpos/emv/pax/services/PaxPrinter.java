@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.emv.pax.services;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.util.Pair;
 
 import com.pax.dal.IPrinter;
 import com.pax.dal.entity.EFontTypeAscii;
@@ -10,6 +11,7 @@ import com.pax.dal.exceptions.PrinterDevException;
 
 public class PaxPrinter {
 
+    final static int PRINT_STATUS_OK = 0;
     private static PaxPrinter mPaxPrinter;
     private IPrinter printer;
 
@@ -45,7 +47,7 @@ public class PaxPrinter {
         logTrue(e + " " + s);
     }
 
-    public String getStatus() {
+    public Pair<Integer, String> getStatus() {
         try {
             int status = printer.getStatus();
             logTrue("getStatus");
@@ -53,7 +55,7 @@ public class PaxPrinter {
         } catch (PrinterDevException e) {
             e.printStackTrace();
             logErr("getStatus", e.toString());
-            return "";
+            return new Pair<>(0x0F, e.getMessage());
         }
 
     }
@@ -111,7 +113,7 @@ public class PaxPrinter {
         }
     }
 
-    public String start() {
+    public Pair<Integer, String> start() {
         try {
             int res = printer.start();
             logTrue("start");
@@ -119,7 +121,7 @@ public class PaxPrinter {
         } catch (PrinterDevException e) {
             e.printStackTrace();
             logErr("start", e.toString());
-            return "";
+            return new Pair<>(0x0F, e.getMessage());
         }
 
     }
@@ -230,10 +232,10 @@ public class PaxPrinter {
         }
     }
 
-    public String statusCode2Str(int status) {
+    public Pair<Integer, String> statusCode2Str(int status) {
         String res = "";
         switch (status) {
-            case 0:
+            case PRINT_STATUS_OK:
                 res = "Success ";
                 break;
             case 1:
@@ -268,6 +270,6 @@ public class PaxPrinter {
         }
 
         logTrue(res);
-        return res;
+        return new Pair<>(status,res);
     }
 }

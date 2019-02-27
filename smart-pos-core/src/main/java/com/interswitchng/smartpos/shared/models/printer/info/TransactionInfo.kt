@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.shared.models.printslips.info
+package com.interswitchng.smartpos.shared.models.printer.info
 
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 

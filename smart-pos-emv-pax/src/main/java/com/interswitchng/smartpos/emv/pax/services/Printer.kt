@@ -6,10 +6,11 @@ import com.interswitchng.smartpos.shared.interfaces.device.IPrinter
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
+import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
 import com.pax.dal.entity.EFontTypeAscii
 import com.pax.dal.entity.EFontTypeExtCode
 
-object Printer: IPrinter {
+object Printer : IPrinter {
 
     // screen caharacter length
     private const val SCREEN_LARGE_LENGTH = 24
@@ -21,39 +22,46 @@ object Printer: IPrinter {
 
     private val line: String = "-".repeat(SCREEN_NORMAL_LENGTH)
 
-    //----------------------------------------------------------
-    //      Implementation for ISW Printer interface
-    //----------------------------------------------------------
-    override fun printSlip(slip: List<PrintObject>, user: UserType) {
-        Thread {
-            val printer = PaxPrinter.getInstance()
+    override fun canPrint(): PrintStatus {
+        val result = PaxPrinter.getInstance().status
 
-            // initialize printer
-            printer.init()
+        // return result
+        return if (result.first == PaxPrinter.PRINT_STATUS_OK) PrintStatus.Ok(result.second)
+        else PrintStatus.Error(result.second)
+    }
 
-            // set line spacing
-            printer.spaceSet(0, 10)
+    override fun printSlip(slip: List<PrintObject>, user: UserType): PrintStatus {
+        val printer = PaxPrinter.getInstance()
 
-            // set step distance
-            printer.step(60)
+        // initialize printer
+        printer.init()
 
-            // extract slip items and print it
-            for (item in slip) printItem(printer, item)
+        // set line spacing
+        printer.spaceSet(0, 10)
 
-            // print thank you message at end of slip
-            val thankYouMsg = PrintObject.Data("Thanks for using PAX POS", PrintStringConfiguration(displayCenter = true))
-            printItem(printer, thankYouMsg)
+        // set step distance
+        printer.step(60)
 
-            // print users copy
-            val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
-            printItem(printer, userCopy)
+        // extract slip items and print it
+        for (item in slip) printItem(printer, item)
 
-            // set step distance
-            printer.step(80)
+        // print thank you message at end of slip
+        val thankYouMsg = PrintObject.Data("Thanks for using PAX POS", PrintStringConfiguration(displayCenter = true))
+        printItem(printer, thankYouMsg)
 
-            // start printing
-            printer.start()
-        }.start()
+        // print users copy
+        val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
+        printItem(printer, userCopy)
+
+        // set step distance
+        printer.step(80)
+
+        // start printing
+        val result = printer.start()
+
+        // return result
+        return if (result.first == PaxPrinter.PRINT_STATUS_OK) PrintStatus.Ok(result.second)
+        else PrintStatus.Error(result.second)
     }
 
     private fun printItem(paxPrinter: PaxPrinter, item: PrintObject) {

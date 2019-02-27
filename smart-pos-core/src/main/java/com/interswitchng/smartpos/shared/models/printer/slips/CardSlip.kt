@@ -1,11 +1,10 @@
-package com.interswitchng.smartpos.shared.models.printslips.slips
+package com.interswitchng.smartpos.shared.models.printer.slips
 
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionInfo
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionStatus
-import java.text.NumberFormat
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
 
 internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo) : TransactionSlip(terminal, status) {
 

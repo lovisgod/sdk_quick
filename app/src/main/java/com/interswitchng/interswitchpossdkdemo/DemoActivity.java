@@ -26,6 +26,7 @@ import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
 import com.interswitchng.smartpos.shared.models.core.UserType;
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
+import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
@@ -53,29 +54,58 @@ public class DemoActivity extends AppCompatActivity {
             device = new POSDevice() {
                 @Override
                 public IPrinter getPrinter() {
-                    return (slip, user) -> Toast.makeText(DemoActivity.this, "Printing Slip", Toast.LENGTH_LONG).show();
+                    return new IPrinter() {
+                        @Override
+                        public PrintStatus printSlip(List<? extends PrintObject> slip, UserType user) {
+                            return new PrintStatus.Error("No Printer installed");
+                        }
+
+                        @Override
+                        public PrintStatus canPrint() {
+                            return new PrintStatus.Error("No Printer installed");
+                        }
+                    };
                 }
 
 
                 @Override
                 public EmvCardTransaction getEmvCardTransaction() {
-                    return  new EmvCardTransaction() {
+                    return new EmvCardTransaction() {
                         @Override
-                        public EmvResult completeTransaction(TransactionResponse response) { return EmvResult.OFFLINE_APPROVED; }
+                        public EmvResult completeTransaction(TransactionResponse response) {
+                            return EmvResult.OFFLINE_APPROVED;
+                        }
+
                         @Override
-                        public void setEmvCallback(EmvCallback callback){ }
+                        public void setEmvCallback(EmvCallback callback) {
+                        }
+
                         @Override
-                        public void removeEmvCallback(EmvCallback callback){ }
+                        public void removeEmvCallback(EmvCallback callback) {
+                        }
+
                         @Override
-                        public void  setupTransaction(int amount, TerminalInfo terminalInfo){ }
+                        public void setupTransaction(int amount, TerminalInfo terminalInfo) {
+                        }
+
                         @Override
-                        public EmvResult startTransaction() { return EmvResult.OFFLINE_APPROVED; }
+                        public EmvResult startTransaction() {
+                            return EmvResult.OFFLINE_APPROVED;
+                        }
+
                         @Override
-                        public CardDetail getCardDetail() { return null; }
+                        public CardDetail getCardDetail() {
+                            return null;
+                        }
+
                         @Override
-                        public void  cancelTransaction() { }
+                        public void cancelTransaction() {
+                        }
+
                         @Override
-                        public EmvData getTransactionInfo() { return null; }
+                        public EmvData getTransactionInfo() {
+                            return null;
+                        }
                     };
                 }
             };
@@ -99,7 +129,7 @@ public class DemoActivity extends AppCompatActivity {
             } else {
                 try {
                     // trigger payment
-                    IswPos.getInstance().initiatePayment(this, Integer.valueOf(enteredAmount) * 100, PaymentType.Card);
+                    IswPos.getInstance().initiatePayment(this, Integer.valueOf(enteredAmount) * 100, null);
                 } catch (NotConfiguredException e) {
                     Log.d("DEMO", e.getMessage());
                 }
@@ -131,9 +161,16 @@ public class DemoActivity extends AppCompatActivity {
             if (data != null) {
                 PurchaseResult result = IswPos.getResult(data);
                 Log.d("Demo", "" + result);
+                toast(result.toString());
             }
         } else {
             // else handle error
         }
+    }
+
+    private void toast(String msg) {
+        runOnUiThread(() -> {
+            Toast.makeText(DemoActivity.this, "Printing Slip", Toast.LENGTH_LONG).show();
+        });
     }
 }

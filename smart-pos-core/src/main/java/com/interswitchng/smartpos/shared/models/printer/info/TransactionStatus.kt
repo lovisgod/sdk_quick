@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.shared.models.printslips.info
+package com.interswitchng.smartpos.shared.models.printer.info
 
 internal data class TransactionStatus (
     val responseMessage: String,

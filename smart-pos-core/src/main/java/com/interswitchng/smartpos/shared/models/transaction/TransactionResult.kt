@@ -6,12 +6,12 @@ import android.os.Parcelable
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionInfo
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionStatus
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionType
-import com.interswitchng.smartpos.shared.models.printslips.slips.CardSlip
-import com.interswitchng.smartpos.shared.models.printslips.slips.TransactionSlip
-import com.interswitchng.smartpos.shared.models.printslips.slips.UssdQrSlip
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
+import com.interswitchng.smartpos.shared.models.printer.slips.CardSlip
+import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
+import com.interswitchng.smartpos.shared.models.printer.slips.UssdQrSlip
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 
 internal data class TransactionResult(

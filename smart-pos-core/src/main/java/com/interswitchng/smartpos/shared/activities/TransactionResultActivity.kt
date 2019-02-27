@@ -11,12 +11,13 @@ import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.UserType
-import com.interswitchng.smartpos.shared.models.printslips.slips.TransactionSlip
+import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
 import org.koin.android.ext.android.inject
@@ -43,8 +44,6 @@ class TransactionResultActivity : BaseActivity() {
 
         // setup UI
         setupUI()
-        // show alert notification
-        showNotification()
     }
 
     override fun onDestroy() {
@@ -69,13 +68,13 @@ class TransactionResultActivity : BaseActivity() {
         // print user's copy slip
         printSlip?.apply {
             if (result.responseCode != IsoUtils.TIMEOUT_CODE && result.responseCode != IsoUtils.OK) {
-                posDevice.printer.printSlip(getSlipItems(), UserType.Customer)
-                // set flag to true
-                hasPrintedCustomerCopy = true
+                printSlip(this, UserType.Customer)
             }
         }
 
         if (result.responseCode != IsoUtils.OK) showAlert()
+        // show alert notification
+        else showNotification()
     }
 
     private fun setupTransactionStatus(result: TransactionResult) {
@@ -108,31 +107,17 @@ class TransactionResultActivity : BaseActivity() {
         // set payment status container bg
         val colorInt = if (isSuccessful) R.color.iswTextColorSecondaryLight else R.color.iswTextColorError
         paymentStatusContainer.setBackgroundColor(ContextCompat.getColor(this, colorInt))
-
     }
 
     private fun setupButtons() {
 
         printBtn.setOnClickListener {
-            printBtn.isClickable = false
-            printBtn.isEnabled = false
 
             // print slip
             printSlip?.apply {
-                if (!hasPrintedCustomerCopy) {
-                    posDevice.printer.printSlip(getSlipItems(), UserType.Customer)
-                    // set flag to true
-                    hasPrintedCustomerCopy = true
-                } else {
-                    posDevice.printer.printSlip(getSlipItems(), UserType.Merchant)
-                    // set flag to true
-                    hasPrintedMerchantCopy = true
-                }
-
+                if (!hasPrintedCustomerCopy) printSlip(this, UserType.Customer)
+                else printSlip(this, UserType.Merchant)
             }
-            Toast.makeText(this, "Printing Receipt", Toast.LENGTH_LONG).show()
-            printBtn.isClickable = true
-            printBtn.isEnabled = true
         }
 
         closeBtn.setOnClickListener {
@@ -184,6 +169,37 @@ class TransactionResultActivity : BaseActivity() {
                     dialog.dismiss()
                 }
                 .show()
+    }
+
+
+    private fun printSlip(slip: TransactionSlip, userType: UserType) {
+
+        // get printer status
+        val printStatus = posDevice.printer.canPrint()
+
+        // print based on status
+        when (printStatus) {
+            is Error -> toast(printStatus.message)
+            else -> {
+                printBtn.isEnabled = false
+                printBtn.isClickable = false
+
+                val disposable = ThreadUtils.createExecutor {
+                    val status = posDevice.printer.printSlip(slip.getSlipItems(), userType)
+
+                    runOnUiThread {
+                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
+                        printBtn.isEnabled = true
+                        printBtn.isClickable = false
+                    }
+
+                    hasPrintedCustomerCopy = userType == UserType.Customer
+                    hasPrintedMerchantCopy = userType == UserType.Merchant
+                }
+
+                disposables.add(disposable)
+            }
+        }
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? = null

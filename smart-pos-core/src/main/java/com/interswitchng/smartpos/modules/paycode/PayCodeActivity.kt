@@ -1,15 +1,12 @@
 package com.interswitchng.smartpos.modules.paycode
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import com.google.zxing.integration.android.IntentIntegrator
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionType
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction

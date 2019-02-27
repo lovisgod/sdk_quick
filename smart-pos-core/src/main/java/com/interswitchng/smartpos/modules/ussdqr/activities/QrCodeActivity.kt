@@ -13,7 +13,7 @@ import com.interswitchng.smartpos.shared.interfaces.PaymentRequest
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionType
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
@@ -26,6 +26,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlinx.android.synthetic.main.isw_activity_qr_code.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
@@ -104,13 +105,33 @@ class QrCodeActivity : BaseActivity() {
         }
 
         printCodeButton.isEnabled = true
-        printCodeButton.setOnClickListener {
-            printCodeButton.isEnabled = false
-            printCodeButton.isClickable = false
-            posDevice.printer.printSlip(printSlip, UserType.Customer)
-            Toast.makeText(this, "Printing Code", Toast.LENGTH_LONG).show()
-            printCodeButton.isEnabled = true
-            printCodeButton.isClickable = false
+        printCodeButton.setOnClickListener { printCode() }
+
+    }
+
+    private fun printCode() {
+        // get printer status
+        val printStatus = posDevice.printer.canPrint()
+
+        // print based on status
+        when(printStatus) {
+            is Error -> toast(printStatus.message)
+            else -> {
+                printCodeButton.isEnabled = false
+                printCodeButton.isClickable = false
+
+                val disposable = ThreadUtils.createExecutor {
+                    val status = posDevice.printer.printSlip(printSlip, UserType.Customer)
+
+                    runOnUiThread {
+                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
+                        printCodeButton.isEnabled = true
+                        printCodeButton.isClickable = false
+                    }
+                }
+
+                disposables.add(disposable)
+            }
         }
     }
 

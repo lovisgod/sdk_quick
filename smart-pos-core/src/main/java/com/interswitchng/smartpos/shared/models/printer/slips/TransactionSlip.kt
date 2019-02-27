@@ -1,9 +1,9 @@
-package com.interswitchng.smartpos.shared.models.printslips.slips
+package com.interswitchng.smartpos.shared.models.printer.slips
 
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
-import com.interswitchng.smartpos.shared.models.printslips.info.TransactionStatus
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 
 internal abstract class TransactionSlip(private val terminal: TerminalInfo, private val status: TransactionStatus) {
