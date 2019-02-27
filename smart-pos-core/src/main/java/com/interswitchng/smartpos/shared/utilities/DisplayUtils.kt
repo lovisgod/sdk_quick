@@ -1,7 +1,10 @@
 package com.interswitchng.smartpos.shared.utilities
 
+import android.app.Activity
 import android.content.Context
 import android.util.DisplayMetrics
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,5 +68,16 @@ internal object DisplayUtils {
         numberFormat.maximumFractionDigits = 2
 
         return numberFormat.format(amount)
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view = activity.currentFocus
+        if (view == null) {
+            view = View(activity)
+        }
+        try {
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        } catch (e: Exception) {}
     }
 }

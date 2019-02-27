@@ -30,6 +30,15 @@ class TransactionResultActivity : BaseActivity() {
                 .setTitle("An Error Occurred")
                 .setMessage("Would you like to try another payment method?")
     }
+    private val emailInputDialog by lazy {
+        DialogUtils.getEmailInputDialog(this) { email ->
+            // handle user interaction here
+            when {
+                email == null -> { } // user cancelled dialog
+                else -> { } // process email
+            }
+        }
+    }
 
     private var printSlip: TransactionSlip? = null
     private lateinit var result: TransactionResult
@@ -123,6 +132,10 @@ class TransactionResultActivity : BaseActivity() {
         closeBtn.setOnClickListener {
             setResult()
             finish()
+        }
+
+        btnEReceipt.setOnClickListener {
+            emailInputDialog.show()
         }
     }
 

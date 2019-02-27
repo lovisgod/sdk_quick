@@ -129,8 +129,7 @@
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:background="@drawable/bg_outline"
-        android:layout_gravity="center_horizontal"
-        />
+        android:layout_gravity="center_horizontal" />
 
     <Button
         android:id="@+id/closeBtn"

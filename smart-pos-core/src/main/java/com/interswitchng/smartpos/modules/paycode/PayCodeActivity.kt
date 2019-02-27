@@ -45,6 +45,10 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
         btnContinue.setOnClickListener {
             btnContinue.isEnabled = false
             btnContinue.isClickable = false
+
+            // hide keyboard
+            DisplayUtils.hideKeyboard(this)
+
             // start paycode process
             val disposable = ThreadUtils.createExecutor { processOnline() }
             disposables.add(disposable)
