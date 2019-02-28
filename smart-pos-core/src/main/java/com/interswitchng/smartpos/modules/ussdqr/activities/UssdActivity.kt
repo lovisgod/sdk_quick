@@ -183,8 +183,9 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
                 // TODO remove mock trigger
                 showMockButtons(request, response)
+
                 // check transaction status
-                checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
+                handler.postDelayed({checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode)) }, 60_000)
             }
             else -> {
                 runOnUiThread {
@@ -217,7 +218,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         return TransactionResult(
                 paymentType = PaymentType.USSD,
                 dateTime = DisplayUtils.getIsoString(now),
-                amount = DisplayUtils.getAmountString(paymentInfo.amount),
+                amount = DisplayUtils.getAmountString(paymentInfo.amount / 100),
                 type = TransactionType.Purchase,
                 authorizationCode = transaction.responseCode,
                 responseMessage = responseMsg,

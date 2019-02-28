@@ -87,7 +87,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
                 transactionResult = TransactionResult(
                         paymentType = PaymentType.Card,
                         dateTime = DisplayUtils.getIsoString(now),
-                        amount = DisplayUtils.getAmountString(paymentInfo.amount),
+                        amount = DisplayUtils.getAmountString(paymentInfo.amount / 100),
                         type = TransactionType.Purchase,
                         authorizationCode = response.authCode,
                         responseMessage = responseMsg,

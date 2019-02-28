@@ -32,7 +32,7 @@ android {
             buildConfigField("boolean", "MOCK", "false") // mock device
         }
         debug {
-            buildConfigField("boolean", "MOCK", "true") // mock device
+            buildConfigField("boolean", "MOCK", "false") // mock device
             applicationIdSuffix '.debug'
         }
     }

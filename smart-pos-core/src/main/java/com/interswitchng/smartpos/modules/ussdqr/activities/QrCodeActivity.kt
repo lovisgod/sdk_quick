@@ -149,7 +149,7 @@ class QrCodeActivity : BaseActivity() {
                 }
 
                 // check transaction status
-                checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
+               handler.postDelayed({checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode)) }, 60_000)
             }
             else -> {
                 runOnUiThread {
@@ -185,7 +185,7 @@ class QrCodeActivity : BaseActivity() {
         return TransactionResult(
                 paymentType = PaymentType.QR,
                 dateTime = DisplayUtils.getIsoString(now),
-                amount = DisplayUtils.getAmountString(paymentInfo.amount),
+                amount = DisplayUtils.getAmountString(paymentInfo.amount / 100),
                 type = TransactionType.Purchase,
                 authorizationCode = transaction.responseCode,
                 responseMessage = responseMsg,

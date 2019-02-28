@@ -9,6 +9,9 @@
         />
 
     <item android:id="@+id/cancelPayment"
-        android:title="@string/isw_action_cancel" />
+        android:title="@string/isw_action_cancel"
+        android:icon="@drawable/isw_ic_close_white"
+        app:showAsAction="always"
+        />
 
 </menu>

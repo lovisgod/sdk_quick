@@ -7,7 +7,7 @@ import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
 import java.text.NumberFormat
 
-internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo, private val code: PrintObject?): TransactionSlip(terminal, status) {
+internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(terminal, status) {
 
 
     override fun getTransactionInfo(): List<PrintObject> {
@@ -25,15 +25,8 @@ internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, pri
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
         val txnType = pairString("", info.type.toString(), stringConfig = typeConfig)
 
-        val halfList = listOf(txnType, stan, date, line, amount, line)
-        val fullList = when(code) {
-            null -> halfList
-            else -> halfList + codeTitle + code + line
-        }
-
         // return transaction info of slip
-        return fullList
-
+        return listOf(txnType, stan, date, line, amount, line)
     }
 
 }

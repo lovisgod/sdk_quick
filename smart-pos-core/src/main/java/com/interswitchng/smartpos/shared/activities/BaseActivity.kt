@@ -3,6 +3,8 @@ package com.interswitchng.smartpos.shared.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -38,6 +40,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private val payableService: Payable by inject()
 
     protected val instance: IswPos by inject()
+    protected val handler = Handler(Looper.getMainLooper())
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
     protected val disposables = IswCompositeDisposable()
 
@@ -134,7 +137,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 .enableProgress(true)
                 .setDismissable(false)
                 .enableInfiniteDuration(true)
-                .setBackgroundColorRes(android.R.color.darker_gray)
+                .setBackgroundColorRes(R.color.iswColorPrimaryDark)
                 .setProgressColorRes(android.R.color.white)
                 .show()
     }

@@ -62,7 +62,7 @@ class TransactionResultActivity : BaseActivity() {
 
     private fun setupUI() {
 
-        printSlip = TerminalInfo.get(store)?.let { result.getSlip(this, it) }
+        printSlip = TerminalInfo.get(store)?.let { result.getSlip(it) }
 
         // set amount text view
         val amountStr = DisplayUtils.getAmountString(paymentInfo.amount / 100)
