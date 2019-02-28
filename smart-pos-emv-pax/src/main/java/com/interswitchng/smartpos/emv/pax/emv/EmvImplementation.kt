@@ -100,6 +100,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
             merchName = terminalInfo.merchantNameAndLocation.toByteArray()
             termId = terminalInfo.terminalId.toByteArray()
             merchId = terminalInfo.merchantId.toByteArray()
+            merchCateCode = terminalInfo.merchantCategoryCode.toByteArray()
             forceOnline = 1
             terminalType = 34
             exCapability = str2Bcd("E000F0A001")
@@ -125,7 +126,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         EMVCallback.EMVSetMCKParam(mckParameters)
 
         // set PCI mode to allow offline pin
-        EMVCallback.EMVSetPCIModeParam(1, "4,5".toByteArray(), 60 * 1000)
+        EMVCallback.EMVSetPCIModeParam(1, "4,5".toByteArray(), 30 * 1000)
 
         // remove all applications from terminal app list
         EMVCallback.EMVDelAllApp()
@@ -245,9 +246,9 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         }
     }
 
-    fun enterPin(isOnline: Boolean, offlineTriesLeft: Int, pan: String) {
+    fun enterPin(isOnline: Boolean, triesCount: Int,  offlineTriesLeft: Int, pan: String) {
         logger.log("offline tries left: $offlineTriesLeft")
-        pinCallback.enterPin(isOnline, offlineTriesLeft, pan)
+        pinCallback.enterPin(isOnline, triesCount, offlineTriesLeft, pan)
     }
 
 
@@ -266,7 +267,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
             logger.log("Verify pin failed")
 
             // return 1 to cancel or 0 to retry
-            return 0
+            return 1
         }
 
 
@@ -294,7 +295,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
             } else {
 
                 val pan = getPan()!!
-                enterPin(pin == null, remainCount, pan)
+                enterPin(pin == null, tryFlag, remainCount, pan)
                 logger.log("emvGetHolderPwd enterPin finish")
 
                 ret = pinCallback.getPinResult(pan)

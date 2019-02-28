@@ -17,4 +17,5 @@ interface EmvCallback {
 
     fun onTransactionCancelled(code: Int, reason: String)
 
+    fun showPinError(remainCount: Int)
 }

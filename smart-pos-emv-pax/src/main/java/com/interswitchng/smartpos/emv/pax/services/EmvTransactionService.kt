@@ -155,7 +155,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
     override fun getPinResult(panBlock: String) = pinResult
 
 
-    override fun enterPin(isOnline: Boolean, offlineTriesLeft: Int, panBlock: String) {
+    override fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String) {
         try {
             // reset text
             text = ""
@@ -164,15 +164,20 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
             // set empty string as pin
             emvCallback?.setPinText(text)
 
-            // set check interval
-            ped.setIntervalTime(1, 1)
-            // set input listener
-            ped.setInputPinListener(this)
+            // show pin input error
+            if (triesCount > 0) {
+                emvCallback?.showPinError(offlineTriesLeft)
+            }
+            else {
+                // set check interval
+                ped.setIntervalTime(1, 1)
+                // set input listener
+                ped.setInputPinListener(this)
 
-            // trigger pin input based flag
-            if (isOnline) getOnlinePin(panBlock)
-            else getOfflinePin()
-
+                // trigger pin input based flag
+                if (isOnline) getOnlinePin(panBlock)
+                else getOfflinePin()
+            }
         } catch (e: PedDevException) {
             logger.logErr("Error occured verifying pin: isOnline - $isOnline, code - ${e.errCode}, msg - ${e.errMsg}")
             setPinResult(e.errCode) // set the pin result
@@ -184,7 +189,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
     }
 
     private fun getOnlinePin(panBlock: String) {
-        val pinBlock = ped.getPinBlock(INDEX_TPK, "4,5", panBlock.toByteArray(), EPinBlockMode.ISO9564_0, 60 * 1000)
+        val pinBlock = ped.getPinBlock(INDEX_TPK, "4,5", panBlock.toByteArray(), EPinBlockMode.ISO9564_0, 30 * 1000)
         if (pinBlock == null)
             pinResult = RetCode.EMV_NO_PASSWORD
         else {

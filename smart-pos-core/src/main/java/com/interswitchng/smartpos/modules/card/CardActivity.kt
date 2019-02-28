@@ -22,6 +22,7 @@ import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
+import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
@@ -41,6 +42,7 @@ class CardActivity : BaseActivity() {
     private var pinOk = false
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
+    private val alert by lazy { DialogUtils.getAlertDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -233,6 +235,16 @@ class CardActivity : BaseActivity() {
 
         override fun onTransactionCancelled(code: Int, reason: String) {
             cancelTransaction(reason)
+        }
+
+        override fun showPinError(remainCount: Int) {
+            runOnUiThread {
+                alert.setTitle("Invalid Pin")
+                        .setMessage("Please ensure you put the right pin, you have $remainCount tries left.")
+                        .setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); startTransaction() }
+                        .setNeutralButton(R.string.isw_action_change_payment) { dialog, _ -> dialog.dismiss(); showPaymentOptions(BottomSheetOptionsDialog.CARD) }
+                        .show()
+            }
         }
     }
 }

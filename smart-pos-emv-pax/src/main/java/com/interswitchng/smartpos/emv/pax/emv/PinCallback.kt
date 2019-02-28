@@ -6,7 +6,7 @@ interface PinCallback {
 
     fun getPinResult(panBlock: String): Int
 
-    fun enterPin(isOnline: Boolean, offlineTriesLeft: Int, panBlock: String)
+    fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String)
 
     fun showPinOk()
 }
