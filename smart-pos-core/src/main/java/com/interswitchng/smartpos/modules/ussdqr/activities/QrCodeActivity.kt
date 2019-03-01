@@ -68,7 +68,7 @@ class QrCodeActivity : BaseActivity() {
     private fun setupImage() {
 
         // set the amount
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
+        val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
         paymentHint.text = getString(R.string.isw_hint_qr_code)
 
@@ -185,7 +185,7 @@ class QrCodeActivity : BaseActivity() {
         return TransactionResult(
                 paymentType = PaymentType.QR,
                 dateTime = DisplayUtils.getIsoString(now),
-                amount = DisplayUtils.getAmountString(paymentInfo.amount / 100),
+                amount = DisplayUtils.getAmountString(paymentInfo),
                 type = TransactionType.Purchase,
                 authorizationCode = transaction.responseCode,
                 responseMessage = responseMsg,

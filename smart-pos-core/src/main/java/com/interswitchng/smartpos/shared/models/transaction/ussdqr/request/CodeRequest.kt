@@ -29,7 +29,7 @@ internal data class CodeRequest(
 
         internal fun from(terminalInfo: TerminalInfo, paymentInfo: PaymentInfo, transactionType: String, qrFormat: String? = null) = CodeRequest (
                 alias = "000007", // TODO replace with -> terminalInfo.merchantId,
-                amount = "${paymentInfo.amount * 100}",
+                amount = "${paymentInfo.amount}",
                 bankCode = paymentInfo.bankCode,
                 date = DisplayUtils.getIsoString(Date()),
                 stan = paymentInfo.stan,

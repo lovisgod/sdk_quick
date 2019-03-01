@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,13 +62,19 @@ internal object DisplayUtils {
      * @param amount A value in integer representing the transaction amount
      * @return A string representation of the decimal notation for the amount
      */
-    fun getAmountString(amount: Int): String {
+    fun getAmountString(amount: Float): String {
 
         val numberFormat = NumberFormat.getInstance()
         numberFormat.minimumFractionDigits = 2
         numberFormat.maximumFractionDigits = 2
 
         return numberFormat.format(amount)
+    }
+
+
+    fun getAmountString(paymentInfo: PaymentInfo): String {
+        val amount = paymentInfo.amount  / 100f
+        return getAmountString(amount)
     }
 
     fun hideKeyboard(activity: Activity) {

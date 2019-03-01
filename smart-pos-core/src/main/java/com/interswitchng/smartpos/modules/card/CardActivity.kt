@@ -42,14 +42,14 @@ class CardActivity : BaseActivity() {
     private var pinOk = false
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
-    private val alert by lazy { DialogUtils.getAlertDialog(this) }
+    private val alert by lazy { DialogUtils.getAlertDialog(this).create() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_card)
 
         // set the amount
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
+        val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
     }
 
@@ -66,30 +66,26 @@ class CardActivity : BaseActivity() {
 
 
     private fun setupTransaction() {
-       val disposable =  ThreadUtils.createExecutor {
+        val disposable = ThreadUtils.createExecutor {
 
             // attach callback for emv transaction
             emv.setEmvCallback(emvCallback)
 
-            // setup mock terminal info
-            val empty = ""
-            val terminalInfo = TerminalInfo("20390007", "20390007",
-                    empty, empty, "0566", "0566",
-                    1200, 1200)
+            TerminalInfo.get(store)?.let {
 
-            // setup card transaction
-            emv.setupTransaction(paymentInfo.amount, terminalInfo)
+                // setup card transaction
+                emv.setupTransaction(paymentInfo.amount, it)
 
-            runOnUiThread { dialog.dismiss() }
-            startTransaction()
-
+                runOnUiThread { dialog.dismiss() }
+                startTransaction()
+            }
         }
 
         disposables.add(disposable)
     }
 
     private fun startTransaction() {
-       val disposable = ThreadUtils.createExecutor {
+        val disposable = ThreadUtils.createExecutor {
             // start card transaction
             val result = emv.startTransaction()
 
@@ -112,7 +108,7 @@ class CardActivity : BaseActivity() {
     }
 
     private fun showContainer(state: CardTransactionState) {
-        val container = when(state) {
+        val container = when (state) {
             CardTransactionState.ShowInsertCard -> insertCardContainer
             CardTransactionState.EnterPin -> insertPinContainer
             CardTransactionState.Default -> blankContainer
@@ -123,6 +119,10 @@ class CardActivity : BaseActivity() {
 
     private fun cancelTransaction(reason: String) {
         runOnUiThread {
+            // remove dialogs
+            if (dialog.isShowing) dialog.dismiss()
+            if (alert.isShowing) alert.dismiss()
+
             setResult(Activity.RESULT_CANCELED)
             toast(reason)
             finish()
@@ -154,7 +154,7 @@ class CardActivity : BaseActivity() {
                 response?.let {
 
                     val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
-                    val pinStatus = when{
+                    val pinStatus = when {
                         pinOk || it.responseCode == IsoUtils.OK -> "PIN Verified"
                         else -> "PIN Unverified"
                     }
@@ -162,7 +162,7 @@ class CardActivity : BaseActivity() {
                     transactionResult = TransactionResult(
                             paymentType = PaymentType.Card,
                             dateTime = DisplayUtils.getIsoString(now),
-                            amount = DisplayUtils.getAmountString(paymentInfo.amount / 100),
+                            amount = DisplayUtils.getAmountString(paymentInfo),
                             type = TransactionType.Purchase,
                             authorizationCode = response.authCode,
                             responseMessage = responseMsg,
@@ -173,7 +173,7 @@ class CardActivity : BaseActivity() {
 
                     // complete transaction by applying scripts
                     // only when responseCode is 'OK'
-                    if(it.responseCode == IsoUtils.OK) {
+                    if (it.responseCode == IsoUtils.OK) {
                         val completionResult = emv.completeTransaction(it)
 
                         when (completionResult) {
@@ -240,10 +240,8 @@ class CardActivity : BaseActivity() {
         override fun showPinError(remainCount: Int) {
             runOnUiThread {
                 alert.setTitle("Invalid Pin")
-                        .setMessage("Please ensure you put the right pin, you have $remainCount tries left.")
-                        .setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); startTransaction() }
-                        .setNeutralButton(R.string.isw_action_change_payment) { dialog, _ -> dialog.dismiss(); showPaymentOptions(BottomSheetOptionsDialog.CARD) }
-                        .show()
+                alert.setMessage("Please ensure you put the right pin.")
+                alert.show()
             }
         }
     }

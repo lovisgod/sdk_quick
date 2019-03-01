@@ -69,12 +69,12 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
     private fun setupUI() {
 
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
+        val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
 
         // loadBanks()
 
-        paymentHint.text = "Loading Banks..."
+        paymentHint.text = getString(R.string.isw_select_bank)
         banks.text = getString(R.string.isw_select_bank)
         banks.setOnClickListener {
             val dialog = SelectBankBottomSheet.newInstance()
@@ -218,7 +218,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         return TransactionResult(
                 paymentType = PaymentType.USSD,
                 dateTime = DisplayUtils.getIsoString(now),
-                amount = DisplayUtils.getAmountString(paymentInfo.amount / 100),
+                amount = DisplayUtils.getAmountString(paymentInfo),
                 type = TransactionType.Purchase,
                 authorizationCode = transaction.responseCode,
                 responseMessage = responseMsg,
@@ -235,10 +235,10 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
     }
 
     override fun onBankSelected(bank: Bank) {
+        selectedBank = bank
         banks.text = bank.name
         selectedItem = bank.name
-
-        selectedBank = bank
+        paymentHint.text = bank.name
 
         getBankCode()
     }

@@ -26,7 +26,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
 
 
         // set the amount
-        val amount = DisplayUtils.getAmountString(paymentInfo.amount / 100)
+        val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
     }
 
@@ -87,7 +87,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
                 transactionResult = TransactionResult(
                         paymentType = PaymentType.Card,
                         dateTime = DisplayUtils.getIsoString(now),
-                        amount = DisplayUtils.getAmountString(paymentInfo.amount / 100),
+                        amount = DisplayUtils.getAmountString(paymentInfo),
                         type = TransactionType.Purchase,
                         authorizationCode = response.authCode,
                         responseMessage = responseMsg,

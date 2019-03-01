@@ -1,12 +1,16 @@
 package com.interswitchng.smartpos.modules.ussdqr.views
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.ussdqr.adapters.BankListAdapter
@@ -17,11 +21,22 @@ import org.koin.android.ext.android.inject
 
 internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 
-    private val paymentService: Payable by inject()
     private var callback: SelectBankCallback? = null
     private val adapter: BankListAdapter = BankListAdapter {
         if (proceedSelectBank.visibility != View.VISIBLE)
             proceedSelectBank.visibility = View.VISIBLE
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+        dialog.setOnShowListener {
+            val sheetDialog = it as BottomSheetDialog
+            val bottomSheet: FrameLayout? = sheetDialog.findViewById(android.support.design.R.id.design_bottom_sheet)
+            BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED)
+        }
+
+        return dialog
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
