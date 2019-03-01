@@ -1,14 +1,64 @@
 package com.interswitchng.smartpos.emv.pax.utilities
 
+import android.content.Context
 import android.util.Log
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.interswitchng.smartpos.emv.pax.R
 import com.interswitchng.smartpos.emv.pax.emv.ICCData
+import com.interswitchng.smartpos.emv.pax.models.EmvAIDs
+import com.interswitchng.smartpos.emv.pax.models.EmvCard
+import com.interswitchng.smartpos.emv.pax.models.TerminalConfig
+import com.pax.jemv.clcommon.EMV_APPLIST
+import java.io.File
+import java.io.InputStream
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 import java.util.*
 
-object EmvUtils {
+internal object EmvUtils {
 
    private val HEX_DIGITS = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
+
+
+    fun getAids(xmlFile: String): EmvAIDs {
+        val xmlMapper = XmlMapper()
+                .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        return xmlMapper.readValue(xmlFile, EmvAIDs::class.java)
+    }
+
+    fun getTerminalConfig(xmlFile: String): TerminalConfig {
+        val xmlMapper = XmlMapper()
+                .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        return xmlMapper.readValue(xmlFile, TerminalConfig::class.java)
+    }
+
+    fun createAppList(terminalConfig: TerminalConfig, aiDs: EmvAIDs): List<EMV_APPLIST> {
+        val creator = { card: EmvCard -> card.toAPPListItem(terminalConfig) }
+        return aiDs.cards.map(creator).toList()
+    }
+
+    fun getConfigurations(context: Context): Pair<TerminalConfig, EmvAIDs> {
+        val getString = { ist: InputStream ->
+            val length = ist.available()
+            val buffer = ByteArray(length)
+
+            ist.read(buffer)
+            String(buffer)
+        }
+        // get resource streams
+        val emvStr = getString(context.resources.openRawResource(R.raw.emv_config))
+        val terminalStr = getString(context.resources.openRawResource(R.raw.terminal_config))
+        // extract values
+        val emvApps = getAids(emvStr)
+        val terminalConfig = getTerminalConfig(terminalStr)
+
+        return Pair(terminalConfig, emvApps)
+    }
+
 
     /**
      * ASCII码字符串转数字字符串

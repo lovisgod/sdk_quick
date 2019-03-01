@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.emv.pax.services
 
+import android.content.Context
 import android.os.SystemClock
 import com.interswitchng.smartpos.emv.pax.emv.*
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
@@ -23,7 +24,7 @@ import com.pax.jemv.clcommon.RetCode
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
 
-class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPinListener {
+class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback, IPed.IPedInputPinListener {
 
     private val logger by lazy { Logger.with("EmvTransactionService") }
     private val ped by lazy { POSDeviceService.dal.getPed(EPedType.INTERNAL) }
@@ -32,7 +33,7 @@ class EmvTransactionService : EmvCardTransaction, PinCallback, IPed.IPedInputPin
 
     private var text = ""
 
-    private val emvImpl by lazy { EmvImplementation(this) }
+    private val emvImpl by lazy { EmvImplementation(context, this) }
     private var emvCallback: EmvCallback? = null
 
     private var pinResult: Int = RetCode.EMV_OK

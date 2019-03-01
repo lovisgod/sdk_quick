@@ -1,26 +1,20 @@
-package com.igweze.ebi.paxemvcontact
+package com.interswitchng.smartpos.emv.pax
 
 import java.io.File
 import java.io.InputStream
 
 object Utilities {
 
-    fun getStream(path: String): InputStream {
+    fun getFile(path: String): File {
         val loader = javaClass.classLoader
         val uri = loader?.getResource(path)
-        val file = File(uri?.path)
-        return file.inputStream()
+        return File(uri?.path)
     }
 
-    fun getJson(path: String): String {
-        val uri = javaClass.classLoader?.getResource(path)
-        val file = File(uri?.path)
-        return String(file.readBytes())
-    }
+    fun getStream(path: String): InputStream = getFile(path).inputStream()
 
-    fun getBytes(path: String): ByteArray {
-        val uri = javaClass.classLoader?.getResource(path)
-        val file = File(uri?.path)
-        return file.readBytes()
-    }
+    fun getString(path: String): String = String(getBytes(path))
+
+    fun getBytes(path: String): ByteArray = getFile(path).readBytes()
+
 }

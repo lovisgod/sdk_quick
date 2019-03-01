@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.emv.pax.emv
 
+import android.content.Context
 import android.util.SparseArray
+import com.interswitchng.smartpos.emv.pax.models.EmvAIDs
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bcd2Str
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
@@ -9,20 +11,16 @@ import java.util.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
-import com.pax.jemv.clcommon.ACType
-import com.pax.jemv.clcommon.EMV_APPLIST
-import com.pax.jemv.clcommon.OnlineResult
-import com.pax.jemv.clcommon.RetCode
+import com.pax.jemv.clcommon.*
 import com.pax.jemv.device.DeviceManager
 import com.pax.jemv.emv.api.EMVCallback
 import com.pax.jemv.emv.model.EmvEXTMParam
 import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
 
-class EmvImplementation(private val pinCallback: PinCallback) {
+class EmvImplementation(private val context: Context, private val pinCallback: PinCallback) {
 
     private val emvParameters = EmvParam()
-    private val tlvs = SparseArray<ByteArray>()
     private val mckParameters = EmvMCKParam().also { it.extmParam = EmvEXTMParam() }
     private val emvCallback = EMVCallback.getInstance().also { it.setCallbackListener(Listener()) }
     private val logger = Logger.with("EMVImplementation")
@@ -33,7 +31,7 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         this.amount = amount
     }
 
-    private fun addCAPKIntoEmvLib(): Int {
+    private fun addCAPKIntoEmvLib(capks: List<EMV_CAPK>): Int {
 
         var ret: Int
         val dataList = com.pax.jemv.clcommon.ByteArray()
@@ -53,8 +51,8 @@ class EmvImplementation(private val pinCallback: PinCallback) {
                 val keyId = dataList.data[0]
                 logger.log("keyID=$keyId")
 
-                for (capk in EmvTestCAPKList.genCapks()) {
-                    if (bytes2String(capk!!.rID) == String(rid)) {
+                for (capk in capks) {
+                    if (bytes2String(capk.rID) == String(rid)) {
                         if (keyId.toInt() == -1 || capk.keyID == keyId) {
 
                             // log certified authority public key
@@ -131,23 +129,30 @@ class EmvImplementation(private val pinCallback: PinCallback) {
         // remove all applications from terminal app list
         EMVCallback.EMVDelAllApp()
 
-        // use test apps to find matching AID
-        for (app in EmvTestAIDList.genApplists()) {
+        // get terminal config and EMV apps
+        val config = EmvUtils.getConfigurations(context)
+
+
+        // use terminal config and emv AID to configure EMV Kernel
+        for (app in EmvUtils.createAppList(config.first, config.second)) {
             val addResult = EMVCallback.EMVAddApp(app)
 
             if (addResult == RetCode.EMV_OK) logger.log("AddApp succeeded: aid - ${app.aid}")
             else return addResult.also { logger.logErr("AddApp failed: code - $addResult: aid - ${app.aid}") }
         }
 
+        // get capks for AIDs
+        val capks = config.second.getCapks()
 
         // TODO verify that DELAllCAPK is available
         // remove CAPKs
-        for (capk in EmvTestCAPKList.genCapks())
-            capk?.apply { EMVCallback.EMVDelCAPK(keyID, rID) }
+        for (capk in capks) capk.apply {
+            EMVCallback.EMVDelCAPK(keyID, rID)
+        }
 
 
         // add all CAPKs
-        addCAPKIntoEmvLib()
+        addCAPKIntoEmvLib(capks)
 
 
         // show Input card info
