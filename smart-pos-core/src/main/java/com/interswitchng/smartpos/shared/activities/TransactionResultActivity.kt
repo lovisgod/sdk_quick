@@ -33,8 +33,8 @@ class TransactionResultActivity : BaseActivity() {
     private val emailInputDialog by lazy {
         DialogUtils.getEmailInputDialog(this) { email ->
             // handle user interaction here
-            when {
-                email == null -> { } // user cancelled dialog
+            when(email){
+                null -> { } // user cancelled dialog
                 else -> { } // process email
             }
         }
@@ -130,8 +130,19 @@ class TransactionResultActivity : BaseActivity() {
         }
 
         closeBtn.setOnClickListener {
-            setResult()
-            finish()
+
+            val hasNotPrinted = !hasPrintedCustomerCopy && !hasPrintedCustomerCopy
+            if (hasNotPrinted) {
+                DialogUtils.getAlertDialog(this)
+                .setTitle("Close without printing?")
+                .setMessage("Are you sure you want to close without printing")
+                        .setNegativeButton(android.R.string.no) { dialog, i -> dialog.dismiss() }
+                        .setPositiveButton(android.R.string.yes) { dialog, _ -> dialog.dismiss(); setResult(); finish(); }
+                .show()
+            } else {
+                setResult()
+                finish()
+            }
         }
 
         btnEReceipt.setOnClickListener {
