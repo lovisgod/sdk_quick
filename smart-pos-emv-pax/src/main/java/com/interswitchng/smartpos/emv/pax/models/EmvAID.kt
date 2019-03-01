@@ -1,16 +1,17 @@
 package com.interswitchng.smartpos.emv.pax.models
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
+import com.kulik.android.jaxb.library.Annotations.XmlRootElement
+import com.kulik.android.jaxb.library.Annotations.XmlElement
 import com.pax.jemv.clcommon.EMV_APPLIST
 import com.pax.jemv.clcommon.EMV_CAPK
 
-@JacksonXmlRootElement(localName = "emv")
-internal data class EmvAIDs(
-        @JacksonXmlProperty(localName = "emvcards")
-        val cards: List<EmvCard>) {
+@XmlRootElement(name = "emv")
+internal class EmvAIDs {
+
+    @XmlElement(name = "emvcards")
+    var cards: ArrayList<EmvCard> = arrayListOf()
 
 
     fun getCapks(): List<EMV_CAPK> {
@@ -22,16 +23,16 @@ internal data class EmvAIDs(
     }
 }
 
-@JacksonXmlRootElement(localName = "emvcard")
-internal data class EmvCard(
-        @JacksonXmlProperty(localName = "name")
-        val name: String,
-        @JacksonXmlProperty(localName = "aid")
-        val aid: String,
-        @JacksonXmlProperty(localName = "partialmatch")
-        val partialMatch: Boolean,
-        @JacksonXmlProperty(localName = "keys")
-        val keys: List<EmvCapk>) {
+@XmlRootElement(name = "emvcard")
+internal class EmvCard {
+    @XmlElement(name = "name")
+    var name: String = ""
+    @XmlElement(name = "aid")
+    var aid: String = ""
+    @XmlElement(name = "partialmatch")
+    var partialMatch: Boolean = false
+    @XmlElement(name = "keys")
+    var keys: ArrayList<EmvCapk> = arrayListOf()
 
 
 
@@ -71,18 +72,18 @@ internal data class EmvCard(
 }
 
 
-@JacksonXmlRootElement(localName = "key")
-internal data class EmvCapk(
-        @JacksonXmlProperty(localName = "keyidx")
-        val id: String,
-        @JacksonXmlProperty(localName = "expdate")
-        val expiry: String,
-        @JacksonXmlProperty(localName = "modulus")
-        val modulus: String,
-        @JacksonXmlProperty(localName = "exponent")
-        val exponent: String,
-        @JacksonXmlProperty(localName = "checksum")
-        val checksum: String) {
+@XmlRootElement(name = "key")
+internal class EmvCapk {
+        @XmlElement(name = "keyidx")
+        var id: String = ""
+        @XmlElement(name = "expdate")
+        var expiry: String = ""
+        @XmlElement(name = "modulus")
+        var modulus: String = ""
+        @XmlElement(name = "exponent")
+        var exponent: String = ""
+        @XmlElement(name = "checksum")
+        var checksum: String = ""
 
 
 

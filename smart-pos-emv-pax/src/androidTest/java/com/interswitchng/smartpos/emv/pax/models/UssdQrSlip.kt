@@ -1,4 +1,4 @@
-package com.igweze.ebi.paxemvcontact.models
+package com.interswitchng.smartpos.emv.pax.models
 
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 

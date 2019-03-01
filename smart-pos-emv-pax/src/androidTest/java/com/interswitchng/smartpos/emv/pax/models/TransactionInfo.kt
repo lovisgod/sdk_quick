@@ -1,4 +1,5 @@
-package com.igweze.ebi.paxemvcontact.models
+package com.interswitchng.smartpos.emv.pax.models
+
 
 
 data class TransactionInfo(

@@ -1,41 +1,42 @@
 package com.interswitchng.smartpos.emv.pax.models
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import com.kulik.android.jaxb.library.Annotations.XmlRootElement
+import com.kulik.android.jaxb.library.Annotations.XmlElement;
 
 
-@JacksonXmlRootElement(localName = "terminal")
+
+@XmlRootElement(name = "terminal")
 internal data class TerminalConfig(
-        @JacksonXmlProperty(localName = "supportpse")
+        @XmlElement(name = "supportpse")
         val supportpse: Boolean,
-        @JacksonXmlProperty(localName = "floorlimitcheck")
+        @XmlElement(name = "floorlimitcheck")
         val floorlimitcheck: Boolean,
-        @JacksonXmlProperty(localName = "floorlimit")
+        @XmlElement(name = "floorlimit")
         val floorlimit: Int,
-        @JacksonXmlProperty(localName = "tacdenial")
+        @XmlElement(name = "tacdenial")
         val tacdenial: String,
-        @JacksonXmlProperty(localName = "taconline")
+        @XmlElement(name = "taconline")
         val taconline: String,
-        @JacksonXmlProperty(localName = "tacdefault")
+        @XmlElement(name = "tacdefault")
         val tacdefault: String,
-        @JacksonXmlProperty(localName = "ddol")
+        @XmlElement(name = "ddol")
         val ddol: String,
-        @JacksonXmlProperty(localName = "tdol")
+        @XmlElement(name = "tdol")
         val tdol: String,
-        @JacksonXmlProperty(localName = "version")
+        @XmlElement(name = "version")
         val version: String,
-        @JacksonXmlProperty(localName = "riskdata")
+        @XmlElement(name = "riskdata")
         val riskdata: String,
-        @JacksonXmlProperty(localName = "terminalcountrycode")
+        @XmlElement(name = "terminalcountrycode")
         val terminalcountrycode: String,
-        @JacksonXmlProperty(localName = "terminaltype")
+        @XmlElement(name = "terminaltype")
         val terminaltype: String,
-        @JacksonXmlProperty(localName = "terminalcapability")
+        @XmlElement(name = "terminalcapability")
         val terminalcapability: String,
-        @JacksonXmlProperty(localName = "extendedterminalcapability")
+        @XmlElement(name = "extendedterminalcapability")
         val extendedterminalcapability: String,
-        @JacksonXmlProperty(localName = "referercurrencycode")
+        @XmlElement(name = "referercurrencycode")
         val referercurrencycode: String,
-        @JacksonXmlProperty(localName = "merchantcatcode")
+        @XmlElement(name = "merchantcatcode")
         val merchantcatcode: String
 )

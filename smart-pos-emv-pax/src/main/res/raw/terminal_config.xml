@@ -1,18 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!---TERMINAL CONFIG SECTION-->
 <terminal>
     <supportpse>true</supportpse>
-    <floorlimitcheck>false</floorlimitcheck>
-    <floorlimit>0</floorlimit>
-    <tacdenial>0000000000</tacdenial>
-    <taconline>CC00FC8000</taconline>
-    <tacdefault>CC00FC8000</tacdefault>
+    <floorlimitcheck>true</floorlimitcheck>
+    <floorlimit>100</floorlimit>
+    <tacdenial>0010000000</tacdenial>
+    <taconline>FCF8E4F880</taconline>
+    <tacdefault>FCF0E40800</tacdefault>
     <ddol>9F3704</ddol>
     <tdol>N/A</tdol>
-    <version>0001</version>
+    <version>0020</version>
     <riskdata></riskdata>
     <terminalcountrycode>0566</terminalcountrycode>
     <terminaltype>34</terminaltype>
-    <terminalcapability>E040C8</terminalcapability>
+    <terminalcapability>E0F8C8</terminalcapability>
     <extendedterminalcapability>E000F0A001</extendedterminalcapability>
     <referercurrencycode>0566</referercurrencycode>
     <merchantcatcode></merchantcatcode>
-  </terminal>
+</terminal>
+

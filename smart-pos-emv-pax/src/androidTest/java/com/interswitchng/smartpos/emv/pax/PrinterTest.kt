@@ -3,7 +3,7 @@ package com.interswitchng.smartpos.emv.pax
 import android.os.Looper
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.igweze.ebi.paxemvcontact.models.*
+import com.interswitchng.smartpos.emv.pax.models.*
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceService
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.models.core.UserType
