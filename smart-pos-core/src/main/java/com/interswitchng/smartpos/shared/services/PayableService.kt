@@ -71,7 +71,8 @@ internal class PayableService(private val httpService: IHttpService): Payable {
                 }
 
                 val nextDuration = secs * 1000
-                if (!hasResponse && !it.isDisposed) Thread.sleep(nextDuration)
+                val canSleep = !hasResponse && !it.isDisposed && endTime > nextDuration + System.currentTimeMillis()
+                if (canSleep) Thread.sleep(nextDuration)
             }
         }
     }
