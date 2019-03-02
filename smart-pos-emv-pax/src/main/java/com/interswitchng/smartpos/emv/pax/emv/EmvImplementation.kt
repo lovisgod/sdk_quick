@@ -1,12 +1,11 @@
 package com.interswitchng.smartpos.emv.pax.emv
 
 import android.content.Context
-import android.util.SparseArray
-import com.interswitchng.smartpos.emv.pax.models.EmvAIDs
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bcd2Str
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
+import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import java.util.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -198,7 +197,11 @@ class EmvImplementation(private val context: Context, private val pinCallback: P
         logger.log("Before EMVStartTransaction")
         logger.log("AC type - ${ac.type}")
 
+        // set the other amount:
+        val bytes = "0".repeat(6).toByteArray()
+        EMVCallback.EMVSetTLVData(ICCData.ANOTHER_AMOUNT.tag.toShort(), bytes, bytes.size)
 
+        // start the transaction
         val startTransactionResult = EMVCallback.EMVStartTrans(amount.toLong(), 0, ac)
 
         logger.log("After EMVStartTransaction")
@@ -335,8 +338,6 @@ class EmvImplementation(private val context: Context, private val pinCallback: P
                     System.arraycopy(time, 4, data.data, 0, 3)
                 }
                 0x9F37 -> {
-                    //byte[] random = TradeApplication.dal.getSys().getRandom(data.data.length);
-                    //System.arraycopy(random, 0, data.data, 0, data.data.length);
                     val random = ByteArray(4)
                     DeviceManager.getInstance().getRand(random, 4)
                     System.arraycopy(random, 0, data.data, 0, data.data.size)

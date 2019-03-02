@@ -105,7 +105,7 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
             val carPin = pinData ?: ""
 
             // get track 2 string
-            val track2data = EmvUtils.bcd2Str(it)
+            var track2data = EmvUtils.bcd2Str(it)
 
             // extract pan and expiry
             val strTrack2 = track2data.split("F")[0]
@@ -113,9 +113,15 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
             val expiry = strTrack2.split("D")[1].substring(0, 4)
             val src = strTrack2.split("D")[1].substring(4, 7)
 
+            // issue with visa cards: solution remove last character
+            if (track2data.last().isLetter())  track2data = track2data.substring(0 until strTrack2.length - 1)
+
             val icc = emvImpl.getIccData()
             val aid = EmvUtils.bcd2Str(emvImpl.getTlv(0x9F06)!!)
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src)
+            // get the card sequence number
+            val csnStr = EmvUtils.bcd2Str(emvImpl.getTlv(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
+            val csn = "0$csnStr"
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn)
         }
     }
 

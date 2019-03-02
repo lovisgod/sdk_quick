@@ -108,7 +108,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
         val bankCode = selectedBank?.code
         // create payment info with bank code
-        val paymentInfoPrime = PaymentInfo(paymentInfo.amount, paymentInfo.stan, bankCode)
+        val paymentInfoPrime = PaymentInfo(paymentInfo.amount, bankCode)
         val request = CodeRequest.from(terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
 
         dialog.show()
@@ -224,7 +224,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
                 responseMessage = responseMsg,
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = "",
-                stan = paymentInfo.stan, pinStatus = "", AID = "", code = ussdCode!!,
+                stan = paymentInfo.getStan(), pinStatus = "", AID = "", code = ussdCode!!,
                 telephone = "08031140978"
         )
     }

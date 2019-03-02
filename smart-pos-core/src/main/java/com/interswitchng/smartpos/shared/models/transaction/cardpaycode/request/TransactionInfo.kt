@@ -9,6 +9,7 @@ internal data class TransactionInfo(
         val cardTrack2: String,
         val icc: String,
         val src: String, // service restriction code
+        val csn: String, // card sequence number
         val amount: Int,
         val stan: String,
         val purchaseType: PurchaseType,
@@ -23,8 +24,9 @@ internal data class TransactionInfo(
                 cardTrack2 =  emv.cardTrack2,
                 icc = emv.icc,
                 src = emv.src,
+                csn = emv.csn,
                 amount = paymentInfo.amount,
-                stan = paymentInfo.stan,
+                stan = paymentInfo.getStan(),
                 purchaseType = purchaseType,
                 accountType = accountType)
     }

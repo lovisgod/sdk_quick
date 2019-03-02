@@ -211,7 +211,7 @@ internal class IsoServiceImpl(
                     .setValue(14, transaction.cardExpiry)
                     .setValue(18, terminalInfo.merchantCategoryCode)
                     .setValue(22, "051")
-                    .setValue(23, "001")
+                    .setValue(23, transaction.csn)
                     .setValue(25, "00")
                     .setValue(26, "06")
                     .setValue(28, "C00000000")
@@ -289,7 +289,8 @@ internal class IsoServiceImpl(
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "010000"
-            val randomReference = "000000${paymentInfo.stan}"
+            val stan = paymentInfo.getStan()
+            val randomReference = "000000$stan"
             val date = dateFormatter.format(now)
             val src = "501"
 
@@ -308,7 +309,7 @@ internal class IsoServiceImpl(
                     .setValue(3, processCode)
                     .setValue(4, amount)
                     .setValue(7, timeAndDateFormatter.format(now))
-                    .setValue(11, paymentInfo.stan)
+                    .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
                     .setValue(13, date)
                     .setValue(14, expiry)
@@ -363,7 +364,7 @@ internal class IsoServiceImpl(
             return responseMsg.message.let {
                 val empty = ""
                 val responseCode = it.getObjectValue<String>(39)
-                return@let TransactionResponse(responseCode, authCode = empty, stan = paymentInfo.stan, scripts = empty)
+                return@let TransactionResponse(responseCode, authCode = empty, stan = stan, scripts = empty)
             }
 
         } catch (e: Exception) {

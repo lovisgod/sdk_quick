@@ -20,7 +20,7 @@ enum class ICCData(val tagName: String, val tag: Int, val min: Int, val max: Int
     INTERFACE_DEVICE_SERIAL_NUMBER("IDSN", 0X9F1E, 8, 8),
     DEDICATED_FILE_NAME("Dedicated File Name", 0x84, 5, 16),
     APP_VERSION_NUMBER("App Version Number", 0x9F09, 2, 2),
-    AMOUNT("Amount", 0x9F03, 6, 6),
+    ANOTHER_AMOUNT("Amount", 0x9F03, 6, 6),
     APP_PAN_SEQUENCE_NUMBER("App PAN Sequence Number", 0x5F34, 1, 1),
 
 
@@ -49,5 +49,5 @@ internal val REQUEST_TAGS = listOf(ICCData.AUTHORIZATION_REQUEST,
         ICCData.INTERFACE_DEVICE_SERIAL_NUMBER,
         ICCData.DEDICATED_FILE_NAME,
         ICCData.APP_VERSION_NUMBER,
-        ICCData.AMOUNT,
+        ICCData.ANOTHER_AMOUNT,
         ICCData.APP_PAN_SEQUENCE_NUMBER)

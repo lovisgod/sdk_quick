@@ -27,8 +27,8 @@ class TestFile {
     fun showTest() {
 
         val m = "A0000000041010"
-        val sub = m.substring(0..9)
-        assertEquals(sub, "A000000004")
+        val sub = m.substring(0 until m.length-1)
+        assertEquals(sub, "A000000004101")
     }
 
 

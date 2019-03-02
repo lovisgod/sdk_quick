@@ -191,7 +191,7 @@ class QrCodeActivity : BaseActivity() {
                 responseMessage = responseMsg,
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = "",
-                stan = paymentInfo.stan, pinStatus = "", AID = "",
+                stan = paymentInfo.getStan(), pinStatus = "", AID = "",
                 code = qrData!!, telephone = "08031140978"
         )
     }

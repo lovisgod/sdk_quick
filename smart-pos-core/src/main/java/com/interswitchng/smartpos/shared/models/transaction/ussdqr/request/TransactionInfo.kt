@@ -20,7 +20,7 @@ internal data class TransactionInfo(
                 merchantLocation = terminalInfo.merchantNameAndLocation,
                 posGeoCode = terminalInfo.countryCode,
                 terminalType = "Android",
-                uniqueId = paymentInfo.stan
+                uniqueId =  paymentInfo.currentStan
         )
     }
 }

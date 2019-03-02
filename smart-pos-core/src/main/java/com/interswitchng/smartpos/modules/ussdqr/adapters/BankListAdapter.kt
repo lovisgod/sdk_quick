@@ -69,6 +69,7 @@ internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerVie
                 else bankImageView.apply {
                     elevation = context.resources.getDimension(R.dimen.isw_elevation)
                     outlineProvider = TweakableOutlineProvider()
+                    setBackgroundColor(ContextCompat.getColor(context, R.color.iswColorPrimary))
                 }
             } else {
                 // remove tint or elevation

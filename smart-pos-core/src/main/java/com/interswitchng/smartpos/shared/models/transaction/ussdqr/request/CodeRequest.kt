@@ -32,7 +32,7 @@ internal data class CodeRequest(
                 amount = "${paymentInfo.amount}",
                 bankCode = paymentInfo.bankCode,
                 date = DisplayUtils.getIsoString(Date()),
-                stan = paymentInfo.stan,
+                stan = paymentInfo.getStan(),
                 terminalId = terminalInfo.terminalId,
                 transactionType = transactionType,
                 qrFormat = qrFormat,

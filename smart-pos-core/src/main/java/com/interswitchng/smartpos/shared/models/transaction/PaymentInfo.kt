@@ -2,33 +2,27 @@ package com.interswitchng.smartpos.shared.models.transaction
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.interswitchng.smartpos.IswPos
 
 internal class PaymentInfo: Parcelable {
 
-    internal val amount: Int
-    internal val stan: String
-    internal var bankCode: String
+    val amount: Int
+    var bankCode: String
+    lateinit var currentStan: String
 
-    constructor(amount: Int, stan: String?) {
+    constructor(amount: Int, bankCode: String?) {
         this.amount = amount
-        this.stan = stan ?: ""
-        this.bankCode = ""
+        this.bankCode = bankCode  ?: ""
     }
 
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
-            parcel.readString(),
             parcel.readString())
 
-
-    constructor(amount: Int, stan: String?, bankCode: String?): this(amount, stan) {
-        this.bankCode = bankCode  ?: ""
-    }
-
+    fun getStan() = IswPos.getNextStan().also { currentStan = it }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(amount)
-        parcel.writeString(stan)
         parcel.writeString(bankCode)
     }
 
