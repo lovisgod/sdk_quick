@@ -72,7 +72,6 @@ class IswPos private constructor(private val app: Application, internal val devi
 
         @JvmStatic
         fun setupTerminal(app: Application, device: POSDevice, config: POSConfig) {
-
             if (!isSetup) {
 
                 // prevent multiple threads from creating instance

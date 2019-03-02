@@ -113,7 +113,13 @@ public class DemoActivity extends AppCompatActivity {
             device = POSDeviceService.create(getApplicationContext());
         }
 
-        POSConfig config = new POSConfig("MX5882");
+        String clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D";
+        String clientSecret = "t1ll73stS3cr3t";
+        String alias = "000001";
+        String merchantCode = "MX1065";
+
+        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode);
+
         // configure terminal
         IswPos.setupTerminal(getApplication(), device, config);
     }

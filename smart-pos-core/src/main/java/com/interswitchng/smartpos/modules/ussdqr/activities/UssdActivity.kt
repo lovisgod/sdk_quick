@@ -50,6 +50,8 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
     // container for banks and bank-codes
     private var allBanks: List<Bank>? = null
     private val printSlip = mutableListOf<PrintObject>()
+    // bottom sheet dialog for banks
+    private lateinit var banksDialog: SelectBankBottomSheet
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,8 +79,8 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         paymentHint.text = getString(R.string.isw_select_bank)
         banks.text = getString(R.string.isw_select_bank)
         banks.setOnClickListener {
-            val dialog = SelectBankBottomSheet.newInstance()
-            dialog.show(supportFragmentManager, dialog.tag)
+            banksDialog = SelectBankBottomSheet.newInstance()
+            banksDialog.show(supportFragmentManager, banksDialog.tag)
         }
         banks.performClick()
     }
@@ -89,11 +91,15 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
         else paymentService.getBanks { allBanks, throwable ->
             if (throwable != null) {
-                // TODO handle error
+                toast("Unable To load banks")
+                banksDialog.dismiss()
             } else {
                 allBanks?.let {
                     this.allBanks = it
                     runOnUiThread { callback(it) }
+                } ?: run {
+                    toast("Unable To load banks")
+                    banksDialog.dismiss()
                 }
             }
         }

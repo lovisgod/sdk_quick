@@ -3,10 +3,11 @@ package com.interswitchng.smartpos.shared
 object Constants {
 
     // URL END POINTS
-    internal const val TILL_CODE_END_POINT = "till.json"
-    internal const val TILL_TRANSACTION_STATUS_QR = "transactions/qr"
-    internal const val TILL_TRANSACTION_STATUS_USSD = "transactions/ussd.json"
-    internal const val TILL_BANKS_END_POINT = "issuers/NG"
+    internal const val CODE_END_POINT = "till.json"
+    internal const val TRANSACTION_STATUS_QR = "transactions/qr"
+    internal const val TRANSACTION_STATUS_USSD = "transactions/ussd.json"
+    internal const val BANKS_END_POINT = "issuers/NG"
+    internal const val AUTH_END_POINT = "oauth/token"
 
     internal const val KEY_PAYMENT_INFO = "payment_info_key"
 
