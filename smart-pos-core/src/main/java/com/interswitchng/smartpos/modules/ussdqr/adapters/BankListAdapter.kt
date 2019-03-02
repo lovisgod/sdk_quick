@@ -62,20 +62,24 @@ internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerVie
 
             nameTextView.text = bank.name
 
-            if (bank == selectedBank) {
+            if (bank.code == selectedBank?.code) {
                 // add tint or elevation
-                val filter: Int = ContextCompat.getColor(context, R.color.iswTransparent)
-                if (SDK_INT < Build.VERSION_CODES.LOLLIPOP) bankImageView.setColorFilter(filter)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.isw_bg_solid_primary)
+                if (SDK_INT < Build.VERSION_CODES.LOLLIPOP) bankImageView.background = drawable
                 else bankImageView.apply {
                     elevation = context.resources.getDimension(R.dimen.isw_elevation)
                     outlineProvider = TweakableOutlineProvider()
-                    setBackgroundColor(ContextCompat.getColor(context, R.color.iswColorPrimary))
+                    bankImageView.background = drawable
                 }
             } else {
                 // remove tint or elevation
-                val filter: Int = ContextCompat.getColor(context, android.R.color.transparent)
-                if (SDK_INT < Build.VERSION_CODES.LOLLIPOP) bankImageView.setColorFilter(filter)
-                else bankImageView.elevation = 0f
+                val drawable = ContextCompat.getDrawable(context, android.R.color.transparent)
+                if (SDK_INT < Build.VERSION_CODES.LOLLIPOP) bankImageView.background = drawable
+                else bankImageView.apply {
+                    elevation = 0f
+                    outlineProvider = null
+                    bankImageView.background = drawable
+                }
             }
 
             bankImageView.setOnClickListener {
