@@ -27,6 +27,7 @@ import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
+import com.interswitchng.smartpos.shared.models.utils.IswDisposable
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
@@ -40,13 +41,12 @@ abstract class BaseActivity : AppCompatActivity() {
     private val payableService: Payable by inject()
 
     protected val instance: IswPos by inject()
-    protected val handler = Handler(Looper.getMainLooper())
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
     protected val disposables = IswCompositeDisposable()
 
 
     private lateinit var transactionResponse: Transaction
-    private var pollingExecutor: ExecutorService? = null
+    private var pollingExecutor: IswDisposable? = null
 
     // getResult payment info
     internal lateinit var paymentInfo: PaymentInfo
@@ -149,7 +149,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected fun stopPolling() {
         Alerter.clearCurrent(this)
-        pollingExecutor?.shutdownNow()
+        pollingExecutor?.dispose()
     }
 
     internal fun showTransactionResult(transaction: Transaction) {

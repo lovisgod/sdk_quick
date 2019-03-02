@@ -6,8 +6,6 @@ import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.ussdqr.views.SelectBankBottomSheet
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
-import com.interswitchng.smartpos.shared.interfaces.PaymentInitiator
-import com.interswitchng.smartpos.shared.interfaces.PaymentRequest
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
@@ -35,7 +33,6 @@ import java.util.*
 class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
     private val paymentService: Payable by inject()
-    private val initiator: PaymentInitiator by inject()
 
     private var ussdCode: String? = null
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
@@ -130,19 +127,13 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
     }
 
     private fun showMockButtons(request: CodeRequest, response: CodeResponse) {
-        // TODO remove mock trigger
         initiateButton.isEnabled = true
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
-            val payment = PaymentRequest(4077131215677, request.amount.toInt(), 566, 623222, response.transactionReference!!)
-            initiator.initiateQr(payment).process { s, t ->
-                if (t != null) logger.log(t.localizedMessage)
-                else logger.log(s!!)
-            }
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
@@ -189,9 +180,6 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
                 // TODO remove mock trigger
                 showMockButtons(request, response)
-
-                // check transaction status
-                handler.postDelayed({checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode)) }, 60_000)
             }
             else -> {
                 runOnUiThread {

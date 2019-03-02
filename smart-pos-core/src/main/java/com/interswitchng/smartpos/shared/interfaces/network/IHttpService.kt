@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.network
 
+import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants.BANKS_END_POINT
 import com.interswitchng.smartpos.shared.Constants.CODE_END_POINT
 import com.interswitchng.smartpos.shared.Constants.TRANSACTION_STATUS_QR
@@ -8,7 +9,6 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeR
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
-import com.interswitchng.smartpos.shared.utilities.Simple
 import retrofit2.http.*
 
 internal interface IHttpService {

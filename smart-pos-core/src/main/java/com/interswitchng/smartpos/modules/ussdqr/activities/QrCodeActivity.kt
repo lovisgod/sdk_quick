@@ -8,8 +8,6 @@ import android.widget.Toast
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
-import com.interswitchng.smartpos.shared.interfaces.PaymentInitiator
-import com.interswitchng.smartpos.shared.interfaces.PaymentRequest
 import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
@@ -38,8 +36,6 @@ class QrCodeActivity : BaseActivity() {
     private val paymentService: Payable by inject()
     private val store: IKeyValueStore by inject()
 
-    // TODO remove reference
-    private val initiator: PaymentInitiator by inject()
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
     private val logger by lazy { Logger.with("QR") }
@@ -94,14 +90,8 @@ class QrCodeActivity : BaseActivity() {
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
-            val payment = PaymentRequest(4077131215677, request.amount.toInt(), 566, 623222, response.transactionReference!!)
-            initiator.initiateQr(payment).process { s, t ->
-                if (t != null) logger.log(t.localizedMessage)
-                else logger.log(s!!)
-            }
-
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
@@ -147,9 +137,6 @@ class QrCodeActivity : BaseActivity() {
                     // TODO remove mock trigger
                     showTransactionMocks(request, response)
                 }
-
-                // check transaction status
-               handler.postDelayed({checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode)) }, 60_000)
             }
             else -> {
                 runOnUiThread {

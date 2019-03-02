@@ -27,7 +27,13 @@ class UsbActivity : AppCompatActivity() , MessageListener {
 
         try {
             val deviceService = POSDeviceService.create(this)
-            val config = POSConfig("MX5882").with(usbConfig)
+
+            val clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D"
+            val clientSecret = "t1ll73stS3cr3t"
+            val alias = "000001"
+            val merchantCode = "MX1065"
+
+            val config = POSConfig(alias, clientId, clientSecret, merchantCode).with(usbConfig)
             // configure terminal
             IswPos.setupTerminal(application, deviceService, config)
         } catch (ex: NotConfiguredException) {

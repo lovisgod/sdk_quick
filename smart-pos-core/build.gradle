@@ -39,7 +39,7 @@ android {
     }
 
     testOptions {
-//        execution 'ANDROID_TEST_ORCHESTRATOR'
+        execution 'ANDROID_TEST_ORCHESTRATOR'
         animationsDisabled true
         unitTests {
             includeAndroidResources = true
@@ -63,6 +63,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation 'com.tapadoo.android:alerter:3.0.0'
     implementation "com.google.zxing:core:$zxing_version"
+    implementation "com.igweze.ebi:simple-call-adapter:1.0.1"
     implementation ("com.journeyapps:zxing-android-embedded:$zxing_version")  {
         exclude group: "com.android.support"
     }
