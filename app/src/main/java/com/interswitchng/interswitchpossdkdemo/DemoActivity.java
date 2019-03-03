@@ -7,36 +7,41 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
 import com.interswitchng.smartpos.IswPos;
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction;
 import com.interswitchng.smartpos.shared.interfaces.device.IPrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
 import com.interswitchng.smartpos.shared.models.core.UserType;
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus;
-import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 
-public class DemoActivity extends AppCompatActivity {
+public class DemoActivity extends AppCompatActivity implements TextWatcher {
+
+    private String current = "";
+    private EditText amount;
+    private int currentAmount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,8 +130,10 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        final EditText amount = findViewById(R.id.amount);
+        amount = findViewById(R.id.amount);
         final AppCompatButton button = findViewById(R.id.btnSubmitAmount);
+
+        amount.addTextChangedListener(this);
 
         button.setOnClickListener(v -> {
             String enteredAmount = amount.getText().toString();
@@ -135,12 +142,14 @@ public class DemoActivity extends AppCompatActivity {
             } else {
                 try {
                     // trigger payment
-                    IswPos.getInstance().initiatePayment(this, Integer.valueOf(enteredAmount) * 100, null);
+                    IswPos.getInstance().initiatePayment(this, currentAmount, null);
                 } catch (NotConfiguredException e) {
                     Log.d("DEMO", e.getMessage());
                 }
             }
         });
+
+
     }
 
 
@@ -178,5 +187,39 @@ public class DemoActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             Toast.makeText(DemoActivity.this, "Printing Slip", Toast.LENGTH_LONG).show();
         });
+    }
+
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s != null && !s.toString().equals(current)) {
+            amount.removeTextChangedListener(this);
+
+            String cleanString = s.toString().replaceAll("[$,.]", "");
+
+            double parsed = Double.parseDouble(cleanString);
+            NumberFormat numberFormat = NumberFormat.getInstance();
+            numberFormat.setMinimumFractionDigits(2);
+            numberFormat.setMaximumFractionDigits(2);
+
+            String formatted = numberFormat.format((parsed / 100));
+
+            current = formatted;
+            currentAmount = Integer.valueOf(cleanString);
+            amount.setText(formatted);
+            amount.setSelection(formatted.length());
+
+            amount.addTextChangedListener(this);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }
