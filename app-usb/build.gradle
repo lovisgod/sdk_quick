@@ -34,6 +34,8 @@ dependencies {
     implementation project(path: ':smart-pos-core')
     implementation project(path: ':smart-pos-emv-pax')
     implementation project(path: ':smart-pos-usb')
+    implementation files('libs/NeptuneLiteApi_V2.03.00_20180208.jar')
+
 
 
     testImplementation 'junit:junit:4.12'

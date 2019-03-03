@@ -123,6 +123,7 @@ class CardActivity : BaseActivity() {
             if (dialog.isShowing) dialog.dismiss()
             if (alert.isShowing) alert.dismiss()
 
+            // set cancel result
             setResult(Activity.RESULT_CANCELED)
             toast(reason)
             finish()
