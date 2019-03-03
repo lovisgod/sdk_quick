@@ -5,7 +5,6 @@ import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bcd2Str
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
-import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import java.util.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -17,8 +16,9 @@ import com.pax.jemv.emv.model.EmvEXTMParam
 import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
 
-class EmvImplementation(private val context: Context, private val pinCallback: PinCallback) {
+internal class EmvImplementation(private val context: Context, private val pinCallback: PinCallback) {
 
+    val timeout = 30 * 1000L
     private val emvParameters = EmvParam()
     private val mckParameters = EmvMCKParam().also { it.extmParam = EmvEXTMParam() }
     private val emvCallback = EMVCallback.getInstance().also { it.setCallbackListener(Listener()) }
@@ -123,7 +123,7 @@ class EmvImplementation(private val context: Context, private val pinCallback: P
         EMVCallback.EMVSetMCKParam(mckParameters)
 
         // set PCI mode to allow offline pin
-        EMVCallback.EMVSetPCIModeParam(1, "4,5".toByteArray(), 30 * 1000)
+        EMVCallback.EMVSetPCIModeParam(1, "4,5".toByteArray(), timeout)
 
         // remove all applications from terminal app list
         EMVCallback.EMVDelAllApp()
