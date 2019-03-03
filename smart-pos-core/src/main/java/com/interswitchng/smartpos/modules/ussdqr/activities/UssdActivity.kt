@@ -112,7 +112,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         val bankCode = selectedBank?.code
         // create payment info with bank code
         val paymentInfoPrime = PaymentInfo(paymentInfo.amount, bankCode)
-        val request = CodeRequest.from(terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
+        val request = CodeRequest.from(iswPos.config.alias, terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
 
         dialog.show()
 
@@ -121,19 +121,19 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
             runOnUiThread {
                 // handle error or response
                 if (throwable != null) handleError(throwable)
-                else response?.apply { handleResponse(request, this) }
+                else response?.apply { handleResponse(this) }
             }
         }
     }
 
-    private fun showMockButtons(request: CodeRequest, response: CodeResponse) {
+    private fun showButtons(response: CodeResponse) {
         initiateButton.isEnabled = true
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
 
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
@@ -167,7 +167,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         }
     }
 
-    private fun handleResponse(request: CodeRequest, response: CodeResponse) {
+    private fun handleResponse(response: CodeResponse) {
         when (response.responseCode) {
             CodeResponse.OK -> {
 
@@ -178,8 +178,8 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
                 }
                 dialog.dismiss()
 
-                // TODO remove mock trigger
-                showMockButtons(request, response)
+                // show buttons
+                showButtons(response)
             }
             else -> {
                 runOnUiThread {

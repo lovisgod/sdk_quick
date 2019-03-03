@@ -74,24 +74,24 @@ class QrCodeActivity : BaseActivity() {
             qrCodeImage.setImageBitmap(qrBitmap)
             dialog.dismiss()
         } else {
-            val request = CodeRequest.from(terminalInfo, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
+            val request = CodeRequest.from(iswPos.config.alias, terminalInfo, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
             // initiate qr payment
             paymentService.initiateQrPayment(request) { response, throwable ->
                 if (throwable != null) handleError(throwable)
-                else response?.apply { handleResponse(request, this) }
+                else response?.apply { handleResponse(this) }
             }
         }
     }
 
-    private fun showTransactionMocks(request: CodeRequest, response: CodeResponse) {
+    private fun showTransactionMocks(response: CodeResponse) {
         mockButtonsContainer.visibility = View.VISIBLE
-        // TODO remove mock trigger
         initiateButton.isEnabled = true
+
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference!!, instance.config.merchantCode))
+            checkTransactionStatus(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
@@ -125,7 +125,7 @@ class QrCodeActivity : BaseActivity() {
         }
     }
 
-    private fun handleResponse(request: CodeRequest, response: CodeResponse) {
+    private fun handleResponse(response: CodeResponse) {
         when (response.responseCode) {
             CodeResponse.OK -> {
                 qrData = response.qrCodeData
@@ -134,8 +134,7 @@ class QrCodeActivity : BaseActivity() {
                 printSlip.add(bitmap)
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
-                    // TODO remove mock trigger
-                    showTransactionMocks(request, response)
+                    showTransactionMocks(response)
                 }
             }
             else -> {

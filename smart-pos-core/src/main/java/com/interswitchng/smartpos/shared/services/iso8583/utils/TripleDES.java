@@ -45,7 +45,7 @@ public class TripleDES {
         System.arraycopy(tmp, 0, keyBytes, 0, 16);
         System.arraycopy(tmp, 0, keyBytes, 16, 8);
         SecretKey sk = new SecretKeySpec(keyBytes, "DESede");
-        // create an instance of cipher
+        // create an iswPos of cipher
         Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, sk);
 
@@ -73,7 +73,7 @@ public class TripleDES {
 
         /*byte[] message = HexCodec.hexDecode(encrypted);
 
-        MessageDigest md = MessageDigest.getInstance("MD5");
+        MessageDigest md = MessageDigest.getIswPos("MD5");
         byte[] digestOfPassword = md.digest(HexCodec.hexDecode(key));
         byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
 
@@ -83,7 +83,7 @@ public class TripleDES {
 
         SecretKey secretKey = new SecretKeySpec(keyBytes, "DESede");
 
-        Cipher decipher = Cipher.getInstance("DESede/ECB/NoPadding");
+        Cipher decipher = Cipher.getIswPos("DESede/ECB/NoPadding");
         decipher.init(Cipher.DECRYPT_MODE, secretKey);
 
         byte[] plainText = decipher.doFinal(message);*/
@@ -94,7 +94,7 @@ public class TripleDES {
         byte[] keyBytes = new byte[24];
         System.arraycopy(tmp, 0, keyBytes, 0, 8);
         //System.arraycopy(tmp, 0, keyBytes, 16, 8);
-        Cipher cipher = Cipher.getInstance("DESede/ECB/NoPadding");
+        Cipher cipher = Cipher.getIswPos("DESede/ECB/NoPadding");
         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(keyBytes, "DESede"));
         byte[] plaintext = cipher.doFinal(hexToBytes(encrypted));
         return bytesToHex(plaintext);*/

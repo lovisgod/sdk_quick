@@ -4,10 +4,10 @@ import android.content.Intent
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.shared.interfaces.library.Callback
 import com.interswitchng.smartpos.shared.interfaces.library.Payable
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
-import com.interswitchng.smartpos.shared.utilities.SimpleResponseHandler
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -47,7 +47,7 @@ class QrCodeActivityTests {
 
         val service: Payable = mock()
         whenever(service.initiateQrPayment(any(), any())).then{
-            val callback: SimpleResponseHandler<CodeResponse?>  = it.getArgument(1)
+            val callback: Callback<CodeResponse?>  = it.getArgument(1)
             callback(failedResponse, null)
         }
 

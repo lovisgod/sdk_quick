@@ -1,5 +1,8 @@
 package com.interswitchng.smartpos.services
 
+import com.igweze.ebi.simplecalladapter.Simple
+import com.igweze.ebi.simplecalladapter.SimpleHandler
+import com.interswitchng.smartpos.shared.interfaces.library.Callback
 import com.interswitchng.smartpos.shared.interfaces.network.IHttpService
 import com.interswitchng.smartpos.shared.interfaces.network.TransactionRequeryCallback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
@@ -7,8 +10,6 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.Trans
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.PayableService
-import com.interswitchng.smartpos.shared.utilities.Simple
-import com.interswitchng.smartpos.shared.utilities.SimpleResponseHandler
 import com.nhaarman.mockitokotlin2.*
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
@@ -31,8 +32,8 @@ class PayableServiceTests {
         }
 
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.test(any())).doAnswer {
-                val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
+            on(mock.run(any<(Transaction?, Throwable?) -> Unit>())).doAnswer {
+                val argumentCallback:  Callback<Transaction?> = it.getArgument(0)
                 argumentCallback(successTransaction, null)
             }
         }
@@ -69,8 +70,8 @@ class PayableServiceTests {
         }
 
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.test(any())).doAnswer {
-                val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
+            on(mock.run(any<(Transaction?, Throwable?) -> Unit>())).doAnswer {
+                val argumentCallback:  Callback<Transaction?> = it.getArgument(0)
                 argumentCallback(pendingTransaction, null)
             }
         }
@@ -107,8 +108,8 @@ class PayableServiceTests {
         }
 
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.test(any())).doAnswer {
-                val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
+            on(mock.run(any<(Transaction?, Throwable?) -> Unit>())).doAnswer {
+                val argumentCallback:  Callback<Transaction?> = it.getArgument(0)
                 argumentCallback(pendingTransaction, null)
             }
         }
@@ -149,9 +150,11 @@ class PayableServiceTests {
             on(mock.isPending()) doReturn false
         }
 
+
+
         val simpleResponse: Simple<Transaction?> = mock {
-            on(mock.test(any())).doAnswer {
-                val argumentCallback:  SimpleResponseHandler<Transaction?> = it.getArgument(0)
+            on(mock.run(any<(Transaction?, Throwable?) -> Unit>())).doAnswer {
+                val argumentCallback:  Callback<Transaction?> = it.getArgument(0)
                 argumentCallback(pendingTransaction, null)
             }
         }
@@ -179,11 +182,11 @@ class PayableServiceTests {
 
     @Test
     fun `should invoke callback function with response`() {
-        val callback: SimpleResponseHandler<List<Bank>?> = mock()
+        val callback: Callback<List<Bank>?> = mock()
 
         val response: Simple<List<Bank>?> = mock()
-        whenever(response.process( any())).then {
-            val argumentCallback:  SimpleResponseHandler<List<Bank>?> = it.getArgument(0)
+        whenever(response.process(callback)).then {
+            val argumentCallback:  Callback<List<Bank>?> = it.getArgument(0)
             argumentCallback(listOf(), null)
         }
 
@@ -198,40 +201,4 @@ class PayableServiceTests {
         verify(callback, times(1)).invoke(any(), anyOrNull())
     }
 
-    @Test
-    fun testExecutor() {
-        val scheduler = Executors.newSingleThreadScheduledExecutor()
-
-        println(Thread.activeCount())
-        scheduler.execute {
-            println("before sleep")
-            Thread.sleep(5000)
-            println("after sleep")
-        }
-
-        Thread.sleep(3000)
-        scheduler.shutdownNow()
-        Thread.sleep(3000)
-
-        assertEquals(1, Thread.activeCount())
-    }
-
-
-    @Test
-    fun testCopy() {
-        val bytes = byteArrayOf(1,2,3,4,5,6)
-        val copy = ByteArray(bytes.size - 4)
-        if (bytes.size > 4)
-            System.arraycopy(bytes, 0, copy, 0, bytes.size - 4)
-
-        for (b in copy)
-            print(b)
-
-        println(copy.size)
-
-        val m = String(byteArrayOf(0x0))
-        println(m.length)
-        println(m.isEmpty())
-        println(m.isBlank())
-    }
 }

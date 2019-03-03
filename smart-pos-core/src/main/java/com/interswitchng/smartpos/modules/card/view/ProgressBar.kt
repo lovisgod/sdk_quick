@@ -111,7 +111,7 @@ class ProgressBar : View {
         val blocksCount = width / blockLength
         // 9 for percentage block, 1 for text block
         val percentageBlocksCount = (blocksCount * 0.9f).toInt()
-        val textBlock = blocksCount - percentageBlocksCount
+//        val textBlock = blocksCount - percentageBlocksCount
         // compute percentage rect
         percentageRect.set(0, 0, percentageBlocksCount - blockLength, height)
 

@@ -40,7 +40,7 @@ abstract class BaseActivity : AppCompatActivity() {
     internal val posDevice: POSDevice by inject()
     private val payableService: Payable by inject()
 
-    protected val instance: IswPos by inject()
+    protected val iswPos: IswPos by inject()
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
     protected val disposables = IswCompositeDisposable()
 

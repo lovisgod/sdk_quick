@@ -1,7 +1,6 @@
 package com.interswitchng.smartpos.adapter
 
-import com.interswitchng.smartpos.shared.utilities.Simple
-import com.interswitchng.smartpos.shared.utilities.SimpleAdapterFactory
+import com.igweze.ebi.simplecalladapter.SimpleCallAdapterFactory
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -11,7 +10,7 @@ class SimpleAdapterFactoryTest {
 
     @Test
     fun test() {
-        val factory = SimpleAdapterFactory.create()
+        val factory = SimpleCallAdapterFactory.create()
         val expectedType = String::class.java
         val mockd: Array<String> = arrayOf()
         val type: Type = mockd.javaClass

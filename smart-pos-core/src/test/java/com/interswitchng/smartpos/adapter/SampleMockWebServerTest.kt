@@ -1,8 +1,8 @@
 package com.interswitchng.smartpos.adapter
 
+import com.igweze.ebi.simplecalladapter.SimpleCallAdapterFactory
 import com.interswitchng.smartpos.Utilities
 import com.interswitchng.smartpos.shared.interfaces.network.IHttpService
-import com.interswitchng.smartpos.shared.utilities.SimpleAdapterFactory
 import com.nhaarman.mockitokotlin2.mock
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -28,7 +28,7 @@ class SampleMockWebServerTest: KoinTest{
         val url = mockServer.url("/")
         val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(SimpleAdapterFactory.create())
+                .addCallAdapterFactory(SimpleCallAdapterFactory.create())
                 .baseUrl(url)
                 .build()
 
@@ -50,7 +50,7 @@ class SampleMockWebServerTest: KoinTest{
         val httpService: IHttpService = get()
 
         // issue request and check results
-        httpService.getQrCode(mock()).test { codeResponse, throwable ->
+        httpService.getQrCode(mock()).run { codeResponse, throwable ->
             Assert.assertNull("an error occured", throwable)
             Assert.assertNotNull("response is null", codeResponse)
         }

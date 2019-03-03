@@ -39,7 +39,7 @@ int amount = 1000 * KOBO; // convert to kobo
 // there are four(4) payment types that you can use
 // and they are (CARD, USSD, QR and PAYCODE), if paymentType is null
 // CARD paymentType will be used be default
-IswPos.getInstance().initiatePayment(activity, amount, paymentType);
+IswPos.getIswPos().initiatePayment(activity, amount, paymentType);
 ```
 
 The SDK will take over from here. You can override your Activity's `onActivityResult` method to handle the result of the initiated payment

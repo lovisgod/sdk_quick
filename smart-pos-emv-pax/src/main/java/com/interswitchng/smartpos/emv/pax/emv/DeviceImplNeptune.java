@@ -163,7 +163,7 @@ public class DeviceImplNeptune implements IDevice, TickTimer.TickTimerListener {
             Log.i("log", "pedVerifyPlainPin expectPinLen=" + this.expectPinLen);
             Log.i("log", "pedVerifyPlainPin mode=" + mode);
             Log.i("log", "pedVerifyPlainPin timeOut=" + timeOut);
-            //ped.setKeyboardLayoutLandscape(!ViewUtils.isScreenOrientationPortrait(ActivityStack.getInstance().top()));
+            //ped.setKeyboardLayoutLandscape(!ViewUtils.isScreenOrientationPortrait(ActivityStack.getIswPos().top()));
             byte[] e = ped.verifyPlainPin(iccSlot, expectPinLen, mode, timeOut);
             Log.i("log", "pedVerifyPlainPin iccRespOut=" + bcd2Str(e));
             System.arraycopy(e, 0, iccRespOut, 0, 2);
@@ -217,7 +217,7 @@ public class DeviceImplNeptune implements IDevice, TickTimer.TickTimerListener {
         Log.i("log", "pedVerifyCipherPin pinkey set ok");
 
         try {
-             //ped.setKeyboardLayoutLandscape(!ViewUtils.isScreenOrientationPortrait(ActivityStack.getInstance().top()));
+             //ped.setKeyboardLayoutLandscape(!ViewUtils.isScreenOrientationPortrait(ActivityStack.getIswPos().top()));
             Log.i("log", "pedVerifyCipherPin expectPinLen=" + this.expectPinLen);
             Log.i("log", "pedVerifyCipherPin mode=" + mode);
             Log.i("log", "pedVerifyCipherPin timeOut=" + timeOut);

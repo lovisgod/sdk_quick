@@ -288,7 +288,7 @@ internal class IsoServiceImpl(
             val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
-            val processCode = "010000"
+            val processCode = "001000"
             val stan = paymentInfo.getStan()
             val randomReference = "000000$stan"
             val date = dateFormatter.format(now)
@@ -315,7 +315,7 @@ internal class IsoServiceImpl(
                     .setValue(14, expiry)
                     .setValue(18, terminalInfo.merchantCategoryCode)
                     .setValue(22, "051")
-                    .setValue(23, "001")
+                    .setValue(23, "000")
                     .setValue(25, "00")
                     .setValue(26, "06")
                     .setValue(28, "C00000000")
@@ -375,7 +375,7 @@ internal class IsoServiceImpl(
     }
 
     private fun generatePan(code: String): String {
-        val bin = "506101"
+        val bin = "506179"
         var binAndCode = "$bin$code"
         val remainder = 12 - code.length
         // pad if less than 12

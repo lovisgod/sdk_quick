@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="16dp">
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/headerLabelLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:id="@+id/headerLabelLayout">
-
-        <ImageView
-            android:id="@+id/closeSheetButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/isw_ic_close"
-            android:layout_gravity="center_vertical|end|right"/>
+        android:orientation="horizontal">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textSize="18sp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
             android:layout_gravity="center_vertical"
             android:textColor="@color/iswTextColorSecondaryLight"
             android:text="Select Customer's preferred bank"/>
-    </FrameLayout>
+
+
+        <ImageView
+            android:id="@+id/closeSheetButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/isw_ic_close"
+            />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -40,14 +46,22 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"/>
 
-    <ProgressBar
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="32dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/headerLabelDivider"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/progressBarSelectBank"/>
+        android:gravity="center"
+        >
+
+        <ProgressBar
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/progressBarSelectBank"
+            />
+
+    </LinearLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
@@ -55,19 +69,19 @@
         android:id="@+id/rvBankLists"
         android:layout_above="@+id/proceedSelectBank"
         android:layout_below="@+id/headerLabelDivider"/>
+
     <RelativeLayout
+        android:id="@+id/proceedSelectBank"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:id="@+id/proceedSelectBank"
-        android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="16sp"
         android:layout_marginBottom="16dp"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/isw_bg_square_">
+        android:background="@drawable/isw_bg_action_button">
 
         <TextView
             android:layout_width="wrap_content"

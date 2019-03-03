@@ -74,7 +74,7 @@ class IswPos private constructor(private val app: Application, internal val devi
         fun setupTerminal(app: Application, device: POSDevice, config: POSConfig) {
             if (!isSetup) {
 
-                // prevent multiple threads from creating instance
+                // prevent multiple threads from creating iswPos
                 synchronized(this) {
                     INSTANCE = IswPos(app, device, config)
                 }

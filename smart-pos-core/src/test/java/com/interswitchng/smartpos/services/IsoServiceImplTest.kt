@@ -8,7 +8,7 @@ class IsoServiceImplTest {
 
     private fun getBinAndCode(code: String): String {
 
-        val bin = "506101"
+        val bin = "506179"
         var binAndCode = "$bin$code"
         val remainder = 12 - code.length
         // pad if less than 12
@@ -46,8 +46,8 @@ class IsoServiceImplTest {
 
     @Test
     fun should_return_correct_card_check_digits() {
-        val code = getBinAndCode("123456789")
-        val expectedPan = "5061011234567890008"
+        val code = getBinAndCode("131607374")
+        val expectedPan = "5061791316073740003"
 
         val actualPan = getPan(code)
         assertEquals(expectedPan, actualPan)

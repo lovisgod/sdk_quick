@@ -1,7 +1,7 @@
 package com.interswitchng.smartpos.adapter
 
-import com.interswitchng.smartpos.shared.utilities.Simple
-import com.interswitchng.smartpos.shared.utilities.SimpleCallAdapter
+import com.igweze.ebi.simplecalladapter.Simple
+import com.igweze.ebi.simplecalladapter.SimpleCallAdapter
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
@@ -30,7 +30,7 @@ class SimpleAdapterTest: KoinTest {
         val simpleAdapter = SimpleCallAdapter<String>(String::class.java)
         val simpleResponse = simpleAdapter.adapt(call) as Simple<String>
 
-        simpleResponse.test { s, throwable ->
+        simpleResponse.run { s, throwable ->
             assertNull("error is not null", throwable)
             assertNotNull("response is null", s)
             assertSame("error message is different", msg, s)
@@ -53,7 +53,7 @@ class SimpleAdapterTest: KoinTest {
         val simpleAdapter = SimpleCallAdapter<String>(String::class.java)
         val simpleResponse = simpleAdapter.adapt(call) as Simple<String>
 
-        simpleResponse.test { s, throwable ->
+        simpleResponse.run { s, throwable ->
             assertNotNull("error is null", throwable)
             assertSame("error message is different", msg, throwable?.message)
             assertNull("response is not null", s)

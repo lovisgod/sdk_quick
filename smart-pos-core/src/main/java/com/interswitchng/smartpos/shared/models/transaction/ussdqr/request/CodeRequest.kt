@@ -27,8 +27,8 @@ internal data class CodeRequest(
         internal const val QR_FORMAT_RAW = "RAW"
         internal const val QR_FORMAT_FULL = "FULL"
 
-        internal fun from(terminalInfo: TerminalInfo, paymentInfo: PaymentInfo, transactionType: String, qrFormat: String? = null) = CodeRequest (
-                alias = "000007", // TODO replace with -> terminalInfo.merchantId,
+        internal fun from(alias: String, terminalInfo: TerminalInfo, paymentInfo: PaymentInfo, transactionType: String, qrFormat: String? = null) = CodeRequest (
+                alias = alias,
                 amount = "${paymentInfo.amount}",
                 bankCode = paymentInfo.bankCode,
                 date = DisplayUtils.getIsoString(Date()),
