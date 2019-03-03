@@ -92,7 +92,7 @@ class CardActivity : BaseActivity() {
             when (result) {
                 EmvResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
                 else -> {
-                    toast("Transaction Declined")
+                    toast("Transaction not processed")
                     showContainer(CardTransactionState.Default)
                 }
             }
@@ -123,6 +123,7 @@ class CardActivity : BaseActivity() {
             if (dialog.isShowing) dialog.dismiss()
             if (alert.isShowing) alert.dismiss()
 
+            // set cancel result
             setResult(Activity.RESULT_CANCELED)
             toast(reason)
             finish()

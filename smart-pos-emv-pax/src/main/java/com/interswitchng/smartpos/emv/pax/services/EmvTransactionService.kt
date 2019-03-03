@@ -64,7 +64,7 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
             else -> null
         }
 
-        if (resultMsg != null) emvCallback?.onTransactionCancelled(resultMsg.errCode, resultMsg.errMsg)
+        if (resultMsg != null) callTransactionCancelled(resultMsg.errCode, resultMsg.errMsg)
     }
 
     override fun startTransaction(): CoreEmvResult {
@@ -92,10 +92,12 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
     }
 
     override fun cancelTransaction() {
-        isCancelled = true
-        disposables.dispose()
-        ped.setInputPinListener(null) // remove the pin pad
-        emvCallback = null
+        if(!isCancelled) {
+            isCancelled = true
+            disposables.dispose()
+            ped.setInputPinListener(null) // remove the pin pad
+            emvCallback = null
+        }
     }
 
     override fun getTransactionInfo(): EmvData? {
@@ -149,11 +151,13 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
             // try and detect card
             while (!it.isDisposed) {
                 // check if card cannot be detected
-                if (!POSDeviceService.dal.icc.detect(0x00)) break
+                if (!POSDeviceService.dal.icc.detect(0x00))  {
+                    // notify callback of card removal
+                    emvCallback?.onCardRemoved()
+                    break
+                }
                 Thread.sleep(1000)
             }
-            // notify callback of card removal
-            emvCallback?.onCardRemoved()
         }
 
         disposables.add(disposable)
@@ -181,16 +185,28 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
                 // set input listener
                 ped.setInputPinListener(this)
 
+                // cancel Transaction after Timeout
+                val disposable =  ThreadUtils.createExecutor {
+                    // expected timeout
+                    val timeout = System.currentTimeMillis() + emvImpl.timeout - 1000
+                    // flag to know when timeout occurs
+                    var hasTimedOut = false
+                    while (!it.isDisposed) {
+                        // notify callback or set timeout flag
+                        if (hasTimedOut) callTransactionCancelled(RetCode.EMV_TIME_OUT, "Pin Input Timeout ")
+                        else hasTimedOut = System.currentTimeMillis() + 1000 >= timeout
+
+                        // sleep for 1 second
+                        if(!hasTimedOut) Thread.sleep(1000)
+                        else ped.cancelInput()
+                    }
+                }
+                disposables.add(disposable)
+
+
                 // trigger pin input based flag
                 if (isOnline) getOnlinePin(panBlock)
                 else getOfflinePin()
-
-                // cancel Transaction after Timeout
-                val disposable =  ThreadUtils.createExecutor {
-                    Thread.sleep(emvImpl.timeout)
-                    emvCallback?.onTransactionCancelled(RetCode.EMV_TIME_OUT, "Pin Input Timeout ")
-                }
-                disposables.add(disposable)
             }
         } catch (e: PedDevException) {
             logger.logErr("Error occured verifying pin: isOnline - $isOnline, code - ${e.errCode}, msg - ${e.errMsg}")
@@ -237,8 +253,7 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
         }
 
         // check if the user cancelled pin input
-        if (key == EKeyCode.KEY_CANCEL)
-            emvCallback?.onTransactionCancelled(RetCode.EMV_USER_CANCEL, "User cancelled PIN input")
+        if (key == EKeyCode.KEY_CANCEL) callTransactionCancelled(RetCode.EMV_USER_CANCEL, "User cancelled PIN input")
         else emvCallback?.setPinText(text) // set password text
     }
 
@@ -250,6 +265,11 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
             EPedDevException.PED_ERR_NO_PIN_INPUT.errCodeFromBasement -> RetCode.EMV_NO_PASSWORD
             else -> RetCode.EMV_NO_PINPAD
         }
+    }
+
+    private fun callTransactionCancelled(code: Int, reason: String) {
+        emvCallback?.onTransactionCancelled(code, reason)
+        cancelTransaction()
     }
 
     companion object {

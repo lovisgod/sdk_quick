@@ -50,13 +50,14 @@ repositories {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'], excludes: ['NeptuneLiteApi_V2.03.00_20180208.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.github.kulik:android-jaxb:0.5'
     compileOnly project(':smart-pos-core')
+    compileOnly files('libs/NeptuneLiteApi_V2.03.00_20180208.jar')
 
 
 
@@ -65,6 +66,7 @@ dependencies {
 
 
     androidTestImplementation project(':smart-pos-core')
+    androidTestImplementation files('libs/NeptuneLiteApi_V2.03.00_20180208.jar')
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation "com.android.support.test:rules:$test_runner_version"
