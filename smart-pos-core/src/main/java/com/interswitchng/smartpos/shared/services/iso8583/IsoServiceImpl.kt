@@ -6,7 +6,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_PIN_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_SESSION_KEY
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
@@ -28,7 +28,7 @@ import java.util.*
 
 internal class IsoServiceImpl(
         private val context: Context,
-        private val store: IKeyValueStore,
+        private val store: KeyValueStore,
         private val socket: IsoSocket) : IsoService {
 
     private val logger by lazy { Logger.with("IsoServiceImpl") }

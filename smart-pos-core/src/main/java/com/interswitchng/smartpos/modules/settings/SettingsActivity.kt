@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
@@ -17,7 +17,7 @@ import java.util.*
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val store: IKeyValueStore by inject()
+    private val store: KeyValueStore by inject()
     private val isoService: IsoService by inject()
 
     private val disposables = IswCompositeDisposable()

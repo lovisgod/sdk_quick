@@ -1,12 +1,12 @@
 package com.interswitchng.smartpos.shared.services
 
-import com.interswitchng.smartpos.shared.interfaces.library.IUserService
-import com.interswitchng.smartpos.shared.interfaces.network.IAuthService
+import com.interswitchng.smartpos.shared.interfaces.library.UserStore
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
 import com.interswitchng.smartpos.shared.models.core.AuthToken
 import retrofit2.HttpException
 import java.io.IOException
 
-internal class UserService(private val authService: IAuthService): IUserService {
+internal class UserStoreImpl(private val authService: IAuthService): UserStore {
 
     private lateinit var token: AuthToken
 

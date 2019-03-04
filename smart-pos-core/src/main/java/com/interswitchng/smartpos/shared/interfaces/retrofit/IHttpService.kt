@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.shared.interfaces.network
+package com.interswitchng.smartpos.shared.interfaces.retrofit
 
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants.BANKS_END_POINT

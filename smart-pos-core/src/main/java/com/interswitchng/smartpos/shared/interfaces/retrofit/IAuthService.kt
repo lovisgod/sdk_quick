@@ -1,9 +1,8 @@
-package com.interswitchng.smartpos.shared.interfaces.network
+package com.interswitchng.smartpos.shared.interfaces.retrofit
 
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants.AUTH_END_POINT
 import com.interswitchng.smartpos.shared.models.core.AuthToken
-import com.interswitchng.smartpos.shared.models.core.POSConfig
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST

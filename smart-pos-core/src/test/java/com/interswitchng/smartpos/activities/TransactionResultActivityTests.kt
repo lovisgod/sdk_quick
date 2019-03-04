@@ -7,7 +7,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.TransactionResultActivity
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -37,7 +37,7 @@ class TransactionResultActivityTests {
     @Before
     fun setup() {
         val posDevice: POSDevice = mock()
-        val store: IKeyValueStore = mock { whenever(mock.getString(any(), any())) doReturn "" }
+        val store: KeyValueStore = mock { whenever(mock.getString(any(), any())) doReturn "" }
 
         loadKoinModules(module(override = true) {
             single { posDevice }

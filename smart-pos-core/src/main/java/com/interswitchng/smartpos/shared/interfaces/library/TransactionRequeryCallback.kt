@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.shared.interfaces.network
+package com.interswitchng.smartpos.shared.interfaces.library
 
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 

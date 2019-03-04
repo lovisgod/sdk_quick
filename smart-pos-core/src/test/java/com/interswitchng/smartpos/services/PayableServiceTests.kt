@@ -1,20 +1,18 @@
 package com.interswitchng.smartpos.services
 
 import com.igweze.ebi.simplecalladapter.Simple
-import com.igweze.ebi.simplecalladapter.SimpleHandler
 import com.interswitchng.smartpos.shared.interfaces.library.Callback
-import com.interswitchng.smartpos.shared.interfaces.network.IHttpService
-import com.interswitchng.smartpos.shared.interfaces.network.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
+import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
-import com.interswitchng.smartpos.shared.services.PayableService
+import com.interswitchng.smartpos.shared.services.HttpServiceImpl
 import com.nhaarman.mockitokotlin2.*
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Test
-import java.util.concurrent.Executors
 
 class PayableServiceTests {
 
@@ -43,7 +41,7 @@ class PayableServiceTests {
         }
 
         val threadCountBeforeServiceCall = Thread.activeCount()
-        val service = PayableService(httpService)
+        val service = HttpServiceImpl(httpService)
         service.checkPayment(PaymentType.QR, status, 3000, transactionStatusCallback)
         val threadCountDuringServiceCall = Thread.activeCount()
         assertEquals(threadCountBeforeServiceCall + 1, threadCountDuringServiceCall)
@@ -81,7 +79,7 @@ class PayableServiceTests {
         }
 
 
-        val service = PayableService(httpService)
+        val service = HttpServiceImpl(httpService)
         val threadCountBeforeServiceCall = Thread.activeCount()
         service.checkPayment(PaymentType.QR, status, 3000, transactionStatusCallback)
         val threadCountDuringServiceCall = Thread.activeCount()
@@ -118,7 +116,7 @@ class PayableServiceTests {
             on(mock.getUssdTransactionStatus(any(), any())) doReturn simpleResponse
         }
 
-        val service = PayableService(httpService)
+        val service = HttpServiceImpl(httpService)
         val threadCountBeforeServiceCall = Thread.activeCount()
         service.checkPayment(PaymentType.USSD, status, 6000, transactionStatusCallback)
 
@@ -164,7 +162,7 @@ class PayableServiceTests {
         }
 
 
-        val service = PayableService(httpService)
+        val service = HttpServiceImpl(httpService)
         val threadCountBeforeServiceCall = Thread.activeCount()
         service.checkPayment(PaymentType.USSD, status, 3000, transactionStatusCallback)
         val threadCountDuringServiceCall = Thread.activeCount()
@@ -193,7 +191,7 @@ class PayableServiceTests {
         val httpService: IHttpService = mock()
         whenever(httpService.getBanks()).doReturn(response)
 
-        val service = PayableService(httpService)
+        val service = HttpServiceImpl(httpService)
         service.getBanks(callback)
 
 

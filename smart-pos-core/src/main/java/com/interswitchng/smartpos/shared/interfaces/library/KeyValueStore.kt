@@ -1,6 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
-internal interface IKeyValueStore {
+internal interface KeyValueStore {
 
     fun saveString(key: String, value: String)
 

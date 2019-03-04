@@ -1,19 +1,15 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
-import com.igweze.ebi.simplecalladapter.SimpleHandler
-import com.interswitchng.smartpos.shared.interfaces.network.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.utils.IswDisposable
-import java.util.concurrent.ExecutorService
 
 
-typealias Callback<R> = (response: R?, t: Throwable?) -> Unit
-
-internal interface Payable {
+internal interface HttpService {
 
     fun initiateQrPayment(request: CodeRequest, callback: Callback<CodeResponse>)
 

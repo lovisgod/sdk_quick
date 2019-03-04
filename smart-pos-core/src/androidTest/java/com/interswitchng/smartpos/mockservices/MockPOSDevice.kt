@@ -1,10 +1,14 @@
 package com.interswitchng.smartpos.mockservices
 
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
-import com.interswitchng.smartpos.shared.interfaces.device.IPrinter
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
+import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 
-internal class MockPOSDevice(override val emvCardTransaction: EmvCardTransaction, override val printer: IPrinter) : POSDevice {
+internal class MockPOSDevice(override val printer: DevicePrinter) : POSDevice {
+
+    override fun getEmvCardTransaction(): EmvCardReader {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
 }

@@ -11,9 +11,9 @@ import android.widget.TextView
 import com.google.gson.Gson
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.base.BaseTestActivity
-import com.interswitchng.smartpos.mockservices.MockPayableService
+import com.interswitchng.smartpos.mockservices.MockHttpServiceService
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
+import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.utils.Utilities
 import com.interswitchng.smartpos.utils.WaitUtils
@@ -74,7 +74,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
     @Test
     fun should_show_success_message_when_transaction_is_successful() {
 
-        val service: Payable = MockPayableService.Builder()
+        val service: HttpService = MockHttpServiceService.Builder()
                 .setPaymentStatusCall {
                     val successString = Utilities.getJson(activityRule.activity, "success-transaction-response.json")
                     val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
@@ -113,7 +113,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
     fun should_show_error_msg_when_transaction_fails() {
 
         var errorMsg = "error"
-        val service: Payable = MockPayableService.Builder()
+        val service: HttpService = MockHttpServiceService.Builder()
                 .setPaymentStatusCall {
                     val successString = Utilities.getJson(activityRule.activity,"failed-transaction-response.json")
                     val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
@@ -149,7 +149,7 @@ class UssdCodeInstrumentationTests: BaseTestActivity() {
     @Test
     fun should_show_error_msg_when_transaction_times_out() {
 
-        val service: Payable = MockPayableService.Builder()
+        val service: HttpService = MockHttpServiceService.Builder()
                 .setPaymentStatusCall { it.onTransactionTimeOut() }
                 .build()
 

@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.UserType
@@ -24,7 +24,7 @@ import org.koin.android.ext.android.inject
 
 class TransactionResultActivity : BaseActivity() {
 
-    private val store: IKeyValueStore by inject()
+    private val store: KeyValueStore by inject()
     private val alert by lazy {
         DialogUtils.getAlertDialog(this)
                 .setTitle("An Error Occurred")

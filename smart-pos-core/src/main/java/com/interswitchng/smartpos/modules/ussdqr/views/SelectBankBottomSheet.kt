@@ -14,10 +14,8 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.ussdqr.adapters.BankListAdapter
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import kotlinx.android.synthetic.main.isw_select_bank_bottom_sheet.*
-import org.koin.android.ext.android.inject
 
 internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 

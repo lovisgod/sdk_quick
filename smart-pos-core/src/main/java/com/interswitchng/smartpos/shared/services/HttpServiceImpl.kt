@@ -1,9 +1,9 @@
 package com.interswitchng.smartpos.shared.services
 
-import com.interswitchng.smartpos.shared.interfaces.library.Callback
-import com.interswitchng.smartpos.shared.interfaces.network.IHttpService
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
-import com.interswitchng.smartpos.shared.interfaces.network.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
+import com.interswitchng.smartpos.shared.interfaces.library.HttpService
+import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
@@ -12,7 +12,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Code
 import com.interswitchng.smartpos.shared.models.utils.IswDisposable
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 
-internal class PayableService(private val httpService: IHttpService): Payable {
+internal class HttpServiceImpl(private val httpService: IHttpService): HttpService {
 
     override fun getBanks(callback: Callback<List<Bank>?>) {
         httpService.getBanks().process(callback)

@@ -1,23 +1,24 @@
 package com.interswitchng.smartpos.mockservices
 
 import android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
-import com.interswitchng.smartpos.shared.interfaces.network.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.interfaces.library.HttpService
+import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
-import com.interswitchng.smartpos.shared.utilities.SimpleResponseHandler
-import java.util.concurrent.ExecutorService
+import com.interswitchng.smartpos.shared.models.utils.IswDisposable
+import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import java.util.concurrent.Executors
 
-internal class MockPayableService private constructor(
-        private val qr: ((SimpleResponseHandler<CodeResponse?>) -> Unit)?,
-        private val ussd: ((SimpleResponseHandler<CodeResponse?>) -> Unit)?,
-        private val banks: ((SimpleResponseHandler<List<Bank>?>) -> Unit)?,
-        private val paymentStatus: ((TransactionRequeryCallback) -> Unit)?) : Payable {
+internal class MockHttpService private constructor(
+        private val qr: ((Callback<CodeResponse?>) -> Unit)?,
+        private val ussd: ((Callback<CodeResponse?>) -> Unit)?,
+        private val banks: ((Callback<List<Bank>?>) -> Unit)?,
+        private val paymentStatus: ((TransactionRequeryCallback) -> Unit)?) : HttpService {
 
 
 
@@ -38,7 +39,7 @@ internal class MockPayableService private constructor(
             Bank(103, "GUARANTY TRUST BANK", "isw_logo_gtb"),
             Bank(114, "Skye Bank", "SKYE"))
 
-    override fun initiateUssdPayment(request: CodeRequest, callback: SimpleResponseHandler<CodeResponse?>) {
+    override fun initiateUssdPayment(request: CodeRequest, callback: Callback<CodeResponse?>) {
 
         Thread(Runnable {
 
@@ -52,7 +53,7 @@ internal class MockPayableService private constructor(
         }).start()
     }
 
-    override fun initiateQrPayment(request: CodeRequest, callback: SimpleResponseHandler<CodeResponse?>) {
+    override fun initiateQrPayment(request: CodeRequest, callback: Callback<CodeResponse?>) {
 
         Thread(Runnable {
 
@@ -66,7 +67,7 @@ internal class MockPayableService private constructor(
         }).start()
     }
 
-    override fun getBanks(callback: SimpleResponseHandler<List<Bank>?>) {
+    override fun getBanks(callback: Callback<List<Bank>?>) {
         Thread(Runnable {
             Thread.sleep(defaultTime)
 
@@ -77,10 +78,8 @@ internal class MockPayableService private constructor(
         }).start()
     }
 
-    override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): ExecutorService {
-        val executor = Executors.newSingleThreadScheduledExecutor()
-
-        executor.execute {
+    override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): IswDisposable {
+        return ThreadUtils.createExecutor {
             Thread.sleep(defaultTime)
             val response = Transaction(3380867, 5000, "XeAAoeCX8dklyjbBMDg5wysiA", "00", "566", false, "011", 50, null)
 
@@ -89,27 +88,25 @@ internal class MockPayableService private constructor(
                 else callback.onTransactionCompleted(response)
             }
         }
-
-        return executor
     }
 
     class Builder {
-        private var qr: ((SimpleResponseHandler<CodeResponse?>) -> Unit)? = null
-        private var ussd: ((SimpleResponseHandler<CodeResponse?>) -> Unit)? = null
-        private var banks: ((SimpleResponseHandler<List<Bank>?>) -> Unit)? = null
+        private var qr: ((Callback<CodeResponse?>) -> Unit)? = null
+        private var ussd: ((Callback<CodeResponse?>) -> Unit)? = null
+        private var banks: ((Callback<List<Bank>?>) -> Unit)? = null
         private var paymentStatus: ((TransactionRequeryCallback) -> Unit)? = null
 
-        fun setQrCall(call: (SimpleResponseHandler<CodeResponse?>) -> Unit): Builder {
+        fun setQrCall(call: (Callback<CodeResponse?>) -> Unit): Builder {
             qr = call
             return this
         }
 
-        fun setUssdCall(call: (SimpleResponseHandler<CodeResponse?>) -> Unit): Builder {
+        fun setUssdCall(call: (Callback<CodeResponse?>) -> Unit): Builder {
             ussd = call
             return this
         }
 
-        fun setBanksCall(call: (SimpleResponseHandler<List<Bank>?>) -> Unit): Builder {
+        fun setBanksCall(call: (Callback<List<Bank>?>) -> Unit): Builder {
             banks = call
             return this
         }
@@ -119,7 +116,7 @@ internal class MockPayableService private constructor(
             return this
         }
 
-        fun build() = MockPayableService(qr, ussd, banks, paymentStatus)
+        fun build() = MockHttpService(qr, ussd, banks, paymentStatus)
 
     }
 }

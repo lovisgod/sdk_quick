@@ -8,7 +8,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.settings.SettingsActivity
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
@@ -43,7 +43,7 @@ class SettingsActivityTests {
         }
     }
 
-    private val store: IKeyValueStore = mock {
+    private val store: KeyValueStore = mock {
         on(mock.getNumber(anyString(), anyLong())) doAnswer {
             val key = it.arguments[0] as String
             val default = it.arguments[1] as Long

@@ -3,8 +3,8 @@ package com.interswitchng.smartpos.shared.interfaces.device
 
 interface POSDevice {
 
-    val printer: IPrinter
+    val printer: DevicePrinter
 
-    fun getEmvCardTransaction(): EmvCardTransaction
+    fun getEmvCardTransaction(): EmvCardReader
 
 }

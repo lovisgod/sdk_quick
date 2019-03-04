@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.base
 
 import android.app.Application
 import com.interswitchng.smartpos.IswPos
-import com.interswitchng.smartpos.mockservices.EmvTransactionImpl
+import com.interswitchng.smartpos.mockservices.MockEmvCardReaderImpl
 import com.interswitchng.smartpos.mockservices.MockPOSDevice
 import com.interswitchng.smartpos.mockservices.Printer
 import com.interswitchng.smartpos.shared.models.core.POSConfig
@@ -26,7 +26,7 @@ class MockApplication: Application() {
 
 
         // setup device for terminal
-        val device = MockPOSDevice(EmvTransactionImpl(), Printer())
+        val device = MockPOSDevice(MockEmvCardReaderImpl(), Printer())
         val config = POSConfig(merchantCode)
         IswPos.setupTerminal(this, device, config)
 

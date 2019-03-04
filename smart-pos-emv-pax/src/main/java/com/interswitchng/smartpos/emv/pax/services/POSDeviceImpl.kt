@@ -2,20 +2,19 @@ package com.interswitchng.smartpos.emv.pax.services
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.support.v4.content.ContextCompat
 import com.interswitchng.smartpos.emv.pax.R
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
-import com.interswitchng.smartpos.shared.interfaces.device.IPrinter
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
+import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.emv.pax.emv.DeviceImplNeptune
 import com.pax.dal.IDAL
 import com.pax.jemv.device.DeviceManager
 import com.pax.neptunelite.api.NeptuneLiteUser
 
-class POSDeviceService private constructor(override val printer: IPrinter, private val factory: () -> EmvCardTransaction) : POSDevice {
+class POSDeviceImpl private constructor(override val printer: DevicePrinter, private val factory: () -> EmvCardReader) : POSDevice {
 
 
     init {
@@ -28,7 +27,7 @@ class POSDeviceService private constructor(override val printer: IPrinter, priva
     }
 
 
-    override fun getEmvCardTransaction(): EmvCardTransaction = factory()
+    override fun getEmvCardTransaction(): EmvCardReader = factory()
 
     fun setCompanyLogo(bitmap: Bitmap) {
         companyLogo = bitmap
@@ -40,7 +39,7 @@ class POSDeviceService private constructor(override val printer: IPrinter, priva
         internal lateinit var companyLogo: Bitmap private set
 
         @JvmStatic
-        internal fun create(context: Context, printer: IPrinter = Printer, factory: () -> EmvCardTransaction): POSDeviceService {
+        internal fun create(context: Context, printer: DevicePrinter = DevicePrinterImpl, factory: () -> EmvCardReader): POSDeviceImpl {
             // setupDevice pos device
             setupDevice(context)
 
@@ -57,14 +56,14 @@ class POSDeviceService private constructor(override val printer: IPrinter, priva
                 }
             }
 
-            return POSDeviceService(printer, factory)
+            return POSDeviceImpl(printer, factory)
         }
 
 
         @JvmStatic
-        fun create(context: Context): POSDeviceService {
-            val printer: IPrinter = Printer
-            val factory = { EmvTransactionService(context) }
+        fun create(context: Context): POSDeviceImpl {
+            val printer: DevicePrinter = DevicePrinterImpl
+            val factory = { EmvCardReaderImpl(context) }
             return create(context, printer, factory)
         }
 

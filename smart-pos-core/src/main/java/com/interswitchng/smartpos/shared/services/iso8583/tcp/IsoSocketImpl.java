@@ -27,7 +27,7 @@ import javax.net.ssl.TrustManager;
  * @author tosin.eniolorunda
  */
 
-public class NibssIsoSocket implements IsoSocket {
+public class IsoSocketImpl implements IsoSocket {
 
     private SSLSocket socket;
     private SocketAddress socketAddress;
@@ -37,12 +37,12 @@ public class NibssIsoSocket implements IsoSocket {
     private static final int SOCKET_SIZE_INCREAMENT = 100 * 1024;
     private SSLSocketFactory factory;
 
-    public NibssIsoSocket(SocketAddress socketAddress, int timeout) {
+    public IsoSocketImpl(SocketAddress socketAddress, int timeout) {
         this.socketAddress = socketAddress;
         this.timeout = timeout;
     }
 
-    public NibssIsoSocket(String serverIp, int serverPort, int timeout) {
+    public IsoSocketImpl(String serverIp, int serverPort, int timeout) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
         this.timeout = timeout;

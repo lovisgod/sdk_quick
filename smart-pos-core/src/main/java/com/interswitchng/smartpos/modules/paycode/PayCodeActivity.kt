@@ -3,7 +3,7 @@ package com.interswitchng.smartpos.modules.paycode
 import android.os.Bundle
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseActivity
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -32,7 +32,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
 
 
     private val isoService: IsoService by inject()
-    private val store: IKeyValueStore by inject()
+    private val store: KeyValueStore by inject()
     private lateinit var transactionResult: TransactionResult
 
     override fun onStart() {

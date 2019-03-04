@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.adapter
 
 import com.igweze.ebi.simplecalladapter.SimpleCallAdapterFactory
 import com.interswitchng.smartpos.Utilities
-import com.interswitchng.smartpos.shared.interfaces.network.IHttpService
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
 import com.nhaarman.mockitokotlin2.mock
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

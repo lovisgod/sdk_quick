@@ -7,7 +7,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResul
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 
-interface EmvCardTransaction {
+interface EmvCardReader {
 
     fun setEmvCallback(callback: EmvCallback)
 

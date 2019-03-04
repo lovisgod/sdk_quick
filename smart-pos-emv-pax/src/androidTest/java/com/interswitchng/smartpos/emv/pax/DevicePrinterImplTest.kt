@@ -5,7 +5,7 @@ import android.os.Looper
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.interswitchng.smartpos.emv.pax.models.*
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceService
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
@@ -13,13 +13,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
-import android.graphics.Bitmap
-import android.graphics.Matrix
-import com.interswitchng.smartpos.emv.pax.services.Printer
 
 
 @RunWith(AndroidJUnit4::class)
-class PrinterTest {
+class DevicePrinterImplTest {
 
 
     private lateinit var pos: POSDevice
@@ -28,7 +25,7 @@ class PrinterTest {
     @Before
     fun setup() {
         Looper.prepare()
-        pos = POSDeviceService.create(context)
+        pos = POSDeviceImpl.create(context)
 
     }
 
@@ -79,7 +76,7 @@ class PrinterTest {
         val slip = getCardSlip()
 //        pos.printer.printSlip(slip, UserType.Customer)
         val bm = BitmapFactory.decodeResource(context.resources, R.drawable.isw_logo_gtb)
-        (pos as POSDeviceService).setCompanyLogo(bm)
+        (pos as POSDeviceImpl).setCompanyLogo(bm)
         pos.printer.printSlip(listOf(), UserType.Customer)
 
         Thread.sleep(2000)

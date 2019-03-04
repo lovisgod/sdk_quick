@@ -3,8 +3,6 @@ package com.interswitchng.smartpos.shared.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -17,8 +15,8 @@ import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
-import com.interswitchng.smartpos.shared.interfaces.network.TransactionRequeryCallback
+import com.interswitchng.smartpos.shared.interfaces.library.HttpService
+import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -33,12 +31,11 @@ import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
-import java.util.concurrent.ExecutorService
 
 abstract class BaseActivity : AppCompatActivity() {
 
     internal val posDevice: POSDevice by inject()
-    private val payableService: Payable by inject()
+    private val payableService: HttpService by inject()
 
     protected val iswPos: IswPos by inject()
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }

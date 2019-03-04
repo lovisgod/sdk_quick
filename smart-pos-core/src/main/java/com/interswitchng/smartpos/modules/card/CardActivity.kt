@@ -6,7 +6,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -22,7 +22,6 @@ import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
-import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
@@ -36,7 +35,7 @@ class CardActivity : BaseActivity() {
     private val emv by lazy { posDevice.getEmvCardTransaction() }
 
     private val isoService: IsoService by inject()
-    private val store: IKeyValueStore by inject()
+    private val store: KeyValueStore by inject()
     private val accountType = AccountType.Default
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false

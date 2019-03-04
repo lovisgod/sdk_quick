@@ -1,11 +1,11 @@
 package com.interswitchng.smartpos.shared.services.storage
 
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.utilities.Logger
 
-internal class KeyValueStore(private val prefManager: SharePreferenceManager): IKeyValueStore {
+internal class KeyValueStoreImpl(private val prefManager: SharePreferenceManager): KeyValueStore {
 
-    val logger = Logger.with("KeyValueStore")
+    val logger = Logger.with("KeyValueStoreImpl")
 
     override fun saveString(key: String, value: String) {
         val result = prefManager.saveString(key, value)
@@ -22,10 +22,6 @@ internal class KeyValueStore(private val prefManager: SharePreferenceManager): I
 
     override fun getNumber(key: String, default: Long): Long {
         return prefManager.getNumber(key, default)
-    }
-
-    companion object {
-
     }
 
 }

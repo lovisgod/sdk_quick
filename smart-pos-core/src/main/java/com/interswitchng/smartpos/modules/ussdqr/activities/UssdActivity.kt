@@ -5,7 +5,7 @@ import android.widget.Toast
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.ussdqr.views.SelectBankBottomSheet
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
+import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
@@ -32,7 +32,7 @@ import java.util.*
 
 class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
-    private val paymentService: Payable by inject()
+    private val paymentService: HttpService by inject()
 
     private var ussdCode: String? = null
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }

@@ -4,15 +4,15 @@ import com.igweze.ebi.simplecalladapter.SimpleCallAdapterFactory
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.library.*
-import com.interswitchng.smartpos.shared.interfaces.network.IAuthService
-import com.interswitchng.smartpos.shared.interfaces.network.IHttpService
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.services.PayableService
+import com.interswitchng.smartpos.shared.services.HttpServiceImpl
 import com.interswitchng.smartpos.shared.services.storage.SharePreferenceManager
-import com.interswitchng.smartpos.shared.services.UserService
+import com.interswitchng.smartpos.shared.services.UserStoreImpl
 import com.interswitchng.smartpos.shared.services.iso8583.IsoServiceImpl
-import com.interswitchng.smartpos.shared.services.iso8583.tcp.NibssIsoSocket
-import com.interswitchng.smartpos.shared.services.storage.KeyValueStore
+import com.interswitchng.smartpos.shared.services.iso8583.tcp.IsoSocketImpl
+import com.interswitchng.smartpos.shared.services.storage.KeyValueStoreImpl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -26,22 +26,22 @@ const val AUTH_INTERCEPTOR = "auth_interceptor"
 
 private val serviceModule = module {
     single { IswPos.getInstance() }
-    single<Payable> { PayableService(get()) }
-    single<IUserService> { UserService(get()) }
+    single<HttpService> { HttpServiceImpl(get()) }
+    single<UserStore> { UserStoreImpl(get()) }
     single { SharePreferenceManager(androidContext()) }
-    single<IKeyValueStore> { KeyValueStore(get()) }
+    single<com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore> { KeyValueStoreImpl(get()) }
     factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
     factory<IsoSocket> {
         val resource = androidContext().resources
         val serverIp = resource.getString(R.string.isw_nibss_ip)
         val port = resource.getInteger(R.integer.iswNibssPort)
         // try getting terminal info
-        val store: IKeyValueStore = get()
+        val store: com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
         // getResult timeout based on terminal info
         val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.iswTimeout)
 
-        return@factory NibssIsoSocket(serverIp, port, timeout * 1000)
+        return@factory IsoSocketImpl(serverIp, port, timeout * 1000)
     }
 }
 
@@ -56,7 +56,7 @@ private val networkModule = module {
 
     // retrofit interceptor for authentication
     single(AUTH_INTERCEPTOR) {
-        val userManager: IUserService = get()
+        val userManager: UserStoreImpl = get()
         return@single Interceptor { chain ->
             return@Interceptor userManager.getToken {
                 val request = chain.request().newBuilder()

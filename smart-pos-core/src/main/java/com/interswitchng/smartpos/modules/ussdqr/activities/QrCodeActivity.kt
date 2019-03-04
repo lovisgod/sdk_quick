@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.Toast
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.HttpService
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -33,8 +33,8 @@ import java.util.*
 
 class QrCodeActivity : BaseActivity() {
 
-    private val paymentService: Payable by inject()
-    private val store: IKeyValueStore by inject()
+    private val paymentService: HttpService by inject()
+    private val store: KeyValueStore by inject()
 
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }

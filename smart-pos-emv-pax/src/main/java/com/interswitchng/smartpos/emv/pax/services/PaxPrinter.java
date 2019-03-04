@@ -16,7 +16,7 @@ public class PaxPrinter {
     private IPrinter printer;
 
     private PaxPrinter() {
-        printer = POSDeviceService.getDal().getPrinter();
+        printer = POSDeviceImpl.getDal().getPrinter();
     }
 
 
@@ -239,7 +239,7 @@ public class PaxPrinter {
                 res = "Success ";
                 break;
             case 1:
-                res = "Printer is busy ";
+                res = "DevicePrinterImpl is busy ";
                 break;
             case 2:
                 res = "Out of paper ";
@@ -248,13 +248,13 @@ public class PaxPrinter {
                 res = "The format of print data packet error ";
                 break;
             case 4:
-                res = "Printer malfunctions ";
+                res = "DevicePrinterImpl malfunctions ";
                 break;
             case 8:
-                res = "Printer over heats ";
+                res = "DevicePrinterImpl over heats ";
                 break;
             case 9:
-                res = "Printer voltage is too low";
+                res = "DevicePrinterImpl voltage is too low";
                 break;
             case 240:
                 res = "Printing is unfinished ";

@@ -1,7 +1,7 @@
 package com.interswitchng.smartpos.shared.models.core
 
 import com.google.gson.Gson
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 
 data class TerminalInfo(
         val terminalId: String,
@@ -14,7 +14,7 @@ data class TerminalInfo(
         val serverTimeoutInSec: Int) {
 
 
-    internal fun persist(store: IKeyValueStore) {
+    internal fun persist(store: KeyValueStore) {
         val jsonString = Gson().toJson(this)
         store.saveString(PERSIST_KEY, jsonString)
     }
@@ -36,7 +36,7 @@ data class TerminalInfo(
 
         private const val PERSIST_KEY = "terminal_data"
 
-        internal fun get(store: IKeyValueStore): TerminalInfo? {
+        internal fun get(store: KeyValueStore): TerminalInfo? {
             val jsonString = store.getString(PERSIST_KEY, "")
             return when(jsonString) {
                 "" -> null

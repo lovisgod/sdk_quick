@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.SystemClock
 import com.interswitchng.smartpos.emv.pax.emv.*
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -24,10 +24,10 @@ import com.pax.jemv.clcommon.RetCode
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
 
-class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback, IPed.IPedInputPinListener {
+class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPedInputPinListener {
 
-    private val logger by lazy { Logger.with("EmvTransactionService") }
-    private val ped by lazy { POSDeviceService.dal.getPed(EPedType.INTERNAL) }
+    private val logger by lazy { Logger.with("EmvCardReaderImpl") }
+    private val ped by lazy { POSDeviceImpl.dal.getPed(EPedType.INTERNAL) }
     private val disposables = IswCompositeDisposable()
     private var isCancelled = false
 
@@ -41,7 +41,7 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
 
 
     //----------------------------------------------------------
-    //     Implementation for ISW EmvCardTransaction interface
+    //     Implementation for ISW EmvCardReader interface
     //----------------------------------------------------------
 
     override fun setEmvCallback(callback: EmvCallback) {
@@ -137,7 +137,7 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
 
         // try and detect card
         while (!isCancelled) {
-            if (POSDeviceService.dal.icc.detect(0x00)) break
+            if (POSDeviceImpl.dal.icc.detect(0x00)) break
         }
 
         // notify callback of card detected
@@ -151,7 +151,7 @@ class EmvTransactionService(context: Context) : EmvCardTransaction, PinCallback,
             // try and detect card
             while (!it.isDisposed) {
                 // check if card cannot be detected
-                if (!POSDeviceService.dal.icc.detect(0x00))  {
+                if (!POSDeviceImpl.dal.icc.detect(0x00))  {
                     // notify callback of card removal
                     emvCallback?.onCardRemoved()
                     break

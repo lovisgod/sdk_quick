@@ -4,7 +4,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.emv.pax.utilities.TickTimer;
 import com.pax.dal.IDAL;
 import com.pax.dal.IIcc;
@@ -80,7 +80,7 @@ public class DeviceImplNeptune implements IDevice, TickTimer.TickTimerListener {
     private static DeviceImplNeptune instance = null;
 
     private DeviceImplNeptune() {
-        dal = POSDeviceService.getDal();
+        dal = POSDeviceImpl.getDal();
         ped = dal.getPed(EPedType.INTERNAL);
         icc = dal.getIcc();
         picc = dal.getPicc(EPiccType.INTERNAL);

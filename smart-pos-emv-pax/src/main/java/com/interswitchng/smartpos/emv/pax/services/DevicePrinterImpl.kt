@@ -6,7 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import com.interswitchng.smartpos.emv.pax.utilities.StringUtils
-import com.interswitchng.smartpos.shared.interfaces.device.IPrinter
+import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
@@ -14,7 +14,7 @@ import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
 import com.pax.dal.entity.EFontTypeAscii
 import com.pax.dal.entity.EFontTypeExtCode
 
-object Printer : IPrinter {
+object DevicePrinterImpl : DevicePrinter {
 
     // screen caharacter length
     private const val SCREEN_LARGE_LENGTH = 24
@@ -116,7 +116,7 @@ object Printer : IPrinter {
 
 
     fun printCompanyLogo(printer: PaxPrinter) {
-        POSDeviceService.companyLogo.also { logo ->
+        POSDeviceImpl.companyLogo.also { logo ->
             // copy out bitmap
             val it = logo.copy(logo.config, logo.isMutable)
             val smallScale =

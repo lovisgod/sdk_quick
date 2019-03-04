@@ -1,18 +1,18 @@
 package com.interswitchng.smartpos.base
 
 import com.interswitchng.smartpos.mockservices.MockKeyValueStore
-import com.interswitchng.smartpos.mockservices.MockPayableService
-import com.interswitchng.smartpos.mockservices.MockUserService
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
-import com.interswitchng.smartpos.shared.interfaces.library.IUserService
-import com.interswitchng.smartpos.shared.interfaces.library.Payable
+import com.interswitchng.smartpos.mockservices.MockHttpServiceService
+import com.interswitchng.smartpos.mockservices.MockUserStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.UserStore
+import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import org.koin.dsl.module.module
 
 
 private val mockServiceModule = module(override = true) {
-    single<IKeyValueStore> { MockKeyValueStore() }
-    single<Payable> { MockPayableService.Builder().build() }
-    single<IUserService> { MockUserService(get()) }
+    single<KeyValueStore> { MockKeyValueStore() }
+    single<HttpService> { MockHttpServiceService.Builder().build() }
+    single<UserStore> { MockUserStore(get()) }
 }
 
 

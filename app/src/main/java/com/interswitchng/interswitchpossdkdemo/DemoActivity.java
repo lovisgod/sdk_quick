@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -23,10 +22,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.interswitchng.smartpos.IswPos;
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceService;
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction;
-import com.interswitchng.smartpos.shared.interfaces.device.IPrinter;
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
+import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
@@ -65,24 +64,24 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
         if (BuildConfig.MOCK) {
             device = new POSDevice() {
                 @Override
-                public IPrinter getPrinter() {
-                    return new IPrinter() {
+                public DevicePrinter getPrinter() {
+                    return new DevicePrinter() {
                         @Override
                         public PrintStatus printSlip(List<? extends PrintObject> slip, UserType user) {
-                            return new PrintStatus.Error("No Printer installed");
+                            return new PrintStatus.Error("No DevicePrinterImpl installed");
                         }
 
                         @Override
                         public PrintStatus canPrint() {
-                            return new PrintStatus.Error("No Printer installed");
+                            return new PrintStatus.Error("No DevicePrinterImpl installed");
                         }
                     };
                 }
 
 
                 @Override
-                public EmvCardTransaction getEmvCardTransaction() {
-                    return new EmvCardTransaction() {
+                public EmvCardReader getEmvCardTransaction() {
+                    return new EmvCardReader() {
                         @Override
                         public EmvResult completeTransaction(TransactionResponse response) {
                             return EmvResult.OFFLINE_APPROVED;
@@ -126,7 +125,7 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
-            POSDeviceService service  = POSDeviceService.create(getApplicationContext());
+            POSDeviceImpl service  = POSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
             device = service;
         }

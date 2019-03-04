@@ -14,7 +14,7 @@ import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
-import com.interswitchng.smartpos.shared.interfaces.library.IKeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.POSConfig
@@ -65,7 +65,7 @@ class IswPos private constructor(private val app: Application, internal val devi
         private const val KEY_STAN = "stan"
         private lateinit var INSTANCE: IswPos
         private var isSetup = false
-        private val store: IKeyValueStore by Container.inject()
+        private val store: KeyValueStore by Container.inject()
 
 
         internal fun isConfigured () = TerminalInfo.get(store) != null

@@ -9,7 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.interswitchng.smartpos.IswPos
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceService
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
@@ -26,7 +26,7 @@ class UsbActivity : AppCompatActivity() , MessageListener {
         setContentView(R.layout.activity_usb)
 
         try {
-            val deviceService = POSDeviceService.create(this)
+            val deviceService = POSDeviceImpl.create(this)
 
             val clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D"
             val clientSecret = "t1ll73stS3cr3t"

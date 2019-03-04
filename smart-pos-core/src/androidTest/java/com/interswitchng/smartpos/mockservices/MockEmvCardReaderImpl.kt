@@ -1,12 +1,22 @@
 package com.interswitchng.smartpos.mockservices
 
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 
-class EmvTransactionImpl: EmvCardTransaction {
+class MockEmvCardReaderImpl: EmvCardReader {
+    override fun completeTransaction(response: TransactionResponse): EmvResult {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getTransactionInfo(): EmvData? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun setEmvCallback(callback: EmvCallback) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -24,10 +34,6 @@ class EmvTransactionImpl: EmvCardTransaction {
     }
 
     override fun getCardDetail(): CardDetail {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun completeTransaction() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
