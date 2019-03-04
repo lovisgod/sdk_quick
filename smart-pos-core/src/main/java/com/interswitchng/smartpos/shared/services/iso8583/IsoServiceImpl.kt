@@ -15,6 +15,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.*
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.dateFormatter
+import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.monthFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.yearAndMonthFormatter
@@ -63,7 +64,7 @@ internal class IsoServiceImpl(
                     .setValue(7, timeAndDateFormatter.format(now))
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
-                    .setValue(13, dateFormatter.format(now))
+                    .setValue(13, monthFormatter.format(now))
                     .setValue(41, terminalId)
 
             // remove unset fields
@@ -140,7 +141,7 @@ internal class IsoServiceImpl(
                     .setValue(7, timeAndDateFormatter.format(now))
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
-                    .setValue(13, dateFormatter.format(now))
+                    .setValue(13, monthFormatter.format(now))
                     .setValue(41, terminalId)
                     .setValue(62, field62)
 
@@ -207,7 +208,7 @@ internal class IsoServiceImpl(
                     .setValue(7, timeAndDateFormatter.format(now))
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
-                    .setValue(13, dateFormatter.format(now))
+                    .setValue(13, monthFormatter.format(now))
                     .setValue(14, transaction.cardExpiry)
                     .setValue(18, terminalInfo.merchantCategoryCode)
                     .setValue(22, "051")
@@ -294,8 +295,15 @@ internal class IsoServiceImpl(
             val date = dateFormatter.format(now)
             val src = "501"
 
+            val expiryDate = Calendar.getInstance().let {
+                it.time = now
+                val currentYear = it.get(Calendar.YEAR)
+                it.set(Calendar.YEAR, currentYear + 1)
+                it.time
+            }
+
             // format track 2
-            val expiry = yearAndMonthFormatter.format(now)
+            val expiry = yearAndMonthFormatter.format(expiryDate)
             val track2 = "${pan}D$expiry"
 
             // format icc data
@@ -311,7 +319,7 @@ internal class IsoServiceImpl(
                     .setValue(7, timeAndDateFormatter.format(now))
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
-                    .setValue(13, date)
+                    .setValue(13, monthFormatter.format(now))
                     .setValue(14, expiry)
                     .setValue(18, terminalInfo.merchantCategoryCode)
                     .setValue(22, "051")
@@ -328,7 +336,7 @@ internal class IsoServiceImpl(
                     .setValue(49, terminalInfo.currencyCode)
                     .setValue(55, iccData)
                     .setValue(59, "00") //""90")
-                    .setValue(123, "511101511344101")
+                    .setValue(123, "510101561344101")
 
             message.message.removeFields( 32,  52)
 

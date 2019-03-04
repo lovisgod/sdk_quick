@@ -56,7 +56,7 @@ private val networkModule = module {
 
     // retrofit interceptor for authentication
     single(AUTH_INTERCEPTOR) {
-        val userManager: UserStoreImpl = get()
+        val userManager: UserStore = get()
         return@single Interceptor { chain ->
             return@Interceptor userManager.getToken {
                 val request = chain.request().newBuilder()

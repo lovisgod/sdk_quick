@@ -4,8 +4,8 @@ import android.content.Intent
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.shared.Constants
-import com.interswitchng.smartpos.shared.interfaces.library.Callback
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
+import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.nhaarman.mockitokotlin2.any

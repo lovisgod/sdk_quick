@@ -10,8 +10,10 @@ internal object DateUtils {
     @JvmField
     val timeFormatter = SimpleDateFormat("HHmmss", Locale.getDefault()) // field 12
     @JvmField
-    val dateFormatter = SimpleDateFormat("MMdd", Locale.getDefault()) // field 13
-    // @JvmField
+    val monthFormatter = SimpleDateFormat("MMdd", Locale.getDefault()) // field 13
+
+    val dateFormatter = SimpleDateFormat("yyMMdd", Locale.getDefault())
+
     val yearAndMonthFormatter = SimpleDateFormat("yyMM", Locale.getDefault())
     @JvmField
     val dateStringFormatter = SimpleDateFormat("YYYY-MM-dd hh:mm:ss", Locale.ENGLISH)
