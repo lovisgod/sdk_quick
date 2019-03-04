@@ -172,6 +172,7 @@ class TransactionResultActivity : BaseActivity() {
                 .setTitle(getString(title))
                 .setText(getString(text))
                 .setDismissable(true)
+                .enableSwipeToDismiss()
                 .setBackgroundColorRes(background)
                 .setDuration(2 * 1000)
                 .show()
