@@ -3,9 +3,11 @@ package com.interswitchng.smartpos.shared.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
@@ -136,6 +138,12 @@ abstract class BaseActivity : AppCompatActivity() {
                 .enableInfiniteDuration(true)
                 .setBackgroundColorRes(R.color.iswColorPrimaryDark)
                 .setProgressColorRes(android.R.color.white)
+                .addButton("Cancel", R.style.AlertButton, View.OnClickListener {
+                    Toast.makeText(this, "Status check stopped", Toast.LENGTH_LONG).show()
+                    Alerter.clearCurrent(this)
+                    onCheckStopped()
+                    Handler().postDelayed(::stopPolling,300)
+                })
                 .show()
     }
 
@@ -175,7 +183,7 @@ abstract class BaseActivity : AppCompatActivity() {
         // do nothing
     }
 
-    open fun onCheckError() {
+    open fun onCheckStopped() {
         // do nothing
     }
 
@@ -213,7 +221,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     .setDuration(15 * 1000)
                     .show()
 
-            onCheckError()
+            onCheckStopped()
         }
 
         override fun onTransactionTimeOut() = runOnUiThread {
@@ -232,7 +240,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     .setDuration(15 * 1000)
                     .show()
 
-            onCheckError()
+            onCheckStopped()
         }
 
     }

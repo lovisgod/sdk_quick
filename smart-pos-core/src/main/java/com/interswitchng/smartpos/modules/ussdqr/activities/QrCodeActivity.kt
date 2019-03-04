@@ -183,10 +183,10 @@ class QrCodeActivity : BaseActivity() {
     }
 
 
-    override fun onCheckError() {
+    override fun onCheckStopped() {
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
-        super.onCheckError()
+        super.onCheckStopped()
     }
 
 }

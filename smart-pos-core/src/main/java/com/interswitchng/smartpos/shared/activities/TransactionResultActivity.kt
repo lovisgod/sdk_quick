@@ -12,12 +12,14 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
+import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
+import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
 import org.koin.android.ext.android.inject
@@ -182,10 +184,17 @@ class TransactionResultActivity : BaseActivity() {
     }
 
     private fun showAlert() {
+        // TODO rewrite this inside bottomSheet 'newInstance' method
+        val exclude = when (result.paymentType) {
+            PaymentType.Card -> BottomSheetOptionsDialog.CARD
+            PaymentType.QR -> BottomSheetOptionsDialog.QR
+            PaymentType.PayCode -> BottomSheetOptionsDialog.PAYCODE
+            PaymentType.USSD -> BottomSheetOptionsDialog.USSD
+        }
         alert
                 .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
                     dialog.dismiss()
-                    showPaymentOptions()
+                    showPaymentOptions(exclude)
                 }
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
                     setResult()

@@ -85,7 +85,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
                 val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
 
                 transactionResult = TransactionResult(
-                        paymentType = PaymentType.Card,
+                        paymentType = PaymentType.PayCode,
                         dateTime = DisplayUtils.getIsoString(now),
                         amount = DisplayUtils.getAmountString(paymentInfo),
                         type = TransactionType.Purchase,
