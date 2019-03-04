@@ -3,8 +3,15 @@ package com.interswitchng.interswitchpossdkdemo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
@@ -115,7 +122,13 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
                 }
             };
         } else {
-            device = POSDeviceService.create(getApplicationContext());
+            Resources resources = getResources();
+            Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
+            Bitmap bm = drawableToBitmap(logo);
+
+            POSDeviceService service  = POSDeviceService.create(getApplicationContext());
+            service.setCompanyLogo(bm);
+            device = service;
         }
 
         String clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D";
@@ -144,6 +157,7 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
                     // trigger payment
                     IswPos.getInstance().initiatePayment(this, currentAmount, null);
                 } catch (NotConfiguredException e) {
+                    toast("Pos has not been configured");
                     Log.d("DEMO", e.getMessage());
                 }
             }
@@ -152,6 +166,20 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
 
     }
 
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,7 +213,7 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
 
     private void toast(String msg) {
         runOnUiThread(() -> {
-            Toast.makeText(DemoActivity.this, "Printing Slip", Toast.LENGTH_LONG).show();
+            Toast.makeText(DemoActivity.this, msg, Toast.LENGTH_LONG).show();
         });
     }
 

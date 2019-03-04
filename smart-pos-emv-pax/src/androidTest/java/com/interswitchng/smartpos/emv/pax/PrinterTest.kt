@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.emv.pax
 
+import android.graphics.BitmapFactory
 import android.os.Looper
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -12,6 +13,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
+import android.graphics.Bitmap
+import android.graphics.Matrix
+import com.interswitchng.smartpos.emv.pax.services.Printer
 
 
 @RunWith(AndroidJUnit4::class)
@@ -73,9 +77,11 @@ class PrinterTest {
     @Test
     fun printCardSlip() {
         val slip = getCardSlip()
-        pos.printer.printSlip(slip, UserType.Customer)
+//        pos.printer.printSlip(slip, UserType.Customer)
+        val bm = BitmapFactory.decodeResource(context.resources, R.drawable.isw_logo_gtb)
+        (pos as POSDeviceService).setCompanyLogo(bm)
+        pos.printer.printSlip(listOf(), UserType.Customer)
 
         Thread.sleep(2000)
     }
-
 }

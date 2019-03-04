@@ -116,7 +116,7 @@ class QrCodeActivity : BaseActivity() {
                     runOnUiThread {
                         Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
                         printCodeButton.isEnabled = true
-                        printCodeButton.isClickable = false
+                        printCodeButton.isClickable = true
                     }
                 }
 

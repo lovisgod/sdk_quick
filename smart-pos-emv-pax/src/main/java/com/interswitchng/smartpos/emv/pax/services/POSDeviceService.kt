@@ -1,6 +1,12 @@
 package com.interswitchng.smartpos.emv.pax.services
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.support.v4.content.ContextCompat
+import com.interswitchng.smartpos.emv.pax.R
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardTransaction
 import com.interswitchng.smartpos.shared.interfaces.device.IPrinter
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -21,13 +27,36 @@ class POSDeviceService private constructor(override val printer: IPrinter, priva
         System.loadLibrary("F_PUBLIC_LIB_PayDroid")
     }
 
+
     override fun getEmvCardTransaction(): EmvCardTransaction = factory()
 
+    fun setCompanyLogo(bitmap: Bitmap) {
+        companyLogo = bitmap
+    }
+
+
     companion object {
+
+        internal lateinit var companyLogo: Bitmap private set
+
         @JvmStatic
         internal fun create(context: Context, printer: IPrinter = Printer, factory: () -> EmvCardTransaction): POSDeviceService {
             // setupDevice pos device
             setupDevice(context)
+
+            // setup logo
+            val drawable = ContextCompat.getDrawable(context, R.drawable.isw_pax_app_logo)!!
+            companyLogo = run {
+                return@run when(drawable) {
+                    is BitmapDrawable -> drawable.bitmap
+                    else -> Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888).also { bitmap ->
+                        val canvas = Canvas(bitmap)
+                        drawable.setBounds(0, 0, canvas.width, canvas.height)
+                        drawable.draw(canvas)
+                    }
+                }
+            }
+
             return POSDeviceService(printer, factory)
         }
 

@@ -214,11 +214,11 @@ class TransactionResultActivity : BaseActivity() {
                     runOnUiThread {
                         Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
                         printBtn.isEnabled = true
-                        printBtn.isClickable = false
+                        printBtn.isClickable = true
                     }
 
-                    hasPrintedCustomerCopy = userType == UserType.Customer
-                    hasPrintedMerchantCopy = userType == UserType.Merchant
+                    hasPrintedCustomerCopy = hasPrintedCustomerCopy || userType == UserType.Customer
+                    hasPrintedMerchantCopy = hasPrintedMerchantCopy || userType == UserType.Merchant
                 }
 
                 disposables.add(disposable)

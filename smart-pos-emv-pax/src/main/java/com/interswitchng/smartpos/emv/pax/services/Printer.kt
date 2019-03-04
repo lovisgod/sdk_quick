@@ -1,6 +1,10 @@
 package com.interswitchng.smartpos.emv.pax.services
 
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Matrix
 import com.interswitchng.smartpos.emv.pax.utilities.StringUtils
 import com.interswitchng.smartpos.shared.interfaces.device.IPrinter
 import com.interswitchng.smartpos.shared.models.core.UserType
@@ -41,6 +45,13 @@ object Printer : IPrinter {
 
         // set step distance
         printer.step(60)
+
+        // print logo
+        printCompanyLogo(printer)
+
+        // print 2 new lines for distance from logo
+        printer.fontSet(NORMAL_FONT.first, NORMAL_FONT.second)
+        printer.printStr("\n", null)
 
         // extract slip items and print it
         for (item in slip) printItem(printer, item)
@@ -103,4 +114,88 @@ object Printer : IPrinter {
         }
     }
 
+
+    fun printCompanyLogo(printer: PaxPrinter) {
+        POSDeviceService.companyLogo.also { logo ->
+            // copy out bitmap
+            val it = logo.copy(logo.config, logo.isMutable)
+            val smallScale =
+                    if (it.width == it.height) getScaledDownBitmap(it)
+                    else getScaledDownBitmap(it, threshold = 200)
+            val paddingLeft = ((SCREEN_NORMAL_LENGTH * 12.5) - smallScale.width) / 2 // 1 dot in print is 12.5px
+
+            // add padding to bitmap
+            val outputBitmap = Bitmap.createBitmap(smallScale.width + paddingLeft.toInt(), smallScale.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(outputBitmap)
+            // draw logo in output bitmap
+            canvas.drawColor(Color.WHITE)
+            canvas.drawBitmap(smallScale, paddingLeft.toFloat(), 0f, null)
+
+            // print bitmap
+            printer.printBitmap(outputBitmap)
+        }
+    }
+
+
+    /**
+     * @param bitmap the Bitmap to be scaled
+     * @param threshold the maxium dimension (either width or height) of the scaled bitmap
+     * @param isNecessaryToKeepOrig is it necessary to keep the original bitmap? If not recycle the original bitmap to prevent memory leak.
+     */
+
+    fun getScaledDownBitmap(bitmap: Bitmap, threshold: Int = 150, isNecessaryToKeepOrig: Boolean = false): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        var newWidth = width
+        var newHeight = height
+
+        if (width > height && width > threshold) {
+            newWidth = threshold
+            newHeight = (height * newWidth.toFloat() / width).toInt()
+        }
+
+        if (width in (height + 1)..threshold) {
+            //the bitmap is already smaller than our required dimension, no need to resize it
+            return bitmap
+        }
+
+        if (width < height && height > threshold) {
+            newHeight = threshold
+            newWidth = (width * newHeight.toFloat() / height).toInt()
+        }
+
+        if (height in (width + 1)..threshold) {
+            //the bitmap is already smaller than our required dimension, no need to resize it
+            return bitmap
+        }
+
+        if (width == height && width > threshold) {
+            newWidth = threshold
+            newHeight = newWidth
+        }
+
+        return if (width == height && width <= threshold) {
+            //the bitmap is already smaller than our required dimension, no need to resize it
+            bitmap
+        } else getResizedBitmap(bitmap, newWidth, newHeight, isNecessaryToKeepOrig)
+
+    }
+
+    private fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int, isNecessaryToKeepOrig: Boolean): Bitmap {
+        val width = bm.width
+        val height = bm.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+        // CREATE A MATRIX FOR THE MANIPULATION
+        val matrix = Matrix()
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        // "RECREATE" THE NEW BITMAP
+        val resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false)
+        if (!isNecessaryToKeepOrig) {
+            bm.recycle()
+        }
+        return resizedBitmap
+    }
 }
