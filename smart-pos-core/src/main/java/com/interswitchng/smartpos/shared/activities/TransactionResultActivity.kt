@@ -28,9 +28,25 @@ class TransactionResultActivity : BaseActivity() {
 
     private val store: KeyValueStore by inject()
     private val alert by lazy {
-        DialogUtils.getAlertDialog(this)
+        val exclude = when (result.paymentType) {
+            PaymentType.Card -> BottomSheetOptionsDialog.CARD
+            PaymentType.QR -> BottomSheetOptionsDialog.QR
+            PaymentType.PayCode -> BottomSheetOptionsDialog.PAYCODE
+            PaymentType.USSD -> BottomSheetOptionsDialog.USSD
+        }
+
+        return@lazy DialogUtils.getAlertDialog(this)
                 .setTitle("An Error Occurred")
                 .setMessage("Would you like to try another payment method?")
+                .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
+                    dialog.dismiss()
+                    showPaymentOptions(exclude)
+                }
+                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                    setResult()
+                    finish()
+                    dialog.dismiss()
+                }
     }
     private val emailInputDialog by lazy {
         DialogUtils.getEmailInputDialog(this) { email ->
@@ -138,8 +154,8 @@ class TransactionResultActivity : BaseActivity() {
                 DialogUtils.getAlertDialog(this)
                 .setTitle("Close without printing?")
                 .setMessage("Are you sure you want to close without printing")
-                        .setNegativeButton(android.R.string.no) { dialog, i -> dialog.dismiss() }
-                        .setPositiveButton(android.R.string.yes) { dialog, _ -> dialog.dismiss(); setResult(); finish(); }
+                .setNegativeButton(android.R.string.no) { dialog, i -> dialog.dismiss() }
+                .setPositiveButton(android.R.string.yes) { dialog, _ -> dialog.dismiss(); setResult(); finish(); }
                 .show()
             } else {
                 setResult()
@@ -185,24 +201,8 @@ class TransactionResultActivity : BaseActivity() {
     }
 
     private fun showAlert() {
-        // TODO rewrite this inside bottomSheet 'newInstance' method
-        val exclude = when (result.paymentType) {
-            PaymentType.Card -> BottomSheetOptionsDialog.CARD
-            PaymentType.QR -> BottomSheetOptionsDialog.QR
-            PaymentType.PayCode -> BottomSheetOptionsDialog.PAYCODE
-            PaymentType.USSD -> BottomSheetOptionsDialog.USSD
-        }
-        alert
-                .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
-                    dialog.dismiss()
-                    showPaymentOptions(exclude)
-                }
-                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
-                    setResult()
-                    finish()
-                    dialog.dismiss()
-                }
-                .show()
+
+        alert.show()
     }
 
 

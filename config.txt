@@ -1,0 +1,8 @@
+# test configuration
+alias - 000007
+clientId - IKIAB23A4E2756605C1ABC33CE3C287E27267F660D61
+clientSecret - secret
+merchantCode - MX5882
+
+// terminalID
+terminalID - 20390007

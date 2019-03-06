@@ -38,6 +38,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
     private var pinResult: Int = RetCode.EMV_OK
     private var pinData: String? = null
+    private var hasEnteredPin: Boolean = false
 
 
     //----------------------------------------------------------
@@ -61,14 +62,19 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             EmvResult.EMV_ERR_NO_APP.errCode -> EmvResult.EMV_ERR_NO_APP
             EmvResult.EMV_ERR_NO_PASSWORD.errCode -> EmvResult.EMV_ERR_NO_PASSWORD
             EmvResult.EMV_ERR_TIME_OUT.errCode -> EmvResult.EMV_ERR_TIME_OUT
+//            EmvResult.EMV_ERR_NO_DATA.errCode -> EmvResult.EMV_ERR_NO_DATA
             else -> null
         }
 
-        if (resultMsg != null) callTransactionCancelled(resultMsg.errCode, resultMsg.errMsg)
+        if (resultMsg != null) callTransactionCancelled(resultMsg.errCode, "Unable to read Card")
     }
+
+
 
     override fun startTransaction(): CoreEmvResult {
         val result = emvImpl.startContactEmvTransaction()
+
+        hasEnteredPin = true
 
         return if(!isCancelled) when (result) {
             ACType.AC_TC  -> logger.log("offline process approved").let { CoreEmvResult.OFFLINE_APPROVED }
@@ -198,7 +204,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
                         // sleep for 1 second
                         if(!hasTimedOut) Thread.sleep(1000)
-                        else ped.cancelInput()
+                        else if(!hasEnteredPin) ped.cancelInput()
                     }
                 }
                 disposables.add(disposable)

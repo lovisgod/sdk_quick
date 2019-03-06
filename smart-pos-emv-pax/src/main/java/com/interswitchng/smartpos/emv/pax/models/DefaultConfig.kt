@@ -17,6 +17,23 @@ internal fun getDefaultEmvConfig(): EmvAIDs {
                 exponent = "03"
                 checksum = "676822D335AB0D2C3848418CB546DF7B6A6C32C0"
             }
+
+            key(this) {
+                id = "04"
+                expiry = "171231"
+                modulus = "D13CD5E1B921E4E0F0D40E2DE14CCE73E3A34ED2DCFA826531D8195641091E37C8474D19B686E8243F089A69F7B18D2D34CB4824F228F7750F96D1EFBDFF881F259A8C04DE64915A3A3D7CB846135F4083C93CDE755BC808886F600542DFF085558D5EA7F45CB15EC835064AA856D602A0A44CD021F54CF8EC0CC680B54B3665ABE74A7C43D02897FF84BB4CB98BC91D"
+                exponent = "03"
+                checksum = "B36A3E3D814CE6C6EBEAAF27674BB7BC67275B1"
+            }
+
+            key(this) {
+                id = "03"
+                expiry = "171231"
+                modulus = "d06238b856cf2c8890a7f668ca17c19247498d193a7c11e7105dedeee6a873e8189e50493e9b17547c42ea4fa88bbef30bb6bc2409246ccc95f36622a7f4d92d46444f20b1b24bf63c5b28395d8ef18c23205c2119dfe5fba2fbfc311b2fe8a6a75b35a7dab72d421792a500cdfd8133b8a97d84a49c0bd22d52d06ea5e0ef3e471d47d8370c37aa48b564689d0035d9"
+                exponent = "03"
+                checksum = "319F3C608B67F1118C729B0E1516EAB07CB290C8"
+            }
+
         }
 
         // China Union Pay

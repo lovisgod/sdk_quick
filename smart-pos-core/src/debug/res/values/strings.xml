@@ -2,7 +2,7 @@
     <string name="ISW_USSD_QR_BASE_URL">https://qa.interswitchng.com/paymentgateway/api/v1/</string>
     <string name="ISW_IMAGE_BASE_URL">https://qa.interswitchng.com/paymentgateway/</string>
     <string name="isw_cms">DBEECACCB4210977ACE73A1D873CA59F</string>
-    <string name="ISW_TOKEN_BASE_URL">https://qa.interswitchng.com/passport/oauth/token</string>
+    <string name="ISW_TOKEN_BASE_URL">https://qa.interswitchng.com/passport/</string>
     <string name="isw_nibss_ip">196.6.103.72</string>
 
 

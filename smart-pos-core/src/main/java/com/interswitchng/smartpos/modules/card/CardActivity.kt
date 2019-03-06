@@ -22,6 +22,7 @@ import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
+import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
@@ -39,6 +40,7 @@ class CardActivity : BaseActivity() {
     private val accountType = AccountType.Default
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false
+    private var isCancelled = false
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
     private val alert by lazy { DialogUtils.getAlertDialog(this).create() }
@@ -90,9 +92,21 @@ class CardActivity : BaseActivity() {
 
             when (result) {
                 EmvResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
-                else -> {
-                    toast("Transaction not processed")
-                    showContainer(CardTransactionState.Default)
+                else -> runOnUiThread {
+                   if (!isCancelled) toast("Error processing card transaction")
+
+                    DialogUtils.getAlertDialog(this)
+                            .setTitle("Unable to process card transaction?")
+                            .setMessage("Would you like to try another payment method?")
+                            .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
+                                dialog.dismiss()
+                                showPaymentOptions(BottomSheetOptionsDialog.CARD)
+                            }
+                            .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                                finish()
+                                dialog.dismiss()
+                            }
+                            .show()
                 }
             }
         }
@@ -121,6 +135,8 @@ class CardActivity : BaseActivity() {
             // remove dialogs
             if (dialog.isShowing) dialog.dismiss()
             if (alert.isShowing) alert.dismiss()
+            // set flag
+            isCancelled = true
 
             // set cancel result
             setResult(Activity.RESULT_CANCELED)

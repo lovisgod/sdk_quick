@@ -131,27 +131,26 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         // get terminal config and EMV apps
         val config = EmvUtils.getConfigurations(context)
 
-
         // use terminal config and emv AID to configure EMV Kernel
-        for (app in EmvUtils.createAppList(config.first, config.second)) {
+        val appList = EmvUtils.createAppList(config.first, config.second)
+        for (app in appList) {
             val addResult = EMVCallback.EMVAddApp(app)
 
-            if (addResult == RetCode.EMV_OK) logger.log("AddApp succeeded: aid - ${app.aid}")
-            else return addResult.also { logger.logErr("AddApp failed: code - $addResult: aid - ${app.aid}") }
-        }
-
-        // get capks for AIDs
-        val capks = config.second.getCapks()
-
-        // TODO verify that DELAllCAPK is available
-        // remove CAPKs
-        for (capk in capks) capk.apply {
-            EMVCallback.EMVDelCAPK(keyID, rID)
+            if (addResult == RetCode.EMV_OK) logger.log("AddApp succeeded: aid - ${bcd2Str(app.aid)}")
+            else return addResult.also { logger.logErr("AddApp failed: code - $addResult: aid - ${bcd2Str(app.aid)}") }
         }
 
 
-        // add all CAPKs
-        addCAPKIntoEmvLib(capks)
+        // verify that all apps were added
+        val test = EMV_APPLIST()
+        for (i in 0 until appList.size) {
+            val ret = EMVCallback.EMVGetApp(i, test)
+            logger.log("EmvApiGetApp " + bcd2Str(test.aid))
+            if (ret != RetCode.EMV_OK) {
+                logger.log( "EMVGetApp err= $ret")
+                return ret
+            }
+        }
 
 
         // show Input card info
@@ -169,6 +168,20 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         if (readResult != RetCode.EMV_OK)
             return readResult.also { logger.logErr("ReadAppData Error: code - $readResult") }
         else extractTags()
+
+
+        // get capks for AIDs
+        val capks = config.second.getCapks()
+
+        // TODO verify that DELAllCAPK is available
+        // remove CAPKs
+        for (capk in capks) capk.apply {
+            EMVCallback.EMVDelCAPK(keyID, rID)
+        }
+
+
+        // add all CAPKs
+        addCAPKIntoEmvLib(capks)
 
 
         // authenticate card

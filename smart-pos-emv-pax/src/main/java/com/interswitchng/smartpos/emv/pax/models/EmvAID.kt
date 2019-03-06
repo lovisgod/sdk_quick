@@ -2,15 +2,10 @@ package com.interswitchng.smartpos.emv.pax.models
 
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
-import com.kulik.android.jaxb.library.Annotations.XmlRootElement
-import com.kulik.android.jaxb.library.Annotations.XmlElement
 import com.pax.jemv.clcommon.EMV_APPLIST
 import com.pax.jemv.clcommon.EMV_CAPK
 
-@XmlRootElement(name = "emv")
 internal class EmvAIDs {
-
-    @XmlElement(name = "emvcards")
     var cards: ArrayList<EmvCard> = arrayListOf()
 
 
@@ -23,15 +18,10 @@ internal class EmvAIDs {
     }
 }
 
-@XmlRootElement(name = "emvcard")
 internal class EmvCard {
-    @XmlElement(name = "name")
     var name: String = ""
-    @XmlElement(name = "aid")
     var aid: String = ""
-    @XmlElement(name = "partialmatch")
     var partialMatch: Boolean = false
-    @XmlElement(name = "keys")
     var keys: ArrayList<EmvCapk> = arrayListOf()
 
 
@@ -72,17 +62,11 @@ internal class EmvCard {
 }
 
 
-@XmlRootElement(name = "key")
 internal class EmvCapk {
-        @XmlElement(name = "keyidx")
         var id: String = ""
-        @XmlElement(name = "expdate")
         var expiry: String = ""
-        @XmlElement(name = "modulus")
         var modulus: String = ""
-        @XmlElement(name = "exponent")
         var exponent: String = ""
-        @XmlElement(name = "checksum")
         var checksum: String = ""
 
 
