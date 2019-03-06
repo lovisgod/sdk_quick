@@ -9,7 +9,7 @@ import android.view.View
 import com.google.gson.Gson
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.base.BaseTestActivity
-import com.interswitchng.smartpos.mockservices.MockHttpServiceService
+import com.interswitchng.smartpos.mockservices.MockHttpService
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
@@ -44,7 +44,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
     @Test
     fun should_show_success_message_when_transaction_is_successful() {
 
-        val service: HttpService = MockHttpServiceService.Builder()
+        val service: HttpService = MockHttpService.Builder()
                 .setPaymentStatusCall {
                     val successString = Utilities.getJson(activityRule.activity, "success-transaction-response.json")
                     val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
@@ -83,7 +83,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
     fun should_show_error_msg_when_transaction_fails() {
 
         var errorMsg = "error"
-        val service: HttpService = MockHttpServiceService.Builder()
+        val service: HttpService = MockHttpService.Builder()
                 .setPaymentStatusCall {
                     val successString = Utilities.getJson(activityRule.activity,"failed-transaction-response.json")
                     val transaction: Transaction = Gson().fromJson(successString, Transaction::class.java)
@@ -119,7 +119,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
     @Test
     fun should_show_error_msg_when_transaction_times_out() {
 
-        val service: HttpService = MockHttpServiceService.Builder()
+        val service: HttpService = MockHttpService.Builder()
                 .setPaymentStatusCall { it.onTransactionTimeOut() }
                 .build()
 

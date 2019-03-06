@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
@@ -25,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.paxConfig
             applicationIdSuffix '.release'
@@ -44,15 +45,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation project(path: ':smart-pos-core')
-    implementation project(':smart-pos-emv-pax')
-    implementation files('libs/NeptuneLiteApi_V2.03.00_20180208.jar')
-
-
     implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation (project(path: ':smart-pos-core'))
+    implementation (project(':smart-pos-emv-pax'))
+
+
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:$robolectric_version"
     testImplementation "org.koin:koin-test:$koin_version"

@@ -7,7 +7,7 @@ import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 internal class MockPOSDevice(override val printer: DevicePrinter) : POSDevice {
 
     override fun getEmvCardTransaction(): EmvCardReader {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return MockEmvCardReaderImpl()
     }
 
 

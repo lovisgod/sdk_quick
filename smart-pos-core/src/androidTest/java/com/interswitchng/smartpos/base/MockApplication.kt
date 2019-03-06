@@ -16,7 +16,8 @@ class MockApplication: Application() {
 
         val alias = "000007"
         val terminalId = "2069018M"
-        val merchantId = "IBP000000001384"
+        val clientId = "IBP000000001384"
+        val clientSecret = "secret"
         val merchantLocation = "AIRTEL NETWORKS LIMITED PH MALL"
         // val currencyCode = "566"
         // val posGeoCode = "0023400000000056"
@@ -26,8 +27,8 @@ class MockApplication: Application() {
 
 
         // setup device for terminal
-        val device = MockPOSDevice(MockEmvCardReaderImpl(), Printer())
-        val config = POSConfig(merchantCode)
+        val device = MockPOSDevice(Printer())
+        val config = POSConfig(alias, clientId, clientSecret, merchantCode)
         IswPos.setupTerminal(this, device, config)
 
         // load mock modules based on runner arguments

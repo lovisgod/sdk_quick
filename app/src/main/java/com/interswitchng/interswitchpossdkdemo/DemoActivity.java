@@ -137,7 +137,7 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
 
         POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode);
 
-        // configure terminal
+        // setup terminal
         IswPos.setupTerminal(getApplication(), device, config);
     }
 

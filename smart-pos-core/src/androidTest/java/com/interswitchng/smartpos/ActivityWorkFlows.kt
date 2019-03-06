@@ -61,9 +61,6 @@ class ActivityWorkFlows: BaseTestActivity() {
         WaitUtils.waitTime(3500)
         onView(withText("GUARANTY TRUST BANK")).perform(click())
 
-        WaitUtils.waitTime(1500)
-        onView(withId(R.id.btnGetCode)).perform(click())
-
         WaitUtils.waitTime(10000)
         onView(withId(R.id.ussdText)).check(matches(isDisplayed()))
 
