@@ -129,21 +129,23 @@ abstract class BaseActivity : AppCompatActivity() {
         pollingExecutor = payableService.checkPayment(paymentType, status, seconds.toLong(), TransactionStatusCallback())
     }
 
-    protected fun showProgressAlert() {
-        Alerter.create(this)
+    protected fun showProgressAlert(canCancel: Boolean = true) {
+        val alert = Alerter.create(this)
                 .setTitle(getString(R.string.isw_title_transaction_in_progress))
                 .setText(getString(R.string.isw_title_checking_transaction_status))
                 .enableProgress(true)
                 .setDismissable(false)
                 .enableInfiniteDuration(true)
                 .setBackgroundColorRes(R.color.iswColorPrimaryDark)
-                .setProgressColorRes(android.R.color.white)
-                .addButton("Cancel", R.style.AlertButton, View.OnClickListener {
-                    Toast.makeText(this, "Status check stopped", Toast.LENGTH_LONG).show()
-                    Alerter.clearCurrent(this)
-                    onCheckStopped()
-                    Handler().postDelayed(::stopPolling,300)
-                })
+                .setProgressColorRes(android.R.color.white).also {
+                    // add cancel  button if cancel is allowed
+                    if (canCancel) it.addButton("Cancel", R.style.AlertButton, View.OnClickListener {
+                        Toast.makeText(this, "Status check stopped", Toast.LENGTH_LONG).show()
+                        Alerter.clearCurrent(this)
+                        onCheckStopped()
+                        Handler().postDelayed(::stopPolling,300)
+                    })
+                }
                 .show()
     }
 

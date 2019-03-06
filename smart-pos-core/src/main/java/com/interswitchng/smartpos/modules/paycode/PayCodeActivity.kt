@@ -68,7 +68,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
             // change hint text
             paymentHint.text = getString(R.string.isw_title_processing_transaction)
             // show transaction progress alert
-            showProgressAlert()
+            showProgressAlert(false)
         }
 
         // TODO refactor this function [extremely ugly!!]

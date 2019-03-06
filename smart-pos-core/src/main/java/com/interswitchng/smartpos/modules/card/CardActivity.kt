@@ -6,13 +6,13 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
@@ -93,20 +93,22 @@ class CardActivity : BaseActivity() {
             when (result) {
                 EmvResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
                 else -> runOnUiThread {
-                   if (!isCancelled) toast("Error processing card transaction")
+                    if (!isCancelled) {
+                        toast("Error processing card transaction")
 
-                    DialogUtils.getAlertDialog(this)
-                            .setTitle("Unable to process card transaction?")
-                            .setMessage("Would you like to try another payment method?")
-                            .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
-                                dialog.dismiss()
-                                showPaymentOptions(BottomSheetOptionsDialog.CARD)
-                            }
-                            .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
-                                finish()
-                                dialog.dismiss()
-                            }
-                            .show()
+                        DialogUtils.getAlertDialog(this)
+                                .setTitle("Unable to process card transaction?")
+                                .setMessage("Would you like to try another payment method?")
+                                .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
+                                    dialog.dismiss()
+                                    showPaymentOptions(BottomSheetOptionsDialog.CARD)
+                                }
+                                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                                    finish()
+                                    dialog.dismiss()
+                                }
+                                .show()
+                    }
                 }
             }
         }
@@ -138,10 +140,23 @@ class CardActivity : BaseActivity() {
             // set flag
             isCancelled = true
 
-            // set cancel result
-            setResult(Activity.RESULT_CANCELED)
-            toast(reason)
-            finish()
+            val cancel = {
+                // set cancel result
+                setResult(Activity.RESULT_CANCELED)
+                toast(reason)
+                finish()
+            }
+
+
+            DialogUtils.getAlertDialog(this)
+                    .setTitle(reason)
+                    .setMessage("Would you like to try another payment method?")
+                    .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
+                        dialog.dismiss()
+                        showPaymentOptions(BottomSheetOptionsDialog.NONE)
+                    }
+                    .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss(); cancel() }
+                    .show()
         }
     }
 
@@ -152,7 +167,7 @@ class CardActivity : BaseActivity() {
             // hide other layouts: show default screen
             showContainer(CardTransactionState.Default)
             // show transaction progress alert
-            showProgressAlert()
+            showProgressAlert(false)
         }
 
         // TODO refactor this function [extremely ugly!!]
