@@ -15,7 +15,6 @@
         <activity
             android:name=".modules.home.HomeActivity"
             android:label="@string/isw_label_app_title"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity

@@ -28,6 +28,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.Trans
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.models.utils.IswDisposable
+import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
@@ -38,6 +39,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
     internal val posDevice: POSDevice by inject()
     private val payableService: HttpService by inject()
+    private val alert by lazy {
+        DialogUtils.getAlertDialog(this)
+                .setTitle("Cancel Transaction")
+                .setMessage("Are you sure you want to cancel current transaction?")
+                .setNegativeButton(R.string.isw_no) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(R.string.isw_yes) { dialog, _ -> dialog.dismiss(); finish(); }
+    }
 
     protected val iswPos: IswPos by inject()
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
@@ -84,8 +92,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item?.itemId) {
             R.id.cancelPayment -> {
-                // TODO show confirmation dialog
-                finish()
+                alert.show()
                 true
             }
             R.id.changePaymentMethod -> {

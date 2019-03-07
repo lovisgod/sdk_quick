@@ -69,21 +69,25 @@ class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
         ussdPayment.setOnClickListener {
             val ussdIntent = Intent(context, UssdActivity::class.java)
             startActivity(ussdIntent)
+            dismiss()
         }
 
         qrPayment.setOnClickListener {
             val qrIntent = Intent(context, QrCodeActivity::class.java)
             startActivity(qrIntent)
+            dismiss()
         }
 
         cardPayment.setOnClickListener {
             val cardIntent = Intent(context, CardActivity::class.java)
             startActivity(cardIntent)
+            dismiss()
         }
 
         payCodePayment.setOnClickListener {
             val payCodeIntent = Intent(context, PayCodeActivity::class.java)
             startActivity(payCodeIntent)
+            dismiss()
         }
 
         closeBtn.setOnClickListener { dismiss() }

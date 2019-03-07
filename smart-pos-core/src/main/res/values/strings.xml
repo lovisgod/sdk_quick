@@ -79,6 +79,8 @@
     <string name="isw_message_camera_permission">You need to grant access to camera to allow the app scan the Code.</string>
     <string name="isw_hint_print_ussd">PRINT USSD</string>
     <string name="isw_title_confirm_payment">CONFIRM PAYMENT</string>
+    <string name="isw_yes">Yes</string>
+    <string name="isw_no">No</string>
 
 
     <string-array name="isw_account_types">
