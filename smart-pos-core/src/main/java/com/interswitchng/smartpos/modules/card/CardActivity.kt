@@ -61,6 +61,7 @@ class CardActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        isCancelled = true
         emv.removeEmvCallback(emvCallback)
         emv.cancelTransaction()
     }

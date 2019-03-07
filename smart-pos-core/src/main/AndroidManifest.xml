@@ -10,7 +10,7 @@
 
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
+            android:resource="@array/isw_preloaded_fonts" />
 
         <activity
             android:name=".modules.home.HomeActivity"

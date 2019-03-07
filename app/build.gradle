@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
@@ -61,4 +60,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation "com.android.support.test:rules:$test_runner_version"
+}
+repositories {
+    mavenCentral()
 }

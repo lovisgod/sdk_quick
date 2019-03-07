@@ -135,7 +135,7 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
         String alias = "000001";
         String merchantCode = "MX1065";
 
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && BuildConfig.MOCK) {
             alias = "000007";
             clientId = "IKIAB23A4E2756605C1ABC33CE3C287E27267F660D61";
             clientSecret = "secret";
