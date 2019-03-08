@@ -81,6 +81,10 @@
     <string name="isw_title_confirm_payment">CONFIRM PAYMENT</string>
     <string name="isw_yes">Yes</string>
     <string name="isw_no">No</string>
+    <string name="isw_hint_select_customer_s_preferred_payment_option">Select Customer\'s Preferred Payment Option</string>
+    <string name="isw_hint_select_bank_hint">Select Customer\'s Preferred Bank</string>
+    <string name="isw_hint_enter_ussd_code">Enter this code: %1$s to pay using your mobile banking app or Quickteller</string>
+
 
 
     <string-array name="isw_account_types">

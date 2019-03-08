@@ -171,61 +171,59 @@ class CardActivity : BaseActivity() {
             showProgressAlert(false)
         }
 
-        // TODO refactor this function [extremely ugly!!]
-        TerminalInfo.get(store)?.let { terminalInfo ->
-            val emvData = emv.getTransactionInfo()
+        // get emv data captured by card
+        val emvData = emv.getTransactionInfo()
 
-            if (emvData != null) {
-                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-                val response = isoService.initiateCardPurchase(terminalInfo, txnInfo)
-                // used default transaction because the
-                // transaction is not processed by isw directly
-                val txn = Transaction.default()
+        if (emvData != null) {
+            val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+            val response = isoService.initiateCardPurchase(terminalInfo, txnInfo)
+            // used default transaction because the
+            // transaction is not processed by isw directly
+            val txn = Transaction.default()
 
-                val now = Date()
-                response?.let {
+            val now = Date()
+            response?.let {
 
-                    val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
-                    val pinStatus = when {
-                        pinOk || it.responseCode == IsoUtils.OK -> "PIN Verified"
-                        else -> "PIN Unverified"
-                    }
+                val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
+                val pinStatus = when {
+                    pinOk || it.responseCode == IsoUtils.OK -> "PIN Verified"
+                    else -> "PIN Unverified"
+                }
 
-                    transactionResult = TransactionResult(
-                            paymentType = PaymentType.Card,
-                            dateTime = DisplayUtils.getIsoString(now),
-                            amount = DisplayUtils.getAmountString(paymentInfo),
-                            type = TransactionType.Purchase,
-                            authorizationCode = response.authCode,
-                            responseMessage = responseMsg,
-                            responseCode = response.responseCode,
-                            cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = "",
-                            stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                            telephone = "08031150978")
+                transactionResult = TransactionResult(
+                        paymentType = PaymentType.Card,
+                        dateTime = DisplayUtils.getIsoString(now),
+                        amount = DisplayUtils.getAmountString(paymentInfo),
+                        type = TransactionType.Purchase,
+                        authorizationCode = response.authCode,
+                        responseMessage = responseMsg,
+                        responseCode = response.responseCode,
+                        cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = "",
+                        stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
+                        telephone = "08031150978")
 
-                    // complete transaction by applying scripts
-                    // only when responseCode is 'OK'
-                    if (it.responseCode == IsoUtils.OK) {
-                        val completionResult = emv.completeTransaction(it)
+                // complete transaction by applying scripts
+                // only when responseCode is 'OK'
+                if (it.responseCode == IsoUtils.OK) {
+                    val completionResult = emv.completeTransaction(it)
 
-                        when (completionResult) {
-                            EmvResult.OFFLINE_APPROVED -> logger.log("online has been approved")
-                            else -> {
-                                toast("Transaction Declined")
-                                showContainer(CardTransactionState.Default)
-                            }
+                    when (completionResult) {
+                        EmvResult.OFFLINE_APPROVED -> logger.log("online has been approved")
+                        else -> {
+                            toast("Transaction Declined")
+                            showContainer(CardTransactionState.Default)
                         }
-
                     }
 
-                    // show transaction result screen
-                    showTransactionResult(txn)
-                } ?: toast("Unable to process Transaction").also { finish() }
+                }
 
-            } else {
-                toast("Unable to getResult icc").also { finish() }
-            }
-        } ?: toast("No terminal info, found on device").also { finish() }
+                // show transaction result screen
+                showTransactionResult(txn)
+            } ?: toast("Unable to process Transaction").also { finish() }
+
+        } else {
+            toast("Unable to getResult icc").also { finish() }
+        }
     }
 
 

@@ -71,36 +71,32 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
             showProgressAlert(false)
         }
 
-        // TODO refactor this function [extremely ugly!!]
-        TerminalInfo.get(store)?.let { terminalInfo ->
-            val code = payCode.text.toString()
-            val response = isoService.initiatePaycodePurchase(terminalInfo, code, paymentInfo)
-            // used default transaction because the
-            // transaction is not processed by isw directly
-            val txn = Transaction.default()
+        val code = payCode.text.toString()
+        val response = isoService.initiatePaycodePurchase(terminalInfo, code, paymentInfo)
+        // used default transaction because the
+        // transaction is not processed by isw directly
+        val txn = Transaction.default()
 
-            val now = Date()
-            response?.let {
+        val now = Date()
+        response?.let {
 
-                val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
+            val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
 
-                transactionResult = TransactionResult(
-                        paymentType = PaymentType.PayCode,
-                        dateTime = DisplayUtils.getIsoString(now),
-                        amount = DisplayUtils.getAmountString(paymentInfo),
-                        type = TransactionType.Purchase,
-                        authorizationCode = response.authCode,
-                        responseMessage = responseMsg,
-                        responseCode = response.responseCode,
-                        stan = response.stan, pinStatus = "", AID = "", code = "",
-                        cardPan = "", cardExpiry = "", cardType = "",
-                        telephone = "08031150978")
+            transactionResult = TransactionResult(
+                    paymentType = PaymentType.PayCode,
+                    dateTime = DisplayUtils.getIsoString(now),
+                    amount = DisplayUtils.getAmountString(paymentInfo),
+                    type = TransactionType.Purchase,
+                    authorizationCode = response.authCode,
+                    responseMessage = responseMsg,
+                    responseCode = response.responseCode,
+                    stan = response.stan, pinStatus = "", AID = "", code = "",
+                    cardPan = "", cardExpiry = "", cardType = "",
+                    telephone = "08031150978")
 
-                // show transaction result screen
-                showTransactionResult(txn)
-            } ?: toast("Unable to process Transaction").also { finish() }
-
-        } ?: toast("No terminal info, found on device").also { finish() }
+            // show transaction result screen
+            showTransactionResult(txn)
+        } ?: toast("Unable to process Transaction").also { finish() }
     }
 
     override fun getTransactionResult(transaction: Transaction) = transactionResult

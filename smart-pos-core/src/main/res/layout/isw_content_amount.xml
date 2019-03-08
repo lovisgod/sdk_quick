@@ -15,11 +15,12 @@
         android:padding="@dimen/isw_content_padding">
 
         <TextView
+            android:id="@+id/currencySymbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/isw_bg_primary_light"
             android:padding="2dp"
-            android:text="@string/isw_currency_naira"
+            tools:text="@string/isw_currency_naira"
             android:textColor="@color/iswTextColorSecondaryDark"
             android:textSize="20sp"
             android:textStyle="bold"

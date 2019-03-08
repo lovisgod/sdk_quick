@@ -20,17 +20,19 @@ import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
-import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.models.utils.IswDisposable
+import com.interswitchng.smartpos.shared.utilities.CurrencyUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
+import kotlinx.android.synthetic.main.isw_content_amount.*
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
@@ -75,8 +77,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK, intent)
 
             } ?: setResult(Activity.RESULT_CANCELED) // else set result as cancelled
-        }
-        else setResult(Activity.RESULT_CANCELED) // else set result as cancelled
+        } else setResult(Activity.RESULT_CANCELED) // else set result as cancelled
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,13 +91,13 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+        return when (item?.itemId) {
             R.id.cancelPayment -> {
                 alert.show()
                 true
             }
             R.id.changePaymentMethod -> {
-                val exclude = when(this) {
+                val exclude = when (this) {
                     is QrCodeActivity -> BottomSheetOptionsDialog.QR
                     is PayCodeActivity -> BottomSheetOptionsDialog.PAYCODE
                     is CardActivity -> BottomSheetOptionsDialog.CARD
@@ -120,6 +121,9 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         setSupportActionBar(toolbar)
+        val currency = CurrencyUtils.getCurrencySymbol(terminalInfo.currencyCode)
+        currencySymbol.text = currency
+
     }
 
 
@@ -137,7 +141,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     protected fun showProgressAlert(canCancel: Boolean = true) {
-        val alert = Alerter.create(this)
+        Alerter.create(this)
                 .setTitle(getString(R.string.isw_title_transaction_in_progress))
                 .setText(getString(R.string.isw_title_checking_transaction_status))
                 .enableProgress(true)
@@ -150,7 +154,7 @@ abstract class BaseActivity : AppCompatActivity() {
                         Toast.makeText(this, "Status check stopped", Toast.LENGTH_LONG).show()
                         Alerter.clearCurrent(this)
                         onCheckStopped()
-                        Handler().postDelayed(::stopPolling,300)
+                        Handler().postDelayed(::stopPolling, 300)
                     })
                 }
                 .show()
@@ -181,7 +185,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
 
-
     protected fun toast(message: String) {
         runOnUiThread { Toast.makeText(this, message, Toast.LENGTH_LONG).show() }
     }
@@ -197,7 +200,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     // class that provides implementation for transaction status callbacks
-    private inner class TransactionStatusCallback: TransactionRequeryCallback {
+    private inner class TransactionStatusCallback : TransactionRequeryCallback {
 
 
         override fun onTransactionCompleted(transaction: Transaction) = runOnUiThread {

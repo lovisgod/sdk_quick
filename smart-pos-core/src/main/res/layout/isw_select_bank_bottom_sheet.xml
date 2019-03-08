@@ -21,7 +21,7 @@
             android:layout_marginRight="32dp"
             android:layout_gravity="center_vertical"
             android:textColor="@color/iswTextColorSecondaryLight"
-            android:text="Select Customer's preferred bank"/>
+            android:text="@string/isw_hint_select_bank_hint"/>
 
 
         <ImageView

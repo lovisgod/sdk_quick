@@ -27,7 +27,7 @@
                 android:layout_marginRight="32dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/iswTextColorSecondaryLight"
-                android:text="Select Customer's preferred payment option"/>
+                android:text="@string/isw_hint_select_customer_s_preferred_payment_option"/>
 
             <ImageView
                 android:id="@+id/closeBtn"

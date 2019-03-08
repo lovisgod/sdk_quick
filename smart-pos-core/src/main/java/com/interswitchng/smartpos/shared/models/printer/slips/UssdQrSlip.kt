@@ -17,16 +17,16 @@ internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, pri
         numberFormat.maximumFractionDigits = 2
 
 
+        val paymentType = pairString("channel", info.paymentType.toString())
         val stan = pairString("stan", info.stan)
         val date = pairString("date", info.dateTime)
         val amount = pairString("amount", info.amount)
-        val codeTitle = pairString("code","", hasNewLine = true)
 
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
         val txnType = pairString("", info.type.toString(), stringConfig = typeConfig)
 
         // return transaction info of slip
-        return listOf(txnType, stan, date, line, amount, line)
+        return listOf(txnType, paymentType, stan, date, line, amount, line)
     }
 
 }
