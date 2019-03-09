@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.modules.ussdqr.activities
 
 import android.os.Bundle
+import android.support.v4.text.HtmlCompat
 import android.widget.Toast
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
@@ -105,7 +106,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
     private fun getBankCode() {
 
         if (selectedBank == null) {
-            Toast.makeText(this, "You have to select a Bank", Toast.LENGTH_LONG).show()
+            toast("You have to select a bank")
             return
         }
 
@@ -119,6 +120,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         // initiate ussd payment
         paymentService.initiateUssdPayment(request) { response, throwable ->
             runOnUiThread {
+                dialog.dismiss()
                 // handle error or response
                 if (throwable != null) handleError(throwable)
                 else response?.apply { handleResponse(this) }
@@ -174,9 +176,10 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
                 ussdCode = response.bankShortCode ?: response.defaultShortCode
                 ussdCode?.apply {
                     ussdText.text = this
+                    val code = substring(lastIndexOf("*") + 1 until lastIndexOf("#"))
+                    paymentHint.text = HtmlCompat.fromHtml(getString(R.string.isw_hint_enter_ussd_code, code), HtmlCompat.FROM_HTML_MODE_LEGACY)
                     printSlip.add(PrintObject.Data("code \n $this\n", PrintStringConfiguration(isBold = true, isTitle = true)))
                 }
-                dialog.dismiss()
 
                 // show buttons
                 showButtons(response)

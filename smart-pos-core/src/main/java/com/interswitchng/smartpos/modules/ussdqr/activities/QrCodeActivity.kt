@@ -77,8 +77,11 @@ class QrCodeActivity : BaseActivity() {
             val request = CodeRequest.from(iswPos.config.alias, terminalInfo, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
             // initiate qr payment
             paymentService.initiateQrPayment(request) { response, throwable ->
-                if (throwable != null) handleError(throwable)
-                else response?.apply { handleResponse(this) }
+                runOnUiThread {
+                    dialog.dismiss()
+                    if (throwable != null) handleError(throwable)
+                    else response?.apply { handleResponse(this) }
+                }
             }
         }
     }
