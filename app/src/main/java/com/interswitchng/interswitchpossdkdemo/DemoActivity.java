@@ -12,13 +12,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.interswitchng.smartpos.IswPos;
@@ -43,16 +40,20 @@ import java.text.NumberFormat;
 import java.util.List;
 
 
-public class DemoActivity extends AppCompatActivity implements TextWatcher {
+public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoardListener {
 
+    final private String defaultAmount = "0.00";
     private String current = "";
-    private EditText amount;
+    private TextView amount;
     private int currentAmount;
+    private Keyboard keyboard;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+
+        setSupportActionBar(findViewById(R.id.homeToolbar));
 
         configureTerminal();
         setupUI();
@@ -150,26 +151,8 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
 
     private void setupUI() {
         amount = findViewById(R.id.amount);
-        final AppCompatButton button = findViewById(R.id.btnSubmitAmount);
-
-        amount.addTextChangedListener(this);
-
-        button.setOnClickListener(v -> {
-            String enteredAmount = amount.getText().toString();
-            if (enteredAmount.isEmpty()) {
-                Toast.makeText(DemoActivity.this, "Amount value is required", Toast.LENGTH_LONG).show();
-            } else {
-                try {
-                    // trigger payment
-                    IswPos.getInstance().initiatePayment(this, currentAmount, null);
-                } catch (NotConfiguredException e) {
-                    toast("Pos has not been configured");
-                    Log.d("DEMO", e.getMessage());
-                }
-            }
-        });
-
-
+        amount.setText("0.00");
+        keyboard = new Keyboard(this, this);
     }
 
 
@@ -203,38 +186,15 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            // handle success
-            if (data != null) {
-                PurchaseResult result = IswPos.getResult(data);
-                Log.d("Demo", "" + result);
-                toast(result.toString());
-            }
-        } else {
-            // else handle error
-        }
-    }
-
     private void toast(String msg) {
-        runOnUiThread(() -> {
-            Toast.makeText(DemoActivity.this, msg, Toast.LENGTH_LONG).show();
-        });
-    }
-
-
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+        runOnUiThread(() -> Toast.makeText(DemoActivity.this, msg, Toast.LENGTH_LONG).show());
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s != null && !s.toString().equals(current)) {
-            amount.removeTextChangedListener(this);
+    public void onTextChange(String s) {
+        if (s != null && !s.isEmpty() && !s.equals(current)) {
 
-            String cleanString = s.toString().replaceAll("[$,.]", "");
+            String cleanString = s.replaceAll("[$,.]", "");
 
             double parsed = Double.parseDouble(cleanString);
             NumberFormat numberFormat = NumberFormat.getInstance();
@@ -246,14 +206,42 @@ public class DemoActivity extends AppCompatActivity implements TextWatcher {
             current = formatted;
             currentAmount = Integer.valueOf(cleanString);
             amount.setText(formatted);
-            amount.setSelection(formatted.length());
-
-            amount.addTextChangedListener(this);
+            keyboard.setText(formatted);
         }
     }
 
     @Override
-    public void afterTextChanged(Editable editable) {
+    public void onSubmit(String text) {
 
+        String enteredAmount = amount.getText().toString();
+        if (enteredAmount.isEmpty() || enteredAmount.equals(defaultAmount)) {
+            toast( "Amount value is required");
+        } else {
+            try {
+                // trigger payment
+                IswPos.getInstance().initiatePayment(this, currentAmount, null);
+            } catch (NotConfiguredException e) {
+                toast("Pos has not been configured");
+                Log.d("DEMO", e.getMessage());
+            }
+        }
     }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            // handle success
+            if (data != null) {
+                PurchaseResult result = IswPos.getResult(data);
+                Log.d("Demo", "" + result);
+                toast(result.toString());
+                onTextChange(defaultAmount);
+            }
+        } else {
+            // else handle error
+        }
+    }
+
 }
