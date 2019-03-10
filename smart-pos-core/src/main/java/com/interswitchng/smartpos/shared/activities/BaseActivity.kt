@@ -121,9 +121,10 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         setSupportActionBar(toolbar)
-        val currency = CurrencyUtils.getCurrencySymbol(terminalInfo.currencyCode)
-        currencySymbol.text = currency
-
+        if (this !is TransactionResultActivity) {
+            val currency = CurrencyUtils.getCurrencySymbol(terminalInfo.currencyCode)
+           currencySymbol.text = currency
+        }
     }
 
 

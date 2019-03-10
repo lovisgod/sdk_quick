@@ -210,10 +210,6 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         logger.log("Before EMVStartTransaction")
         logger.log("AC type - ${ac.type}")
 
-        // set the other amount:
-        val bytes = "0".repeat(6).toByteArray()
-        EMVCallback.EMVSetTLVData(ICCData.ANOTHER_AMOUNT.tag.toShort(), bytes, bytes.size)
-
         // start the transaction
         val startTransactionResult = EMVCallback.EMVStartTrans(amount.toLong(), 0, ac)
 
