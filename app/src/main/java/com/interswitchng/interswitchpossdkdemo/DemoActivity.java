@@ -2,6 +2,9 @@ package com.interswitchng.interswitchpossdkdemo;
 
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -25,23 +28,27 @@ import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback;
+import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
 import com.interswitchng.smartpos.shared.models.core.UserType;
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus;
+import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
+import com.interswitchng.smartpos.usb.UsbConfig;
+import com.interswitchng.smartpos.usb.interfaces.MessageListener;
 
 import java.text.NumberFormat;
 import java.util.List;
 
 
-public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoardListener {
-
+public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoardListener, MessageListener {
+    private static String KEY_ENABLE_USB = "key_enable_usb";
     final private String defaultAmount = "0.00";
     private String current = "";
     private TextView amount;
@@ -122,7 +129,6 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
                 }
             };
         } else {
-            Resources resources = getResources();
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
@@ -143,7 +149,13 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
             merchantCode = "MX5882";
         }
 
+        boolean enableUsb = getIntent().getBooleanExtra(KEY_ENABLE_USB, false);
         POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode);
+
+        if (enableUsb) {
+            UsbConnector usbConfig = new UsbConfig(this);
+            config.with(usbConfig);
+        }
 
         // setup terminal
         IswPos.setupTerminal(getApplication(), device, config);
@@ -181,6 +193,9 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         if (item.getItemId() == R.id.terminal_config) {
             IswPos.showSettingsScreen(); // show settings for terminal configuration
             return true;
+        } else if (item.getItemId() == R.id.enable_usb) {
+            restartApplication();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -188,6 +203,16 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
     private void toast(String msg) {
         runOnUiThread(() -> Toast.makeText(DemoActivity.this, msg, Toast.LENGTH_LONG).show());
+    }
+
+    private void restartApplication() {
+        Intent intent = getIntent();
+        intent.putExtra(KEY_ENABLE_USB, true);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
     }
 
     @Override
@@ -217,16 +242,24 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         if (enteredAmount.isEmpty() || enteredAmount.equals(defaultAmount)) {
             toast( "Amount value is required");
         } else {
-            try {
-                // trigger payment
-                IswPos.getInstance().initiatePayment(this, currentAmount, null);
-            } catch (NotConfiguredException e) {
-                toast("Pos has not been configured");
-                Log.d("DEMO", e.getMessage());
-            }
+            makePayment(currentAmount, null);
         }
     }
 
+    private void makePayment(int amount, PaymentType type) {
+        try {
+            // trigger payment
+            IswPos.getInstance().initiatePayment(this, amount, type);
+        } catch (NotConfiguredException e) {
+            toast("Pos has not been configured");
+            Log.d("DEMO", e.getMessage());
+        }
+    }
+
+    @Override
+    public void  onMessageReceived(PaymentType paymentType, int amount) {
+        makePayment(amount, paymentType);
+    }
 
 
     @Override

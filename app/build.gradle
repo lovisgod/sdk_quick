@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation (project(path: ':smart-pos-core'))
     implementation (project(':smart-pos-emv-pax'))
+    implementation (project(path: ':smart-pos-usb'))
 
 
     testImplementation 'junit:junit:4.12'
