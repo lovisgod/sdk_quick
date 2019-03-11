@@ -161,7 +161,7 @@ abstract class BaseActivity : AppCompatActivity() {
     private fun schedulePolling() {
         timer.scheduleAtFixedRate(object : TimerTask() {
 
-            override fun run() {
+            override fun run() = runOnUiThread {
                 if (::transactionStatus.isInitialized)
                     checkTransactionStatus(transactionStatus)
             }
