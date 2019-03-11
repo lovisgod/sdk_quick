@@ -31,8 +31,8 @@
 
             <ImageView
                 android:id="@+id/qrCodeImage"
-                android:layout_width="280dp"
-                android:layout_height="280dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/isw_bg_qr_code_boundary"
                 android:contentDescription="@string/isw_description_qr_code_image"
@@ -41,6 +41,56 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="250dp"
+                android:layout_height="50dp">
+
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_verve_safe_token"
+                    />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="8dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_master_card"
+                    />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_master_card_secure_code"
+                    />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_verified_by_visa"
+                    />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_visa_card"
+                    />
+
+
+            </LinearLayout>
+
+
 
 
             <LinearLayout
