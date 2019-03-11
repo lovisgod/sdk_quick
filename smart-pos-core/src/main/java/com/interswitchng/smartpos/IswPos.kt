@@ -3,6 +3,7 @@ package com.interswitchng.smartpos
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.support.v7.app.AppCompatActivity
 import com.interswitchng.smartpos.di.activityModules
 import com.interswitchng.smartpos.di.appModules
 import com.interswitchng.smartpos.modules.card.CardActivity
@@ -20,6 +21,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
+import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import org.koin.dsl.module.module
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.loadKoinModules
@@ -30,7 +32,7 @@ import java.util.*
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
-    fun initiatePayment(activity: Activity, amount: Int, paymentType: PaymentType?) {
+    fun initiatePayment(activity: AppCompatActivity, amount: Int, paymentType: PaymentType?, showOptionsDialog: Boolean = true) {
 
         if (!isConfigured()) throw NotConfiguredException()
 
@@ -51,8 +53,17 @@ class IswPos private constructor(private val app: Application, internal val devi
             putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
         }
 
+        // TODO refactor this
+        if (showOptionsDialog) {
+            activity.apply {
+                // create and show bottom sheet
+                BottomSheetOptionsDialog
+                        .newInstance(info = paymentInfo)
+                        .show(supportFragmentManager, "Payment Options")
+            }
+        }
         // start activity
-        activity.startActivityForResult(intent, CODE_PURCHASE)
+        else activity.startActivityForResult(intent, CODE_PURCHASE)
     }
 
     companion object {

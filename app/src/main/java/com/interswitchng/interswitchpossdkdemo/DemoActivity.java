@@ -249,7 +249,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
     private void makePayment(int amount, PaymentType type) {
         try {
             // trigger payment
-            IswPos.getInstance().initiatePayment(this, amount, type);
+            IswPos.getInstance().initiatePayment(this, amount, type, true);
         } catch (NotConfiguredException e) {
             toast("Pos has not been configured");
             Log.d("DEMO", e.getMessage());
