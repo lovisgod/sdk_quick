@@ -19,6 +19,8 @@ import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.shared.activities.BaseActivity
+import com.interswitchng.smartpos.shared.activities.TransactionResultActivity
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import kotlinx.android.synthetic.main.isw_content_payment_options.*
 
@@ -64,10 +66,7 @@ class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
         val context = requireActivity()
         val startActivity = { intent: Intent ->
             val isIswActivity = when (context) {
-                is UssdActivity,
-                is PayCodeActivity,
-                is QrCodeActivity,
-                is CardActivity,
+                is BaseActivity,
                 is HomeActivity -> true
                 else -> false
             }

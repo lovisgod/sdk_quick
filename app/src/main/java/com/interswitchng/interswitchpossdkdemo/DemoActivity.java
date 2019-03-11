@@ -271,7 +271,8 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
                 Log.d("Demo", "" + result);
                 toast(result.toString());
                 // reset the amount back to default
-                onTextChange(defaultAmount);
+                if (result.getResponseCode().equals("00"))
+                    onTextChange(defaultAmount);
             }
         } else {
             // else handle error

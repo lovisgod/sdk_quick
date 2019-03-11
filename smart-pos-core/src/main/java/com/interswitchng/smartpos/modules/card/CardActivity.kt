@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.card
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
@@ -58,6 +59,7 @@ class CardActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         setupTransaction()
+        isCancelled = false
     }
 
     override fun onDestroy() {
@@ -151,9 +153,7 @@ class CardActivity : BaseActivity() {
                     }
                     .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
                         dialog.dismiss()
-                        finish()
-                        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
-                        startActivity(intent)
+                        resetTransaction()
                     }
                     .show()
         }
@@ -224,6 +224,11 @@ class CardActivity : BaseActivity() {
         }
     }
 
+    private fun resetTransaction() {
+        val newIntent = Intent(intent)
+        newIntent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
+        startActivity(newIntent)
+    }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? = transactionResult
 
