@@ -12,15 +12,16 @@
     <string name="isw_title_get_bank_code">get bank code</string>
     <string name="isw_title_print_receipt">Print Receipt</string>
     <string name="isw_title_transaction_approved">Transaction Approved</string>
-    <string name="isw_title_transaction_in_progress">Transaction in progress</string>
-    <string name="isw_title_checking_transaction_status">Checking transaction status…</string>
+    <string name="isw_title_transaction_in_progress">Transaction in Progress</string>
+    <string name="isw_sub_title_processing_progress">Processing transaction…</string>
+    <string name="isw_sub_title_checking_transaction_status">Checking payment status…</string>
     <string name="isw_title_transaction_successful">Transaction Successful</string>
     <string name="isw_title_transaction_completed_successfully">Transaction completed successfully</string>
     <string name="isw_title_transaction_not_confirmed">Transaction not confirmed</string>
     <string name="isw_content_transaction_not_confirmed">Unable to confirm transaction, please try again later</string>
     <string name="isw_title_transaction_error">Transaction Error</string>
-    <string name="isw_title_transaction_timeout">Checking Transaction Timeout</string>
-    <string name="isw_content_transaction_in_progress_time_out">Checking transaction status timed out</string>
+    <string name="isw_title_transaction_timeout">Checking Confirmation Timeout</string>
+    <string name="isw_content_transaction_in_progress_time_out">Checking payment status timed out</string>
     <string name="isw_label_insert_card">Insert your card</string>
     <string name="isw_enter_pin">Enter Pin</string>
     <string name="isw_action_cancel">Cancel</string>
@@ -84,7 +85,7 @@
     <string name="isw_hint_select_customer_s_preferred_payment_option">Select Customer\'s Preferred Payment Option</string>
     <string name="isw_hint_select_bank_hint">Select Customer\'s Preferred Bank</string>
     <string name="isw_hint_enter_ussd_code">Enter this code: <b>%1$s</b> to pay using your mobile banking app or Quickteller</string>
-
+    <string name="isw_title_confirmation_in_progress">Confirmation in Progress</string>
 
 
     <string-array name="isw_account_types">

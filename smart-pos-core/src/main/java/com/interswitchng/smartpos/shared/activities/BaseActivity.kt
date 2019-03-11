@@ -36,8 +36,11 @@ import kotlinx.android.synthetic.main.isw_content_amount.*
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
+import java.util.*
 
 abstract class BaseActivity : AppCompatActivity() {
+
+    data class PollingText(val title: String, val subTitle: String)
 
     internal val posDevice: POSDevice by inject()
     private val payableService: HttpService by inject()
@@ -52,13 +55,17 @@ abstract class BaseActivity : AppCompatActivity() {
     protected val iswPos: IswPos by inject()
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
     protected val disposables = IswCompositeDisposable()
+    private lateinit var pollingText: PollingText
 
 
     private lateinit var transactionResponse: Transaction
     private var pollingExecutor: IswDisposable? = null
+    private var isPolling = false
+    private lateinit var transactionStatus: TransactionStatus
 
     // getResult payment info
     internal lateinit var paymentInfo: PaymentInfo
+    private val timer by lazy { Timer() }
 
 
     override fun onDestroy() {
@@ -83,6 +90,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
+        pollingText = getPollingText()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -123,13 +131,22 @@ abstract class BaseActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         if (this !is TransactionResultActivity) {
             val currency = CurrencyUtils.getCurrencySymbol(terminalInfo.currencyCode)
-           currencySymbol.text = currency
+            currencySymbol.text = currency
         }
     }
 
 
+    protected fun startPolling(status: TransactionStatus) {
+        transactionStatus = status
+        schedulePolling()
+    }
+
     // for Qr and USSD only
-    fun checkTransactionStatus(status: TransactionStatus) {
+    protected fun checkTransactionStatus(status: TransactionStatus) {
+        if (isPolling) stopPolling()
+
+        isPolling = false
+
         // show progress alert
         showProgressAlert()
         // check payment status and timeout after 5 minutes
@@ -141,10 +158,23 @@ abstract class BaseActivity : AppCompatActivity() {
         pollingExecutor = payableService.checkPayment(paymentType, status, seconds.toLong(), TransactionStatusCallback())
     }
 
+    private fun schedulePolling() {
+        timer.scheduleAtFixedRate(object : TimerTask() {
+
+            override fun run() {
+                if (::transactionStatus.isInitialized)
+                    checkTransactionStatus(transactionStatus)
+            }
+
+        }, 10_000, 35_000)
+
+
+    }
+
     protected fun showProgressAlert(canCancel: Boolean = true) {
         Alerter.create(this)
-                .setTitle(getString(R.string.isw_title_transaction_in_progress))
-                .setText(getString(R.string.isw_title_checking_transaction_status))
+                .setTitle(pollingText.title)
+                .setText(pollingText.subTitle)
                 .enableProgress(true)
                 .setDismissable(false)
                 .enableInfiniteDuration(true)
@@ -166,9 +196,11 @@ abstract class BaseActivity : AppCompatActivity() {
         showTransactionResult(transactionResponse)
     }
 
-    protected fun stopPolling() {
+    private fun stopPolling() {
         Alerter.clearCurrent(this)
         pollingExecutor?.dispose()
+        timer.cancel()
+        isPolling = false
     }
 
     internal fun showTransactionResult(transaction: Transaction) {
@@ -200,21 +232,39 @@ abstract class BaseActivity : AppCompatActivity() {
         // do nothing
     }
 
+    open fun getPollingText(): PollingText {
+        val isCodeActivity = this is QrCodeActivity || this is UssdActivity
+
+        val title =
+                if (isCodeActivity) getString(R.string.isw_title_confirmation_in_progress)
+                else getString(R.string.isw_title_transaction_in_progress)
+
+        val subTitle =
+                if (isCodeActivity) getString(R.string.isw_sub_title_checking_transaction_status)
+                else getString(R.string.isw_sub_title_processing_progress)
+
+        return PollingText(title, subTitle)
+    }
+
     // class that provides implementation for transaction status callbacks
     private inner class TransactionStatusCallback : TransactionRequeryCallback {
 
 
         override fun onTransactionCompleted(transaction: Transaction) = runOnUiThread {
+            isPolling = false
             // set and complete payment
             transactionResponse = transaction
             completePayment()
         }
 
         override fun onTransactionStillPending(transaction: Transaction) {
+            isPolling = true
             // extend the time for the notification
         }
 
         override fun onTransactionError(transaction: Transaction?, throwable: Throwable?) = runOnUiThread {
+            isPolling = false
+
             // getResult error message
             val message = throwable?.message
                     ?: transaction?.responseDescription
@@ -239,6 +289,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
 
         override fun onTransactionTimeOut() = runOnUiThread {
+            isPolling = false
             // change notification to error notification
 
             // clear current notification

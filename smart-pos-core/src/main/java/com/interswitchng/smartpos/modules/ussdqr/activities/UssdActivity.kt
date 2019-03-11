@@ -183,6 +183,8 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
 
                 // show buttons
                 showButtons(response)
+                // check transaction status
+                startPolling(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
             }
             else -> {
                 runOnUiThread {

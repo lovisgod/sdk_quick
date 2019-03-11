@@ -138,6 +138,8 @@ class QrCodeActivity : BaseActivity() {
                 runOnUiThread {
                     qrCodeImage.setImageBitmap(qrBitmap)
                     showTransactionMocks(response)
+                    // check transaction status
+                    startPolling(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
                 }
             }
             else -> {

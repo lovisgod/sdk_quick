@@ -59,7 +59,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
         activityRule.launchActivity(intent)
 
         WaitUtils.waitTime(3000)
-        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_sub_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -100,7 +100,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
         activityRule.launchActivity(intent)
 
         WaitUtils.waitTime( 500)
-        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_sub_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
@@ -131,7 +131,7 @@ class QrCodeInstrumentationTests: BaseTestActivity() {
         activityRule.launchActivity(intent)
 
         WaitUtils.waitTime( 500)
-        onView(withText(R.string.isw_title_checking_transaction_status)).check { view, noViewFoundException ->
+        onView(withText(R.string.isw_sub_title_checking_transaction_status)).check { view, noViewFoundException ->
 
             Assert.assertNull(noViewFoundException)
 
