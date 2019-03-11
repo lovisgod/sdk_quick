@@ -6,13 +6,15 @@ import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
-import android.view.ViewGroup
-import android.view.LayoutInflater
 import android.support.design.widget.BottomSheetDialogFragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardActivity
+import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
@@ -61,9 +63,23 @@ class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
     private fun setupUI(info: PaymentInfo) {
         val context = requireActivity()
         val startActivity = { intent: Intent ->
+            val isIswActivity = when (context) {
+                is UssdActivity,
+                is PayCodeActivity,
+                is QrCodeActivity,
+                is CardActivity,
+                is HomeActivity -> true
+                else -> false
+            }
+
             intent.putExtra(Constants.KEY_PAYMENT_INFO, info)
-            intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
-            context.startActivity(intent)
+
+            if (isIswActivity) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
+                context.startActivity(intent)
+            } else {
+                context.startActivityForResult(intent, IswPos.CODE_PURCHASE)
+            }
         }
 
         ussdPayment.setOnClickListener {

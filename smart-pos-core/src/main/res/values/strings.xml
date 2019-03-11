@@ -86,6 +86,7 @@
     <string name="isw_hint_select_bank_hint">Select Customer\'s Preferred Bank</string>
     <string name="isw_hint_enter_ussd_code">Enter this code: <b>%1$s</b> to pay using your mobile banking app or Quickteller</string>
     <string name="isw_title_confirmation_in_progress">Confirmation in Progress</string>
+    <string name="isw_action_change">Change</string>
 
 
     <string-array name="isw_account_types">

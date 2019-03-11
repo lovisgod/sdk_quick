@@ -270,6 +270,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
                 PurchaseResult result = IswPos.getResult(data);
                 Log.d("Demo", "" + result);
                 toast(result.toString());
+                // reset the amount back to default
                 onTextChange(defaultAmount);
             }
         } else {

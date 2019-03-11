@@ -197,7 +197,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
                     val timeout = System.currentTimeMillis() + emvImpl.timeout - 1000
                     // flag to know when timeout occurs
                     var hasTimedOut = false
-                    while (!it.isDisposed) {
+                    while (!hasEnteredPin && !it.isDisposed) {
                         // notify callback or set timeout flag
                         if (hasTimedOut) callTransactionCancelled(RetCode.EMV_TIME_OUT, "Pin Input Timeout ")
                         else hasTimedOut = System.currentTimeMillis() + 1000 >= timeout

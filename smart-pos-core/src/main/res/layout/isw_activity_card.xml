@@ -58,6 +58,7 @@
                 android:maxLength="4"
                 android:textIsSelectable="false"
                 android:clickable="false"
+                android:focusable="false"
                 android:textSize="20sp"
                 tools:text="44445" />
 

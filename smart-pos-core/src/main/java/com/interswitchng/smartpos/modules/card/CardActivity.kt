@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.modules.card
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
@@ -96,19 +97,7 @@ class CardActivity : BaseActivity() {
                 else -> runOnUiThread {
                     if (!isCancelled) {
                         toast("Error processing card transaction")
-
-                        DialogUtils.getAlertDialog(this)
-                                .setTitle("Unable to process card transaction?")
-                                .setMessage("Would you like to try another payment method?")
-                                .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
-                                    dialog.dismiss()
-                                    showPaymentOptions(BottomSheetOptionsDialog.CARD)
-                                }
-                                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
-                                    finish()
-                                    dialog.dismiss()
-                                }
-                                .show()
+                        cancelTransaction("Unable to process card transaction")
                     }
                 }
             }
@@ -151,12 +140,21 @@ class CardActivity : BaseActivity() {
 
             DialogUtils.getAlertDialog(this)
                     .setTitle(reason)
-                    .setMessage("Would you like to try another payment method?")
-                    .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
+                    .setMessage("Would you like to change payment method, or try again?")
+                    .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
                         dialog.dismiss()
-                        showPaymentOptions(BottomSheetOptionsDialog.NONE)
+                        cancel()
                     }
-                    .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss(); cancel() }
+                    .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
+                        dialog.dismiss()
+                        showPaymentOptions(BottomSheetOptionsDialog.CARD)
+                    }
+                    .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
+                        dialog.dismiss()
+                        finish()
+                        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT)
+                        startActivity(intent)
+                    }
                     .show()
         }
     }
