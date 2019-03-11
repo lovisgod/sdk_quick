@@ -20,7 +20,7 @@
     <string name="isw_title_transaction_not_confirmed">Transaction not confirmed</string>
     <string name="isw_content_transaction_not_confirmed">Unable to confirm transaction, please try again later</string>
     <string name="isw_title_transaction_error">Transaction Error</string>
-    <string name="isw_title_transaction_timeout">Checking Confirmation Timeout</string>
+    <string name="isw_title_transaction_timeout">Confirmation Timeout</string>
     <string name="isw_content_transaction_in_progress_time_out">Checking payment status timed out</string>
     <string name="isw_label_insert_card">Insert your card</string>
     <string name="isw_enter_pin">Enter Pin</string>

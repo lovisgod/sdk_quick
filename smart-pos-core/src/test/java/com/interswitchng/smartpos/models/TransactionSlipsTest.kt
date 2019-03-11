@@ -89,4 +89,24 @@ class TransactionSlipsTest {
 
         assertEquals(ex, ac)
     }
+
+    @Test
+    fun checkPaymentToStringMethod() {
+
+        val exPayCode = "PAYCODE"
+        val actualPayCodeStr = PaymentType.PayCode.toString()
+        assertEquals(exPayCode, actualPayCodeStr)
+
+        val exCardStr = "CREDIT/DEBIT CARD"
+        val actualCard = PaymentType.Card.toString()
+        assertEquals(exCardStr, actualCard)
+
+        val exQrCode = "QR CODE"
+        val actualQr = PaymentType.QR.toString()
+        assertEquals(exQrCode, actualQr)
+
+        val exUssd = "USSD"
+        val actualUssd = PaymentType.USSD.toString()
+        assertEquals(exUssd, actualUssd)
+    }
 }

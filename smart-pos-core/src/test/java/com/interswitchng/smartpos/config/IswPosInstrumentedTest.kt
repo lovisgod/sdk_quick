@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.config
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.support.v7.app.AppCompatActivity
 import androidx.test.core.app.ApplicationProvider
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.modules.home.HomeActivity
@@ -25,7 +26,7 @@ class IswPosInstrumentedTest {
         val payment: PaymentInfo = mock()
         val config: POSConfig = mock()
         IswPos.setupTerminal(app, mock(), config)
-        val activity: Activity =  mock()
+        val activity: AppCompatActivity =  mock()
 
         val expectedIntent = Intent(app, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
