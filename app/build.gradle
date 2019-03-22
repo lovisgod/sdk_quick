@@ -40,6 +40,11 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
+    configurations {
+        releasImplementation
+        debugImplementation
+    }
 }
 
 dependencies {
@@ -48,9 +53,14 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation "com.interswitchng:smart-pos-core:$versionName"
-    implementation "com.interswitchng:smart-pos-emv-pax:$versionName"
-    implementation "com.interswitchng:smart-pos-usb:$versionName"
+
+    releaseImplementation "com.interswitchng:smart-pos-core:$versionName"
+    releaseImplementation "com.interswitchng:smart-pos-emv-pax:$versionName"
+    releaseImplementation "com.interswitchng:smart-pos-usb:$versionName"
+
+    debugImplementation project(':smart-pos-core')
+    debugImplementation project(':smart-pos-emv-pax')
+    debugImplementation project(':smart-pos-usb')
 
 
     testImplementation 'junit:junit:4.12'

@@ -35,7 +35,6 @@ allprojects {
         versionCode = 2
         versionName = "1.0.0-beta4"
 
-
         // core dependencies
         koin_version = '1.0.1'
         retrofit_version = '2.5.0'
@@ -73,7 +72,6 @@ allprojects {
         licenseName = 'The Apache Software License, Version 2.0'  //Example for license
         licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
         allLicenses = ["Apache-2.0"]
-
 
         bintray_user = properties.get 'BINTRAY_USER'
         bintray_apikey = properties.get 'BINTRAY_KEY'
