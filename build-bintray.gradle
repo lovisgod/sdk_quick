@@ -9,7 +9,6 @@ bintray {
     key = bintray_apikey
 
     configurations = ['archives']
-    dryRun = runDry ?: false
     pkg {
         repo = bintrayRepo
         name = bintrayName

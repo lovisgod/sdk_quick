@@ -54,7 +54,6 @@ allprojects {
         bintrayRepo = 'maven'
         bintrayName = 'smart-pos'
 
-        runDry = true // set true to perform dry-run
 
         publishedGroupId = 'com.interswitchng'
         libraryName = 'Smart POS'

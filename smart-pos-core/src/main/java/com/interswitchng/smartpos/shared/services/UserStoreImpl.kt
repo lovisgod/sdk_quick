@@ -3,11 +3,13 @@ package com.interswitchng.smartpos.shared.services
 import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
 import com.interswitchng.smartpos.shared.models.core.AuthToken
+import com.interswitchng.smartpos.shared.utilities.Logger
 import retrofit2.HttpException
 import java.io.IOException
 
 internal class UserStoreImpl(private val authService: IAuthService): UserStore {
 
+    private val logger by lazy { Logger.with("UserStoreImpl")}
     private lateinit var token: AuthToken
 
     override  fun <T> getToken (callback: (String) -> T): T {
@@ -18,13 +20,11 @@ internal class UserStoreImpl(private val authService: IAuthService): UserStore {
         // process callback based on availability of access token
         if (::token.isInitialized) return callback(token.token)
         else authService.getToken(grantType, scope).run().let {
-            if (it.isSuccessful) {
-                token = it.body()!!
-                return callback(token.token)
-            } else {
-                throw if (it.code() in 400..511) HttpException(it)
-                else IOException("Unable to get Access Token")
-            }
+            val authToken =
+                    if (it.isSuccessful) it.body()!!.also { token = it }
+                    else AuthToken("") // empty token
+
+            return callback(authToken.token)
         }
     }
 }

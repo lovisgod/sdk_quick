@@ -48,9 +48,9 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation (project(path: ':smart-pos-core'))
-    implementation (project(':smart-pos-emv-pax'))
-    implementation (project(path: ':smart-pos-usb'))
+    implementation "com.interswitchng:smart-pos-core:$versionName"
+    implementation "com.interswitchng:smart-pos-emv-pax:$versionName"
+    implementation "com.interswitchng:smart-pos-usb:$versionName"
 
 
     testImplementation 'junit:junit:4.12'
