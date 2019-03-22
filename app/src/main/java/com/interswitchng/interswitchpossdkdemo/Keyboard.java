@@ -3,6 +3,7 @@ package com.interswitchng.interswitchpossdkdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Keyboard implements View.OnClickListener {
@@ -38,8 +39,17 @@ public class Keyboard implements View.OnClickListener {
         activity.findViewById(R.id.oneZero).setOnClickListener(this);
         activity.findViewById(R.id.twoZeros).setOnClickListener(this);
         activity.findViewById(R.id.threeZeros).setOnClickListener(this);
-        activity.findViewById(R.id.delete).setOnClickListener(this);
         activity.findViewById(R.id.done).setOnClickListener(this);
+
+        ImageView delete = activity.findViewById(R.id.delete);
+        delete.setOnClickListener(this);
+        // clear text on long click
+        delete.setOnLongClickListener(v -> {
+            result = "";
+            if (mCallback != null) mCallback.onTextChange(result);
+            return true;
+        });
+
 
         // set callback
         mCallback = callback;
