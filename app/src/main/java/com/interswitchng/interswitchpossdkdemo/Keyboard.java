@@ -3,25 +3,28 @@ package com.interswitchng.interswitchpossdkdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 public class Keyboard implements View.OnClickListener {
-    
+
     interface KeyBoardListener {
         void onTextChange(String text);
+
         void onSubmit(String text);
     }
 
     private Context mContext;
     private String result = "";
     private KeyBoardListener mCallback;
-    
-    
+
+
     public Keyboard(Activity activity, KeyBoardListener callback) {
         setupButtons(activity, callback);
     }
 
 
     private void setupButtons(Activity activity, KeyBoardListener callback) {
+        mContext = activity;
         // add buttons
         activity.findViewById(R.id.one).setOnClickListener(this);
         activity.findViewById(R.id.two).setOnClickListener(this);
@@ -37,32 +40,34 @@ public class Keyboard implements View.OnClickListener {
         activity.findViewById(R.id.threeZeros).setOnClickListener(this);
         activity.findViewById(R.id.delete).setOnClickListener(this);
         activity.findViewById(R.id.done).setOnClickListener(this);
-        
+
         // set callback
         mCallback = callback;
     }
 
     @Override
     public void onClick(View view) {
+        long maxValue = 1_000_000_00L; // 1 million (1,000,000.00)
+        String result = this.result;
 
         switch (view.getId()) {
-            case R.id.one : {
+            case R.id.one: {
                 result += "1";
                 break;
             }
-            case R.id.two : {
+            case R.id.two: {
                 result += "2";
                 break;
             }
-            case R.id.three : {
+            case R.id.three: {
                 result += "3";
                 break;
             }
-            case R.id.four : {
+            case R.id.four: {
                 result += "4";
                 break;
             }
-            case R.id.five : {
+            case R.id.five: {
                 result += "5";
                 break;
             }
@@ -107,9 +112,17 @@ public class Keyboard implements View.OnClickListener {
                 return;
             }
         }
-        
-        
-        if (mCallback != null) mCallback.onTextChange(result);
+
+        boolean isDisabled = !result.isEmpty() && (Long.valueOf(result) > maxValue);
+
+        if (!isDisabled) {
+            this.result = result;
+            if (mCallback != null) mCallback.onTextChange(result);
+        } else {
+            // show max input
+            Toast.makeText(mContext, "Max value is 1 Million", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void setText(String text) {

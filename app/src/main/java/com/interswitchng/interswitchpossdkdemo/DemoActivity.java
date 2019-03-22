@@ -6,7 +6,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,8 +23,8 @@ import android.widget.Toast;
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback;
 import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector;
@@ -132,7 +131,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
-            POSDeviceImpl service  = POSDeviceImpl.create(getApplicationContext());
+            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
             device = service;
         }
@@ -168,10 +167,10 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
     }
 
 
-    public static Bitmap drawableToBitmap (Drawable drawable) {
+    public static Bitmap drawableToBitmap(Drawable drawable) {
 
         if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable)drawable).getBitmap();
+            return ((BitmapDrawable) drawable).getBitmap();
         }
 
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -217,9 +216,11 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
     @Override
     public void onTextChange(String s) {
-        if (s != null && !s.isEmpty() && !s.equals(current)) {
+        if (s != null && !s.equals(current)) {
 
-            String cleanString = s.replaceAll("[$,.]", "");
+            String text = s.isEmpty() ? defaultAmount : s;
+
+            String cleanString = text.replaceAll("[$,.]", "");
 
             double parsed = Double.parseDouble(cleanString);
             NumberFormat numberFormat = NumberFormat.getInstance();
@@ -228,10 +229,10 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
             String formatted = numberFormat.format((parsed / 100));
 
-            current = formatted;
             currentAmount = Integer.valueOf(cleanString);
             amount.setText(formatted);
-            keyboard.setText(formatted);
+            current = cleanString;
+            keyboard.setText(cleanString);
         }
     }
 
@@ -240,7 +241,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
         String enteredAmount = amount.getText().toString();
         if (enteredAmount.isEmpty() || enteredAmount.equals(defaultAmount)) {
-            toast( "Amount value is required");
+            toast("Amount value is required");
         } else {
             makePayment(currentAmount, null);
         }
@@ -257,7 +258,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
     }
 
     @Override
-    public void  onMessageReceived(PaymentType paymentType, int amount) {
+    public void onMessageReceived(PaymentType paymentType, int amount) {
         makePayment(amount, paymentType);
     }
 
