@@ -12,6 +12,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.5'
 
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -24,7 +26,16 @@ allprojects {
         maven { url "http://dl.bintray.com/ebi-igweze/maven" }
     }
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
     ext {
+
+        // config
+        versionCode = 2
+        versionName = "1.0.0-beta4"
+
+
         // core dependencies
         koin_version = '1.0.1'
         retrofit_version = '2.5.0'
@@ -37,6 +48,41 @@ allprojects {
         androidx_version = '1.0.0'
         test_runner_version = '1.0.2'
         concurrent_version = '0.4.4'
+
+        // publish config
+        // bintray & maven config
+        bintrayRepo = 'maven'
+        bintrayName = 'smart-pos'
+
+        runDry = true // set true to perform dry-run
+
+        publishedGroupId = 'com.interswitchng'
+        libraryName = 'Smart POS'
+
+        libraryDescription = 'Smart POS for Android'
+
+        siteUrl = 'https://bitbucket.org/devsickle/interswitchpossdk'
+        gitUrl = 'https://ebi-igweze@bitbucket.org/devsickle/interswitchpossdk.git'
+
+        libraryVersion = versionName
+
+        developerId = 'bintray-ebi-igweze-smart-pos'
+        developerName = 'Ebi Igweze'
+        developerEmail = 'ebi.igweze@gmail.com'
+
+        // organization = 'your_organization' // if you push to organization's repository.
+        licenseName = 'The Apache Software License, Version 2.0'  //Example for license
+        licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        allLicenses = ["Apache-2.0"]
+
+
+        bintray_user = properties.get 'BINTRAY_USER'
+        bintray_apikey = properties.get 'BINTRAY_KEY'
+        bintray_gpg_password = properties.get 'GPG_PASS_PHRASE'
+
+        // paths to build gradle files
+        maven_installer = '../build-maven.gradle'
+        bintray_installer = '../build-bintray.gradle'
     }
 }
 

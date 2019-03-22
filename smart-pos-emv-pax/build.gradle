@@ -4,16 +4,19 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'com.getkeepsafe.dexcount'
 
+ext {
+    artifact = 'smart-pos-emv-pax' // This artifact name should be the same with library module name
+}
+
 android {
+
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode versionCode
+        versionName versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -35,10 +38,6 @@ android {
     }
 
 
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir 'src/main/libs'
-    }
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -71,3 +70,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     androidTestImplementation "com.android.support.test:rules:$test_runner_version"
 }
+
+
+// maven-installer
+apply from: maven_installer
+// bintray
+apply from: bintray_installer
