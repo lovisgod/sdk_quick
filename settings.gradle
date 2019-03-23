@@ -1,1 +1,1 @@
-include ':app', ':smart-pos-core', ':smart-pos-usb', ':smart-pos-emv-pax', ':app-usb'
+include ':app', ':smart-pos-core', ':smart-pos-usb', ':smart-pos-emv-pax'

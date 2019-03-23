@@ -15,25 +15,19 @@ import kotlinx.android.synthetic.main.isw_content_home.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var optionsDialog: BottomSheetOptionsDialog
-
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_home)
 
-
-        // get payment info
-        val paymentInfo: PaymentInfo = intent.getParcelableExtra(KEY_PAYMENT_INFO)
-        // set up the UI
-        optionsDialog = BottomSheetOptionsDialog.newInstance(info = paymentInfo)
-
         // setup the drawer layout
         setupDrawerLayout()
 
         // click listener
-        makePurchase.setOnClickListener { optionsDialog.show(supportFragmentManager, optionsDialog.tag) }
+        makePurchase.setOnClickListener {
+
+        }
     }
 
     private fun setupDrawerLayout() {
@@ -57,14 +51,6 @@ class HomeActivity : AppCompatActivity() {
         super.onConfigurationChanged(newConfig)
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if (item?.itemId == android.R.id.home) {
-            finish()
-            true
-        } else super.onOptionsItemSelected(item)
-
     }
 }
 

@@ -1,13 +1,11 @@
 package com.interswitchng.smartpos
 
-import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import com.interswitchng.smartpos.di.activityModules
 import com.interswitchng.smartpos.di.appModules
 import com.interswitchng.smartpos.modules.card.CardActivity
-import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.settings.SettingsActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
@@ -16,10 +14,10 @@ import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
-import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import org.koin.dsl.module.module
@@ -32,38 +30,35 @@ import java.util.*
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
-    fun initiatePayment(activity: AppCompatActivity, amount: Int, paymentType: PaymentType?, showOptionsDialog: Boolean = true) {
+    fun initiatePayment(activity: AppCompatActivity, amount: Int, paymentType: PaymentType?) {
 
         if (!isConfigured()) throw NotConfiguredException()
 
         val stan = getNextStan()
-
-        // getResult the activity class object
-        val typeClass = when (paymentType) {
-            PaymentType.PayCode -> PayCodeActivity::class.java
-            PaymentType.QR -> QrCodeActivity::class.java
-            PaymentType.USSD -> UssdActivity::class.java
-            PaymentType.Card -> CardActivity::class.java
-            else ->  HomeActivity::class.java
-        }
         // create payment info for purchase request
         val paymentInfo = PaymentInfo(amount, stan)
-        // create intent with payment info and flags
-        val intent = Intent(app, typeClass).apply {
-            putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
-        }
 
-        // TODO refactor this
-        if (showOptionsDialog) {
-            activity.apply {
-                // create and show bottom sheet
-                BottomSheetOptionsDialog
-                        .newInstance(info = paymentInfo)
-                        .show(supportFragmentManager, "Payment Options")
+        if (paymentType == null) {
+            // create and show bottom sheet
+            BottomSheetOptionsDialog
+                    .newInstance(info = paymentInfo)
+                    .show(activity.supportFragmentManager, "Payment Options")
+
+        } else {
+            // getResult the activity class object
+            val typeClass = when (paymentType) {
+                PaymentType.PayCode -> PayCodeActivity::class.java
+                PaymentType.QR -> QrCodeActivity::class.java
+                PaymentType.USSD -> UssdActivity::class.java
+                PaymentType.Card -> CardActivity::class.java
             }
+
+            // create intent with payment info and flags
+            val intent = Intent(app, typeClass).putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
+
+            // start activity
+            activity.startActivityForResult(intent, CODE_PURCHASE)
         }
-        // start activity
-        else activity.startActivityForResult(intent, CODE_PURCHASE)
     }
 
     companion object {
