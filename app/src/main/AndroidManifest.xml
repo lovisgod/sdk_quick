@@ -3,6 +3,7 @@
     package="com.interswitchng.interswitchpossdkdemo">
 
     <application
+        android:name=".POSApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,7 +13,7 @@
         <activity
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar"
-            android:name=".DemoActivity">
+            android:name="com.interswitchng.smartpos.modules.home.HomeActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

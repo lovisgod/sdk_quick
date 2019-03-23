@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.modules.home
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.ActionBarDrawerToggle
@@ -25,9 +26,7 @@ class HomeActivity : AppCompatActivity() {
         setupDrawerLayout()
 
         // click listener
-        makePurchase.setOnClickListener {
-
-        }
+        makePurchase.setOnClickListener { startActivity(Intent(this, PurchaseActivity::class.java)) }
     }
 
     private fun setupDrawerLayout() {

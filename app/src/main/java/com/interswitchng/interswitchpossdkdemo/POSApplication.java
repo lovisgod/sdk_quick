@@ -1,35 +1,20 @@
 package com.interswitchng.interswitchpossdkdemo;
 
-
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
-import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback;
 import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
-import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
 import com.interswitchng.smartpos.shared.models.core.UserType;
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
@@ -42,27 +27,15 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.usb.UsbConfig;
 import com.interswitchng.smartpos.usb.interfaces.MessageListener;
 
-import java.text.NumberFormat;
 import java.util.List;
 
-
-public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoardListener, MessageListener {
-    private static String KEY_ENABLE_USB = "key_enable_usb";
-    final private String defaultAmount = "0.00";
-    private String current = "";
-    private TextView amount;
-    private int currentAmount;
-    private Keyboard keyboard;
+public class POSApplication extends Application   {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demo);
-
-        setSupportActionBar(findViewById(R.id.homeToolbar));
+    public void onCreate() {
+        super.onCreate();
 
         configureTerminal();
-        setupUI();
     }
 
     private void configureTerminal() {
@@ -148,23 +121,11 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
             merchantCode = "MX5882";
         }
 
-        boolean enableUsb = getIntent().getBooleanExtra(KEY_ENABLE_USB, false);
         POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode);
-
-        if (enableUsb) {
-            UsbConfig usbConfig = new UsbConfig();
-            usbConfig.setMessageListener(this);
-            config.with(usbConfig);
-        }
+        config.with(new UsbConfig());
 
         // setup terminal
-        IswPos.setupTerminal(getApplication(), device, config);
-    }
-
-    private void setupUI() {
-        amount = findViewById(R.id.amount);
-        amount.setText("0.00");
-        keyboard = new Keyboard(this, this);
+        IswPos.setupTerminal(this, device, config);
     }
 
 
@@ -181,104 +142,4 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
         return bitmap;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.demo_options, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.terminal_config) {
-            IswPos.showSettingsScreen(); // show settings for terminal configuration
-            return true;
-        } else if (item.getItemId() == R.id.enable_usb) {
-            restartApplication();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void toast(String msg) {
-        runOnUiThread(() -> Toast.makeText(DemoActivity.this, msg, Toast.LENGTH_LONG).show());
-    }
-
-    private void restartApplication() {
-        Intent intent = getIntent();
-        intent.putExtra(KEY_ENABLE_USB, true);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(this, mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        System.exit(0);
-    }
-
-    @Override
-    public void onTextChange(String s) {
-        if (s != null && !s.equals(current)) {
-
-            String text = s.isEmpty() ? defaultAmount : s;
-
-            String cleanString = text.replaceAll("[$,.]", "");
-
-            double parsed = Double.parseDouble(cleanString);
-            NumberFormat numberFormat = NumberFormat.getInstance();
-            numberFormat.setMinimumFractionDigits(2);
-            numberFormat.setMaximumFractionDigits(2);
-
-            String formatted = numberFormat.format((parsed / 100));
-
-            currentAmount = Integer.valueOf(cleanString);
-            amount.setText(formatted);
-            current = cleanString;
-            keyboard.setText(cleanString);
-        }
-    }
-
-    @Override
-    public void onSubmit(String text) {
-
-        String enteredAmount = amount.getText().toString();
-        if (enteredAmount.isEmpty() || enteredAmount.equals(defaultAmount)) {
-            toast("Amount value is required");
-        } else {
-            makePayment(currentAmount, null);
-        }
-    }
-
-    private void makePayment(int amount, PaymentType type) {
-        try {
-            // trigger payment
-            IswPos.getInstance().initiatePayment(this, amount, type);
-        } catch (NotConfiguredException e) {
-            toast("Pos has not been configured");
-            Log.d("DEMO", e.getMessage());
-        }
-    }
-
-    @Override
-    public void onMessageReceived(PaymentType paymentType, int amount) {
-        makePayment(amount, paymentType);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            // handle success
-            if (data != null) {
-                PurchaseResult result = IswPos.getResult(data);
-                Log.d("Demo", "" + result);
-                toast(result.toString());
-                // reset the amount back to default
-                if (result.getResponseCode().equals("00"))
-                    onTextChange(defaultAmount);
-            }
-        } else {
-            // else handle error
-        }
-    }
-
 }
