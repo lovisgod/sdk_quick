@@ -34,7 +34,6 @@ class UsbService : Service() {
     private val logger = Logger.with("UsbService")
     private val disposables = IswCompositeDisposable()
     private val usbConnector: UsbConnector by inject()
-    private val usbMessageListener: MessageListener by inject()
 
     override fun onBind(intent: Intent): IBinder? = null
 
@@ -132,7 +131,7 @@ class UsbService : Service() {
                 val request = gson.fromJson(message, Request::class.java)
                 // notify listener of message
                 if (request != null) {
-                    usbMessageListener.onMessageReceived(PaymentType.Card, request.amount)
+                    UsbConfig.messageListener?.onMessageReceived(PaymentType.Card, request.amount)
                 }
             }
         }

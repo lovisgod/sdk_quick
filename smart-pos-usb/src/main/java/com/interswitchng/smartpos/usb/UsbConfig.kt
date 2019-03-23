@@ -15,7 +15,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector as UsbC
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
-class UsbConfig(private val messageListener: MessageListener) : UsbCoreConnector {
+class UsbConfig : UsbCoreConnector {
 
     internal lateinit var app: Application
 
@@ -24,12 +24,19 @@ class UsbConfig(private val messageListener: MessageListener) : UsbCoreConnector
 
         val module = module {
             single<UsbConnector> { UsbConnectionManager() }
-            single { messageListener }
         }
 
         loadKoinModules(module)
         // start comms service
         startUsbService(app)
+    }
+
+    fun setMessageListener(listener: MessageListener) {
+        messageListener = listener
+    }
+
+    fun removeMessageListener() {
+        messageListener = null
     }
 
     fun startService(context: Context) = startUsbService(context)
@@ -44,6 +51,8 @@ class UsbConfig(private val messageListener: MessageListener) : UsbCoreConnector
     }
 
     companion object {
+
+        internal var messageListener: MessageListener? = null
 
 
         @TargetApi(Build.VERSION_CODES.O)

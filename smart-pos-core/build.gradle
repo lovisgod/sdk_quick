@@ -72,10 +72,10 @@ dependencies {
     implementation 'com.tapadoo.android:alerter:3.0.0'
     implementation "com.google.zxing:core:$zxing_version"
     implementation "com.igweze.ebi:simple-call-adapter:1.0.1"
-    implementation ("com.journeyapps:zxing-android-embedded:$zxing_version")  {
+    implementation("com.journeyapps:zxing-android-embedded:$zxing_version") {
         exclude group: "com.android.support"
     }
-    implementation ("com.github.bumptech.glide:glide:4.9.0") {
+    implementation("com.github.bumptech.glide:glide:4.9.0") {
         exclude group: "com.android.support"
     }
 
@@ -93,7 +93,6 @@ dependencies {
     androidTestImplementation "com.android.support.test:rules:$test_runner_version"
     androidTestUtil 'com.android.support.test:orchestrator:1.0.2'
 }
-
 
 // maven-installer
 apply from: maven_installer
