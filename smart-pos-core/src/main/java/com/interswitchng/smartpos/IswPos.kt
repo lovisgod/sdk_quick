@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import com.interswitchng.smartpos.di.activityModules
 import com.interswitchng.smartpos.di.appModules
 import com.interswitchng.smartpos.modules.card.CardActivity
+import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.settings.SettingsActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
@@ -61,6 +62,10 @@ class IswPos private constructor(private val app: Application, internal val devi
         }
     }
 
+    fun gotoSettings() = showSettingsScreen()
+
+    fun gotoDashboard() = showDashboardScreen()
+
     companion object {
         // code used to start purchase request
         const val CODE_PURCHASE: Int = 23849
@@ -114,13 +119,15 @@ class IswPos private constructor(private val app: Application, internal val devi
             return String.format(Locale.getDefault(), "%06d", newStan)
         }
 
+        @JvmStatic
+        fun showSettingsScreen() = showScreen(SettingsActivity::class.java)
 
         @JvmStatic
-        fun showSettingsScreen() {
+        fun showDashboardScreen() = showScreen(HomeActivity::class.java)
+
+        private fun showScreen(clazz: Class<*>) {
             val app = INSTANCE.app
-            val intent = Intent(app, SettingsActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
+            val intent = Intent(app, clazz).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             app.startActivity(intent)
         }
 

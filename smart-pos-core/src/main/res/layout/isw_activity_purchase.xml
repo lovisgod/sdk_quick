@@ -8,7 +8,7 @@
 
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/homeToolbar"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:contentInsetStart="0dp"
@@ -19,8 +19,6 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:paddingLeft="32dp"
-            android:paddingRight="32dp"
             android:paddingTop="@dimen/isw_content_padding"
             android:paddingBottom="@dimen/isw_content_padding"
             android:scaleType="fitStart"

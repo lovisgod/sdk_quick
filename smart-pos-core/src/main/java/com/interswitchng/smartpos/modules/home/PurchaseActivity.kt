@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.widget.Toast
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
@@ -26,8 +27,18 @@ class PurchaseActivity : AppCompatActivity(), Keyboard.KeyBoardListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_purchase)
 
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         amount.text = defaultAmount
         keyboard = Keyboard(this, this)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == android.R.id.home) {
+            finish()
+            true
+        } else super.onOptionsItemSelected(item)
     }
 
 
