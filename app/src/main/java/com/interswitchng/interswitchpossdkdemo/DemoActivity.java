@@ -111,10 +111,6 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
                             return EmvResult.OFFLINE_APPROVED;
                         }
 
-                        @Override
-                        public CardDetail getCardDetail() {
-                            return null;
-                        }
 
                         @Override
                         public void cancelTransaction() {

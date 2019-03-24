@@ -1,9 +1,9 @@
 package com.interswitchng.smartpos.modules.card
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
@@ -39,13 +40,15 @@ class CardActivity : BaseActivity() {
 
     private val isoService: IsoService by inject()
     private val store: KeyValueStore by inject()
-    private val accountType = AccountType.Default
+    private var accountType = AccountType.Default
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false
     private var isCancelled = false
 
+
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
     private val alert by lazy { DialogUtils.getAlertDialog(this).create() }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,11 +85,38 @@ class CardActivity : BaseActivity() {
                 emv.setupTransaction(paymentInfo.amount, it)
 
                 runOnUiThread { dialog.dismiss() }
-                startTransaction()
+
+                // show account type selection
+                chooseAccount()
             }
         }
 
         disposables.add(disposable)
+    }
+
+    private fun chooseAccount() = runOnUiThread {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.isw_hint_account_type)
+                .setSingleChoiceItems(R.array.isw_account_types, accountType.ordinal) { dialog, selectedIndex ->
+                    if (selectedIndex != -1) {
+                        // set the selected account
+                        accountType = when(selectedIndex) {
+                            1 -> AccountType.Savings
+                            2 -> AccountType.Current
+                            3 -> AccountType.Credit
+                            else -> AccountType.Default
+                        }
+
+                        selectedCardType.text = accountType.toString()
+
+                        // start transaction
+                        startTransaction()
+
+                        //
+                    }
+                    dialog.dismiss()
+                }
+                .show()
     }
 
     private fun startTransaction() {
@@ -248,19 +278,31 @@ class CardActivity : BaseActivity() {
             }
         }
 
-        override fun showEnterPin() {
+        override fun onCardRead(cardType: CardType) = runOnUiThread {
+            val cardIcon = when(cardType) {
+                CardType.MASTER -> R.drawable.isw_ic_card_mastercard
+                CardType.VISA -> R.drawable.isw_ic_card_visa
+                else -> R.drawable.isw_ic_card
+            }
+
+            // set the card icon
+            cardTypeIcon.setImageResource(cardIcon)
+        }
+
+        override fun showEnterPin() = runOnUiThread {
             showContainer(CardTransactionState.EnterPin)
-            runOnUiThread { paymentHint.text = getString(R.string.isw_hint_input_pin) }
+            paymentHint.text = getString(R.string.isw_hint_input_pin)
         }
 
-        override fun setPinText(text: String) {
-            runOnUiThread { cardPin.setText(text) }
+        override fun setPinText(text: String) = runOnUiThread {
+            cardPin.setText(text)
         }
 
-        override fun showPinOk() {
+        override fun showPinOk() = runOnUiThread {
             pinOk = true
-            runOnUiThread { toast("Pin Input ok") }
+            toast("Pin OK")
         }
+
 
         override fun onCardRemoved() {
             cancelTransaction("Transaction Cancelled: Card was removed")
@@ -270,12 +312,11 @@ class CardActivity : BaseActivity() {
             cancelTransaction(reason)
         }
 
-        override fun showPinError(remainCount: Int) {
-            runOnUiThread {
-                alert.setTitle("Invalid Pin")
-                alert.setMessage("Please ensure you put the right pin.")
-                alert.show()
-            }
+        override fun showPinError(remainCount: Int) = runOnUiThread {
+            alert.setTitle("Invalid Pin")
+            alert.setMessage("Please ensure you put the right pin.")
+            alert.show()
         }
+
     }
 }

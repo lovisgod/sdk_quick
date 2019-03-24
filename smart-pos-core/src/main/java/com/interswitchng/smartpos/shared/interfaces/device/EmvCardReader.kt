@@ -17,8 +17,6 @@ interface EmvCardReader {
 
     fun startTransaction(): EmvResult
 
-    fun getCardDetail(): CardDetail
-
     fun completeTransaction(response: TransactionResponse): EmvResult
 
     fun cancelTransaction()

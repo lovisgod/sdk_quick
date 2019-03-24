@@ -20,8 +20,8 @@
     <string name="isw_title_transaction_not_confirmed">Transaction not confirmed</string>
     <string name="isw_content_transaction_not_confirmed">Unable to confirm transaction, please try again later</string>
     <string name="isw_title_transaction_error">Transaction Error</string>
-    <string name="isw_title_transaction_timeout">Confirmation Timeout</string>
-    <string name="isw_content_transaction_in_progress_time_out">Checking payment status timed out</string>
+    <string name="isw_title_transaction_timeout">Confirmation in Progress</string>
+    <string name="isw_content_transaction_in_progress_time_out">Your transaction is still processing, please wait.</string>
     <string name="isw_label_insert_card">Insert your card</string>
     <string name="isw_enter_pin">Enter Pin</string>
     <string name="isw_action_cancel">Cancel</string>
@@ -87,10 +87,10 @@
     <string name="isw_hint_enter_ussd_code">Enter this code: <b>%1$s</b> to pay using your mobile banking app or Quickteller</string>
     <string name="isw_title_confirmation_in_progress">Confirmation in Progress</string>
     <string name="isw_action_change">Change</string>
+    <string name="isw_hint_default_account">Default</string>
 
 
     <string-array name="isw_account_types">
-        <item name="acount_hint">Choose Account</item>
         <item name="default_account">Default Account</item>
         <item name="savings_account">Savings Account</item>
         <item name="current_account">Current Account</item>

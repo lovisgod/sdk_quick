@@ -85,11 +85,6 @@ public class POSApplication extends Application   {
                         }
 
                         @Override
-                        public CardDetail getCardDetail() {
-                            return null;
-                        }
-
-                        @Override
                         public void cancelTransaction() {
                         }
 

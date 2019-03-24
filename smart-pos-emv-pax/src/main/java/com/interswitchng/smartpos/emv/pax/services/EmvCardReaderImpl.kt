@@ -62,11 +62,12 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             EmvResult.EMV_ERR_NO_APP.errCode -> EmvResult.EMV_ERR_NO_APP
             EmvResult.EMV_ERR_NO_PASSWORD.errCode -> EmvResult.EMV_ERR_NO_PASSWORD
             EmvResult.EMV_ERR_TIME_OUT.errCode -> EmvResult.EMV_ERR_TIME_OUT
-//            EmvResult.EMV_ERR_NO_DATA.errCode -> EmvResult.EMV_ERR_NO_DATA
+            EmvResult.EMV_ERR_NO_DATA.errCode -> EmvResult.EMV_ERR_NO_DATA
             else -> null
         }
 
         if (resultMsg != null) callTransactionCancelled(resultMsg.errCode, "Unable to read Card")
+        else emvCallback?.onCardRead(emvImpl.getCardType())
     }
 
 
@@ -81,10 +82,6 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             ACType.AC_ARQC -> logger.log("online should be processed").let { CoreEmvResult.ONLINE_REQUIRED }
             else -> logger.log("offline declined").let { CoreEmvResult.OFFLINE_DENIED }
         } else logger.log("Transaction was cancelled").let { CoreEmvResult.OFFLINE_DENIED }
-    }
-
-    override fun getCardDetail(): CardDetail {
-        return CardDetail("", "")
     }
 
     override fun completeTransaction(response: TransactionResponse): CoreEmvResult {

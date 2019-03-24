@@ -7,6 +7,7 @@ import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
 import java.util.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.jemv.clcommon.*
@@ -23,6 +24,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     private val mckParameters = EmvMCKParam().also { it.extmParam = EmvEXTMParam() }
     private val emvCallback = EMVCallback.getInstance().also { it.setCallbackListener(Listener()) }
     private val logger = Logger.with("EMVImplementation")
+    private lateinit var selectedRID: String
 
     private var amount: Int = 0
 
@@ -54,8 +56,9 @@ internal class EmvImplementation(private val context: Context, private val pinCa
                     if (bytes2String(capk.rID) == String(rid)) {
                         if (keyId.toInt() == -1 || capk.keyID == keyId) {
 
+                            selectedRID = bcd2Str(capk.rID)
                             // log certified authority public key
-                            logger.log("EMVGetTLVData rid=" + bcd2Str(capk.rID))
+                            logger.log("EMVGetTLVData rid=$selectedRID" )
                             logger.log("EMVGetTLVData keyID=" + capk.keyID)
                             logger.log("EMVGetTLVData exponentLen=" + capk.exponentLen)
                             logger.log("EMVGetTLVData hashInd=" + capk.hashInd)
@@ -268,6 +271,20 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         pinCallback.enterPin(isOnline, triesCount, offlineTriesLeft, pan)
     }
 
+    fun getCardType(): CardType {
+        val aids = EmvUtils.getConfigurations(context).second
+        val selected = aids.cards.firstOrNull { ::selectedRID.isInitialized && it.aid.startsWith(selectedRID) }
+        val isCard = { type: CardType -> selected?.name?.contains(type.toString(), true) ?: false}
+
+        var cardType = CardType.DEFAULT
+        // find matching card
+        for (type in CardType.values()) {
+            if (isCard(type)) cardType = type
+        }
+
+        // return type
+        return cardType
+    }
 
     inner class Listener : EMVCallback.EmvCallbackListener {
 

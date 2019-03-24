@@ -10,6 +10,52 @@
 
     <include layout="@layout/isw_content_toolbar" />
 
+    <LinearLayout
+        style="@style/ISW.Subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/iswTextColorSecondaryLight"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/isw_content_small_padding"
+            android:paddingTop="@dimen/isw_content_small_padding"
+            android:textSize="14sp"
+            android:text="@string/isw_hint_account_type"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/cardTypeIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/isw_ic_card"
+            android:layout_marginLeft="@dimen/isw_content_small_margin"
+            android:layout_marginRight="@dimen/isw_content_small_margin"
+            />
+
+
+        <TextView
+            android:id="@+id/selectedCardType"
+            style="@style/ISW.Bold"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_black"
+            android:drawableRight="@drawable/isw_ic_expanded"
+            android:drawableEnd="@drawable/isw_ic_expanded"
+            android:maxLines="1"
+            android:padding="@dimen/isw_content_small_padding"
+            android:textColor="@color/iswColorTextSecondary"
+            android:textSize="14sp"
+            android:text="@string/isw_hint_default_account" />
+
+    </LinearLayout>
+
     <include
         layout="@layout/isw_content_amount"
         android:layout_width="match_parent"
