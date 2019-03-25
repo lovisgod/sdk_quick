@@ -11,6 +11,8 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.UserType
+import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
+import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
@@ -28,18 +30,18 @@ class TransactionResultActivity : BaseActivity() {
 
     private val store: KeyValueStore by inject()
     private val alert by lazy {
-        val exclude = when (result.paymentType) {
-            PaymentType.Card -> BottomSheetOptionsDialog.CARD
-            PaymentType.QR -> BottomSheetOptionsDialog.QR
-            PaymentType.PayCode -> BottomSheetOptionsDialog.PAYCODE
-            PaymentType.USSD -> BottomSheetOptionsDialog.USSD
-        }
 
         return@lazy DialogUtils.getAlertDialog(this)
                 .setTitle("An Error Occurred")
                 .setMessage("Would you like to try another payment method?")
                 .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
                     dialog.dismiss()
+                    val exclude = when (result.paymentType) {
+                        PaymentType.Card -> BottomSheetOptionsDialog.CARD
+                        PaymentType.QR -> BottomSheetOptionsDialog.QR
+                        PaymentType.PayCode -> BottomSheetOptionsDialog.PAYCODE
+                        PaymentType.USSD -> BottomSheetOptionsDialog.USSD
+                    }
                     showPaymentOptions(exclude)
                 }
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
@@ -143,7 +145,14 @@ class TransactionResultActivity : BaseActivity() {
             // print slip
             printSlip?.apply {
                 if (!hasPrintedCustomerCopy) printSlip(this, UserType.Customer)
-                else printSlip(this, UserType.Merchant)
+                else if (hasPrintedMerchantCopy) printSlip(this, UserType.Merchant, reprint = true)
+                else {
+                    // if has not printed merchant copy
+                    // print merchant copy
+                    printSlip(this, UserType.Merchant)
+                    // change print text to re-print
+                    printBtn.text = getString(R.string.isw_title_re_print_receipt)
+                }
             }
         }
 
@@ -206,7 +215,7 @@ class TransactionResultActivity : BaseActivity() {
     }
 
 
-    private fun printSlip(slip: TransactionSlip, userType: UserType) {
+    private fun printSlip(slip: TransactionSlip, userType: UserType, reprint: Boolean = false) {
 
         // get printer status
         val printStatus = posDevice.printer.canPrint()
@@ -219,7 +228,15 @@ class TransactionResultActivity : BaseActivity() {
                 printBtn.isClickable = false
 
                 val disposable = ThreadUtils.createExecutor {
-                    val status = posDevice.printer.printSlip(slip.getSlipItems(), userType)
+                    var slipItems = slip.getSlipItems()
+
+                    // add re-print flag
+                    if (reprint) {
+                        val rePrintFlag = PrintObject.Data("*** Re-Print ***", PrintStringConfiguration(displayCenter = true, isBold = true))
+                        slipItems += rePrintFlag
+                    }
+
+                    val status = posDevice.printer.printSlip(slipItems, userType)
 
                     runOnUiThread {
                         Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()

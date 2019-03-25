@@ -66,5 +66,5 @@ internal abstract class TransactionSlip(private val terminal: TerminalInfo, priv
 
     internal abstract fun getTransactionInfo(): List<PrintObject>
 
-    internal fun getSlipItems() = getTerminalInfo() + getTransactionInfo() + getTransactionStatus()
+    internal fun getSlipItems()  = getTerminalInfo() + getTransactionInfo() + getTransactionStatus()
 }

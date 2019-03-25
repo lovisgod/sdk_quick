@@ -88,6 +88,7 @@
     <string name="isw_title_confirmation_in_progress">Confirmation in Progress</string>
     <string name="isw_action_change">Change</string>
     <string name="isw_hint_default_account">Default</string>
+    <string name="isw_title_re_print_receipt">Re-Print Receipt</string>
 
 
     <string-array name="isw_account_types">
