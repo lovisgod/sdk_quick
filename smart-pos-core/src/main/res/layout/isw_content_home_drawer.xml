@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/appLogo"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:paddingLeft="32dp"
@@ -21,14 +22,9 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        style="@style/ISW.MenuItem"
         android:text="@string/isw_label_menu"
         android:textSize="14sp"
         android:textColor="@color/iswTextColorSecondaryLight"
@@ -40,70 +36,50 @@
         android:background="@color/iswTextColorSecondaryLight" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/history"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="5dp"
+        style="@style/ISW.MenuItem"
         android:text="@string/isw_title_history"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/reports"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="5dp"
+        style="@style/ISW.MenuItem"
         android:text="@string/isw_title_reports"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="5dp"
+        style="@style/ISW.MenuItem"
         android:text="@string/isw_title_setting"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/merchantInfo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="5dp"
+        style="@style/ISW.MenuItem"
         android:text="@string/isw_title_merchant_info"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/help"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="5dp"
+        style="@style/ISW.MenuItem"
         android:text="@string/isw_title_help"
         android:textColor="@android:color/white"
         android:textSize="18sp"

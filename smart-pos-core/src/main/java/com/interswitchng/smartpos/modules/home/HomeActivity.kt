@@ -5,16 +5,19 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
+import android.view.Gravity
+import android.view.View
+import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.Constants.KEY_PAYMENT_INFO
-import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_home.*
 import kotlinx.android.synthetic.main.isw_content_home.*
+import kotlinx.android.synthetic.main.isw_content_home_drawer.*
+import org.koin.android.ext.android.inject
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), View.OnClickListener {
+
+    private val instance: IswPos by inject()
 
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
@@ -38,6 +41,10 @@ class HomeActivity : AppCompatActivity() {
 
         // Tie DrawerLayout events to the ActionBarToggle
         drawerLayout.addDrawerListener(drawerToggle)
+        history.setOnClickListener(this)
+        settings.setOnClickListener(this)
+        merchantInfo.setOnClickListener(this)
+        help.setOnClickListener(this)
     }
 
     override fun onStart() {
@@ -50,6 +57,16 @@ class HomeActivity : AppCompatActivity() {
         super.onConfigurationChanged(newConfig)
         // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig)
+    }
+
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.settings -> instance.gotoSettings()
+        }
+
+        // hide the drawer
+        drawerLayout.closeDrawer(Gravity.START)
     }
 }
 
