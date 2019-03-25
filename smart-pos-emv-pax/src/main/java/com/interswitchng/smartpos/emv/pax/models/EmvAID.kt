@@ -4,8 +4,13 @@ import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
 import com.pax.jemv.clcommon.EMV_APPLIST
 import com.pax.jemv.clcommon.EMV_CAPK
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Root
 
+@Root(name = "emv", strict = false)
 internal class EmvAIDs {
+    @field:ElementList(name = "emvcards")
     var cards: ArrayList<EmvCard> = arrayListOf()
 
 
@@ -18,12 +23,17 @@ internal class EmvAIDs {
     }
 }
 
-internal class EmvCard {
-    var name: String = ""
-    var aid: String = ""
-    var partialMatch: Boolean = false
-    var keys: ArrayList<EmvCapk> = arrayListOf()
 
+@Root(name = "emvcard", strict = false)
+internal class EmvCard {
+    @field:Element(name = "name")
+    var name: String = ""
+    @field:Element(name = "aid")
+    var aid: String = ""
+    @field:Element(name = "partialmatch")
+    var partialMatch: Boolean = false
+    @field:ElementList(name = "keys")
+    var keys: ArrayList<EmvCapk> = arrayListOf()
 
 
     /// function to perform conversion from CARD AID TO APP LIST
@@ -63,12 +73,16 @@ internal class EmvCard {
 
 
 internal class EmvCapk {
-        var id: String = ""
-        var expiry: String = ""
-        var modulus: String = ""
-        var exponent: String = ""
-        var checksum: String = ""
-
+    @field:Element(name = "keyidx")
+    var id: String = ""
+    @field:Element(name = "expdate")
+    var expiry: String = ""
+    @field:Element(name = "modulus")
+    var modulus: String = ""
+    @field:Element(name = "exponent")
+    var exponent: String = ""
+    @field:Element(name = "checksum")
+    var checksum: String = ""
 
 
     // function to get CAPKs

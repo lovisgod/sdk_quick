@@ -1,21 +1,41 @@
 package com.interswitchng.smartpos.emv.pax.models
 
+import org.simpleframework.xml.Element
+import org.simpleframework.xml.Root
 
-internal data class TerminalConfig(
-        val supportpse: Boolean,
-        val floorlimitcheck: Boolean,
-        val floorlimit: Int,
-        val tacdenial: String,
-        val taconline: String,
-        val tacdefault: String,
-        val ddol: String,
-        val tdol: String,
-        val version: String,
-        val riskdata: String,
-        val terminalcountrycode: String,
-        val terminaltype: String,
-        val terminalcapability: String,
-        val extendedterminalcapability: String,
-        val referercurrencycode: String,
-        val merchantcatcode: String
-)
+@Root(name = "terminal", strict = false)
+internal class TerminalConfig {
+
+    @field:Element(name = "supportpse", required = false)
+    var supportpse: Boolean = false
+    @field:Element(name = "floorlimitcheck", required = false)
+    var floorlimitcheck: Boolean = false
+    @field:Element(name = "floorlimit", required = false)
+    var floorlimit: Int = 0
+    @field:Element(name = "tacdenial", required = false)
+    var tacdenial: String = ""
+    @field:Element(name = "taconline", required = false)
+    var taconline: String = ""
+    @field:Element(name = "tacdefault", required = false)
+    var tacdefault: String = ""
+    @field:Element(name = "ddol", required = false)
+    var ddol: String = ""
+    @field:Element(name = "tdol", required = false)
+    var tdol: String = ""
+    @field:Element(name = "version", required = false)
+    var version: String = ""
+    @field:Element(name = "riskdata", required = false)
+    var riskdata: String = ""
+    @field:Element(name = "terminalcountrycode", required = false)
+    var terminalcountrycode: String = ""
+    @field:Element(name = "terminaltype", required = false)
+    var terminaltype: String = ""
+    @field:Element(name = "terminalcapability", required = false)
+    var terminalcapability: String = ""
+    @field:Element(name = "extendedterminalcapability", required = false)
+    var extendedterminalcapability: String = ""
+    @field:Element(name = "referercurrencycode", required = false)
+    var referercurrencycode: String = ""
+    @field:Element(name = "merchantcatcode", required = false)
+    var merchantcatcode: String = ""
+}
