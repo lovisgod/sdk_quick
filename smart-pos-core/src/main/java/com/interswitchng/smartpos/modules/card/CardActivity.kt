@@ -97,6 +97,7 @@ class CardActivity : BaseActivity() {
     private fun chooseAccount() = runOnUiThread {
         AlertDialog.Builder(this)
                 .setTitle(R.string.isw_hint_account_type)
+                .setCancelable(false)
                 .setSingleChoiceItems(R.array.isw_account_types, accountType.ordinal) { dialog, selectedIndex ->
                     if (selectedIndex != -1) {
                         // set the selected account
