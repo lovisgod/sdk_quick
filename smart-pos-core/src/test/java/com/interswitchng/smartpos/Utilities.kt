@@ -1,18 +1,21 @@
 package com.interswitchng.smartpos
 
 import java.io.File
+import java.io.InputStream
 
 object Utilities {
 
-    fun getJson(path: String): String {
-        val uri = javaClass.classLoader?.getResource(path)
-        val file = File(uri?.path)
-        return String(file.readBytes())
+    fun getFile(path: String): File {
+        val loader = javaClass.classLoader
+        val uri = loader?.getResource(path)
+        return File(uri?.path)
     }
 
-    fun getBytes(path: String): ByteArray {
-        val uri = javaClass.classLoader?.getResource(path)
-        val file = File(uri?.path)
-        return file.readBytes()
-    }
+    fun getJson(path: String): String = String(getBytes(path))
+
+    fun getStream(path: String): InputStream = getFile(path).inputStream()
+
+    fun getString(path: String): String = String(getBytes(path))
+
+    fun getBytes(path: String): ByteArray = getFile(path).readBytes()
 }

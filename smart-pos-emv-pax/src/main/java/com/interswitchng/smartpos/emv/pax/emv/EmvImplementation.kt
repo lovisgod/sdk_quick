@@ -1,14 +1,18 @@
 package com.interswitchng.smartpos.emv.pax.emv
 
 import android.content.Context
+import com.interswitchng.smartpos.emv.pax.models.getCapks
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bcd2Str
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
 import java.util.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
+import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
+import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.jemv.clcommon.*
 import com.pax.jemv.device.DeviceManager
@@ -25,6 +29,9 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     private val emvCallback = EMVCallback.getInstance().also { it.setCallbackListener(Listener()) }
     private val logger = Logger.with("EMVImplementation")
     private lateinit var selectedRID: String
+
+    // get terminal config and EMV apps
+    private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
 
     private var amount: Int = 0
 
@@ -92,9 +99,10 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         // getResult default parameters
         EMVCallback.EMVGetParameter(emvParameters)
 
+        val terminalConfig = config.first
         // configure other parameters
         emvParameters.apply {
-            capability = str2Bcd("E0F8C8") // str2Bcd("E000F0A001")
+            capability = str2Bcd(terminalConfig.terminalcapability)
             countryCode = str2Bcd(terminalInfo.countryCode)
             transCurrCode = str2Bcd(terminalInfo.currencyCode)
             merchName = terminalInfo.merchantNameAndLocation.toByteArray()
@@ -102,8 +110,8 @@ internal class EmvImplementation(private val context: Context, private val pinCa
             merchId = terminalInfo.merchantId.toByteArray()
             merchCateCode = terminalInfo.merchantCategoryCode.toByteArray()
             forceOnline = 1
-            terminalType = 34
-            exCapability = str2Bcd("E000F0A001")
+            terminalType = terminalConfig.terminaltype.toByte() //34
+            exCapability = str2Bcd(terminalConfig.extendedterminalcapability)
         }
 
         // set configured parameters
@@ -131,8 +139,6 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         // remove all applications from terminal app list
         EMVCallback.EMVDelAllApp()
 
-        // get terminal config and EMV apps
-        val config = EmvUtils.getConfigurations(context)
 
         // use terminal config and emv AID to configure EMV Kernel
         val appList = EmvUtils.createAppList(config.first, config.second)
@@ -272,7 +278,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     }
 
     fun getCardType(): CardType {
-        val aids = EmvUtils.getConfigurations(context).second
+        val aids = config.second
         val selected = aids.cards.firstOrNull { ::selectedRID.isInitialized && it.aid.startsWith(selectedRID) }
         val isCard = { type: CardType -> selected?.name?.contains(type.toString(), true) ?: false}
 

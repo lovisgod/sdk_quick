@@ -1,13 +1,12 @@
 package com.interswitchng.smartpos.emv.pax.utilities
 
-import android.content.Context
 import android.util.Log
-import com.interswitchng.smartpos.emv.pax.R
 import com.interswitchng.smartpos.emv.pax.emv.ICCData
-import com.interswitchng.smartpos.emv.pax.models.*
+import com.interswitchng.smartpos.emv.pax.models.toAPPListItem
+import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
+import com.interswitchng.smartpos.shared.models.posconfig.EmvCard
+import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
 import com.pax.jemv.clcommon.EMV_APPLIST
-import org.simpleframework.xml.core.Persister
-import java.io.InputStream
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
 import java.util.*
@@ -15,34 +14,11 @@ import java.util.*
 
 
 internal object EmvUtils {
-
    private val HEX_DIGITS = charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
-
-
-    fun getAids(xmlFile: InputStream): EmvAIDs {
-        val deserializer = Persister()
-        return deserializer.read(EmvAIDs::class.java, xmlFile)
-    }
-    
-    fun getTerminalConfig(xmlFile: InputStream): TerminalConfig {
-        val deserializer = Persister()
-        return deserializer.read(TerminalConfig::class.java, xmlFile)
-    }
 
     fun createAppList(terminalConfig: TerminalConfig, aiDs: EmvAIDs): List<EMV_APPLIST> {
         val creator = { card: EmvCard -> card.toAPPListItem(terminalConfig) }
         return aiDs.cards.map(creator).toList()
-    }
-
-    fun getConfigurations(context: Context): Pair<TerminalConfig, EmvAIDs> {
-        // get resource streams
-        val emvStr = context.resources.openRawResource(R.raw.emv_config)
-        val terminalStr = context.resources.openRawResource(R.raw.terminal_config)
-        // extract values
-        val emvApps = getAids(emvStr)
-        val terminalConfig = getTerminalConfig(terminalStr)
-
-        return Pair(terminalConfig, emvApps)
     }
 
 

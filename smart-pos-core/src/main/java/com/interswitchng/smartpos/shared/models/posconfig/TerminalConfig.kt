@@ -1,10 +1,10 @@
-package com.interswitchng.smartpos.emv.pax.models
+package com.interswitchng.smartpos.shared.models.posconfig
 
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
 @Root(name = "terminal", strict = false)
-internal class TerminalConfig {
+class TerminalConfig {
 
     @field:Element(name = "supportpse", required = false)
     var supportpse: Boolean = false
