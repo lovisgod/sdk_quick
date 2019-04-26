@@ -78,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
         // process results
         if (::transactionResponse.isInitialized) {
             getTransactionResult(transactionResponse)?.apply {
-                val purchaseResult = PurchaseResult(responseCode, responseMessage, stan)
+                val purchaseResult = PurchaseResult(responseCode, responseMessage, paymentType, stan)
                 val intent = IswPos.setResult(Intent(), purchaseResult)
                 // set result as ok with result intent
                 setResult(Activity.RESULT_OK, intent)

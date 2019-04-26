@@ -204,7 +204,7 @@ class TransactionResultActivity : BaseActivity() {
     }
 
     private fun setResult() {
-        val purchaseResult = PurchaseResult(result.responseCode, result.responseMessage, result.stan)
+        val purchaseResult = PurchaseResult(result.responseCode, result.responseMessage, result.paymentType, result.stan)
         val intent = IswPos.setResult(Intent(), purchaseResult)
         setResult(Activity.RESULT_OK, intent)
     }

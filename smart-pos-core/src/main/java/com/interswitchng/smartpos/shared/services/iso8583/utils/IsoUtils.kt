@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.shared.services.iso8583.utils
 
 import java.security.MessageDigest
 
-internal object IsoUtils {
+object IsoUtils {
 
     @JvmStatic
     fun hexToBytes(hex: String): ByteArray {
