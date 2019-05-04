@@ -95,29 +95,32 @@ class CardActivity : BaseActivity() {
     }
 
     private fun chooseAccount() = runOnUiThread {
-        AlertDialog.Builder(this)
-                .setTitle(R.string.isw_hint_account_type)
-                .setCancelable(false)
-                .setSingleChoiceItems(R.array.isw_account_types, accountType.ordinal) { dialog, selectedIndex ->
-                    if (selectedIndex != -1) {
-                        // set the selected account
-                        accountType = when(selectedIndex) {
-                            1 -> AccountType.Savings
-                            2 -> AccountType.Current
-                            3 -> AccountType.Credit
-                            else -> AccountType.Default
+        // check if transaction was cancelled
+        if (!isCancelled) {
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.isw_hint_account_type)
+                    .setCancelable(false)
+                    .setSingleChoiceItems(R.array.isw_account_types, accountType.ordinal) { dialog, selectedIndex ->
+                        if (selectedIndex != -1) {
+                            // set the selected account
+                            accountType = when (selectedIndex) {
+                                1 -> AccountType.Savings
+                                2 -> AccountType.Current
+                                3 -> AccountType.Credit
+                                else -> AccountType.Default
+                            }
+
+                            selectedCardType.text = accountType.toString()
+
+                            // start transaction
+                            startTransaction()
+
+                            //
                         }
-
-                        selectedCardType.text = accountType.toString()
-
-                        // start transaction
-                        startTransaction()
-
-                        //
+                        dialog.dismiss()
                     }
-                    dialog.dismiss()
-                }
-                .show()
+                    .show()
+        }
     }
 
     private fun startTransaction() {
@@ -280,7 +283,7 @@ class CardActivity : BaseActivity() {
         }
 
         override fun onCardRead(cardType: CardType) = runOnUiThread {
-            val cardIcon = when(cardType) {
+            val cardIcon = when (cardType) {
                 CardType.MASTER -> R.drawable.isw_ic_card_mastercard
                 CardType.VISA -> R.drawable.isw_ic_card_visa
                 else -> R.drawable.isw_ic_card

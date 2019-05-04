@@ -15,7 +15,5 @@ internal object DateUtils {
     val dateFormatter = SimpleDateFormat("yyMMdd", Locale.getDefault())
 
     val yearAndMonthFormatter = SimpleDateFormat("yyMM", Locale.getDefault())
-    @JvmField
-    val dateStringFormatter = SimpleDateFormat("YYYY-MM-dd hh:mm:ss", Locale.ENGLISH)
 
 }

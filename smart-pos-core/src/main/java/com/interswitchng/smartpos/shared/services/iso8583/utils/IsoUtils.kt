@@ -5,7 +5,7 @@ import java.security.MessageDigest
 object IsoUtils {
 
     @JvmStatic
-    fun hexToBytes(hex: String): ByteArray {
+    internal fun hexToBytes(hex: String): ByteArray {
         if (hex.length and 0x01 == 0x01)
             throw IllegalArgumentException()
 
@@ -22,7 +22,7 @@ object IsoUtils {
     }
 
     @JvmStatic
-    fun bytesToHex(bytes: ByteArray): String {
+    internal fun bytesToHex(bytes: ByteArray): String {
 
         val hex = CharArray(bytes.size * 2)
         for (idx in bytes.indices) {
@@ -36,7 +36,7 @@ object IsoUtils {
 
     @Throws(Exception::class)
     @JvmStatic
-    fun getMac(seed: String, macDataBytes: ByteArray): String {
+    internal fun getMac(seed: String, macDataBytes: ByteArray): String {
 
         val keyBytes = hexToBytes(seed)
         val digest = MessageDigest.getInstance("SHA-256")
@@ -59,7 +59,7 @@ object IsoUtils {
         return hashText
     }
 
-    fun getIsoResult(code: String): Pair<String, String>? {
+    internal fun getIsoResult(code: String): Pair<String, String>? {
         return resultMap[code]?.let { Pair(code, it) }
     }
 
