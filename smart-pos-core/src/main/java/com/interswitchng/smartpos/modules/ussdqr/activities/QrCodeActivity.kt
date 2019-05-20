@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.QR_FORMAT_RAW
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_QR
@@ -181,7 +182,7 @@ class QrCodeActivity : BaseActivity() {
                 authorizationCode = transaction.responseCode,
                 responseMessage = responseMsg,
                 responseCode = transaction.responseCode,
-                cardPan = "", cardExpiry = "", cardType = "",
+                cardPan = "", cardExpiry = "", cardType = CardType.None,
                 stan = paymentInfo.getStan(), pinStatus = "", AID = "",
                 code = qrData!!, telephone = "08031140978"
         )

@@ -163,7 +163,7 @@ class TransactionResultActivity : BaseActivity() {
                 DialogUtils.getAlertDialog(this)
                 .setTitle("Close without printing?")
                 .setMessage("Are you sure you want to close without printing")
-                .setNegativeButton(android.R.string.no) { dialog, i -> dialog.dismiss() }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
                 .setPositiveButton(android.R.string.yes) { dialog, _ -> dialog.dismiss(); setResult(); finish(); }
                 .show()
             } else {
@@ -204,7 +204,7 @@ class TransactionResultActivity : BaseActivity() {
     }
 
     private fun setResult() {
-        val purchaseResult = PurchaseResult(result.responseCode, result.responseMessage, result.paymentType, result.stan)
+        val purchaseResult = PurchaseResult(result.responseCode, result.responseMessage, result.paymentType, result.cardType, result.stan)
         val intent = IswPos.setResult(Intent(), purchaseResult)
         setResult(Activity.RESULT_OK, intent)
     }

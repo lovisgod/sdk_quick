@@ -12,24 +12,25 @@ import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.printer.slips.CardSlip
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.printer.slips.UssdQrSlip
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 
 internal data class TransactionResult(
-         val paymentType: PaymentType,
-         val stan: String,
-         val dateTime: String,
-         val amount: String,
-         val type: TransactionType,
-         val cardPan: String,
-         val cardType: String,
-         val cardExpiry: String,
-         val authorizationCode: String,
-         val pinStatus: String,
-         val responseMessage: String,
-         val responseCode: String,
-         val AID: String,
-         val code: String,
-         val telephone: String): Parcelable {
+        val paymentType: PaymentType,
+        val stan: String,
+        val dateTime: String,
+        val amount: String,
+        val type: TransactionType,
+        val cardPan: String,
+        val cardType: CardType,
+        val cardExpiry: String,
+        val authorizationCode: String,
+        val pinStatus: String,
+        val responseMessage: String,
+        val responseCode: String,
+        val AID: String,
+        val code: String,
+        val telephone: String) : Parcelable {
 
 
     constructor(parcel: Parcel) : this(
@@ -39,7 +40,7 @@ internal data class TransactionResult(
             parcel.readString()!!,
             getTransactionType(parcel.readInt()),
             parcel.readString()!!,
-            parcel.readString()!!,
+            getCardType(parcel.readInt()),
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
@@ -60,7 +61,7 @@ internal data class TransactionResult(
 
     /// function to extract
     /// print slip transaction info
-     fun getTransactionInfo() =
+    fun getTransactionInfo() =
             TransactionInfo(
                     paymentType,
                     stan,
@@ -68,7 +69,7 @@ internal data class TransactionResult(
                     amount,
                     type,
                     cardPan,
-                    cardType,
+                    cardType.name,
                     cardExpiry,
                     authorizationCode,
                     pinStatus)
@@ -76,7 +77,7 @@ internal data class TransactionResult(
 
     /// function to extract
     /// print slip transaction status
-     fun getTransactionStatus() =
+    fun getTransactionStatus() =
             TransactionStatus(
                     responseMessage,
                     responseCode,
@@ -90,7 +91,7 @@ internal data class TransactionResult(
         parcel.writeString(amount)
         parcel.writeInt(type.ordinal)
         parcel.writeString(cardPan)
-        parcel.writeString(cardType)
+        parcel.writeInt(cardType.ordinal)
         parcel.writeString(cardExpiry)
         parcel.writeString(authorizationCode)
         parcel.writeString(pinStatus)
@@ -114,7 +115,7 @@ internal data class TransactionResult(
             return arrayOfNulls(size)
         }
 
-         fun getPaymentType(ordinal: Int): PaymentType {
+        private fun getPaymentType(ordinal: Int): PaymentType {
             return when (ordinal) {
                 PaymentType.Card.ordinal -> PaymentType.Card
                 PaymentType.QR.ordinal -> PaymentType.QR
@@ -123,8 +124,16 @@ internal data class TransactionResult(
             }
         }
 
-         fun getTransactionType(ordinal: Int): TransactionType {
+        private fun getTransactionType(ordinal: Int): TransactionType {
             return TransactionType.Purchase
+        }
+
+        private fun getCardType(ordinal: Int) = when (ordinal) {
+            CardType.VISA.ordinal -> CardType.VISA
+            CardType.VERVE.ordinal -> CardType.VERVE
+            CardType.MASTER.ordinal -> CardType.MASTER
+            CardType.AMERICANEXPRESS.ordinal -> CardType.AMERICANEXPRESS
+            else -> CardType.None
         }
     }
 

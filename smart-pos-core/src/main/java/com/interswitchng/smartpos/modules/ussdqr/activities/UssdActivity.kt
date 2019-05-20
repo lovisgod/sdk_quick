@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfigurati
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_USSD
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
@@ -222,7 +223,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
                 authorizationCode = transaction.responseCode,
                 responseMessage = responseMsg,
                 responseCode = transaction.responseCode,
-                cardPan = "", cardExpiry = "", cardType = "",
+                cardPan = "", cardExpiry = "", cardType = CardType.None,
                 stan = paymentInfo.getStan(), pinStatus = "", AID = "", code = ussdCode!!,
                 telephone = "08031140978"
         )

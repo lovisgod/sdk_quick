@@ -41,9 +41,11 @@ class CardActivity : BaseActivity() {
     private val isoService: IsoService by inject()
     private val store: KeyValueStore by inject()
     private var accountType = AccountType.Default
+    private var cardType = CardType.None
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false
     private var isCancelled = false
+
 
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
@@ -230,9 +232,9 @@ class CardActivity : BaseActivity() {
                         authorizationCode = response.authCode,
                         responseMessage = responseMsg,
                         responseCode = response.responseCode,
-                        cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = "",
+                        cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                         stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                        telephone = "08031150978")
+                        telephone =  "08031150978")
 
                 // complete transaction by applying scripts
                 // only when responseCode is 'OK'
@@ -283,6 +285,7 @@ class CardActivity : BaseActivity() {
         }
 
         override fun onCardRead(cardType: CardType) = runOnUiThread {
+            this@CardActivity.cardType = cardType
             val cardIcon = when (cardType) {
                 CardType.MASTER -> R.drawable.isw_ic_card_mastercard
                 CardType.VISA -> R.drawable.isw_ic_card_visa

@@ -46,7 +46,7 @@ internal class Keyboard(activity: Activity, callback: KeyBoardListener) : View.O
         val delete = activity.findViewById<ImageView>(R.id.delete)
         delete.setOnClickListener(this)
         // clear text on long click
-        delete.setOnLongClickListener { v ->
+        delete.setOnLongClickListener { _ ->
             result = ""
             if (mCallback != null) mCallback!!.onTextChange(result)
             true

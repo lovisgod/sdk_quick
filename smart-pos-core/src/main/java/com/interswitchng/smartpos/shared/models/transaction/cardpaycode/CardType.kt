@@ -5,5 +5,5 @@ enum class CardType {
     VISA,
     VERVE,
     AMERICANEXPRESS,
-    DEFAULT,
+    None,
 }

@@ -9,6 +9,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
@@ -97,7 +98,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
                     responseMessage = responseMsg,
                     responseCode = response.responseCode,
                     stan = response.stan, pinStatus = "", AID = "", code = "",
-                    cardPan = "", cardExpiry = "", cardType = "",
+                    cardPan = "", cardExpiry = "", cardType = CardType.None,
                     telephone = "08031150978")
 
             // show transaction result screen

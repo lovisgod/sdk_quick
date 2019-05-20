@@ -282,7 +282,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         val selected = aids.cards.firstOrNull { ::selectedRID.isInitialized && it.aid.startsWith(selectedRID) }
         val isCard = { type: CardType -> selected?.name?.contains(type.toString(), true) ?: false}
 
-        var cardType = CardType.DEFAULT
+        var cardType = CardType.None
         // find matching card
         for (type in CardType.values()) {
             if (isCard(type)) cardType = type
