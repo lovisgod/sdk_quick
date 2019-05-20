@@ -5,7 +5,7 @@ import java.security.MessageDigest
 object IsoUtils {
 
     @JvmStatic
-    internal fun hexToBytes(hex: String): ByteArray {
+    fun hexToBytes(hex: String): ByteArray {
         if (hex.length and 0x01 == 0x01)
             throw IllegalArgumentException()
 
@@ -22,7 +22,7 @@ object IsoUtils {
     }
 
     @JvmStatic
-    internal fun bytesToHex(bytes: ByteArray): String {
+    fun bytesToHex(bytes: ByteArray): String {
 
         val hex = CharArray(bytes.size * 2)
         for (idx in bytes.indices) {
