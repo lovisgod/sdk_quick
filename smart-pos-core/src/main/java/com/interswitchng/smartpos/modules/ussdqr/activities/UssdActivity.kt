@@ -225,7 +225,7 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = CardType.None,
                 stan = paymentInfo.getStan(), pinStatus = "", AID = "", code = ussdCode!!,
-                telephone = "08031140978"
+                telephone = iswPos.config.merchantTelephone
         )
     }
 

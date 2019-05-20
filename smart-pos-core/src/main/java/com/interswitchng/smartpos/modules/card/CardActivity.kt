@@ -234,7 +234,7 @@ class CardActivity : BaseActivity() {
                         responseCode = response.responseCode,
                         cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                         stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                        telephone =  "08031150978")
+                        telephone = iswPos.config.merchantTelephone)
 
                 // complete transaction by applying scripts
                 // only when responseCode is 'OK'

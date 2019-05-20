@@ -184,7 +184,7 @@ class QrCodeActivity : BaseActivity() {
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = CardType.None,
                 stan = paymentInfo.getStan(), pinStatus = "", AID = "",
-                code = qrData!!, telephone = "08031140978"
+                code = qrData!!, telephone = iswPos.config.merchantTelephone
         )
     }
 

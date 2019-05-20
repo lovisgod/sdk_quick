@@ -99,7 +99,7 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
                     responseCode = response.responseCode,
                     stan = response.stan, pinStatus = "", AID = "", code = "",
                     cardPan = "", cardExpiry = "", cardType = CardType.None,
-                    telephone = "08031150978")
+                    telephone = iswPos.config.merchantTelephone)
 
             // show transaction result screen
             showTransactionResult(txn)
