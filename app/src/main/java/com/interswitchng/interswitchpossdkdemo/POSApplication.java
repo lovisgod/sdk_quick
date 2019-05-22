@@ -116,8 +116,9 @@ public class POSApplication extends Application   {
             merchantCode = "MX5882";
         }
 
-        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode);
-        config.with(new UsbConfig());
+        String merchantPhone = "080311402392";
+        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode, merchantPhone);
+//        config.with(new UsbConfig());
 
         // setup terminal
         IswPos.setupTerminal(this, device, config);

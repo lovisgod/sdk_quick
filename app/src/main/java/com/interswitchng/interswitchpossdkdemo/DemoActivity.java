@@ -145,7 +145,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         }
 
         boolean enableUsb = getIntent().getBooleanExtra(KEY_ENABLE_USB, false);
-        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode);
+        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode, "");
 
         if (enableUsb) {
             UsbConfig usbConfig = new UsbConfig();
