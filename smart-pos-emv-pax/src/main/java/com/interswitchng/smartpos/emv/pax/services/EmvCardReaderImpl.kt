@@ -118,8 +118,6 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             val expiry = strTrack2.split("D")[1].substring(0, 4)
             val src = strTrack2.split("D")[1].substring(4, 7)
 
-            // issue with visa cards: solution remove last character
-//            if (track2data.last().isLetter())  track2data = track2data.substring(0 until strTrack2.length - 1)
 
             val icc = emvImpl.getIccData()
             val aid = EmvUtils.bcd2Str(emvImpl.getTlv(0x9F06)!!)
