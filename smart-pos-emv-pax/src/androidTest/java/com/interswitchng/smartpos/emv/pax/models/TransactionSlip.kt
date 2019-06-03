@@ -38,7 +38,7 @@ internal abstract class TransactionSlip(private val posConfig: POSConfiguration,
         val merchantLocation = pairString("merchant location", posConfig.merchantLocation, true)
         val terminalId = pairString("Terminal Id", posConfig.terminalId)
 
-        return listOf(merchantName, merchantLocation, terminalId, PrintObject.Line())
+        return listOf(merchantName, merchantLocation, terminalId, PrintObject.Line)
     }
 
 
@@ -47,7 +47,7 @@ internal abstract class TransactionSlip(private val posConfig: POSConfiguration,
         val responseCode = pairString("response code", status.responseCode)
         val aid = pairString("AID", status.AID)
         val tel = pairString("TEL", status.telephone)
-        val line = PrintObject.Line()
+        val line = PrintObject.Line
 
         return listOf(responseMsg, responseCode, aid, tel,  line)
     }

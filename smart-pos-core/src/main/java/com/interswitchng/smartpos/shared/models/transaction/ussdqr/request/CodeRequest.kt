@@ -5,6 +5,11 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import java.util.*
 
+
+/**
+ * This class represents information required for
+ * issuing out QR and USSD code purchase request
+ */
 internal data class CodeRequest(
         val alias: String,
         val amount: String,

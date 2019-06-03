@@ -8,6 +8,10 @@ import android.support.annotation.RequiresApi
 import android.view.View
 import android.view.ViewOutlineProvider
 
+/**
+ * This class represents the shadow outline for
+ * the view it gets applied to.
+ */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 internal class TweakableOutlineProvider(
 

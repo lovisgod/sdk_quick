@@ -2,6 +2,10 @@ package com.interswitchng.smartpos.shared.models.core
 
 import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector
 
+
+/**
+ * A data model representing the the POS configuration for the current acquirer
+ */
 data class POSConfig(
         internal val alias: String,
         internal val clientId: String,

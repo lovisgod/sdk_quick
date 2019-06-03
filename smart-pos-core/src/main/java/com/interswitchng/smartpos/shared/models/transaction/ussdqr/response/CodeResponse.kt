@@ -9,6 +9,11 @@ import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 
+
+/**
+ * This class captures information representing server response
+ * for a USSD or QR code request
+ */
 data class CodeResponse(
         val responseCode: String,
         val responseDescription: String?,
@@ -34,6 +39,15 @@ data class CodeResponse(
         internal const val BAD_REQUEST = "10400"
         internal const val SERVER_ERROR = "10500"
 
+
+        /**
+         * This method extracts the bitmap of a given qr code string
+         *
+         * @param context  the given view context in which to render the generated image
+         * @param qrCodeData  the given qr string to be transformed to qr image
+         * @param lengthInDp  the square length in pixel density representing dimensions for the generated bitmap
+         * @return   the generated bitmap image
+         */
         internal fun getBitmap(context: Context, qrCodeData: String, lengthInDp: Int = 240): Bitmap? {
 
             try {

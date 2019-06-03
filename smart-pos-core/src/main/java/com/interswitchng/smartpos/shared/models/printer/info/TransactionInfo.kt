@@ -2,6 +2,10 @@ package com.interswitchng.smartpos.shared.models.printer.info
 
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 
+/**
+ * This class captures information to be
+ * printed out for a purchase transaction
+ */
 internal data class TransactionInfo(
         val paymentType: PaymentType,
         val stan: String,

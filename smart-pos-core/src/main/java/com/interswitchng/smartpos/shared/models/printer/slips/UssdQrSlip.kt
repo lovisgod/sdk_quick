@@ -7,9 +7,19 @@ import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
 import java.text.NumberFormat
 
+
+/**
+ * This class is responsible for generating a print
+ * slip for USSD and QR transactions
+ *
+ * @param info the information concerning the current transaction
+ */
 internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo): TransactionSlip(terminal, status) {
 
 
+    /**
+     * @inherit
+     */
     override fun getTransactionInfo(): List<PrintObject> {
 
         val numberFormat = NumberFormat.getInstance()

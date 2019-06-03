@@ -5,6 +5,10 @@ import android.os.Parcelable
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 
+
+/**
+ * A data model representing the final result status of an initiated purchase transaction
+ */
 data class PurchaseResult(
         val responseCode: String?,
         val responseMessage: String?,

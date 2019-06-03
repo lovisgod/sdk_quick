@@ -24,6 +24,11 @@ import com.interswitchng.smartpos.shared.activities.TransactionResultActivity
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import kotlinx.android.synthetic.main.isw_content_payment_options.*
 
+
+/**
+ * This class is the inflatable bottom sheet that presents
+ * the SDK's supported payment options
+ */
 class BottomSheetOptionsDialog : BottomSheetDialogFragment() {
 
 

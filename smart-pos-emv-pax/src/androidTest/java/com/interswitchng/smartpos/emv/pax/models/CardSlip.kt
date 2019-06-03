@@ -33,7 +33,7 @@ internal class CardSlip(config: POSConfiguration, status: TransactionStatus, pri
         val pinStatus = pairString("", info.pinStatus)
 
 
-        val line = PrintObject.Line()
+        val line = PrintObject.Line
         // return transaction info of slip
         return listOf(txnType, stan, date, line, amount, line, cardPan, cardExpiry, authCode, pinStatus, line)
     }

@@ -28,6 +28,12 @@ import org.koin.standalone.inject
 import java.util.*
 
 
+/**
+ * This class is the primary bridge used to interact with the payment SDK.
+ * It is responsible for triggering the purchase request and presenting the
+ * final result of the triggered transaction
+ *
+ */
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
@@ -79,8 +85,14 @@ class IswPos private constructor(private val app: Application, internal val devi
         private val store: KeyValueStore by Container.inject()
 
 
+        /**
+         * This function determines if the sdk has been configured
+         */
         internal fun isConfigured () = TerminalInfo.get(store) != null
 
+        /**
+         * This method is responsible for setting up the terminal for the current application
+         */
         @JvmStatic
         fun setupTerminal(app: Application, device: POSDevice, config: POSConfig) {
             if (!isSetup) {
@@ -109,6 +121,9 @@ class IswPos private constructor(private val app: Application, internal val devi
         }
 
 
+        /**
+         * This method returns the next STAN (System Trace Audit Number)
+         */
         internal fun getNextStan(): String {
             var stan = store.getNumber(KEY_STAN, 0)
 
@@ -119,9 +134,16 @@ class IswPos private constructor(private val app: Application, internal val devi
             return String.format(Locale.getDefault(), "%06d", newStan)
         }
 
+
+        /**
+         * This method loads the settings screen
+         */
         @JvmStatic
         fun showSettingsScreen() = showScreen(SettingsActivity::class.java)
 
+        /**
+         * This method loads the dashboard screen
+         */
         @JvmStatic
         fun showDashboardScreen() = showScreen(HomeActivity::class.java)
 
@@ -131,12 +153,21 @@ class IswPos private constructor(private val app: Application, internal val devi
             app.startActivity(intent)
         }
 
+        /**
+         * This method returns the single instance of IswPos for the current app
+         */
         @JvmStatic
         fun getInstance(): IswPos = INSTANCE
 
+        /**
+         * This method extracts the final transaction result
+         */
         @JvmStatic
         fun getResult(data: Intent): PurchaseResult = data.getParcelableExtra(KEY_PURCHASE_RESULT)
 
+        /**
+         * This method sets the out going transaction result for the triggered purchase transaction requeset
+         */
         internal fun setResult(data: Intent, result: PurchaseResult): Intent = data.putExtra(KEY_PURCHASE_RESULT, result)
     }
 }

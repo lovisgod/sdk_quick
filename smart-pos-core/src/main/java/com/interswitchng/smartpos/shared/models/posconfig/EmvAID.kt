@@ -4,6 +4,11 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.ElementList
 import org.simpleframework.xml.Root
 
+
+/**
+ * This file represents model for
+ * EMV Application IDs and keys
+ */
 @Root(name = "emv", strict = false)
 class EmvAIDs {
     @field:ElementList(name = "emvcards")

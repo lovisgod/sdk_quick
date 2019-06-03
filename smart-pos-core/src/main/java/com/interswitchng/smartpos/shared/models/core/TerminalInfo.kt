@@ -3,6 +3,18 @@ package com.interswitchng.smartpos.shared.models.core
 import com.google.gson.Gson
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 
+
+/**
+ * A data model representing the terminal information downloaded from the server, which
+ * is then used to configure the any given POS terminal
+ *
+ * - terminalId: the specific id of a terminal in a merchant's store
+ * - merchantId: the merchant's id
+ * - countryCode: a code identifying the country that the terminal is processing transactions in
+ * - currencyCode: a code indicating the currency of the country
+ * - callHomeTimeInMin: an integer indicating the time (in minutes) required to continuously call home
+ * - serverTimeoutInSec: an integer indicating the time (in seconds) to specify as a connection timeout
+ */
 data class TerminalInfo(
         val terminalId: String,
         val merchantId: String,

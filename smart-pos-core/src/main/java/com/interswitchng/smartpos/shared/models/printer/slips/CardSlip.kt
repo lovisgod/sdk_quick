@@ -6,8 +6,21 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfigurati
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
 
+
+/**
+ * @inherit
+ *
+ * This class is responsible for  generating a print slip
+ * for card and paycode transactions
+ *
+ * @param info the information concerning the current transaction
+ */
 internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, private val info: TransactionInfo) : TransactionSlip(terminal, status) {
 
+
+    /**
+     * @inherit
+     */
     override fun getTransactionInfo(): List<PrintObject> {
 
 

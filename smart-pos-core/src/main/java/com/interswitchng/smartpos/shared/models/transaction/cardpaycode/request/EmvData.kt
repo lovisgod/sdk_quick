@@ -1,5 +1,10 @@
 package com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request
 
+
+/**
+ * This class captures the EMV data
+ * necessary for a purchase request
+ */
 data class EmvData(
     val cardExpiry: String,
     val cardPIN: String,

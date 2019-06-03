@@ -26,6 +26,9 @@ import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
 import org.koin.android.ext.android.inject
 
+/**
+ * This activity displays final transaction status to the user
+ */
 class TransactionResultActivity : BaseActivity() {
 
     private val store: KeyValueStore by inject()

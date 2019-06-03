@@ -1,5 +1,9 @@
 package com.interswitchng.smartpos.shared.models.transaction.ussdqr.response
 
+
+/**
+ * This class represents the response status for a triggered purchase transaction
+ */
 internal class Transaction (
     internal val id: Int,
     internal val amount: Int,

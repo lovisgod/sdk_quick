@@ -2,6 +2,11 @@ package com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request
 
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 
+
+/**
+ * This class captures transaction request information to be issued
+ * out to the EPMS for [PurchaseType] Transactions
+ */
 internal data class TransactionInfo(
         val cardExpiry: String,
         val cardPIN: String,

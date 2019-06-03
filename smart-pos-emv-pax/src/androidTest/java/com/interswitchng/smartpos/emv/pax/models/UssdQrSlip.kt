@@ -13,7 +13,7 @@ internal class UssdQrSlip(config: POSConfiguration, status: TransactionStatus, p
         val authCode = pairString("authentication code", info.authorizationCode)
         val pinStatus = PrintObject.Data(info.pinStatus)
 
-        return listOf(stan, date, amount, authCode, pinStatus,  PrintObject.Line())
+        return listOf(stan, date, amount, authCode, pinStatus,  PrintObject.Line)
     }
 
 }

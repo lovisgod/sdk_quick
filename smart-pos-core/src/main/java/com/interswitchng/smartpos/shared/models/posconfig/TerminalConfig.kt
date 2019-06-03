@@ -3,6 +3,10 @@ package com.interswitchng.smartpos.shared.models.posconfig
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
+/**
+ * This class represents all necessary information
+ * to be used to configure a POS terminal
+ */
 @Root(name = "terminal", strict = false)
 class TerminalConfig {
 

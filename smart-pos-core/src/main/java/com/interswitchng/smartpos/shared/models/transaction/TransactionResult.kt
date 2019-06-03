@@ -11,6 +11,12 @@ import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.printer.slips.UssdQrSlip
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 
+
+/**
+ * This class represents the final result
+ * of the triggered purchase transaction.
+ * This is what gets returned to calling application
+ */
 internal data class TransactionResult(
         val paymentType: PaymentType,
         val stan: String,

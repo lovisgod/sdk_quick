@@ -38,6 +38,10 @@ import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import java.util.*
 
+
+/**
+ * This activity serves as the base class for purchase views
+ */
 abstract class BaseActivity : AppCompatActivity() {
 
     data class PollingText(val title: String, val subTitle: String)

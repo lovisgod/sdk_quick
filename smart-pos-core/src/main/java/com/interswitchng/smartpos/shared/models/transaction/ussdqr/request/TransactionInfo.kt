@@ -3,6 +3,10 @@ package com.interswitchng.smartpos.shared.models.transaction.ussdqr.request
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 
+/**
+ * This class represents transaction information required
+ * to issue out uSSD and QR code Purchase Transactions
+ */
 internal data class TransactionInfo(
         val currencyCode: String,
         val merchantId: String,
