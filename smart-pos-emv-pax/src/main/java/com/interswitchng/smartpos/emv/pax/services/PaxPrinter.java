@@ -9,6 +9,10 @@ import com.pax.dal.entity.EFontTypeAscii;
 import com.pax.dal.entity.EFontTypeExtCode;
 import com.pax.dal.exceptions.PrinterDevException;
 
+
+/**
+ * This class serves as the intermediary between the PosDevice printer and the SDK
+ */
 public class PaxPrinter {
 
     final static int PRINT_STATUS_OK = 0;

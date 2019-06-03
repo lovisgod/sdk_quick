@@ -23,7 +23,9 @@ import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.RetCode
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
-
+/**
+ * This is a the card reader implementation of the [EmvCardReader]
+ */
 class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPedInputPinListener {
 
     private val logger by lazy { Logger.with("EmvCardReaderImpl") }

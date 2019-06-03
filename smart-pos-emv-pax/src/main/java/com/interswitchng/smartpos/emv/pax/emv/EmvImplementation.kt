@@ -21,6 +21,11 @@ import com.pax.jemv.emv.model.EmvEXTMParam
 import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
 
+
+/**
+ * This class interacts with the card reader for the pax terminal, serving as an intermediary
+ * between the pax terminal and the IswPos SDK
+ */
 internal class EmvImplementation(private val context: Context, private val pinCallback: PinCallback) {
 
     val timeout = 30 * 1000L

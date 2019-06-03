@@ -14,6 +14,9 @@ import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
 import com.pax.dal.entity.EFontTypeAscii
 import com.pax.dal.entity.EFontTypeExtCode
 
+/**
+ * This class serves as the implementation to [DevicePrinter] providing printing functionality
+ */
 object DevicePrinterImpl : DevicePrinter {
 
     // screen caharacter length

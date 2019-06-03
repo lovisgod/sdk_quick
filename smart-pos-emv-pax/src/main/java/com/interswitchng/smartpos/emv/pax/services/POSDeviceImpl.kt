@@ -14,6 +14,10 @@ import com.pax.dal.IDAL
 import com.pax.jemv.device.DeviceManager
 import com.pax.neptunelite.api.NeptuneLiteUser
 
+
+/**
+ * This class provides Implemenation for the [POSDevice]
+ */
 class POSDeviceImpl private constructor(override val printer: DevicePrinter, private val factory: () -> EmvCardReader) : POSDevice {
 
 
@@ -31,6 +35,8 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter, pri
 
     fun setCompanyLogo(bitmap: Bitmap) {
         companyLogo = bitmap
+
+
     }
 
 

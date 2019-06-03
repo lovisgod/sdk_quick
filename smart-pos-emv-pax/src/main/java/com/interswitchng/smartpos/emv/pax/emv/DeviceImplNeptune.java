@@ -56,7 +56,7 @@ import static com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd;
 
 
 /**
- * Created by linhb on 4/25/2017.
+ * This class serves as an implementation of the Neptune's SDK IDevice interface
  */
 
 public class DeviceImplNeptune implements IDevice, TickTimer.TickTimerListener {
