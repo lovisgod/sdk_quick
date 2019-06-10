@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.printer.slips.CardSlip
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -108,5 +109,12 @@ class TransactionSlipsTest {
         val exUssd = "USSD"
         val actualUssd = PaymentType.USSD.toString()
         assertEquals(exUssd, actualUssd)
+    }
+
+    @Test
+    fun checkCardNames() {
+        for (type in CardType.values()) {
+            println(type.name)
+        }
     }
 }

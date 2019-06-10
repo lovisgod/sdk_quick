@@ -13,6 +13,7 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -48,7 +49,7 @@ class TransactionResultActivityTests {
         val str = ""
         val result = TransactionResult(PaymentType.Card,
                 str, str, str, TransactionType.Purchase, str,
-                str, str, str, str, str, str, str, str, str)
+                CardType.None, str, str, str, str, str, str, str, str)
 
         val intent = Intent().apply {
             putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
@@ -62,7 +63,7 @@ class TransactionResultActivityTests {
 
     @Test
     fun should_return_correct_purchase_result_when_close_button_is_clicked() {
-        val expextedResult = PurchaseResult("", "", "")
+        val expextedResult = PurchaseResult("", "", PaymentType.Card, CardType.None, "")
         activityController.start()
 
         Thread.sleep(1000)
@@ -80,7 +81,7 @@ class TransactionResultActivityTests {
 
     @Test
     fun should_return_correct_purchase_result_when_activity_is_destroyed() {
-        val expextedResult = PurchaseResult("", "", "")
+        val expextedResult = PurchaseResult("", "", PaymentType.Card, CardType.None, "")
         activityController.start()
 
         Thread.sleep(1000)

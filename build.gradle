@@ -33,7 +33,7 @@ allprojects {
 
         // config
         versionCode = 2
-        versionName = "1.0.0-beta10"
+        versionName = "1.0.0-beta11"
 
         // core dependencies
         koin_version = '1.0.1'

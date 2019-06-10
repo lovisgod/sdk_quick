@@ -9,7 +9,11 @@ import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
 import com.pax.jemv.clcommon.EMV_APPLIST
 import com.pax.jemv.clcommon.EMV_CAPK
 
-
+/**
+ * This file provides extension functions to convert
+ * Emv AIDs and CAPKs to their corresponding PAX SDK
+ * equivalent
+ */
 /// function to perform conversion from CARD AID TO APP LIST
 fun EmvAIDs.getCapks(): List<EMV_CAPK> {
     return cards.flatMap { card ->
