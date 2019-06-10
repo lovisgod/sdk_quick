@@ -31,7 +31,7 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter, pri
     }
 
 
-    override fun getEmvCardTransaction(): EmvCardReader = factory()
+    override fun getEmvCardReader(): EmvCardReader = factory()
 
     fun setCompanyLogo(bitmap: Bitmap) {
         companyLogo = bitmap

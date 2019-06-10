@@ -87,7 +87,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
 
                 @Override
-                public EmvCardReader getEmvCardTransaction() {
+                public EmvCardReader getEmvCardReader() {
                     return new EmvCardReader() {
                         @Override
                         public EmvResult completeTransaction(TransactionResponse response) {

@@ -60,7 +60,7 @@ public class POSApplication extends Application   {
 
 
                 @Override
-                public EmvCardReader getEmvCardTransaction() {
+                public EmvCardReader getEmvCardReader() {
                     return new EmvCardReader() {
                         @Override
                         public EmvResult completeTransaction(TransactionResponse response) {

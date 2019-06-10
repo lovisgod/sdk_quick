@@ -36,7 +36,7 @@ class CardActivity : BaseActivity() {
     private val logger by lazy { Logger.with("CardActivity") }
 
     private val emvCallback by lazy { CardCallback() }
-    private val emv by lazy { posDevice.getEmvCardTransaction() }
+    private val emv by lazy { posDevice.getEmvCardReader() }
 
     private val isoService: IsoService by inject()
     private val store: KeyValueStore by inject()

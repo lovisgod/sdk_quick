@@ -54,6 +54,10 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
             btnContinue.isEnabled = false
             btnContinue.isClickable = false
 
+            // disable scan button
+            btnScanCode.isClickable = false
+            btnScanCode.isEnabled = false
+
             // hide keyboard
             DisplayUtils.hideKeyboard(this)
 
