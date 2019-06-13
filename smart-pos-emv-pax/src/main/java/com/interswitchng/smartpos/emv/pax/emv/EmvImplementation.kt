@@ -285,7 +285,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     fun getCardType(): CardType {
         val aids = config.second
         val selected = aids.cards.firstOrNull { ::selectedRID.isInitialized && it.aid.startsWith(selectedRID) }
-        val isCard = { type: CardType -> selected?.name?.contains(type.toString(), true) ?: false}
+        val isCard = { type: CardType -> selected?.name?.startsWith(type.code, true) ?: false}
 
         var cardType = CardType.None
         // find matching card
