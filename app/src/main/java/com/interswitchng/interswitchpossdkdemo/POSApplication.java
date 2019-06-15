@@ -109,12 +109,12 @@ public class POSApplication extends Application   {
         String alias = "000001";
         String merchantCode = "MX1065";
 
-        if (BuildConfig.DEBUG && BuildConfig.MOCK) {
-            alias = "000007";
-            clientId = "IKIAB23A4E2756605C1ABC33CE3C287E27267F660D61";
-            clientSecret = "secret";
-            merchantCode = "MX5882";
-        }
+//        if (BuildConfig.DEBUG && BuildConfig.MOCK) {
+//            alias = "000007";
+//            clientId = "IKIAB23A4E2756605C1ABC33CE3C287E27267F660D61";
+//            clientSecret = "secret";
+//            merchantCode = "MX5882";
+//        }
 
         String merchantPhone = "080311402392";
         POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode, merchantPhone);

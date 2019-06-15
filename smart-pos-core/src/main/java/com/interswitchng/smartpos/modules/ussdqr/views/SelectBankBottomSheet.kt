@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.modules.ussdqr.views
 
 import android.app.Dialog
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
@@ -19,11 +21,14 @@ import kotlinx.android.synthetic.main.isw_select_bank_bottom_sheet.*
 
 internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 
-    private var callback: SelectBankCallback? = null
     private val adapter: BankListAdapter = BankListAdapter {
         if (proceedSelectBank.visibility != View.VISIBLE)
             proceedSelectBank.visibility = View.VISIBLE
     }
+
+    private val _selectedBank = MutableLiveData<Bank>()
+    val selectedBank: LiveData<Bank> get() = _selectedBank
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -45,33 +50,23 @@ internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
         setupUI()
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        callback = context as SelectBankCallback
-    }
-
     private fun setupUI() {
         rvBankLists.layoutManager = GridLayoutManager(activity, 3)
         rvBankLists.adapter = adapter
         closeSheetButton.setOnClickListener { dismiss() }
 
-        loadBanks()
-
         proceedSelectBank.setOnClickListener {
             adapter.selectedBank?.also {
-                // invoke callback with selected bank
-                callback?.onBankSelected(it)
+                // set the selected bank
+                _selectedBank.value = it
                 dismiss()
             } ?: toast("Please select a Bank") // else prompt user to select bank
         }
     }
 
-    private fun loadBanks() {
-
-        callback?.loadBanks { banks ->
-            adapter.setBanks(banks)
-            progressBarSelectBank.visibility = View.GONE
-        }
+    fun loadBanks(banks: List<Bank>) {
+        adapter.setBanks(banks)
+        progressBarSelectBank.visibility = View.GONE
     }
 
     private fun toast(msg: String) {
@@ -80,11 +75,5 @@ internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         fun newInstance() = SelectBankBottomSheet()
-    }
-
-    internal interface SelectBankCallback {
-        fun onBankSelected(bank: Bank)
-
-        fun loadBanks(callback: (List<Bank>) -> Unit)
     }
 }

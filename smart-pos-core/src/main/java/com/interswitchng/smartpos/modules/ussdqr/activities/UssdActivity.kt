@@ -3,15 +3,17 @@ package com.interswitchng.smartpos.modules.ussdqr.activities
 import android.os.Bundle
 import android.support.v4.text.HtmlCompat
 import android.widget.Toast
-import com.interswitchng.smartpos.shared.activities.BaseActivity
+import com.gojuno.koptional.None
+import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.ussdqr.viewModels.UssdViewModel
 import com.interswitchng.smartpos.modules.ussdqr.views.SelectBankBottomSheet
-import com.interswitchng.smartpos.shared.interfaces.library.HttpService
-import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
+import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
@@ -28,26 +30,20 @@ import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlinx.android.synthetic.main.isw_activity_ussd.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
-import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
+class UssdActivity : BaseActivity() {
 
-    private val paymentService: HttpService by inject()
+    private val ussdViewModel: UssdViewModel by viewModel()
 
     private var ussdCode: String? = null
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
     private val alert by lazy { DialogUtils.getAlertDialog(this) }
     private val logger by lazy { Logger.with("USSD") }
 
-    // getResult strings of first item
-    private val firstItem = "Choose a bank"
-    private var selectedItem = ""
 
-    private var selectedBank: Bank? = null
-    // container for banks and bank-codes
-    private var allBanks: List<Bank>? = null
     private val printSlip = mutableListOf<PrintObject>()
     // bottom sheet dialog for banks
     private lateinit var banksDialog: SelectBankBottomSheet
@@ -73,60 +69,80 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
 
-        // loadBanks()
+        // load bank list immediately
+        ussdViewModel.loadBanks()
 
         paymentHint.text = getString(R.string.isw_select_bank)
         banks.text = getString(R.string.isw_select_bank)
         banks.setOnClickListener {
-            banksDialog = SelectBankBottomSheet.newInstance()
+            // create dialog if not existing
+            if (!::banksDialog.isInitialized)
+                banksDialog = SelectBankBottomSheet.newInstance()
+
+            //  show dialog
             banksDialog.show(supportFragmentManager, banksDialog.tag)
         }
         banks.performClick()
+
+        // observe viewModel
+        observeViewModel()
     }
 
-    override fun loadBanks(callback: (List<Bank>) -> Unit) {
+    private fun observeViewModel() {
+        // func to return lifecycle
+        val owner = { lifecycle }
 
-        if (allBanks != null) callback(allBanks!!)
+        // observe view model
+        with(ussdViewModel) {
 
-        else paymentService.getBanks { allBanks, throwable ->
-            if (throwable != null) {
-                toast("Unable To load banks")
-                banksDialog.dismiss()
-            } else {
-                allBanks?.let {
-                    this.allBanks = it
-                    runOnUiThread { callback(it) }
-                } ?: run {
-                    toast("Unable To load banks")
-                    banksDialog.dismiss()
+            // observe bank list
+            allBanks.observe(owner) {
+                it?.let { banks ->
+                    when (banks) {
+                        is Some -> banksDialog.loadBanks(banks.value)
+                        is None -> banksDialog.dismiss().also { toast("Unable to load bank list") }
+                    }
+                }
+            }
+
+
+            // observe selected bank code
+            bankCode.observe(owner) {
+                // dismiss loading dialog
+                dialog.dismiss()
+
+                // handle code response
+                it?.let { code ->
+                    when(code) {
+                        is Some -> handleResponse(code.value)
+                        is None -> handleError()
+                    }
                 }
             }
         }
+
+        // observe bank selection
+        banksDialog.selectedBank.observe(owner) {
+            it?.apply(::getBankCode)
+        }
+
     }
 
-    private fun getBankCode() {
+    private fun getBankCode(selectedBank: Bank) {
+        // set bank info
+        banks.text = selectedBank.name
+        paymentHint.text = selectedBank.name
 
-        if (selectedBank == null) {
-            toast("You have to select a bank")
-            return
-        }
 
-        val bankCode = selectedBank?.code
-        // create payment info with bank code
-        val paymentInfoPrime = PaymentInfo(paymentInfo.amount, bankCode)
-        val request = CodeRequest.from(iswPos.config.alias, terminalInfo, paymentInfoPrime, TRANSACTION_USSD)
-
+        // show loading dialog
         dialog.show()
 
-        // initiate ussd payment
-        paymentService.initiateUssdPayment(request) { response, throwable ->
-            runOnUiThread {
-                dialog.dismiss()
-                // handle error or response
-                if (throwable != null) handleError(throwable)
-                else response?.apply { handleResponse(this) }
-            }
-        }
+        // create payment info with bank code
+        val info = PaymentInfo(paymentInfo.amount, selectedBank.code)
+        val request = CodeRequest.from(iswPos.config.alias, terminalInfo, info, TRANSACTION_USSD)
+
+        // get ussd code
+        ussdViewModel.getBankCode(request)
     }
 
     private fun showButtons(response: CodeResponse) {
@@ -143,32 +159,6 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
         printCodeButton.setOnClickListener { printCode() }
     }
 
-
-    private fun printCode() {
-        // get printer status
-        val printStatus = posDevice.printer.canPrint()
-
-        // print based on status
-        when(printStatus) {
-            is Error -> toast(printStatus.message)
-            else -> {
-                printCodeButton.isEnabled = false
-                printCodeButton.isClickable = false
-
-                val disposable = ThreadUtils.createExecutor {
-                    val status = posDevice.printer.printSlip(printSlip, UserType.Customer)
-
-                    runOnUiThread {
-                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
-                        printCodeButton.isEnabled = true
-                        printCodeButton.isClickable = true
-                    }
-                }
-
-                disposables.add(disposable)
-            }
-        }
-    }
 
     private fun handleResponse(response: CodeResponse) {
         when (response.responseCode) {
@@ -191,21 +181,44 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
                 runOnUiThread {
                     val errorMessage = "An error occured: ${response.responseDescription}"
                     toast(errorMessage)
-                    showAlert()
+                    handleError()
                 }
             }
         }
     }
 
-    private fun handleError(throwable: Throwable) {
-        toast(throwable.localizedMessage)
-        showAlert()
-    }
-
-    private fun showAlert() {
-        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); getBankCode() }
+    private fun handleError() {
+        val selectedBank = banksDialog.selectedBank.value!!
+        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); getBankCode(selectedBank) }
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
+    }
+
+
+    private fun printCode() {
+        // get printer status
+        val printStatus = posDevice.printer.canPrint()
+
+        // print based on status
+        when (printStatus) {
+            is Error -> toast(printStatus.message)
+            else -> {
+                printCodeButton.isEnabled = false
+                printCodeButton.isClickable = false
+
+                val disposable = ThreadUtils.createExecutor {
+                    val status = posDevice.printer.printSlip(printSlip, UserType.Customer)
+
+                    runOnUiThread {
+                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
+                        printCodeButton.isEnabled = true
+                        printCodeButton.isClickable = true
+                    }
+                }
+
+                disposables.add(disposable)
+            }
+        }
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {
@@ -232,14 +245,5 @@ class UssdActivity : BaseActivity(), SelectBankBottomSheet.SelectBankCallback {
     override fun onCheckStopped() {
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
-    }
-
-    override fun onBankSelected(bank: Bank) {
-        selectedBank = bank
-        banks.text = bank.name
-        selectedItem = bank.name
-        paymentHint.text = bank.name
-
-        getBankCode()
     }
 }

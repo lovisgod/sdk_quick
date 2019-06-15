@@ -58,7 +58,9 @@ dependencies {
     compileOnly (project(':smart-pos-core'))
     compileOnly files('libs/NeptuneLiteApi_V2.03.00_20180208.jar')
 
-
+    // kotlin coroutine libs
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
     testImplementation 'junit:junit:4.12'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"

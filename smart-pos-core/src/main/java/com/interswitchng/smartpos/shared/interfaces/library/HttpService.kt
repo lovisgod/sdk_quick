@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
+import com.gojuno.koptional.Optional
 import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
@@ -13,10 +14,9 @@ internal interface HttpService {
 
     fun initiateQrPayment(request: CodeRequest, callback: Callback<CodeResponse>)
 
-    fun initiateUssdPayment(request: CodeRequest, callback: Callback<CodeResponse>)
+    suspend fun initiateUssdPayment(request: CodeRequest): Optional<CodeResponse>
 
-    fun getBanks(callback: Callback<List<Bank>?>)
+    suspend fun getBanks(): Optional<List<Bank>>
 
     fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): IswDisposable
-    // other two
 }

@@ -1,5 +1,9 @@
 package com.interswitchng.smartpos.shared.services
 
+import com.gojuno.koptional.None
+import com.gojuno.koptional.Optional
+import com.gojuno.koptional.Some
+import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
@@ -10,20 +14,33 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.Trans
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.utils.IswDisposable
+import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 internal class HttpServiceImpl(private val httpService: IHttpService): HttpService {
 
-    override fun getBanks(callback: Callback<List<Bank>?>) {
-        httpService.getBanks().process(callback)
+    val logger by lazy { Logger.with(this.javaClass.name) }
+
+    override suspend fun getBanks(): Optional<List<Bank>> {
+        val banks = httpService.getBanks().await()
+        return when(banks) {
+            null -> None
+            else -> Some(banks)
+        }
     }
 
     override fun initiateQrPayment(request: CodeRequest, callback: Callback<CodeResponse>) {
         httpService.getQrCode(request).process(callback)
     }
 
-    override fun initiateUssdPayment(request: CodeRequest, callback: Callback<CodeResponse>) {
-        httpService.getUssdCode(request).process(callback)
+    override suspend fun initiateUssdPayment(request: CodeRequest): Optional<CodeResponse> {
+        val response = httpService.getUssdCode(request).await()
+        return when(response) {
+            null -> None
+            else -> Some(response)
+        }
     }
 
     override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): IswDisposable {
@@ -73,6 +90,17 @@ internal class HttpServiceImpl(private val httpService: IHttpService): HttpServi
                 val nextDuration = secs * 1000
                 val canSleep = !hasResponse && !it.isDisposed && endTime > nextDuration + System.currentTimeMillis()
                 if (canSleep) Thread.sleep(nextDuration)
+            }
+        }
+    }
+
+    private suspend fun <T> Simple<T>.await(): T? {
+        return suspendCoroutine { continuation ->
+            process { response, t ->
+                // log errors
+                if (t != null) logger.log(t.localizedMessage)
+                // return response
+                continuation.resume(response)
             }
         }
     }

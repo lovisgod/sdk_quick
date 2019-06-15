@@ -40,6 +40,8 @@ allprojects {
         retrofit_version = '2.5.0'
         zxing_version = '3.3.0'
         coroutine_version = '1.1.1'
+        arch_lifecycle_version = '1.1.1'
+        koptional_version = '1.6.0'
 
         // test dependencies
         mockito_version = '2.0.0'
