@@ -192,7 +192,7 @@ class PayableServiceTests {
         whenever(httpService.getBanks()).doReturn(response)
 
         val service = HttpServiceImpl(httpService)
-        service.getBanks(callback)
+        //service.getBanks(callback)
 
 
         verify(httpService, times(1)).getBanks()

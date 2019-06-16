@@ -46,10 +46,10 @@ class QrCodeActivityTests {
         whenever(failedResponse.responseCode).thenReturn(CodeResponse.SERVER_ERROR)
 
         val service: HttpService = mock()
-        whenever(service.initiateQrPayment(any(), any())).then{
-            val callback: Callback<CodeResponse?>  = it.getArgument(1)
-            callback(failedResponse, null)
-        }
+//        whenever(service.initiateQrPayment(any(), any())).then{
+//            val callback: Callback<CodeResponse?>  = it.getArgument(1)
+//            callback(failedResponse, null)
+//        }
 
         // load mock dependencies
         loadKoinModules(module {

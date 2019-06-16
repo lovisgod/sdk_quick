@@ -1,14 +1,13 @@
 package com.interswitchng.smartpos.modules.ussdqr.activities
 
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import com.gojuno.koptional.None
+import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.interfaces.library.HttpService
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
+import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -25,17 +24,15 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
-import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlinx.android.synthetic.main.isw_activity_qr_code.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
-import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 
 class QrCodeActivity : BaseActivity() {
 
-    private val paymentService: HttpService by inject()
-    private val store: KeyValueStore by inject()
+    private val qrViewModel: QrViewModel by viewModel()
 
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
@@ -43,7 +40,6 @@ class QrCodeActivity : BaseActivity() {
     private val alert by lazy { DialogUtils.getAlertDialog(this) }
 
     private var qrData: String? = null
-    private var qrBitmap: Bitmap? = null
     private val printSlip = mutableListOf<PrintObject>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +49,7 @@ class QrCodeActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        setupImage()
+        setupUI()
     }
 
     override fun onDestroy() {
@@ -62,30 +58,74 @@ class QrCodeActivity : BaseActivity() {
     }
 
 
-    private fun setupImage() {
+    private fun setupUI() {
+        // func returns lifecycle
+        val owner = { lifecycle }
 
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
         paymentHint.text = getString(R.string.isw_hint_qr_code)
 
-        dialog.show()
+        // observe print button
+        qrViewModel.printButton.observe(owner) {
+            val isEnabled = it ?: false
+            printCodeButton.isEnabled = isEnabled
+            printCodeButton.isClickable = isEnabled
+        }
 
-        if (qrBitmap != null) {
-            qrCodeImage.setImageBitmap(qrBitmap)
-            dialog.dismiss()
-        } else {
-            val request = CodeRequest.from(iswPos.config.alias, terminalInfo, paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
-            // initiate qr payment
-            paymentService.initiateQrPayment(request) { response, throwable ->
-                runOnUiThread {
-                    dialog.dismiss()
-                    if (throwable != null) handleError(throwable)
-                    else response?.apply { handleResponse(this) }
+        // observe qr code
+        qrViewModel.qrCode.observe(owner) {
+            it?.let { code ->
+                dialog.dismiss()
+                when (code) {
+                    is Some -> handleResponse(code.value)
+                    is None -> handleError()
                 }
             }
         }
+
+        // get qr code
+        getQrCode()
     }
+
+    private fun getQrCode() {
+        // show loading dialog
+        dialog.show()
+
+        // create and request code
+        val request = CodeRequest.from(iswPos.config.alias, terminalInfo,
+                paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
+        qrViewModel.getQrCode(request, this)
+    }
+
+    private fun handleResponse(response: CodeResponse) {
+        when (response.responseCode) {
+            CodeResponse.OK -> {
+                qrData = response.qrCodeData
+                val bitmap = response.qrCodeImage!!
+                printSlip.add(PrintObject.BitMap(bitmap))
+
+                qrCodeImage.setImageBitmap(response.qrCodeImage)
+                showTransactionMocks(response)
+                // check transaction status
+                startPolling(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
+            }
+            else -> {
+                val errorMessage = "An error occured: ${response.responseDescription}"
+                toast(errorMessage)
+                handleError()
+            }
+        }
+    }
+
+    private fun handleError() {
+        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); getQrCode() }
+                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
+                .show()
+    }
+
+
 
     private fun showTransactionMocks(response: CodeResponse) {
         mockButtonsContainer.visibility = View.VISIBLE
@@ -99,74 +139,12 @@ class QrCodeActivity : BaseActivity() {
         }
 
         printCodeButton.isEnabled = true
-        printCodeButton.setOnClickListener { printCode() }
-
-    }
-
-    private fun printCode() {
-        // get printer status
-        val printStatus = posDevice.printer.canPrint()
-
-        // print based on status
-        when(printStatus) {
-            is Error -> toast(printStatus.message)
-            else -> {
-                printCodeButton.isEnabled = false
-                printCodeButton.isClickable = false
-
-                val disposable = ThreadUtils.createExecutor {
-                    val status = posDevice.printer.printSlip(printSlip, UserType.Customer)
-
-                    runOnUiThread {
-                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
-                        printCodeButton.isEnabled = true
-                        printCodeButton.isClickable = true
-                    }
-                }
-
-                disposables.add(disposable)
-            }
-        }
-    }
-
-    private fun handleResponse(response: CodeResponse) {
-        when (response.responseCode) {
-            CodeResponse.OK -> {
-                qrData = response.qrCodeData
-                qrBitmap = response.getBitmap(this)
-                val bitmap = PrintObject.BitMap(qrBitmap!!)
-                printSlip.add(bitmap)
-                runOnUiThread {
-                    qrCodeImage.setImageBitmap(qrBitmap)
-                    showTransactionMocks(response)
-                    // check transaction status
-                    startPolling(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
-                }
-            }
-            else -> {
-                runOnUiThread {
-                    val errorMessage = "An error occured: ${response.responseDescription}"
-                    toast(errorMessage)
-                    showAlert()
-                }
-            }
+        printCodeButton.setOnClickListener {
+            qrViewModel.printCode(this, posDevice, UserType.Customer, printSlip)
         }
 
-        runOnUiThread { dialog.dismiss() }
     }
 
-    private fun handleError(throwable: Throwable) {
-        // TODO handle error
-        toast(throwable.localizedMessage)
-        dialog.dismiss()
-        showAlert()
-    }
-
-    private fun showAlert() {
-        alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); setupImage() }
-                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
-                .show()
-    }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {
         val now = Date()

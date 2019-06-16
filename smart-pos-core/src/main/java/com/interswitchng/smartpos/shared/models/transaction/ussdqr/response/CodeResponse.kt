@@ -14,7 +14,7 @@ import com.interswitchng.smartpos.shared.utilities.DisplayUtils
  * This class captures information representing server response
  * for a USSD or QR code request
  */
-data class CodeResponse(
+internal data class CodeResponse(
         val responseCode: String,
         val responseDescription: String?,
         val date: String?,
@@ -27,9 +27,12 @@ data class CodeResponse(
 ) {
 
 
+    var qrCodeImage: Bitmap? = null
+
+
     @Throws(WriterException::class)
-    internal fun getBitmap(context: Context, lengthInDp: Int = 240): Bitmap? {
-        return qrCodeData?.let { getBitmap(context, it, lengthInDp)}
+    internal fun setBitmap(context: Context, lengthInDp: Int = 240) {
+        qrCodeData?.let { qrCodeImage = setBitmap(context, it, lengthInDp) }
     }
 
 
@@ -48,7 +51,7 @@ data class CodeResponse(
          * @param lengthInDp  the square length in pixel density representing dimensions for the generated bitmap
          * @return   the generated bitmap image
          */
-        internal fun getBitmap(context: Context, qrCodeData: String, lengthInDp: Int = 240): Bitmap? {
+        internal fun setBitmap(context: Context, qrCodeData: String, lengthInDp: Int = 240): Bitmap? {
 
             try {
                 // colors

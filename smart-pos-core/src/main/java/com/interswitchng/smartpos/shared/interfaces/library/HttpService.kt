@@ -12,7 +12,7 @@ import com.interswitchng.smartpos.shared.models.utils.IswDisposable
 
 internal interface HttpService {
 
-    fun initiateQrPayment(request: CodeRequest, callback: Callback<CodeResponse>)
+    suspend fun initiateQrPayment(request: CodeRequest): Optional<CodeResponse>
 
     suspend fun initiateUssdPayment(request: CodeRequest): Optional<CodeResponse>
 

@@ -31,8 +31,12 @@ internal class HttpServiceImpl(private val httpService: IHttpService): HttpServi
         }
     }
 
-    override fun initiateQrPayment(request: CodeRequest, callback: Callback<CodeResponse>) {
-        httpService.getQrCode(request).process(callback)
+    override suspend fun initiateQrPayment(request: CodeRequest): Optional<CodeResponse> {
+        val code = httpService.getQrCode(request).await()
+        return when (code) {
+            null -> None
+            else -> Some(code)
+        }
     }
 
     override suspend fun initiateUssdPayment(request: CodeRequest): Optional<CodeResponse> {
