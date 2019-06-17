@@ -53,8 +53,9 @@ data class PurchaseResult(
         private fun Int.getCardType() = when (this) {
             CardType.AMERICANEXPRESS.ordinal -> CardType.AMERICANEXPRESS
             CardType.MASTER.ordinal -> CardType.MASTER
-            CardType.VERVE.ordinal -> CardType.VISA
+            CardType.VERVE.ordinal -> CardType.VERVE
             CardType.VISA.ordinal -> CardType.VISA
+            CardType.CHINAUNIONPAY.ordinal -> CardType.CHINAUNIONPAY
             else -> CardType.None
         }
     }
