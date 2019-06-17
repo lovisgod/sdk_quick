@@ -6,26 +6,24 @@ import com.gojuno.koptional.Some
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
-import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
-import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
-import com.interswitchng.smartpos.shared.models.utils.IswDisposable
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.utilities.Logger
-import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-internal class HttpServiceImpl(private val httpService: IHttpService): HttpService {
+internal class HttpServiceImpl(private val httpService: IHttpService) : HttpService {
 
     val logger by lazy { Logger.with(this.javaClass.name) }
 
     override suspend fun getBanks(): Optional<List<Bank>> {
         val banks = httpService.getBanks().await()
-        return when(banks) {
+        return when (banks) {
             null -> None
             else -> Some(banks)
         }
@@ -41,59 +39,28 @@ internal class HttpServiceImpl(private val httpService: IHttpService): HttpServi
 
     override suspend fun initiateUssdPayment(request: CodeRequest): Optional<CodeResponse> {
         val response = httpService.getUssdCode(request).await()
-        return when(response) {
+        return when (response) {
             null -> None
             else -> Some(response)
         }
     }
 
-    override fun checkPayment(type: PaymentType, status: TransactionStatus, timeout: Long, callback: TransactionRequeryCallback): IswDisposable {
+    override suspend fun checkPayment(type: PaymentType, status: TransactionStatus): PaymentStatus {
 
-        var hasResponse = false
-        val endTime = System.currentTimeMillis() + timeout
-        return ThreadUtils.createExecutor {
-            var secs = 1L
-            while (!hasResponse && !it.isDisposed) {
-                val call = when(type) {
-                    PaymentType.USSD -> httpService.getUssdTransactionStatus(status.merchantCode, status.reference)
-                    else -> httpService.getQrTransactionStatus(status.merchantCode, status.reference)
-                }
+        // check status based on the transaction type
+        val transaction: Transaction? = when (type) {
+            PaymentType.USSD -> httpService.getUssdTransactionStatus(status.merchantCode, status.reference).await()
+            else -> httpService.getQrTransactionStatus(status.merchantCode, status.reference).await()
+        }
 
-                call.run { transaction, throwable ->
-                    val currentTime = System.currentTimeMillis()
-                    when {
-                        throwable != null -> {
-                            secs = 0
-                            hasResponse = true
-                            callback.onTransactionError(transaction, throwable)
-                        }
-                        transaction == null -> { /* do nothing */ }
-                        transaction.isCompleted() -> {
-                            callback.onTransactionCompleted(transaction)
-                            hasResponse = true
-                        }
-                        transaction.isPending() && endTime > currentTime -> {
-                            callback.onTransactionStillPending(transaction)
-                            secs += 2
-                        }
-                        transaction.isPending() && endTime <= currentTime -> {
-                            secs = 0
-                            hasResponse = true
-                            callback.onTransactionTimeOut()
-                        }
-                        else -> {
-                            // some other error occurred
-                            // terminate loop and return
-                            secs = 0
-                            hasResponse = true
-                            callback.onTransactionError(transaction, throwable)
-                        }
-                    }
-                }
-
-                val nextDuration = secs * 1000
-                val canSleep = !hasResponse && !it.isDisposed && endTime > nextDuration + System.currentTimeMillis()
-                if (canSleep) Thread.sleep(nextDuration)
+        return when {
+            transaction == null || transaction.isError() -> PaymentStatus.Error(transaction)
+            transaction.isCompleted() -> PaymentStatus.Complete(transaction)
+            transaction.isPending() -> PaymentStatus.Pending(transaction)
+            else -> {
+                // some other error occurred
+                // terminate loop and return
+                PaymentStatus.Error(transaction)
             }
         }
     }

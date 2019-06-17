@@ -10,10 +10,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import kotlinx.coroutines.*
 
-internal class UssdViewModel(private val paymentService: HttpService) : ViewModel() {
-
-    private val job = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + job)
+internal class UssdViewModel(paymentService: HttpService) : BaseViewModel(paymentService) {
 
     private val _allBanks = MutableLiveData<Optional<List<Bank>>>()
     val allBanks: LiveData<Optional<List<Bank>>> get() = _allBanks
@@ -37,10 +34,5 @@ internal class UssdViewModel(private val paymentService: HttpService) : ViewMode
             val response = uiScope.async(Dispatchers.IO) { paymentService.initiateUssdPayment(codeRequest) }
             _bankCode.value = response.await()
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        job.cancel()
     }
 }

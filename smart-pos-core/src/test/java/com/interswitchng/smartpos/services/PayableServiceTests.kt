@@ -2,7 +2,6 @@ package com.interswitchng.smartpos.services
 
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
-import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
 import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus

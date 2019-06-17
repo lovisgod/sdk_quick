@@ -2,7 +2,6 @@ package com.interswitchng.smartpos.mockservices
 
 import android.support.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
-import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
 import com.interswitchng.smartpos.shared.models.core.Callback
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
@@ -12,7 +11,6 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Code
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.models.utils.IswDisposable
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
-import java.util.concurrent.Executors
 
 internal class MockHttpService private constructor(
         private val qr: ((Callback<CodeResponse?>) -> Unit)?,

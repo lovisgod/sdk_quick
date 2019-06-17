@@ -67,23 +67,44 @@ class QrCodeActivity : BaseActivity() {
         amountText.text = getString(R.string.isw_amount, amount)
         paymentHint.text = getString(R.string.isw_hint_qr_code)
 
-        // observe print button
-        qrViewModel.printButton.observe(owner) {
-            val isEnabled = it ?: false
-            printCodeButton.isEnabled = isEnabled
-            printCodeButton.isClickable = isEnabled
-        }
+        // observe view model
+        with(qrViewModel) {
 
-        // observe qr code
-        qrViewModel.qrCode.observe(owner) {
-            it?.let { code ->
-                dialog.dismiss()
-                when (code) {
-                    is Some -> handleResponse(code.value)
-                    is None -> handleError()
+            // observe print button
+            printButton.observe(owner) {
+                val isEnabled = it ?: false
+                printCodeButton.isEnabled = isEnabled
+                printCodeButton.isClickable = isEnabled
+            }
+
+            // observe qr code
+            qrCode.observe(owner) {
+                it?.let { code ->
+                    dialog.dismiss()
+                    when (code) {
+                        is Some -> handleResponse(code.value)
+                        is None -> handleError()
+                    }
+                }
+            }
+
+            // observe payment status
+            paymentStatus.observe(owner) {
+                // handle updates of payment status
+                it?.let(::handlePaymentStatus)
+            }
+
+            showProgress.observe(owner) {
+                if (it != true) return@observe
+
+                // show progress alert
+                showProgressAlert {
+                    qrViewModel.cancelPoll()
+                    onCheckStopped()
                 }
             }
         }
+
 
         // get qr code
         getQrCode()
@@ -108,8 +129,10 @@ class QrCodeActivity : BaseActivity() {
 
                 qrCodeImage.setImageBitmap(response.qrCodeImage)
                 showTransactionMocks(response)
+
                 // check transaction status
-                startPolling(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
+                val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
+                qrViewModel.pollTransactionStatus(status)
             }
             else -> {
                 val errorMessage = "An error occured: ${response.responseDescription}"
@@ -134,8 +157,10 @@ class QrCodeActivity : BaseActivity() {
         initiateButton.setOnClickListener {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
+
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
+            val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
+            qrViewModel.checkTransactionStatus(status)
         }
 
         printCodeButton.isEnabled = true
@@ -168,9 +193,9 @@ class QrCodeActivity : BaseActivity() {
 
 
     override fun onCheckStopped() {
+        super.onCheckStopped()
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
-        super.onCheckStopped()
     }
 
 }

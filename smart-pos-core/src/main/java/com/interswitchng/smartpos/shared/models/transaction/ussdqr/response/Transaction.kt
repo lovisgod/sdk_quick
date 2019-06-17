@@ -19,7 +19,7 @@ internal class Transaction (
 
     fun isCompleted(): Boolean = responseCode == CodeResponse.OK
     fun isPending(): Boolean = responseCode == CodeResponse.PENDING
-    fun isSuccessful(): Boolean = isCompleted()
+    fun isError(): Boolean = !isCompleted() && !isPending()
 
     companion object {
         fun default(): Transaction {

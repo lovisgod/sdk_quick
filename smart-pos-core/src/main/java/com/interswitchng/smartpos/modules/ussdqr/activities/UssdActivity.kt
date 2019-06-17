@@ -95,6 +95,13 @@ class UssdActivity : BaseActivity() {
         // observe view model
         with(ussdViewModel) {
 
+            // observe print button
+            printButton.observe(owner) {
+                val isEnabled = it ?: false
+                printCodeButton.isEnabled = isEnabled
+                printCodeButton.isClickable = isEnabled
+            }
+
             // observe bank list
             allBanks.observe(owner) {
                 it?.let { banks ->
@@ -105,7 +112,6 @@ class UssdActivity : BaseActivity() {
                 }
             }
 
-
             // observe selected bank code
             bankCode.observe(owner) {
                 // dismiss loading dialog
@@ -113,10 +119,25 @@ class UssdActivity : BaseActivity() {
 
                 // handle code response
                 it?.let { code ->
-                    when(code) {
+                    when (code) {
                         is Some -> handleResponse(code.value)
                         is None -> handleError()
                     }
+                }
+            }
+
+            // observe payment status
+            paymentStatus.observe(owner) {
+                it?.apply(::handlePaymentStatus)
+            }
+
+            showProgress.observe(owner) {
+                if (it != true) return@observe
+
+                // show progress alert
+                showProgressAlert {
+                    ussdViewModel.cancelPoll()
+                    onCheckStopped()
                 }
             }
         }
@@ -151,8 +172,14 @@ class UssdActivity : BaseActivity() {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
 
+            // show progress alert
+            showProgressAlert {
+                ussdViewModel.cancelPoll()
+                onCheckStopped()
+            }
+
             // check transaction status
-            checkTransactionStatus(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
+            ussdViewModel.checkTransactionStatus(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
@@ -174,8 +201,16 @@ class UssdActivity : BaseActivity() {
 
                 // show buttons
                 showButtons(response)
+
+                // show progress alert
+                showProgressAlert {
+                    ussdViewModel.cancelPoll()
+                    onCheckStopped()
+                }
+
                 // check transaction status
-                startPolling(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
+                val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
+                ussdViewModel.pollTransactionStatus(status)
             }
             else -> {
                 runOnUiThread {
@@ -243,6 +278,7 @@ class UssdActivity : BaseActivity() {
     }
 
     override fun onCheckStopped() {
+        super.onCheckStopped()
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
     }

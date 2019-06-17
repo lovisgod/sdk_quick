@@ -17,17 +17,14 @@ import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
-import com.interswitchng.smartpos.shared.interfaces.library.HttpService
-import com.interswitchng.smartpos.shared.interfaces.library.TransactionRequeryCallback
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
-import com.interswitchng.smartpos.shared.models.utils.IswDisposable
 import com.interswitchng.smartpos.shared.utilities.CurrencyUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
@@ -47,7 +44,6 @@ abstract class BaseActivity : AppCompatActivity() {
     data class PollingText(val title: String, val subTitle: String)
 
     internal val posDevice: POSDevice by inject()
-    private val payableService: HttpService by inject()
     private val alert by lazy {
         DialogUtils.getAlertDialog(this)
                 .setTitle("Cancel Transaction")
@@ -63,22 +59,15 @@ abstract class BaseActivity : AppCompatActivity() {
 
 
     private lateinit var transactionResponse: Transaction
-    private var pollingExecutor: IswDisposable? = null
-    private var isPolling = false
     private lateinit var transactionStatus: TransactionStatus
 
     // getResult payment info
     internal lateinit var paymentInfo: PaymentInfo
-    private val timer by lazy { Timer() }
+
 
 
     override fun onDestroy() {
         super.onDestroy()
-        // stop network polling
-        stopPolling()
-        // dispose all threads
-        disposables.dispose()
-
         // process results
         if (::transactionResponse.isInitialized) {
             getTransactionResult(transactionResponse)?.apply {
@@ -139,43 +128,7 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-
-    protected fun startPolling(status: TransactionStatus) {
-        transactionStatus = status
-        schedulePolling()
-    }
-
-    // for Qr and USSD only
-    protected fun checkTransactionStatus(status: TransactionStatus) {
-        if (isPolling) stopPolling()
-
-        isPolling = false
-
-        // show progress alert
-        showProgressAlert()
-        // check payment status and timeout after 5 minutes
-        val seconds = resources.getInteger(R.integer.iswPollingTime)
-        val paymentType = when (this) {
-            is QrCodeActivity -> PaymentType.QR
-            else -> PaymentType.USSD
-        }
-        pollingExecutor = payableService.checkPayment(paymentType, status, seconds.toLong(), TransactionStatusCallback())
-    }
-
-    private fun schedulePolling() {
-        timer.scheduleAtFixedRate(object : TimerTask() {
-
-            override fun run() = runOnUiThread {
-                if (::transactionStatus.isInitialized)
-                    checkTransactionStatus(transactionStatus)
-            }
-
-        }, 10_000, 35_000)
-
-
-    }
-
-    protected fun showProgressAlert(canCancel: Boolean = true) {
+    protected fun showProgressAlert(canCancel: Boolean = true, oncancel: () -> Unit = {}) {
         Alerter.create(this)
                 .setTitle(pollingText.title)
                 .setText(pollingText.subTitle)
@@ -186,10 +139,9 @@ abstract class BaseActivity : AppCompatActivity() {
                 .setProgressColorRes(android.R.color.white).also {
                     // add cancel  button if cancel is allowed
                     if (canCancel) it.addButton("Cancel", R.style.AlertButton, View.OnClickListener {
-                        Toast.makeText(this, "Status check stopped", Toast.LENGTH_LONG).show()
                         Alerter.clearCurrent(this)
-                        onCheckStopped()
-                        Handler().postDelayed(::stopPolling, 300)
+                        toast("Status check stopped")
+                        oncancel()
                     })
                 }
                 .show()
@@ -198,13 +150,6 @@ abstract class BaseActivity : AppCompatActivity() {
     private fun completePayment() {
         Alerter.clearCurrent(this)
         showTransactionResult(transactionResponse)
-    }
-
-    private fun stopPolling() {
-        Alerter.clearCurrent(this)
-        pollingExecutor?.dispose()
-        timer.cancel()
-        isPolling = false
     }
 
     internal fun showTransactionResult(transaction: Transaction) {
@@ -250,68 +195,60 @@ abstract class BaseActivity : AppCompatActivity() {
         return PollingText(title, subTitle)
     }
 
-    // class that provides implementation for transaction status callbacks
-    private inner class TransactionStatusCallback : TransactionRequeryCallback {
+    internal fun handlePaymentStatus(status: PaymentStatus) {
+
+        when (status) {
+
+            is PaymentStatus.Complete -> {
+                // set and complete payment
+                transactionResponse = status.transaction
+                completePayment()
+            }
+
+            is PaymentStatus.Timeout -> {
+
+                // clear current notification
+                Alerter.clearCurrent(this@BaseActivity)
+
+                // change notification to error notification
+                Alerter.create(this@BaseActivity)
+                        .setTitle(getString(R.string.isw_title_transaction_timeout))
+                        .setText(getString(R.string.isw_content_transaction_in_progress_time_out))
+                        .setIcon(R.drawable.isw_ic_warning)
+                        .setDismissable(true)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(android.R.color.holo_orange_dark)
+                        .setDuration(15 * 1000)
+                        .show()
+
+                onCheckStopped()
+
+            }
+
+            is PaymentStatus.Error -> {
+                // getResult error message
+                val message = status.transaction?.responseDescription
+                        ?: "An error occurred, please try again"
 
 
-        override fun onTransactionCompleted(transaction: Transaction) = runOnUiThread {
-            isPolling = false
-            // set and complete payment
-            transactionResponse = transaction
-            completePayment()
+                // clear current notification
+                Alerter.clearCurrent(this@BaseActivity)
+
+                // change notification to error notification
+                Alerter.create(this@BaseActivity)
+                        .setTitle(getString(R.string.isw_title_transaction_error))
+                        .setText(message)
+                        .setIcon(R.drawable.isw_ic_error)
+                        .setDismissable(true)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(android.R.color.holo_red_dark)
+                        .setDuration(15 * 1000)
+                        .show()
+
+                onCheckStopped()
+            }
         }
 
-        override fun onTransactionStillPending(transaction: Transaction) {
-            isPolling = true
-            // extend the time for the notification
-        }
-
-        override fun onTransactionError(transaction: Transaction?, throwable: Throwable?) = runOnUiThread {
-            isPolling = false
-
-            // getResult error message
-            val message = throwable?.message
-                    ?: transaction?.responseDescription
-                    ?: "An error occurred, please try again"
-
-
-            // clear current notification
-            Alerter.clearCurrent(this@BaseActivity)
-
-            // change notification to error notification
-            Alerter.create(this@BaseActivity)
-                    .setTitle(getString(R.string.isw_title_transaction_error))
-                    .setText(message)
-                    .setIcon(R.drawable.isw_ic_error)
-                    .setDismissable(true)
-                    .enableSwipeToDismiss()
-                    .setBackgroundColorRes(android.R.color.holo_red_dark)
-                    .setDuration(15 * 1000)
-                    .show()
-
-            onCheckStopped()
-        }
-
-        override fun onTransactionTimeOut() = runOnUiThread {
-            isPolling = false
-            // change notification to error notification
-
-            // clear current notification
-            Alerter.clearCurrent(this@BaseActivity)
-
-            // change notification to error notification
-            Alerter.create(this@BaseActivity)
-                    .setTitle(getString(R.string.isw_title_transaction_timeout))
-                    .setText(getString(R.string.isw_content_transaction_in_progress_time_out))
-                    .setIcon(R.drawable.isw_ic_warning)
-                    .setDismissable(true)
-                    .enableSwipeToDismiss()
-                    .setBackgroundColorRes(android.R.color.holo_orange_dark)
-                    .setDuration(15 * 1000)
-                    .show()
-
-            onCheckStopped()
-        }
 
     }
 
