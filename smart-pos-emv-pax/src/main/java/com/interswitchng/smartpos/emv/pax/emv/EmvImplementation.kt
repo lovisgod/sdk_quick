@@ -6,7 +6,6 @@ import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bcd2Str
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.bytes2String
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils.str2Bcd
-import java.util.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
 import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
@@ -20,6 +19,10 @@ import com.pax.jemv.emv.api.EMVCallback
 import com.pax.jemv.emv.model.EmvEXTMParam
 import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
 
 
 /**
@@ -38,11 +41,15 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     // get terminal config and EMV apps
     private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
 
+    private lateinit var scope: CoroutineScope
+
     private var amount: Int = 0
 
-    fun setAmount(amount: Int) {
+    fun setScopeAndAmount(scope: CoroutineScope, amount: Int) {
         this.amount = amount
+        this.scope = scope
     }
+
 
     private fun addCAPKIntoEmvLib(capks: List<EMV_CAPK>): Int {
 
@@ -90,7 +97,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         return ret
     }
 
-    fun setupContactEmvTransaction(terminalInfo: TerminalInfo): Int {
+    suspend fun setupContactEmvTransaction(terminalInfo: TerminalInfo): Int {
 
         // initialize emv library data elements
         val initResult = EMVCallback.EMVCoreInit()
@@ -277,7 +284,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         }
     }
 
-    fun enterPin(isOnline: Boolean, triesCount: Int,  offlineTriesLeft: Int, pan: String) {
+    suspend fun enterPin(isOnline: Boolean, triesCount: Int,  offlineTriesLeft: Int, pan: String) {
         logger.log("offline tries left: $offlineTriesLeft")
         pinCallback.enterPin(isOnline, triesCount, offlineTriesLeft, pan)
     }
@@ -340,7 +347,12 @@ internal class EmvImplementation(private val context: Context, private val pinCa
             } else {
 
                 val pan = getPan()!!
-                enterPin(pin == null, tryFlag, remainCount, pan)
+
+                // trigger enterPin in coroutine scope
+                scope.launch(Dispatchers.IO) {
+                    enterPin(pin == null, tryFlag, remainCount, pan)
+                }
+
                 logger.log("emvGetHolderPwd enterPin finish")
 
                 ret = pinCallback.getPinResult(pan)
@@ -351,8 +363,11 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         }
 
         override fun emvVerifyPINOK() {
-            pinCallback.showPinOk()
-            logger.log("certVerify: For PBOC, so not needed")
+            // trigger pin OK in coroutine
+            scope.launch(Dispatchers.IO) {
+                pinCallback.showPinOk()
+                logger.log("certVerify: For PBOC, so not needed")
+            }
         }
 
 

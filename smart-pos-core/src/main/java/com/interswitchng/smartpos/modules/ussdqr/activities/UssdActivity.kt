@@ -24,10 +24,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
-import com.interswitchng.smartpos.shared.utilities.Logger
-import com.interswitchng.smartpos.shared.utilities.ThreadUtils
+import com.interswitchng.smartpos.shared.utilities.*
 import kotlinx.android.synthetic.main.isw_activity_ussd.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.viewmodel.ext.android.viewModel

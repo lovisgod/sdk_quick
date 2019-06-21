@@ -12,13 +12,10 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.utilities.toast
+import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
 import kotlinx.coroutines.*
 
-internal abstract class BaseViewModel(protected val paymentService: HttpService) : ViewModel() {
-
-    private val job = Job()
-    protected val uiScope = CoroutineScope(Dispatchers.Main + job)
-    protected val ioScope = uiScope.coroutineContext + Dispatchers.IO
+internal abstract class BaseViewModel(protected val paymentService: HttpService) : RootViewModel() {
 
     private val _paymentStatus = MutableLiveData<PaymentStatus>()
     val paymentStatus: LiveData<PaymentStatus> = _paymentStatus
@@ -45,7 +42,7 @@ internal abstract class BaseViewModel(protected val paymentService: HttpService)
                 if (it < 9) delay(5_000)
             }
 
-            cancel()
+            pollingJob?.cancel()
         }
     }
 
@@ -107,10 +104,5 @@ internal abstract class BaseViewModel(protected val paymentService: HttpService)
 
     fun cancelPoll() {
         pollingJob?.cancel()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        job.cancel()
     }
 }

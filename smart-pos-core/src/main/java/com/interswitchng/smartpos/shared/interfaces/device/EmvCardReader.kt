@@ -3,9 +3,12 @@ package com.interswitchng.smartpos.shared.interfaces.device
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 
 
 /**
@@ -16,35 +19,18 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 interface EmvCardReader {
 
     /**
-     * Sets the callback [EmvCallback] implementation, for the EmvCardRead to interact
-     * with. The callback provides hook points to notify the consumer of state and status
-     * of the triggered transaction.
-     *
-     * @param callback  a callback implementation that the reader communicates its status with
-     * @see EmvCallback
-     */
-    fun setEmvCallback(callback: EmvCallback)
-
-    /**
-     * Removes the callback [EmvCallback] implementation that was set to communicate with the
-     * EmvCardReader instance.
-     *
-     * @param callback the callback implementation that was set to be used to communicate with the reader
-     * @see EmvCallback
-     */
-    fun removeEmvCallback(callback: EmvCallback)
-
-
-    /**
      * Sets up a new transaction to be processed, providing the amount and terminal information
      * to be used to trigger the new transaction. The amount should be provided in its lowest
      * denomination of whatever currency the terminal is set to process e.g. kobo for Nigerian Naira
      *
      * @param amount  the cost in integer for the new transaction
      * @param terminalInfo  the terminal information to required to configure the device for the new transaction
+     * @param channel  the channel used to send and receive messages establishing communication with the card reader
+     * @param scope the coroutine scope to contain all launched sub-jobs
      * @see TerminalInfo
+     * @see EmvMessage
      */
-    fun setupTransaction(amount: Int, terminalInfo: TerminalInfo)
+    suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope)
 
 
     /**

@@ -4,38 +4,44 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import com.gojuno.koptional.None
+import com.gojuno.koptional.Optional
+import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
-import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
-import com.interswitchng.smartpos.shared.utilities.ThreadUtils
+import com.interswitchng.smartpos.shared.utilities.toast
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
+
 
 class CardActivity : BaseActivity() {
 
+    private val cardViewModel: CardViewModel by viewModel()
+
     private val logger by lazy { Logger.with("CardActivity") }
 
-    private val emvCallback by lazy { CardCallback() }
     private val emv by lazy { posDevice.getEmvCardReader() }
 
     private val isoService: IsoService by inject()
@@ -45,7 +51,6 @@ class CardActivity : BaseActivity() {
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false
     private var isCancelled = false
-
 
 
     private val dialog by lazy { DialogUtils.getLoadingDialog(this) }
@@ -59,89 +64,206 @@ class CardActivity : BaseActivity() {
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
+
+        // observe view model
+        observeViewModel()
     }
 
     override fun onStart() {
         super.onStart()
-        setupTransaction()
+        cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         isCancelled = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
         isCancelled = true
-        emv.removeEmvCallback(emvCallback)
-        emv.cancelTransaction()
     }
 
+    private fun chooseAccount() {
 
-    private fun setupTransaction() {
-        val disposable = ThreadUtils.createExecutor {
+        // dismiss dialog
+        dialog.dismiss()
 
-            // attach callback for emv transaction
-            emv.setEmvCallback(emvCallback)
-
-            TerminalInfo.get(store)?.let {
-
-                // setup card transaction
-                emv.setupTransaction(paymentInfo.amount, it)
-
-                runOnUiThread { dialog.dismiss() }
-
-                // show account type selection
-                chooseAccount()
-            }
-        }
-
-        disposables.add(disposable)
-    }
-
-    private fun chooseAccount() = runOnUiThread {
-        // check if transaction was cancelled
-        if (!isCancelled) {
-            AlertDialog.Builder(this)
-                    .setTitle(R.string.isw_hint_account_type)
-                    .setCancelable(false)
-                    .setSingleChoiceItems(R.array.isw_account_types, accountType.ordinal) { dialog, selectedIndex ->
-                        if (selectedIndex != -1) {
-                            // set the selected account
-                            accountType = when (selectedIndex) {
-                                1 -> AccountType.Savings
-                                2 -> AccountType.Current
-                                3 -> AccountType.Credit
-                                else -> AccountType.Default
-                            }
-
-                            selectedCardType.text = accountType.toString()
-
-                            // start transaction
-                            startTransaction()
-
-                            //
+        // TODO change alert to dialog with grouped radio buttons
+        AlertDialog.Builder(this)
+                .setTitle(R.string.isw_hint_account_type)
+                .setCancelable(false)
+                .setSingleChoiceItems(R.array.isw_account_types, accountType.ordinal) { dialog, selectedIndex ->
+                    if (selectedIndex != -1) {
+                        // set the selected account
+                        accountType = when (selectedIndex) {
+                            1 -> AccountType.Savings
+                            2 -> AccountType.Current
+                            3 -> AccountType.Credit
+                            else -> AccountType.Default
                         }
-                        dialog.dismiss()
+
+                        selectedCardType.text = accountType.toString()
+
+                        // start transaction
+                        cardViewModel.startTransaction(this, paymentInfo, accountType, terminalInfo)
                     }
-                    .show()
-        }
+                    dialog.dismiss()
+                }
+                .show()
     }
 
-    private fun startTransaction() {
-        val disposable = ThreadUtils.createExecutor {
-            // start card transaction
-            val result = emv.startTransaction()
+    private fun observeViewModel() {
+        with(cardViewModel) {
 
-            when (result) {
-                EmvResult.ONLINE_REQUIRED -> logger.log("online should be processed").also { processOnline() }
-                else -> runOnUiThread {
-                    if (!isCancelled) {
-                        toast("Error processing card transaction")
-                        cancelTransaction("Unable to process card transaction")
+            val owner = { lifecycle }
+
+            // observe emv messages
+            emvMessage.observe(owner) {
+                it?.let(::processMessage)
+            }
+
+            // observe transaction response
+            transactionResponse.observe(owner) {
+                it?.let(::processResponse)
+            }
+
+            // observe online process results
+            onlineResult.observe(owner) {
+                it?.let { result ->
+                    when (result) {
+                        CardViewModel.OnlineProcessResult.NO_EMV -> {
+                            toast("Unable to getResult icc")
+                            finish()
+                        }
+                        CardViewModel.OnlineProcessResult.NO_RESPONSE -> {
+                            toast("Unable to process Transaction")
+                            finish()
+                        }
+                        CardViewModel.OnlineProcessResult.ONLINE_DENIED -> {
+                            toast("Transaction Declined")
+                            showContainer(CardTransactionState.Default)
+                        }
+                        CardViewModel.OnlineProcessResult.ONLINE_APPROVED -> {
+                            toast("Transaction Approved")
+                        }
                     }
                 }
             }
         }
+    }
 
-        disposables.add(disposable)
+
+    private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
+
+        when (transactionResponse) {
+            is None -> logger.log("Unable to complete transaction")
+            is Some -> {
+                // extract info
+                val response = transactionResponse.value.first
+                val emvData = transactionResponse.value.second
+                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+
+                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                val pinStatus = when {
+                    pinOk || response.responseCode == IsoUtils.OK -> "PIN Verified"
+                    else -> "PIN Unverified"
+                }
+
+                val now = Date()
+                transactionResult = TransactionResult(
+                        paymentType = PaymentType.Card,
+                        dateTime = DisplayUtils.getIsoString(now),
+                        amount = DisplayUtils.getAmountString(paymentInfo),
+                        type = TransactionType.Purchase,
+                        authorizationCode = response.authCode,
+                        responseMessage = responseMsg,
+                        responseCode = response.responseCode,
+                        cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
+                        stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
+                        telephone = iswPos.config.merchantTelephone)
+
+
+                // show transaction result screen
+                showTransactionResult(Transaction.default())
+            }
+        }
+    }
+
+    private fun processMessage(message: EmvMessage) {
+
+        // assigns value to ensure the when expression is exhausted
+        val ignore = when (message) {
+
+            // when card is detected
+            is EmvMessage.CardDetected -> {
+                showContainer(CardTransactionState.Default)
+                showLoader("Reading Card", "Loading...")
+            }
+
+            // when card should be inserted
+            is EmvMessage.InsertCard -> {
+                showContainer(CardTransactionState.ShowInsertCard)
+                paymentHint.text = getString(R.string.isw_hint_insert_card)
+            }
+
+            // when card has been read
+            is EmvMessage.CardRead -> {
+
+                cardType = message.cardType
+                val cardIcon = when (cardType) {
+                    CardType.MASTER -> R.drawable.isw_ic_card_mastercard
+                    CardType.VISA -> R.drawable.isw_ic_card_visa
+                    else -> R.drawable.isw_ic_card
+                }
+
+                // set the card icon
+                cardTypeIcon.setImageResource(cardIcon)
+
+                // show account type selection
+                chooseAccount()
+            }
+
+            // when card gets removed
+            is EmvMessage.CardRemoved -> {
+                cancelTransaction("Transaction Cancelled: Card was removed")
+            }
+
+            // when user should enter pin
+            is EmvMessage.EnterPin -> {
+                showContainer(CardTransactionState.EnterPin)
+                paymentHint.text = getString(R.string.isw_hint_input_pin)
+            }
+
+            // when user types in pin
+            is EmvMessage.PinText -> {
+                cardPin.setText(message.text)
+            }
+
+            // when pin has been validated
+            is EmvMessage.PinOk -> {
+                pinOk = true
+                toast("Pin OK")
+            }
+
+            // when pin is incorrect
+            is EmvMessage.PinError -> {
+                alert.setTitle("Invalid Pin")
+                alert.setMessage("Please ensure you put the right pin.")
+                alert.show()
+            }
+
+            // when user cancels transaction
+            is EmvMessage.TransactionCancelled -> {
+                cancelTransaction(message.reason)
+            }
+
+            // when transaction is processing
+            is EmvMessage.ProcessingTransaction -> {
+                // change hint text
+                paymentHint.text = getString(R.string.isw_title_processing_transaction)
+                // hide other layouts: show default screen
+                showContainer(CardTransactionState.Default)
+                // show transaction progress alert
+                showProgressAlert(false)
+            }
+        }
     }
 
     private fun showLoader(title: String = "Processing", message: String) {
@@ -161,103 +283,36 @@ class CardActivity : BaseActivity() {
     }
 
     private fun cancelTransaction(reason: String) {
-        runOnUiThread {
-            // remove dialogs
-            if (dialog.isShowing) dialog.dismiss()
-            if (alert.isShowing) alert.dismiss()
-            // set flag
-            isCancelled = true
+        // remove dialogs
+        if (dialog.isShowing) dialog.dismiss()
+        if (alert.isShowing) alert.dismiss()
+        // set flag
+        isCancelled = true
 
-            val cancel = {
-                // set cancel result
-                setResult(Activity.RESULT_CANCELED)
-                toast(reason)
-                finish()
-            }
-
-
-            DialogUtils.getAlertDialog(this)
-                    .setTitle(reason)
-                    .setMessage("Would you like to change payment method, or try again?")
-                    .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
-                        dialog.dismiss()
-                        cancel()
-                    }
-                    .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
-                        dialog.dismiss()
-                        showPaymentOptions(BottomSheetOptionsDialog.CARD)
-                    }
-                    .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
-                        dialog.dismiss()
-                        resetTransaction()
-                    }
-                    .show()
-        }
-    }
-
-    private fun processOnline() {
-        runOnUiThread {
-            // change hint text
-            paymentHint.text = getString(R.string.isw_title_processing_transaction)
-            // hide other layouts: show default screen
-            showContainer(CardTransactionState.Default)
-            // show transaction progress alert
-            showProgressAlert(false)
+        val cancel = {
+            // set cancel result
+            setResult(Activity.RESULT_CANCELED)
+            toast(reason)
+            finish()
         }
 
-        // get emv data captured by card
-        val emvData = emv.getTransactionInfo()
 
-        if (emvData != null) {
-            val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-            val response = isoService.initiateCardPurchase(terminalInfo, txnInfo)
-            // used default transaction because the
-            // transaction is not processed by isw directly
-            val txn = Transaction.default()
-
-            val now = Date()
-            response?.let {
-
-                val responseMsg = IsoUtils.getIsoResultMsg(it.responseCode) ?: "Unknown Error"
-                val pinStatus = when {
-                    pinOk || it.responseCode == IsoUtils.OK -> "PIN Verified"
-                    else -> "PIN Unverified"
+        DialogUtils.getAlertDialog(this)
+                .setTitle(reason)
+                .setMessage("Would you like to change payment method, or try again?")
+                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                    dialog.dismiss()
+                    cancel()
                 }
-
-                transactionResult = TransactionResult(
-                        paymentType = PaymentType.Card,
-                        dateTime = DisplayUtils.getIsoString(now),
-                        amount = DisplayUtils.getAmountString(paymentInfo),
-                        type = TransactionType.Purchase,
-                        authorizationCode = response.authCode,
-                        responseMessage = responseMsg,
-                        responseCode = response.responseCode,
-                        cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
-                        stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                        telephone = iswPos.config.merchantTelephone)
-
-                // complete transaction by applying scripts
-                // only when responseCode is 'OK'
-                if (it.responseCode == IsoUtils.OK) {
-                    val completionResult = emv.completeTransaction(it)
-
-                    when (completionResult) {
-                        EmvResult.OFFLINE_APPROVED -> logger.log("online has been approved")
-                        else -> {
-                            toast("Transaction Declined")
-                            showContainer(CardTransactionState.Default)
-                        }
-                    }
-
+                .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
+                    dialog.dismiss()
+                    showPaymentOptions(BottomSheetOptionsDialog.CARD)
                 }
-
-                // show transaction result screen
-                showTransactionResult(txn)
-            } ?: toast("Unable to process Transaction").also { finish() }
-
-        } else {
-            toast("Unable to getResult icc").also { finish() }
-        }
+                .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
+                    dialog.dismiss()
+                    resetTransaction()
+                }
+                .show()
     }
 
     private fun resetTransaction() {
@@ -268,62 +323,4 @@ class CardActivity : BaseActivity() {
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? = transactionResult
 
-    internal inner class CardCallback : EmvCallback {
-
-        override fun showInsertCard() {
-            runOnUiThread {
-                showContainer(CardTransactionState.ShowInsertCard)
-                paymentHint.text = getString(R.string.isw_hint_insert_card)
-            }
-        }
-
-        override fun onCardDetected() {
-            runOnUiThread {
-                showContainer(CardTransactionState.Default)
-                showLoader("Reading Card", "Loading...")
-            }
-        }
-
-        override fun onCardRead(cardType: CardType) = runOnUiThread {
-            this@CardActivity.cardType = cardType
-            val cardIcon = when (cardType) {
-                CardType.MASTER -> R.drawable.isw_ic_card_mastercard
-                CardType.VISA -> R.drawable.isw_ic_card_visa
-                else -> R.drawable.isw_ic_card
-            }
-
-            // set the card icon
-            cardTypeIcon.setImageResource(cardIcon)
-        }
-
-        override fun showEnterPin() = runOnUiThread {
-            showContainer(CardTransactionState.EnterPin)
-            paymentHint.text = getString(R.string.isw_hint_input_pin)
-        }
-
-        override fun setPinText(text: String) = runOnUiThread {
-            cardPin.setText(text)
-        }
-
-        override fun showPinOk() = runOnUiThread {
-            pinOk = true
-            toast("Pin OK")
-        }
-
-
-        override fun onCardRemoved() {
-            cancelTransaction("Transaction Cancelled: Card was removed")
-        }
-
-        override fun onTransactionCancelled(code: Int, reason: String) {
-            cancelTransaction(reason)
-        }
-
-        override fun showPinError(remainCount: Int) = runOnUiThread {
-            alert.setTitle("Invalid Pin")
-            alert.setMessage("Please ensure you put the right pin.")
-            alert.show()
-        }
-
-    }
 }

@@ -16,7 +16,6 @@ interface POSDevice {
      * Returns the emv card reader implementation [EmvCardReader]
      * that processes emv card chip transactions
      */
-    // TODO rename function to getEmvCardReader
     fun getEmvCardReader(): EmvCardReader
 
 }

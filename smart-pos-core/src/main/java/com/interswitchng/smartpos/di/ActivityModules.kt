@@ -16,7 +16,7 @@ private val viewModels = module {
 
     viewModel { PayCodeViewModel(get(), get()) }
 
-    viewModel { CardViewModel() }
+    viewModel { CardViewModel(get(), get()) }
 }
 
 

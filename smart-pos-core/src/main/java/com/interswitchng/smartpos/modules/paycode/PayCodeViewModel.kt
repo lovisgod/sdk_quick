@@ -16,14 +16,11 @@ import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
 import kotlinx.coroutines.*
 import java.util.*
 
-internal class PayCodeViewModel(private val isoService: IsoService, private val iswPos: IswPos) : ViewModel() {
-
-    private val job = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + job)
-    private val ioScope = uiScope.coroutineContext + Dispatchers.IO
+internal class PayCodeViewModel(private val isoService: IsoService, private val iswPos: IswPos) : RootViewModel() {
 
 
     private val _transactionResult = MutableLiveData<Optional<TransactionResult>>()
@@ -63,8 +60,6 @@ internal class PayCodeViewModel(private val isoService: IsoService, private val 
 
             _transactionResult.value = result
         }
-
-
     }
 
 }

@@ -3,12 +3,10 @@ package com.interswitchng.smartpos.shared.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardActivity
@@ -17,27 +15,25 @@ import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
-import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
-import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.CurrencyUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
+import com.interswitchng.smartpos.shared.utilities.toast
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import kotlinx.android.synthetic.main.isw_content_toolbar.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
-import java.util.*
 
 
 /**
- * This activity serves as the base class for purchase views
+ * This activity serves as the base class for purchase views and purchase result
  */
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -57,28 +53,9 @@ abstract class BaseActivity : AppCompatActivity() {
     protected val disposables = IswCompositeDisposable()
     private lateinit var pollingText: PollingText
 
-
-    private lateinit var transactionResponse: Transaction
-    private lateinit var transactionStatus: TransactionStatus
-
     // getResult payment info
     internal lateinit var paymentInfo: PaymentInfo
 
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // process results
-        if (::transactionResponse.isInitialized) {
-            getTransactionResult(transactionResponse)?.apply {
-                val purchaseResult = PurchaseResult(responseCode, responseMessage, paymentType, cardType, stan)
-                val intent = IswPos.setResult(Intent(), purchaseResult)
-                // set result as ok with result intent
-                setResult(Activity.RESULT_OK, intent)
-
-            } ?: setResult(Activity.RESULT_CANCELED) // else set result as cancelled
-        } else setResult(Activity.RESULT_CANCELED) // else set result as cancelled
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,6 +105,12 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        // set result as cancelled
+        setResult(Activity.RESULT_CANCELED)
+    }
+
     protected fun showProgressAlert(canCancel: Boolean = true, oncancel: () -> Unit = {}) {
         Alerter.create(this)
                 .setTitle(pollingText.title)
@@ -147,10 +130,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 .show()
     }
 
-    private fun completePayment() {
-        Alerter.clearCurrent(this)
-        showTransactionResult(transactionResponse)
-    }
 
     internal fun showTransactionResult(transaction: Transaction) {
         val result = getTransactionResult(transaction)
@@ -163,25 +142,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
             startActivity(resultIntent)
             finish()
-        }
-    }
 
-
-    protected fun toast(message: String) {
-        runOnUiThread { Toast.makeText(this, message, Toast.LENGTH_LONG).show() }
+        } ?: finish() // else just close activity
     }
 
     internal abstract fun getTransactionResult(transaction: Transaction): TransactionResult?
 
-    override fun onBackPressed() {
-        // do nothing
-    }
-
-    open fun onCheckStopped() {
-        // do nothing
-    }
-
-    open fun getPollingText(): PollingText {
+    private fun getPollingText(): PollingText {
         val isCodeActivity = this is QrCodeActivity || this is UssdActivity
 
         val title =
@@ -195,21 +162,26 @@ abstract class BaseActivity : AppCompatActivity() {
         return PollingText(title, subTitle)
     }
 
+    override fun onBackPressed() {
+        // do nothing to prevent user from navigating away from activity
+    }
+
+    open fun onCheckStopped() {
+        // do nothing
+    }
+
     internal fun handlePaymentStatus(status: PaymentStatus) {
+        // clear current notification
+        Alerter.clearCurrent(this)
 
         when (status) {
 
             is PaymentStatus.Complete -> {
                 // set and complete payment
-                transactionResponse = status.transaction
-                completePayment()
+                showTransactionResult(status.transaction)
             }
 
             is PaymentStatus.Timeout -> {
-
-                // clear current notification
-                Alerter.clearCurrent(this@BaseActivity)
-
                 // change notification to error notification
                 Alerter.create(this@BaseActivity)
                         .setTitle(getString(R.string.isw_title_transaction_timeout))
@@ -222,17 +194,12 @@ abstract class BaseActivity : AppCompatActivity() {
                         .show()
 
                 onCheckStopped()
-
             }
 
             is PaymentStatus.Error -> {
                 // getResult error message
                 val message = status.transaction?.responseDescription
                         ?: "An error occurred, please try again"
-
-
-                // clear current notification
-                Alerter.clearCurrent(this@BaseActivity)
 
                 // change notification to error notification
                 Alerter.create(this@BaseActivity)
@@ -248,8 +215,5 @@ abstract class BaseActivity : AppCompatActivity() {
                 onCheckStopped()
             }
         }
-
-
     }
-
 }

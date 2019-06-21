@@ -6,8 +6,8 @@ import com.interswitchng.smartpos.emv.pax.emv.*
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
@@ -21,6 +21,9 @@ import com.pax.dal.exceptions.EPedDevException
 import com.pax.dal.exceptions.PedDevException
 import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.RetCode
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlin.coroutines.coroutineContext
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
 /**
@@ -30,13 +33,15 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
     private val logger by lazy { Logger.with("EmvCardReaderImpl") }
     private val ped by lazy { POSDeviceImpl.dal.getPed(EPedType.INTERNAL) }
-    private val disposables = IswCompositeDisposable()
     private var isCancelled = false
 
     private var text = ""
 
     private val emvImpl by lazy { EmvImplementation(context, this) }
-    private var emvCallback: EmvCallback? = null
+    private lateinit var channel: Channel<EmvMessage>
+    private lateinit var channelScope: CoroutineScope
+
+
 
     private var pinResult: Int = RetCode.EMV_OK
     private var pinData: String? = null
@@ -47,19 +52,16 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     //     Implementation for ISW EmvCardReader interface
     //----------------------------------------------------------
 
-    override fun setEmvCallback(callback: EmvCallback) {
-        emvCallback = callback
-    }
+    override suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
+        // set amount and channel scope
+        emvImpl.setScopeAndAmount(scope, amount)
+        this.channel = channel
+        this.channelScope = scope
 
-    override fun removeEmvCallback(callback: EmvCallback) {
-        emvCallback = null
-    }
-
-    override fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {
-        emvImpl.setAmount(amount)
+        // setup emv transaction
         val setupResult = emvImpl.setupContactEmvTransaction(terminalInfo)
 
-        val resultMsg = when(setupResult) {
+        val resultMsg = when (setupResult) {
             EmvResult.EMV_ERR_ICC_CMD.errCode -> EmvResult.EMV_ERR_ICC_CMD
             EmvResult.EMV_ERR_NO_APP.errCode -> EmvResult.EMV_ERR_NO_APP
             EmvResult.EMV_ERR_NO_PASSWORD.errCode -> EmvResult.EMV_ERR_NO_PASSWORD
@@ -69,9 +71,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         }
 
         if (resultMsg != null) callTransactionCancelled(resultMsg.errCode, "Unable to read Card")
-        else emvCallback?.onCardRead(emvImpl.getCardType())
+        else channel.send(EmvMessage.CardRead(emvImpl.getCardType()))
     }
-
 
 
     override fun startTransaction(): CoreEmvResult {
@@ -79,8 +80,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
         hasEnteredPin = true
 
-        return if(!isCancelled) when (result) {
-            ACType.AC_TC  -> logger.log("offline process approved").let { CoreEmvResult.OFFLINE_APPROVED }
+        return if (!isCancelled) when (result) {
+            ACType.AC_TC -> logger.log("offline process approved").let { CoreEmvResult.OFFLINE_APPROVED }
             ACType.AC_ARQC -> logger.log("online should be processed").let { CoreEmvResult.ONLINE_REQUIRED }
             else -> logger.log("offline declined").let { CoreEmvResult.OFFLINE_DENIED }
         } else logger.log("Transaction was cancelled").let { CoreEmvResult.OFFLINE_DENIED }
@@ -97,11 +98,9 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     }
 
     override fun cancelTransaction() {
-        if(!isCancelled) {
+        if (!isCancelled) {
             isCancelled = true
-            disposables.dispose()
             ped.setInputPinListener(null) // remove the pin pad
-            emvCallback = null
         }
     }
 
@@ -134,78 +133,74 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     //----------------------------------------------------------
     //      Implementation for PAX PinCallback interface
     //----------------------------------------------------------
-    override fun showInsertCard() {
+    override suspend fun showInsertCard() {
         // notify callback
-        emvCallback?.showInsertCard()
+        channel.send(EmvMessage.InsertCard)
 
         // try and detect card
-        while (!isCancelled) {
+        while (coroutineContext.isActive && !isCancelled) {
             if (POSDeviceImpl.dal.icc.detect(0x00)) break
         }
 
         // notify callback of card detected
-        emvCallback?.onCardDetected()
+        channel.send(EmvMessage.CardDetected)
         // watch for card removal
         startWatchingCard()
     }
 
-    private fun startWatchingCard() {
-        val disposable = ThreadUtils.createExecutor {
-            // try and detect card
-            while (!it.isDisposed) {
-                // check if card cannot be detected
-                if (!POSDeviceImpl.dal.icc.detect(0x00))  {
-                    // notify callback of card removal
-                    emvCallback?.onCardRemoved()
-                    break
-                }
-                Thread.sleep(1000)
+    private suspend fun startWatchingCard() {
+        // try and detect card
+        while (coroutineContext.isActive) {
+            // check if card cannot be detected
+            if (!POSDeviceImpl.dal.icc.detect(0x00)) {
+                // notify callback of card removal
+                channel.send(EmvMessage.CardRemoved)
+                break
             }
-        }
 
-        disposables.add(disposable)
+            delay(1000)
+        }
     }
 
     override fun getPinResult(panBlock: String) = pinResult
 
 
-    override fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String) {
+    override suspend fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String) {
+
         try {
             // reset text
             text = ""
             // notify callback to show pin
-            emvCallback?.showEnterPin()
+            channel.send(EmvMessage.EnterPin)
             // set empty string as pin
-            emvCallback?.setPinText(text)
+            channel.send(EmvMessage.PinText(text))
 
             // show pin input error
             if (triesCount > 0) {
-                emvCallback?.showPinError(offlineTriesLeft)
-            }
-            else {
+                channel.send(EmvMessage.PinError(offlineTriesLeft))
+            } else {
                 // set check interval
                 ped.setIntervalTime(1, 1)
                 // set input listener
                 ped.setInputPinListener(this)
 
-                // cancel Transaction after Timeout
-                val disposable =  ThreadUtils.createExecutor {
-                    // expected timeout
-                    val timeout = System.currentTimeMillis() + emvImpl.timeout - 1000
-                    // flag to know when timeout occurs
-                    var hasTimedOut = false
-                    while (!hasEnteredPin && !it.isDisposed) {
-                        // notify callback or set timeout flag
-                        if (hasTimedOut) callTransactionCancelled(RetCode.EMV_TIME_OUT, "Pin Input Timeout ")
-                        else hasTimedOut = System.currentTimeMillis() + 1000 >= timeout
 
-                        // sleep for 1 second
-                        if(!hasTimedOut) Thread.sleep(1000)
-                        else if(!hasEnteredPin) ped.cancelInput()
+                // cancel pin input after specified Timeout
+                coroutineScope {
+                    // expected timeout
+                    val timeout = emvImpl.timeout - 1000
+                    // delay till timeout
+                    delay(timeout)
+
+                    // cancel pin input if user has not
+                    // already entered his pin
+                    if (!hasEnteredPin) {
+                        // cancel pin input
+                        ped.cancelInput()
+                        // publish pin input timeout
+                        callTransactionCancelled(RetCode.EMV_TIME_OUT, "Pin Input Timeout ")
                     }
                 }
-                disposables.add(disposable)
-
 
                 // trigger pin input based flag
                 if (isOnline) getOnlinePin(panBlock)
@@ -217,8 +212,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         }
     }
 
-    override fun showPinOk() {
-        emvCallback?.showPinOk()
+    override suspend fun showPinOk() {
+        channel.send(EmvMessage.PinOk)
     }
 
     private fun getOnlinePin(panBlock: String) {
@@ -235,7 +230,6 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         // make system sleep so that PED screen will show up
         SystemClock.sleep(300)
     }
-
 
 
     //----------------------------------------------------------
@@ -255,9 +249,12 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             else -> "*$text"
         }
 
-        // check if the user cancelled pin input
-        if (key == EKeyCode.KEY_CANCEL) callTransactionCancelled(RetCode.EMV_USER_CANCEL, "User cancelled PIN input")
-        else emvCallback?.setPinText(text) // set password text
+
+        CoroutineScope(Dispatchers.IO).launch {
+            // check if the user cancelled pin input
+            if (key == EKeyCode.KEY_CANCEL) callTransactionCancelled(RetCode.EMV_USER_CANCEL, "User cancelled PIN input")
+            else channel.send(EmvMessage.PinText(text))
+        }
     }
 
     private fun setPinResult(errCode: Int) {
@@ -270,8 +267,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         }
     }
 
-    private fun callTransactionCancelled(code: Int, reason: String) {
-        emvCallback?.onTransactionCancelled(code, reason)
+    private suspend fun callTransactionCancelled(code: Int, reason: String) {
+        channel.send(EmvMessage.TransactionCancelled(code, reason))
         cancelTransaction()
     }
 

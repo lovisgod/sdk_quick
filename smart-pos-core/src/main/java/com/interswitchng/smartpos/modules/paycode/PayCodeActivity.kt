@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_activity_pay_code.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.viewmodel.ext.android.viewModel
