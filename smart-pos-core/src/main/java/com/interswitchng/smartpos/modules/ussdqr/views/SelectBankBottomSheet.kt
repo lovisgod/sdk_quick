@@ -3,7 +3,6 @@ package com.interswitchng.smartpos.modules.ussdqr.views
 import android.app.Dialog
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialog
@@ -22,8 +21,8 @@ import kotlinx.android.synthetic.main.isw_select_bank_bottom_sheet.*
 internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 
     private val adapter: BankListAdapter = BankListAdapter {
-        if (proceedSelectBank.visibility != View.VISIBLE)
-            proceedSelectBank.visibility = View.VISIBLE
+        if (selectBank.visibility != View.VISIBLE)
+            selectBank.visibility = View.VISIBLE
     }
 
     private val _selectedBank = MutableLiveData<Bank>()
@@ -55,7 +54,13 @@ internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
         rvBankLists.adapter = adapter
         closeSheetButton.setOnClickListener { dismiss() }
 
-        proceedSelectBank.setOnClickListener {
+        // set visible if adpater has no banks
+        progressBarSelectBank.visibility =
+                if (adapter.itemCount > 0) View.GONE
+                else View.VISIBLE
+
+        // set click listener for adapter's selected bank§
+        selectBank.setOnClickListener {
             adapter.selectedBank?.also {
                 // set the selected bank
                 _selectedBank.value = it

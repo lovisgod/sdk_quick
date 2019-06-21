@@ -28,6 +28,8 @@ internal abstract class BaseViewModel(protected val paymentService: HttpService)
 
 
     fun pollTransactionStatus(status: TransactionStatus) {
+        // cancel current polling job before starting new one
+        pollingJob?.cancel()
 
         // poll for status on IO thread
         pollingJob = uiScope.launch(ioScope) {

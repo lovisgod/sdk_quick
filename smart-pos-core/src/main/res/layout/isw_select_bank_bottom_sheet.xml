@@ -67,11 +67,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rvBankLists"
-        android:layout_above="@+id/proceedSelectBank"
+        android:layout_above="@+id/selectBank"
         android:layout_below="@+id/headerLabelDivider"/>
 
     <RelativeLayout
-        android:id="@+id/proceedSelectBank"
+        android:id="@+id/selectBank"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginLeft="32dp"
