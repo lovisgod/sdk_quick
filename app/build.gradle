@@ -1,12 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.getkeepsafe.dexcount'
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion targetSdk
     defaultConfig {
         applicationId "com.interswitchng.interswitchpossdkdemo"
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -32,13 +36,13 @@ android {
             buildConfigField("boolean", "MOCK", "false") // mock device
         }
         debug {
-            buildConfigField("boolean", "MOCK", "true") // mock device
+            buildConfigField("boolean", "MOCK", "false") // mock device
             applicationIdSuffix '.debug'
         }
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility javaVersion
+        sourceCompatibility javaVersion
     }
 
     configurations {
@@ -65,6 +69,11 @@ dependencies {
     releaseImplementation "com.interswitchng:smart-pos-core:$versionName"
     releaseImplementation "com.interswitchng:smart-pos-emv-pax:$versionName"
     releaseImplementation "com.interswitchng:smart-pos-usb:$versionName"
+
+
+    // kotlin coroutine libs
+    debugImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    debugImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
     debugImplementation project(':smart-pos-core')
     debugImplementation project(':smart-pos-emv-pax')

@@ -44,10 +44,13 @@ public class Keyboard implements View.OnClickListener {
         ImageView delete = activity.findViewById(R.id.delete);
         delete.setOnClickListener(this);
         // clear text on long click
-        delete.setOnLongClickListener(v -> {
-            result = "";
-            if (mCallback != null) mCallback.onTextChange(result);
-            return true;
+        delete.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                result = "";
+                if (mCallback != null) mCallback.onTextChange(result);
+                return true;
+            }
         });
 
 

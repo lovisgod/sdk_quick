@@ -30,6 +30,10 @@ allprojects {
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
     ext {
+        // build config
+        minSdk = 16
+        targetSdk = 28
+        javaVersion = JavaVersion.VERSION_1_8
 
         // config
         versionCode = 2

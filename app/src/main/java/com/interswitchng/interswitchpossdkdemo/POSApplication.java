@@ -21,13 +21,21 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail;
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
 import com.interswitchng.smartpos.usb.UsbConfig;
 import com.interswitchng.smartpos.usb.interfaces.MessageListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
+
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
+import kotlinx.coroutines.CoroutineScope;
+import kotlinx.coroutines.channels.Channel;
 
 public class POSApplication extends Application   {
 
@@ -63,20 +71,13 @@ public class POSApplication extends Application   {
                 public EmvCardReader getEmvCardReader() {
                     return new EmvCardReader() {
                         @Override
+                        public Object setupTransaction(int amount, @NotNull TerminalInfo terminalInfo, @NotNull Channel<EmvMessage> channel, @NotNull CoroutineScope scope, @NotNull Continuation<? super Unit> o) {
+                            return null;
+                        }
+
+                        @Override
                         public EmvResult completeTransaction(TransactionResponse response) {
                             return EmvResult.OFFLINE_APPROVED;
-                        }
-
-                        @Override
-                        public void setEmvCallback(EmvCallback callback) {
-                        }
-
-                        @Override
-                        public void removeEmvCallback(EmvCallback callback) {
-                        }
-
-                        @Override
-                        public void setupTransaction(int amount, TerminalInfo terminalInfo) {
                         }
 
                         @Override

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail;
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
@@ -59,7 +61,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-        setSupportActionBar(findViewById(R.id.homeToolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.homeToolbar));
 
         configureTerminal();
         setupUI();
@@ -67,70 +69,69 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
     private void configureTerminal() {
         POSDevice device;
+//
+//        if (BuildConfig.MOCK) {
+//            device = new POSDevice() {
+//                @Override
+//                public DevicePrinter getPrinter() {
+//                    return new DevicePrinter() {
+//                        @Override
+//                        public PrintStatus printSlip(List<? extends PrintObject> slip, UserType user) {
+//                            return new PrintStatus.Error("No DevicePrinterImpl installed");
+//                        }
+//
+//                        @Override
+//                        public PrintStatus canPrint() {
+//                            return new PrintStatus.Error("No DevicePrinterImpl installed");
+//                        }
+//                    };
+//                }
+//
+//
+//                @Override
+//                public EmvCardReader getEmvCardReader() {
+//                    return new EmvCardReader() {
+//
+//
+//                        @Override
+//                        public Object setupTransaction(int amount, TerminalInfo terminalInfo,  kotlinx.coroutines.channels.Channel<EmvMessage> channel, kotlinx.coroutines.CoroutineScope scope,  kotlin.coroutines.Continuation<? super kotlin.Unit> o) {
+//                            return null;
+//                        }
+//
+//                        @Override
+//                        public EmvResult completeTransaction(TransactionResponse response) {
+//                            return EmvResult.OFFLINE_APPROVED;
+//                        }
+//
+//                        @Override
+//                        public EmvResult startTransaction() {
+//                            return EmvResult.OFFLINE_APPROVED;
+//                        }
+//
+//
+//                        @Override
+//                        public void cancelTransaction() {
+//                        }
+//
+//                        @Override
+//                        public EmvData getTransactionInfo() {
+//                            return null;
+//                        }
+//                    };
+//                }
+//            };
+//        } else {
 
-        if (BuildConfig.MOCK) {
-            device = new POSDevice() {
-                @Override
-                public DevicePrinter getPrinter() {
-                    return new DevicePrinter() {
-                        @Override
-                        public PrintStatus printSlip(List<? extends PrintObject> slip, UserType user) {
-                            return new PrintStatus.Error("No DevicePrinterImpl installed");
-                        }
 
-                        @Override
-                        public PrintStatus canPrint() {
-                            return new PrintStatus.Error("No DevicePrinterImpl installed");
-                        }
-                    };
-                }
-
-
-                @Override
-                public EmvCardReader getEmvCardReader() {
-                    return new EmvCardReader() {
-                        @Override
-                        public EmvResult completeTransaction(TransactionResponse response) {
-                            return EmvResult.OFFLINE_APPROVED;
-                        }
-
-                        @Override
-                        public void setEmvCallback(EmvCallback callback) {
-                        }
-
-                        @Override
-                        public void removeEmvCallback(EmvCallback callback) {
-                        }
-
-                        @Override
-                        public void setupTransaction(int amount, TerminalInfo terminalInfo) {
-                        }
-
-                        @Override
-                        public EmvResult startTransaction() {
-                            return EmvResult.OFFLINE_APPROVED;
-                        }
-
-
-                        @Override
-                        public void cancelTransaction() {
-                        }
-
-                        @Override
-                        public EmvData getTransactionInfo() {
-                            return null;
-                        }
-                    };
-                }
-            };
-        } else {
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
             POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
             device = service;
-        }
+
+
+//        }
 
         String clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D";
         String clientSecret = "t1ll73stS3cr3t";
@@ -197,8 +198,13 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         return super.onOptionsItemSelected(item);
     }
 
-    private void toast(String msg) {
-        runOnUiThread(() -> Toast.makeText(DemoActivity.this, msg, Toast.LENGTH_LONG).show());
+    private void toast(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(DemoActivity.this, msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void restartApplication() {
