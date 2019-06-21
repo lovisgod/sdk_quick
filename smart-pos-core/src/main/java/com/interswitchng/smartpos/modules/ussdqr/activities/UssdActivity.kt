@@ -128,6 +128,7 @@ class UssdActivity : BaseActivity() {
                 it?.apply(::handlePaymentStatus)
             }
 
+            // observe progress bar
             showProgress.observe(owner) {
                 if (it != true) return@observe
 
@@ -137,6 +138,8 @@ class UssdActivity : BaseActivity() {
                     onCheckStopped()
                 }
             }
+
+            // observe printer
         }
 
         // observe bank selection
@@ -169,18 +172,14 @@ class UssdActivity : BaseActivity() {
             initiateButton.isEnabled = false
             initiateButton.isClickable = false
 
-            // show progress alert
-            showProgressAlert {
-                ussdViewModel.cancelPoll()
-                onCheckStopped()
-            }
-
             // check transaction status
             ussdViewModel.checkTransactionStatus(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
         }
 
         printCodeButton.isEnabled = true
-        printCodeButton.setOnClickListener { printCode() }
+        printCodeButton.setOnClickListener {
+            ussdViewModel.printCode(this, posDevice, UserType.Customer, printSlip)
+        }
     }
 
 
@@ -198,12 +197,6 @@ class UssdActivity : BaseActivity() {
 
                 // show buttons
                 showButtons(response)
-
-                // show progress alert
-                showProgressAlert {
-                    ussdViewModel.cancelPoll()
-                    onCheckStopped()
-                }
 
                 // check transaction status
                 val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
@@ -224,33 +217,6 @@ class UssdActivity : BaseActivity() {
         alert.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); getBankCode(selectedBank) }
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
                 .show()
-    }
-
-
-    private fun printCode() {
-        // get printer status
-        val printStatus = posDevice.printer.canPrint()
-
-        // print based on status
-        when (printStatus) {
-            is Error -> toast(printStatus.message)
-            else -> {
-                printCodeButton.isEnabled = false
-                printCodeButton.isClickable = false
-
-                val disposable = ThreadUtils.createExecutor {
-                    val status = posDevice.printer.printSlip(printSlip, UserType.Customer)
-
-                    runOnUiThread {
-                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
-                        printCodeButton.isEnabled = true
-                        printCodeButton.isClickable = true
-                    }
-                }
-
-                disposables.add(disposable)
-            }
-        }
     }
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {

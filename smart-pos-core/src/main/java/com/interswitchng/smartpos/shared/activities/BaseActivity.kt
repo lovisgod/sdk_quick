@@ -172,8 +172,11 @@ abstract class BaseActivity : AppCompatActivity() {
 
     internal fun handlePaymentStatus(status: PaymentStatus) {
         // clear current notification
-        Alerter.clearCurrent(this)
+        // if it not pending
+        if (status !is PaymentStatus.Pending)
+            Alerter.clearCurrent(this)
 
+        // else handle status
         when (status) {
 
             is PaymentStatus.Complete -> {
@@ -190,7 +193,7 @@ abstract class BaseActivity : AppCompatActivity() {
                         .setDismissable(true)
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(android.R.color.holo_orange_dark)
-                        .setDuration(15 * 1000)
+                        .setDuration(5 * 1000)
                         .show()
 
                 onCheckStopped()

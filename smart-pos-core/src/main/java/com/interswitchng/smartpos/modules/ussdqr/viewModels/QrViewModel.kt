@@ -27,7 +27,7 @@ internal class QrViewModel(paymentService: HttpService): BaseViewModel(paymentSe
         // retrieve the qr code
         uiScope.launch {
             // get qr code in IO thread
-            val response = uiScope.async(Dispatchers.IO) {
+            val response = withContext(ioScope) {
                 // get the code
                 val code = paymentService.initiateQrPayment(request)
 
@@ -35,11 +35,11 @@ internal class QrViewModel(paymentService: HttpService): BaseViewModel(paymentSe
                 if (code is Some) code.value.setBitmap(context)
 
                 // return value
-                return@async code
+                code
             }
 
             // set result in main
-            _qrCode.value = response.await()
+            _qrCode.value = response
         }
     }
 }
