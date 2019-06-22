@@ -16,21 +16,15 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
 
     private val payCodeViewModel: PayCodeViewModel by viewModel()
+    private lateinit var transactionResult: TransactionResult
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_pay_code)
 
-
         // set the amount
         val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
-    }
-
-    private lateinit var transactionResult: TransactionResult
-
-    override fun onStart() {
-        super.onStart()
         setupUI()
     }
 

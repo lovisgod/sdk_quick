@@ -49,10 +49,6 @@ class UssdActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_ussd)
-    }
-
-    override fun onStart() {
-        super.onStart()
         setupUI()
     }
 

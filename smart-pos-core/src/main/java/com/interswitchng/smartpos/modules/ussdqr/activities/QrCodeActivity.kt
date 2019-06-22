@@ -46,10 +46,6 @@ class QrCodeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_qr_code)
-    }
-
-    override fun onStart() {
-        super.onStart()
         setupUI()
     }
 
