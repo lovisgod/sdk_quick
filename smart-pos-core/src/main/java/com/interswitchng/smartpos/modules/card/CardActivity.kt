@@ -41,11 +41,26 @@ class CardActivity : BaseActivity() {
     private val cardViewModel: CardViewModel by viewModel()
 
     private val logger by lazy { Logger.with("CardActivity") }
+    private val cancelDialog by lazy {
+        DialogUtils.getAlertDialog(this)
+                .setMessage("Would you like to change payment method, or try again?")
+                .setCancelable(false)
+                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                    dialog.dismiss()
+                    // set cancel result
+                    setResult(Activity.RESULT_CANCELED)
+                    finish()
+                }
+                .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
+                    dialog.dismiss()
+                    showPaymentOptions(BottomSheetOptionsDialog.CARD)
+                }
+                .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
+                    dialog.dismiss()
+                    resetTransaction()
+                }.create()
+    }
 
-    private val emv by lazy { posDevice.getEmvCardReader() }
-
-    private val isoService: IsoService by inject()
-    private val store: KeyValueStore by inject()
     private var accountType = AccountType.Default
     private var cardType = CardType.None
     private lateinit var transactionResult: TransactionResult
@@ -67,11 +82,13 @@ class CardActivity : BaseActivity() {
 
         // observe view model
         observeViewModel()
+
+        // setup transaction
+        cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
     }
 
     override fun onStart() {
         super.onStart()
-        cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         isCancelled = false
     }
 
@@ -210,6 +227,7 @@ class CardActivity : BaseActivity() {
                 val cardIcon = when (cardType) {
                     CardType.MASTER -> R.drawable.isw_ic_card_mastercard
                     CardType.VISA -> R.drawable.isw_ic_card_visa
+                    CardType.VERVE -> R.drawable.isw_ic_card_verve
                     else -> R.drawable.isw_ic_card
                 }
 
@@ -279,40 +297,22 @@ class CardActivity : BaseActivity() {
             CardTransactionState.Default -> blankContainer
         }
 
-        runOnUiThread { container.bringToFront() }
+         container.bringToFront()
     }
 
     private fun cancelTransaction(reason: String) {
+        // return early if already cancelled
+        if (isCancelled) return
+
         // remove dialogs
         if (dialog.isShowing) dialog.dismiss()
         if (alert.isShowing) alert.dismiss()
         // set flag
         isCancelled = true
 
-        val cancel = {
-            // set cancel result
-            setResult(Activity.RESULT_CANCELED)
-            toast(reason)
-            finish()
-        }
-
-
-        DialogUtils.getAlertDialog(this)
-                .setTitle(reason)
-                .setMessage("Would you like to change payment method, or try again?")
-                .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
-                    dialog.dismiss()
-                    cancel()
-                }
-                .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
-                    dialog.dismiss()
-                    showPaymentOptions(BottomSheetOptionsDialog.CARD)
-                }
-                .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
-                    dialog.dismiss()
-                    resetTransaction()
-                }
-                .show()
+        // set reason and show cancel dialog
+        cancelDialog.setTitle(reason)
+        if (!cancelDialog.isShowing) cancelDialog.show()
     }
 
     private fun resetTransaction() {

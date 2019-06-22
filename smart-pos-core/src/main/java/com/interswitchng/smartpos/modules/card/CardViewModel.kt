@@ -39,16 +39,20 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
     private val emv by lazy { posDevice.getEmvCardReader() }
 
-
     fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {
 
-        uiScope.launch {
-            withContext(ioScope) {
-                emv.setupTransaction(amount, terminalInfo, channel, uiScope)
-
-                // publish all received messages
+        with(uiScope) {
+            // launch job in IO thread to listen for messages
+            launch(ioScope) {
+                // listen and  publish all received messages
                 for (message in channel)
                     _emvMessage.postValue(message)
+            }
+
+            // trigger transaction setup in IO thread
+            launch(ioScope) {
+                // setup transaction
+                emv.setupTransaction(amount, terminalInfo, channel, uiScope)
             }
         }
     }
@@ -68,8 +72,13 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                     // publish transaction response
                     _transactionResponse.value = response
                 }
+                EmvResult.CANCELLED -> {
+                    // transaction has already been cancelled
+                    context.toast("Transaction was cancelled")
+                }
                 else -> {
                     context.toast("Error processing card transaction")
+                    // trigger transaction cancel
                     _emvMessage.value = EmvMessage.TransactionCancelled(-1, "Unable to process card transaction")
                 }
             }

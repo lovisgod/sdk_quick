@@ -19,10 +19,23 @@ import com.pax.jemv.emv.api.EMVCallback
 import com.pax.jemv.emv.model.EmvEXTMParam
 import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.ByteArray
+import kotlin.Int
+import kotlin.LongArray
+import kotlin.Pair
+import kotlin.Short
+import kotlin.String
+import kotlin.Unit
+import kotlin.also
+import kotlin.apply
+import kotlin.getValue
+import kotlin.isInitialized
+import kotlin.lazy
+import kotlin.let
 
 
 /**
@@ -41,20 +54,18 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     // get terminal config and EMV apps
     private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
 
-    private lateinit var scope: CoroutineScope
 
     private var amount: Int = 0
 
-    fun setScopeAndAmount(scope: CoroutineScope, amount: Int) {
+    fun setAmount(amount: Int) {
         this.amount = amount
-        this.scope = scope
     }
 
 
     private fun addCAPKIntoEmvLib(capks: List<EMV_CAPK>): Int {
 
         var ret: Int
-        val dataList = com.pax.jemv.clcommon.ByteArray()
+        val dataList = ByteArray()
 
         ret = EMVCallback.EMVGetTLVData(0x4F.toShort(), dataList)
 
@@ -348,8 +359,8 @@ internal class EmvImplementation(private val context: Context, private val pinCa
 
                 val pan = getPan()!!
 
-                // trigger enterPin in coroutine scope
-                scope.launch(Dispatchers.IO) {
+                // trigger enterPin
+                runBlocking {
                     enterPin(pin == null, tryFlag, remainCount, pan)
                 }
 
@@ -362,12 +373,9 @@ internal class EmvImplementation(private val context: Context, private val pinCa
             emvCallback.setCallBackResult(ret)
         }
 
-        override fun emvVerifyPINOK() {
-            // trigger pin OK in coroutine
-            scope.launch(Dispatchers.IO) {
-                pinCallback.showPinOk()
-                logger.log("certVerify: For PBOC, so not needed")
-            }
+        override fun emvVerifyPINOK() = runBlocking<Unit> {
+            pinCallback.showPinOk()
+            logger.log("certVerify: For PBOC, so not needed")
         }
 
 
@@ -417,7 +425,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     }
 
     fun getTlv(tag: Int): ByteArray? {
-        val byteArray = com.pax.jemv.clcommon.ByteArray()
+        val byteArray = ByteArray()
         if (EMVCallback.EMVGetTLVData(tag.toShort(), byteArray) == RetCode.EMV_OK) {
             val data = Arrays.copyOfRange(byteArray.data, 0, byteArray.length)
             logger.log("asd" + Integer.toHexString(tag) + ":" + data.size)
