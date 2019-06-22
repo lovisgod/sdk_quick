@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
+import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
@@ -98,7 +99,7 @@ internal abstract class BaseViewModel(protected val paymentService: HttpService)
             val printStatus = withContext(ioScope) { posDevice.printer.canPrint() }
 
             when (printStatus) {
-                is Error -> context.toast(printStatus.message)
+                is PrintStatus.Error -> context.toast(printStatus.message)
                 else -> {
                     // disable print button
                     _printButton.value = false

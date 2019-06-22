@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.services
 
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import org.junit.Assert.assertEquals
@@ -86,5 +87,10 @@ class ThreadUitlsTest {
 
         Thread.sleep(300)
         assertEquals(currentCount, Thread.activeCount())
+    }
+
+    @Test
+    fun test() {
+        val m = PrintM
     }
 }

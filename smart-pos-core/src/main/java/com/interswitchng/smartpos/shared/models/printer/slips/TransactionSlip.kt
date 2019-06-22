@@ -108,5 +108,5 @@ internal abstract class TransactionSlip(private val terminal: TerminalInfo, priv
      * This method generates a combined list of all
      * printable information for this transactions
      */
-    internal fun getSlipItems()  = getTerminalInfo() + getTransactionInfo() + getTransactionStatus()
+    internal fun getSlipItems(): MutableList<PrintObject>  = (getTerminalInfo() + getTransactionInfo() + getTransactionStatus()).toMutableList()
 }

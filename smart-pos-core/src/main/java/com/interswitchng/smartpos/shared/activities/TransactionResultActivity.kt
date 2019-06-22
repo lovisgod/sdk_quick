@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
@@ -14,6 +16,7 @@ import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
@@ -22,21 +25,33 @@ import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import com.interswitchng.smartpos.shared.utilities.toast
+import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
  * This activity displays final transaction status to the user
  */
-class TransactionResultActivity : BaseActivity() {
+class TransactionResultActivity : AppCompatActivity() {
 
     private val store: KeyValueStore by inject()
+    private val resultViewModel: TransactionResultViewModel by viewModel()
+
+    private lateinit var result: TransactionResult
+    private lateinit var paymentInfo: PaymentInfo
+
+    private var printSlip: TransactionSlip? = null
+    private var hasPrintedMerchantCopy = false
+    private var hasPrintedCustomerCopy = false
     private val alert by lazy {
 
+        val title = IsoUtils.getIsoResult(result.responseCode)?.second
+
         return@lazy DialogUtils.getAlertDialog(this)
-                .setTitle("An Error Occurred")
+                .setTitle(title)
                 .setMessage("Would you like to try another payment method?")
                 .setPositiveButton(R.string.isw_action_change_payment) { dialog, _ ->
                     dialog.dismiss()
@@ -54,8 +69,10 @@ class TransactionResultActivity : BaseActivity() {
                     dialog.dismiss()
                 }
     }
+
     private val emailInputDialog by lazy {
         DialogUtils.getEmailInputDialog(this) { email ->
+            // TODO make sure alert doesn't show, when the user sends mail instead of printing
             // handle user interaction here
             when(email){
                 null -> { } // user cancelled dialog
@@ -64,15 +81,11 @@ class TransactionResultActivity : BaseActivity() {
         }
     }
 
-    private var printSlip: TransactionSlip? = null
-    private lateinit var result: TransactionResult
-    private var hasPrintedMerchantCopy = false
-    private var hasPrintedCustomerCopy = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_transaction_result)
 
+        paymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
         result = intent.getParcelableExtra(KEY_TRANSACTION_RESULT)
 
         // setup UI
@@ -95,17 +108,20 @@ class TransactionResultActivity : BaseActivity() {
         // setup transaction status
         setupTransactionStatus(result)
 
+        // observe viewModel
+        observeViewModel()
+
         // setup buttons
         setupButtons()
 
         // print user's copy slip
-        printSlip?.apply {
+        printSlip?.let {
             if (result.responseCode != IsoUtils.TIMEOUT_CODE && result.responseCode != IsoUtils.OK) {
-                printSlip(this, UserType.Customer)
+                resultViewModel.printSlip(UserType.Customer, it)
             }
         }
 
-        if (result.responseCode != IsoUtils.OK) showAlert()
+        if (result.responseCode != IsoUtils.OK) alert.show()
         // show alert notification
         else showNotification()
     }
@@ -142,18 +158,46 @@ class TransactionResultActivity : BaseActivity() {
         paymentStatusContainer.setBackgroundColor(ContextCompat.getColor(this, colorInt))
     }
 
+    private fun observeViewModel() {
+
+        with(resultViewModel) {
+            val owner = { lifecycle }
+
+            // observe printer message
+            printerMessage.observe(owner) {
+                it?.let { msg -> toast(msg) }
+            }
+
+            // observe customer print
+            printedCustomerCopy.observe(owner) {
+                hasPrintedCustomerCopy = it ?: false
+            }
+
+            // observe merchant print
+            printedMerchantCopy.observe(owner) {
+                hasPrintedMerchantCopy = it ?: false
+            }
+
+            // observe print button function
+            printButton.observe(owner) { isEnabled ->
+                printBtn.isEnabled = isEnabled ?: false
+                printBtn.isClickable = isEnabled ?: false
+            }
+        }
+    }
+
     private fun setupButtons() {
 
         printBtn.setOnClickListener {
 
             // print slip
-            printSlip?.apply {
-                if (!hasPrintedCustomerCopy) printSlip(this, UserType.Customer)
-                else if (hasPrintedMerchantCopy) printSlip(this, UserType.Merchant, reprint = true)
+            printSlip?.let {
+                if (!hasPrintedCustomerCopy) resultViewModel.printSlip(UserType.Customer, it)
+                else if (hasPrintedMerchantCopy) resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
                 else {
                     // if has not printed merchant copy
                     // print merchant copy
-                    printSlip(this, UserType.Merchant)
+                    resultViewModel.printSlip(UserType.Merchant, it)
                     // change print text to re-print
                     printBtn.text = getString(R.string.isw_title_re_print_receipt)
                 }
@@ -207,57 +251,19 @@ class TransactionResultActivity : BaseActivity() {
                 .show()
     }
 
+
+    private fun showPaymentOptions(exclude: String = BottomSheetOptionsDialog.NONE): Boolean {
+        val info: PaymentInfo = intent.getParcelableExtra(Constants.KEY_PAYMENT_INFO)
+        val optionsDialog: BottomSheetOptionsDialog = BottomSheetOptionsDialog.newInstance(exclude, info)
+        optionsDialog.show(supportFragmentManager, optionsDialog.tag)
+        return true
+    }
+
     private fun setResult() {
         val purchaseResult = PurchaseResult(result.responseCode, result.responseMessage, result.paymentType, result.cardType, result.stan)
         val intent = IswPos.setResult(Intent(), purchaseResult)
         setResult(Activity.RESULT_OK, intent)
     }
-
-    private fun showAlert() {
-
-        alert.show()
-    }
-
-
-    private fun printSlip(slip: TransactionSlip, userType: UserType, reprint: Boolean = false) {
-
-        // get printer status
-        val printStatus = posDevice.printer.canPrint()
-
-        // print based on status
-        when (printStatus) {
-            is Error -> toast(printStatus.message)
-            else -> {
-                printBtn.isEnabled = false
-                printBtn.isClickable = false
-
-                val disposable = ThreadUtils.createExecutor {
-                    var slipItems = slip.getSlipItems()
-
-                    // add re-print flag
-                    if (reprint) {
-                        val rePrintFlag = PrintObject.Data("*** Re-Print ***", PrintStringConfiguration(displayCenter = true, isBold = true))
-                        slipItems += rePrintFlag
-                    }
-
-                    val status = posDevice.printer.printSlip(slipItems, userType)
-
-                    runOnUiThread {
-                        Toast.makeText(this, status.message, Toast.LENGTH_LONG).show()
-                        printBtn.isEnabled = true
-                        printBtn.isClickable = true
-                    }
-
-                    hasPrintedCustomerCopy = hasPrintedCustomerCopy || userType == UserType.Customer
-                    hasPrintedMerchantCopy = hasPrintedMerchantCopy || userType == UserType.Merchant
-                }
-
-                disposables.add(disposable)
-            }
-        }
-    }
-
-    override fun getTransactionResult(transaction: Transaction): TransactionResult? = null
 
     companion object {
         const val KEY_TRANSACTION_RESULT = "transaction_result_key"
