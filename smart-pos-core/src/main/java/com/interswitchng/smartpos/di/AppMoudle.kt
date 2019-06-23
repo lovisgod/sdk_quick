@@ -22,6 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.util.Base64
 import com.interswitchng.smartpos.BuildConfig
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
+import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 
@@ -30,14 +32,15 @@ private val serviceModule = module {
     single<HttpService> { HttpServiceImpl(get()) }
     single<UserStore> { UserStoreImpl(get()) }
     single { SharePreferenceManager(androidContext()) }
-    single<com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore> { KeyValueStoreImpl(get()) }
+    single<KeyValueStore> { KeyValueStoreImpl(get()) }
+    single<EmailService> { EmailServiceImpl(get()) }
     factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
     factory<IsoSocket> {
         val resource = androidContext().resources
         val serverIp = resource.getString(R.string.isw_nibss_ip)
         val port = resource.getInteger(R.integer.iswNibssPort)
         // try getting terminal info
-        val store: com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore = get()
+        val store: KeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
         // getResult timeout based on terminal info
         val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.iswTimeout)
@@ -117,6 +120,12 @@ private val networkModule = module {
         builder.client(client)
 
         return@single builder.build()
+    }
+
+    // create Email service with retrofit
+    single {
+        val retrofit: Retrofit = get()
+        return@single retrofit.create(IEmailService::class.java)
     }
 
     // create Http service with retrofit
