@@ -26,8 +26,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled minified
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField("String", "ISW_EMAIL_API_KEY", emailApiKey)
+        }
+        debug {
+            buildConfigField("String", "ISW_EMAIL_API_KEY", emailApiKey)
         }
     }
 
@@ -93,10 +97,6 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-
-    // send grid email library
-    implementation "com.sendgrid:sendgrid-java:$send_grid_version"
-
 
     testImplementation 'junit:junit:4.12'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_version"

@@ -34,6 +34,8 @@ allprojects {
         minSdk = 16
         targetSdk = 28
         javaVersion = JavaVersion.VERSION_1_8
+        emailApiKey = properties.get 'EMAIL_API_KEY'
+        minified = false
 
         // config
         versionCode = 2

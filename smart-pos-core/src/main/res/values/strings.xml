@@ -89,6 +89,7 @@
     <string name="isw_action_change">Change</string>
     <string name="isw_hint_default_account">Default</string>
     <string name="isw_title_re_print_receipt">Re-Print Receipt</string>
+    <string name="isw_email_end_point">https://api.sendgrid.com/v3/</string>
 
 
     <string-array name="isw_account_types">

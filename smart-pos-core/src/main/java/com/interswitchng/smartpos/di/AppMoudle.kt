@@ -21,6 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.util.Base64
+import com.interswitchng.smartpos.BuildConfig
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 
@@ -69,7 +70,33 @@ private val networkModule = module {
         }
     }
 
-    // retrofit
+    // retrofit email
+    single {
+        val sendGridUrl = androidContext().getString(R.string.isw_email_end_point)
+        val builder = Retrofit.Builder()
+                .baseUrl(sendGridUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+
+        // okhttp client for retrofit
+        val clientBuilder: OkHttpClient.Builder = get()
+        //  add auth interceptor for sendGrid
+        clientBuilder.addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                    .addHeader("Content-type", "application/json")
+                    .addHeader("Authorization", "Bearer ${BuildConfig.ISW_EMAIL_API_KEY}")
+                    .build()
+
+            chain.proceed(request)
+        }
+
+        // build and add client to retrofit
+        val client = clientBuilder.build()
+        builder.client(client)
+
+        return@single builder.build()
+    }
+
+    // retrofit isw payment
     single {
         val iswBaseUrl = androidContext().getString(R.string.ISW_USSD_QR_BASE_URL)
         val builder = Retrofit.Builder()

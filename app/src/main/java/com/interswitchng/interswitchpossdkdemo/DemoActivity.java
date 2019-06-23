@@ -24,28 +24,14 @@ import android.widget.Toast;
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
-import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
-import com.interswitchng.smartpos.shared.interfaces.library.EmvCallback;
-import com.interswitchng.smartpos.shared.interfaces.library.UsbConnector;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
-import com.interswitchng.smartpos.shared.models.core.UserType;
-import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
-import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardDetail;
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage;
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
 import com.interswitchng.smartpos.usb.UsbConfig;
 import com.interswitchng.smartpos.usb.interfaces.MessageListener;
 
 import java.text.NumberFormat;
-import java.util.List;
 
 
 public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoardListener, MessageListener {
