@@ -4,7 +4,13 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
+//apply plugin: 'realm-android'
+
+apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
+
 
 ext {
     artifact = 'smart-pos-core' // This artifact name should be the same with library module name
