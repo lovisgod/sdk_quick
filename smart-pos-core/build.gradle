@@ -94,6 +94,10 @@ dependencies {
         exclude group: 'stax', module: 'stax'
     }
 
+    // send grid email library
+    implementation "com.sendgrid:sendgrid-java:$send_grid_version"
+
+
     testImplementation 'junit:junit:4.12'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_version"
     testImplementation "org.robolectric:robolectric:4.0.2"

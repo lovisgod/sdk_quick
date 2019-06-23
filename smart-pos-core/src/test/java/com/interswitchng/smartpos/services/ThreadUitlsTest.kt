@@ -88,9 +88,4 @@ class ThreadUitlsTest {
         Thread.sleep(300)
         assertEquals(currentCount, Thread.activeCount())
     }
-
-    @Test
-    fun test() {
-        val m = PrintM
-    }
 }

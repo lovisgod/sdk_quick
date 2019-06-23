@@ -46,6 +46,7 @@ allprojects {
         coroutine_version = '1.1.1'
         arch_lifecycle_version = '1.1.1'
         koptional_version = '1.6.0'
+        send_grid_version = '4.4.1'
 
         // test dependencies
         mockito_version = '2.0.0'
