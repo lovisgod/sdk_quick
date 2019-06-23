@@ -26,6 +26,8 @@ import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
+const val RETROFIT_EMAIL = "email_retrofit"
+const val RETROFIT_PAYMENT = "payment_retrofit"
 
 private val serviceModule = module {
     single { IswPos.getInstance() }
@@ -74,7 +76,7 @@ private val networkModule = module {
     }
 
     // retrofit email
-    single {
+    single(RETROFIT_EMAIL) {
         val sendGridUrl = androidContext().getString(R.string.isw_email_end_point)
         val builder = Retrofit.Builder()
                 .baseUrl(sendGridUrl)
@@ -100,7 +102,7 @@ private val networkModule = module {
     }
 
     // retrofit isw payment
-    single {
+    single(RETROFIT_PAYMENT) {
         val iswBaseUrl = androidContext().getString(R.string.ISW_USSD_QR_BASE_URL)
         val builder = Retrofit.Builder()
                 .baseUrl(iswBaseUrl)
@@ -124,13 +126,13 @@ private val networkModule = module {
 
     // create Email service with retrofit
     single {
-        val retrofit: Retrofit = get()
+        val retrofit: Retrofit = get(RETROFIT_EMAIL)
         return@single retrofit.create(IEmailService::class.java)
     }
 
-    // create Http service with retrofit
+    // create payment Http service with retrofit
     single {
-        val retrofit: Retrofit = get()
+        val retrofit: Retrofit = get(RETROFIT_PAYMENT)
         return@single retrofit.create(IHttpService::class.java)
     }
 

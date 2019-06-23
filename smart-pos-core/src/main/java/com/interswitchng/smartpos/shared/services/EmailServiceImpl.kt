@@ -10,7 +10,7 @@ class EmailServiceImpl(private val emailHttpService: IEmailService): EmailServic
         val request = emailHttpService.sendMail(email)
 
         // get response
-        val response = request.run()
+        val response = request.execute()
         return response.isSuccessful
     }
 

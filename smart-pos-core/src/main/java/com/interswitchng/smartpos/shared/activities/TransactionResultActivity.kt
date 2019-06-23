@@ -43,9 +43,11 @@ class TransactionResultActivity : AppCompatActivity() {
     private lateinit var result: TransactionResult
     private lateinit var paymentInfo: PaymentInfo
 
+    private val terminalInfo by lazy {  TerminalInfo.get(store) }
     private var printSlip: TransactionSlip? = null
     private var hasPrintedMerchantCopy = false
     private var hasPrintedCustomerCopy = false
+    private var hasSentEmail = false
     private val alert by lazy {
 
         val title = IsoUtils.getIsoResult(result.responseCode)?.second
@@ -70,13 +72,23 @@ class TransactionResultActivity : AppCompatActivity() {
                 }
     }
 
+    private val emailSendingDialog by lazy {
+        val dialog = DialogUtils.getLoadingDialog(this)
+        dialog.setTitle("Sending Email")
+        dialog.setMessage("Sending...")
+        return@lazy dialog
+    }
+
     private val emailInputDialog by lazy {
         DialogUtils.getEmailInputDialog(this) { email ->
             // TODO make sure alert doesn't show, when the user sends mail instead of printing
             // handle user interaction here
             when(email){
-                null -> { } // user cancelled dialog
-                else -> { } // process email
+                null -> toast("Email cancelled") // user cancelled dialog
+                else -> {
+                    // process email
+                    terminalInfo?.let { resultViewModel.sendMail(email, result, it) }
+                }
             }
         }
     }
@@ -99,7 +111,7 @@ class TransactionResultActivity : AppCompatActivity() {
 
     private fun setupUI() {
 
-        printSlip = TerminalInfo.get(store)?.let { result.getSlip(it) }
+        printSlip = terminalInfo?.let { result.getSlip(it) }
 
         // set amount text view
         val amountStr = DisplayUtils.getAmountString(paymentInfo)
@@ -183,6 +195,26 @@ class TransactionResultActivity : AppCompatActivity() {
                 printBtn.isEnabled = isEnabled ?: false
                 printBtn.isClickable = isEnabled ?: false
             }
+
+            // observe email sent result
+            emailStatus.observe(owner) {
+                it?.apply {
+                    hasSentEmail = this
+                    val msg =
+                            if (this) "Email has been sent Successfully"
+                            else "An error occurred sending Email"
+
+                    toast(msg)
+                }
+            }
+
+            // observe email dialog
+            emailDialog.observe(owner) {
+                it?.let { show ->
+                    if (show) emailSendingDialog.show()
+                    else emailSendingDialog.hide()
+                }
+            }
         }
     }
 
@@ -207,7 +239,7 @@ class TransactionResultActivity : AppCompatActivity() {
         closeBtn.setOnClickListener {
 
             val hasNotPrinted = !hasPrintedCustomerCopy && !hasPrintedCustomerCopy
-            if (hasNotPrinted) {
+            if (hasNotPrinted && !hasSentEmail) {
                 DialogUtils.getAlertDialog(this)
                 .setTitle("Close without printing?")
                 .setMessage("Are you sure you want to close without printing")

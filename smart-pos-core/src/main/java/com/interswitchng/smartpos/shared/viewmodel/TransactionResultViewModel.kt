@@ -3,15 +3,23 @@ package com.interswitchng.smartpos.shared.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
+import com.interswitchng.smartpos.shared.interfaces.library.EmailService
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
+import com.interswitchng.smartpos.shared.models.email.CustomArguments
+import com.interswitchng.smartpos.shared.models.email.Email
+import com.interswitchng.smartpos.shared.models.email.EmailMessage
+import com.interswitchng.smartpos.shared.models.email.Personalization
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class TransactionResultViewModel(private val posDevice: POSDevice): RootViewModel() {
+internal class TransactionResultViewModel(private val posDevice: POSDevice, private val emailService: EmailService): RootViewModel() {
 
     private val _printButton = MutableLiveData<Boolean>()
     val printButton: LiveData<Boolean> get() = _printButton
@@ -25,6 +33,46 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice): Roo
     private val _printedMerchantCopy = MutableLiveData<Boolean>()
     val printedMerchantCopy: LiveData<Boolean> get() = _printedMerchantCopy
 
+    private val _emailStatus = MutableLiveData<Boolean>()
+    val emailStatus: LiveData<Boolean> = _emailStatus
+
+    private val _emailDialog = MutableLiveData<Boolean>()
+    val emailDialog: LiveData<Boolean> = _emailDialog
+
+
+
+    fun sendMail(email: String, result: TransactionResult, terminalInfo: TerminalInfo) {
+
+        val personlizedMsg = Personalization(
+                to = listOf(Email(email)),
+                templateData = CustomArguments(
+                        terminalId = terminalInfo.terminalId,
+                        merchantName = terminalInfo.merchantNameAndLocation,
+                        amount = result.amount,
+                        stan = result.stan,
+                        date = result.dateTime,
+                        paymentType = result.paymentType.toString(),
+                        responseCode = result.responseCode,
+                        responseMessage = result.responseMessage,
+                        aid = result.AID,
+                        telephone = result.telephone
+                )
+        )
+
+        // create email message to be sent
+        val message = EmailMessage(from = Email(email), personalizations = listOf(personlizedMsg))
+
+
+        uiScope.launch {
+            // show dialog
+            _emailDialog.value = true
+            val isSent = withContext(ioScope) { emailService.send(message) }
+            _emailStatus.value = isSent
+            // hide dialog
+            _emailDialog.value = false
+        }
+
+    }
 
 
     fun printSlip(user: UserType, slip: TransactionSlip, reprint: Boolean = false) {

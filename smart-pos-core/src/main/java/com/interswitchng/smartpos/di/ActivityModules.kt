@@ -19,7 +19,7 @@ private val viewModels = module {
 
     viewModel { CardViewModel(get(), get()) }
 
-    viewModel { TransactionResultViewModel(get()) }
+    viewModel { TransactionResultViewModel(get(), get()) }
 }
 
 

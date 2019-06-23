@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.models.email
 
+
 data class CustomArguments(
         val merchantName: String,
         val terminalId: String,
@@ -9,6 +10,7 @@ data class CustomArguments(
         val amount: String,
         val aid: String,
         val responseCode: String,
+        val responseMessage: String,
         val telephone: String,
         val senderName: String = "Interswitch",
         val senderCity: String = "Victoria Island",
