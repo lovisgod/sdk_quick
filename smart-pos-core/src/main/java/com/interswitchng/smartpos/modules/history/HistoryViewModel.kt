@@ -17,7 +17,7 @@ class HistoryViewModel(factory: TransactionDataSourceFactory): ViewModel() {
 
 
     init {
-        // get data loading state
+        // get data loading state from dataSource
         loadingState = Transformations.switchMap(factory.dataSource) {
             it.loadingState
         }

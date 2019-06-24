@@ -55,9 +55,9 @@
             android:name=".modules.settings.SettingsActivity"
             android:label="Settings"
             android:launchMode="singleTop"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
+
         <activity
             android:name=".modules.home.PurchaseActivity"
             android:launchMode="singleTop"

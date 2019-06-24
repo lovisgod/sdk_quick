@@ -17,10 +17,30 @@
         android:theme="@style/ISW.AppBarOverlay"
         app:popupTheme="@style/ISW.PopupOverlay" />
 
+    <ProgressBar
+        android:id="@+id/initialProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/isw_content_margin"
+        android:padding="@dimen/isw_content_padding"
+        />
+
+    <TextView
+        android:id="@+id/tvNoHistory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:text="No Transacntions in History"
+        android:visibility="gone"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTransactions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        />
 
 
 </LinearLayout>

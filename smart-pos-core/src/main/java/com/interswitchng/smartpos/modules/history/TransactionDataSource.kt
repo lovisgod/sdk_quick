@@ -35,6 +35,8 @@ class TransactionDataSource: PageKeyedDataSource<Int, TransactionLog>() {
         val start = ((page - 1) * size) + 1
         val end = (start + size) - 1
 
+        if (end > start) return emptyList()
+
         if (end > 50) return emptyList()
 
         // simulate time delay
@@ -42,7 +44,11 @@ class TransactionDataSource: PageKeyedDataSource<Int, TransactionLog>() {
 
         val list = mutableListOf<TransactionLog>()
         for(i in start..end) {
-            val log = TransactionLog(id = i, amount = "$i.00", dateTime = "Mon $i Jun, 2019")
+            val code =
+                    if (i % 2 == 0) "00"
+                    else "05"
+
+            val log = TransactionLog(id = i, amount = "$i.00", dateTime = "Mon $i Jun, 2019", responseCode = code)
             list.add(log)
         }
 

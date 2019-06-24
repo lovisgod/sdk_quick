@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.modules.history
 
 import android.arch.paging.PagedListAdapter
+import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
+import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 
 class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder>(diffCallback) {
 
@@ -49,11 +51,11 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
     fun setLoadingStatus(newStatus: Boolean?) {
         // get previous loading state
         val prevLoadingStatus = loading
-        val wasLoading = prevLoadingStatus != false
+        val wasLoading = prevLoadingStatus == true
 
         // check next loading state
         loading = newStatus
-        val isLoading = loading != false
+        val isLoading = loading == true
 
         // react to extra data flag changing
         // between loading updates
@@ -65,7 +67,7 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
             // and now it has more data, notify [loader] item added
             else notifyItemInserted(itemCount)
         } else if (isLoading && prevLoadingStatus != loading) {
-            notifyItemInserted(itemCount - 1)
+            notifyItemChanged(itemCount)
         }
     }
 
@@ -84,6 +86,13 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
                 tvTxnType.text = type.name
                 tvPaymentType.text = paymentType.name
                 tvDate.text = dateTime
+
+                val isSuccess = responseCode == IsoUtils.OK
+                val textColor =
+                        if (isSuccess) R.color.iswTextColorSuccessDark
+                        else R.color.iswTextColorError
+
+                tvAmount.setTextColor(ContextCompat.getColor(tvAmount.context, textColor))
             }
         }
     }
