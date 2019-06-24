@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.di
 
 import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.history.HistoryViewModel
+import com.interswitchng.smartpos.modules.history.TransactionDataSourceFactory
 import com.interswitchng.smartpos.modules.paycode.PayCodeViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.UssdViewModel
@@ -22,5 +24,12 @@ private val viewModels = module {
     viewModel { TransactionResultViewModel(get(), get()) }
 }
 
+private val historyActivity = module {
 
-val activityModules = listOf(viewModels)
+    factory { TransactionDataSourceFactory() }
+
+    viewModel { HistoryViewModel(get()) }
+}
+
+
+val activityModules = listOf(viewModels, historyActivity)

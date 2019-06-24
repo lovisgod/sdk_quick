@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical"
+    android:padding="@dimen/isw_content_padding">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/iswTextColorSuccessDark"
+            app:layout_constraintEnd_toStartOf="@+id/tvPaymentType"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="10,000.00" />
+
+        <TextView
+            android:id="@+id/tvPaymentType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/iswColorPrimary"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvAmount"
+            tools:text="CARD" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Mon, 23 jul 2019" />
+
+
+        <TextView
+            android:id="@+id/tvTransactionType"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="PURCHASE" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

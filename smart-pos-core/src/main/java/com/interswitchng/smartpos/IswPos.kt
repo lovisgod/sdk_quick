@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import com.interswitchng.smartpos.di.activityModules
 import com.interswitchng.smartpos.di.appModules
 import com.interswitchng.smartpos.modules.card.CardActivity
+import com.interswitchng.smartpos.modules.history.HistoryActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.settings.SettingsActivity
@@ -71,6 +72,8 @@ class IswPos private constructor(private val app: Application, internal val devi
     fun gotoSettings() = showSettingsScreen()
 
     fun gotoDashboard() = showDashboardScreen()
+
+    fun gotoHistory() = showScreen(HistoryActivity::class.java)
 
     companion object {
         // code used to start purchase request

@@ -63,6 +63,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.settings -> instance.gotoSettings()
+            R.id.history -> instance.gotoHistory()
         }
 
         // hide the drawer

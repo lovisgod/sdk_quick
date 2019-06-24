@@ -52,6 +52,7 @@ allprojects {
         zxing_version = '3.3.0'
         coroutine_version = '1.1.1'
         arch_lifecycle_version = '1.1.1'
+        arch_paging_version = '1.0.1'
         koptional_version = '1.6.0'
         send_grid_version = '4.4.1'
 
