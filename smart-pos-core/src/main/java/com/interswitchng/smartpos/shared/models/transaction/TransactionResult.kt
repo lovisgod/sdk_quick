@@ -15,7 +15,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 /**
  * This class represents the final result
  * of the triggered purchase transaction.
- * This is what gets returned to calling application
+ * This is what captures the transaction's result
  */
 internal data class TransactionResult(
         val paymentType: PaymentType,
