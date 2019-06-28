@@ -9,12 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.views.TweakableOutlineProvider
+import com.squareup.picasso.Picasso
 
-internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerView.Adapter<BankListAdapter.BankViewHolder>() {
+internal class BankListAdapter(private var tapListener: () -> Unit) : RecyclerView.Adapter<BankListAdapter.BankViewHolder>() {
 
     private var banks: List<Bank> = emptyList()
     var selectedBank: Bank? = null
@@ -41,7 +42,7 @@ internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerVie
         notifyItemChanged(new)
     }
 
-    inner class BankViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    inner class BankViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val context by lazy { view.context }
         private val nameTextView by lazy { view.findViewById<TextView>(R.id.bankNameTextView) }
@@ -52,11 +53,15 @@ internal class BankListAdapter(private var tapListener: () -> Unit): RecyclerVie
             val baseUrl = context.getString(R.string.ISW_IMAGE_BASE_URL)
             val imageUrl = "${baseUrl}banks/${bank.code}.png"
 
+
+            val length = DisplayUtils.convertDpToPixel(80f, context).toInt()
+
             // load image
-            Glide.with(context)
+            Picasso.get()
                     .load(imageUrl)
                     .placeholder(R.drawable.isw_bank_placeholder)
-                    .fitCenter()
+                    .error(R.drawable.isw_bank_placeholder)
+                    .fit()
                     .into(bankImageView)
 
 
