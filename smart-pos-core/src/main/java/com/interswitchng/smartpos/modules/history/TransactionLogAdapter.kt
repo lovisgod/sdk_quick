@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.modules.history
 
+import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapter
+import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
@@ -11,7 +13,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
+import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import java.util.*
 
 class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder>(diffCallback) {
 
@@ -34,6 +38,10 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
             is LoadingViewHolder -> viewHolder.bind(loading ?: false)
             is TransactionViewHolder -> viewHolder.bind(getItem(position))
         }
+
+        // show loading progress bar
+//        if (position == itemCount - 1)
+//            Handler().postAtTime({ setLoadingStatus(true) }, 1000)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -47,8 +55,15 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
         else TYPE_ITEM
     }
 
+    override fun onCurrentListChanged(currentList: PagedList<TransactionLog>?) {
+        super.onCurrentListChanged(currentList)
 
-    fun setLoadingStatus(newStatus: Boolean?) {
+        // cancel loading progress bar
+        setLoadingStatus(false)
+    }
+
+
+    private fun setLoadingStatus(newStatus: Boolean?) {
         // get previous loading state
         val prevLoadingStatus = loading
         val wasLoading = prevLoadingStatus == true
@@ -82,10 +97,12 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
 
         fun bind(txn: TransactionLog?) {
             txn?.toResult()?.apply {
-                tvAmount.text = amount
+                tvAmount.text = tvAmount.context.getString(R.string.isw_currency_amount, amount)
                 tvTxnType.text = type.name
                 tvPaymentType.text = paymentType.name
-                tvDate.text = dateTime
+
+                val date = Date(txn.time)
+                tvDate.text = DateUtils.timeOfDateFormat.format(date)
 
                 val isSuccess = responseCode == IsoUtils.OK
                 val textColor =

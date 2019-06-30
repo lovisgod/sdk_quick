@@ -37,10 +37,6 @@ class HistoryActivity : AppCompatActivity() {
 
             val owner = { lifecycle }
 
-            loadingState.observe(owner) {
-                adapter.setLoadingStatus(it)
-            }
-
             // observe list updates
             pagedList.observe(owner, ::submitList)
 
@@ -52,8 +48,6 @@ class HistoryActivity : AppCompatActivity() {
         rvTransactions.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
 
     }
-
-
 
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

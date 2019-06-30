@@ -81,13 +81,16 @@ class TransactionResultActivity : AppCompatActivity() {
 
     private val emailInputDialog by lazy {
         DialogUtils.getEmailInputDialog(this) { email ->
-            // TODO make sure alert doesn't show, when the user sends mail instead of printing
             // handle user interaction here
             when(email){
                 null -> toast("Email cancelled") // user cancelled dialog
                 else -> {
                     // process email
-                    terminalInfo?.let { resultViewModel.sendMail(email, result, it) }
+                    terminalInfo?.let {
+                        resultViewModel.sendMail(email, result, it)
+                        // prevent warning dialog from showing
+                        hasPrintedCustomerCopy = true
+                    }
                 }
             }
         }
@@ -102,6 +105,9 @@ class TransactionResultActivity : AppCompatActivity() {
 
         // setup UI
         setupUI()
+
+        // log transaction result
+        resultViewModel.logTransaction(result)
     }
 
     override fun onDestroy() {
