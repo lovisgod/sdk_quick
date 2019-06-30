@@ -24,6 +24,10 @@ import android.util.Base64
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
+import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.services.storage.TransactionLogServiceImpl
+import com.zhuinden.monarchy.Monarchy
+import io.realm.RealmConfiguration
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
@@ -37,6 +41,21 @@ private val serviceModule = module {
     single<KeyValueStore> { KeyValueStoreImpl(get()) }
     single<EmailService> { EmailServiceImpl(get()) }
     factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
+    single<TransactionLogService> {
+
+        val realmKey = IsoUtils.hexToBytes(BuildConfig.REALM_KEY)
+        // create realm configuration
+        val realmConfig = RealmConfiguration.Builder()
+                .encryptionKey(realmKey)
+                .build()
+
+        // build monarchy
+        val monarchy = Monarchy.Builder()
+                .setRealmConfiguration(realmConfig)
+                .build()
+
+        TransactionLogServiceImpl(monarchy)
+    }
     factory<IsoSocket> {
         val resource = androidContext().resources
         val serverIp = resource.getString(R.string.isw_nibss_ip)

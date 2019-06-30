@@ -22,6 +22,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
+import com.zhuinden.monarchy.Monarchy
 import org.koin.dsl.module.module
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.loadKoinModules
@@ -114,6 +115,9 @@ class IswPos private constructor(private val app: Application, internal val devi
                 // set up koin
                 val modules = listOf(appContext) + appModules + activityModules
                 loadKoinModules(modules)
+
+                // setup monarchy and realmdb
+                Monarchy.init(app)
 
                 // setup usb connector if exists
                 config.usbConnector?.configure(app)

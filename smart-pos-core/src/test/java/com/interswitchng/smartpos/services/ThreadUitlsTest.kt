@@ -5,6 +5,8 @@ import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ThreadUitlsTest {
 
@@ -87,5 +89,36 @@ class ThreadUitlsTest {
 
         Thread.sleep(300)
         assertEquals(currentCount, Thread.activeCount())
+    }
+
+    @Test
+    fun testDate() {
+
+        val date = Date()
+        val calendar = Calendar.getInstance()
+        // get 12AM (00:00:00 AM) in the morning
+        val morning = calendar.apply {
+            time = date
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        // get midnight 11:59PM (23:59:60 PM) in the midnight
+        val midnight = calendar.apply {
+            time = date
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 69)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+
+        val df = SimpleDateFormat("hh:mm:ss aa")
+
+        println(df.format(morning.time))
+        println(df.format(midnight.time))
+
     }
 }

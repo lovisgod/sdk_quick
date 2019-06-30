@@ -54,8 +54,6 @@ internal class BankListAdapter(private var tapListener: () -> Unit) : RecyclerVi
             val imageUrl = "${baseUrl}banks/${bank.code}.png"
 
 
-            val length = DisplayUtils.convertDpToPixel(80f, context).toInt()
-
             // load image
             Picasso.get()
                     .load(imageUrl)

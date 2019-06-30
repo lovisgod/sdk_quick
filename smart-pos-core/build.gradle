@@ -9,6 +9,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 apply plugin: 'realm-android'
+
 apply plugin: 'com.getkeepsafe.dexcount'
 
 
@@ -38,6 +39,7 @@ android {
         }
         debug {
             buildConfigField("String", "ISW_EMAIL_API_KEY", emailApiKey)
+            buildConfigField("String", "REALM_KEY", realmKey)
         }
     }
 
@@ -92,7 +94,9 @@ dependencies {
 //        exclude group: 'org.xmlpull.v1.XmlPullParserException'
 //    }
     // picasso image library
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation ('com.squareup.picasso:picasso:2.71828') {
+        exclude group: "com.android.support"
+    }
 
     // kotlin coroutine libs
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"

@@ -30,29 +30,6 @@ open class TransactionLog(
         var time: Long = Date().time) : RealmObject() {
 
 
-    /**
-     * This function transforms a [TransactionResult] to
-     * a TransactionLog
-     *
-     * @param result  the transaction result to be logged
-     * @return   the transformed transaction log containing the result
-     */
-    internal fun fromResult(result: TransactionResult) = TransactionLog(
-            paymentType = result.paymentType.ordinal,
-            stan = result.stan,
-            dateTime = result.dateTime,
-            amount = result.amount,
-            transactionType = result.type.ordinal,
-            cardType = result.cardType.ordinal,
-            cardExpiry = result.cardExpiry,
-            authorizationCode = result.authorizationCode,
-            pinStatus = result.pinStatus,
-            responseMessage = result.responseMessage,
-            responseCode = result.responseCode,
-            AID = result.AID,
-            code = result.code,
-            telephone = result.telephone)
-
 
     /**
      * This function transforms this instance of transaction
@@ -98,5 +75,33 @@ open class TransactionLog(
                 telephone
 
         )
+    }
+
+    companion object {
+
+        /**
+         * This function transforms a [TransactionResult] to
+         * a TransactionLog
+         *
+         * @param result  the transaction result to be logged
+         * @return   the transformed transaction log containing the result
+         */
+        internal fun fromResult(result: TransactionResult) = TransactionLog(
+                paymentType = result.paymentType.ordinal,
+                stan = result.stan,
+                dateTime = result.dateTime,
+                amount = result.amount,
+                transactionType = result.type.ordinal,
+                cardType = result.cardType.ordinal,
+                cardExpiry = result.cardExpiry,
+                authorizationCode = result.authorizationCode,
+                pinStatus = result.pinStatus,
+                responseMessage = result.responseMessage,
+                responseCode = result.responseCode,
+                AID = result.AID,
+                code = result.code,
+                telephone = result.telephone)
+
+
     }
 }
