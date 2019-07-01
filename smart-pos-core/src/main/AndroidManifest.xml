@@ -51,25 +51,31 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
+
         <activity
             android:name=".modules.settings.SettingsActivity"
             android:label="Settings"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
-
         <activity
             android:name=".modules.home.PurchaseActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
-
-
-        <activity android:name=".modules.history.HistoryActivity"
+        <activity
+            android:name=".modules.history.HistoryActivity"
             android:label="History"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
+
+        <activity android:name=".modules.report.ReportActivity"
+            android:label="Report"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar"  />
+
     </application>
 
 </manifest>

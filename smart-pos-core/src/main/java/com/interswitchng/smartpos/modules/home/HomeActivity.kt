@@ -42,6 +42,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         // Tie DrawerLayout events to the ActionBarToggle
         drawerLayout.addDrawerListener(drawerToggle)
         history.setOnClickListener(this)
+        reports.setOnClickListener(this)
         settings.setOnClickListener(this)
         merchantInfo.setOnClickListener(this)
         help.setOnClickListener(this)
@@ -64,6 +65,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         when (view.id) {
             R.id.settings -> instance.gotoSettings()
             R.id.history -> instance.gotoHistory()
+            R.id.reports -> instance.gotoReports()
         }
 
         // hide the drawer

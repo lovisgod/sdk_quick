@@ -31,7 +31,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textSize="18sp"
-        android:text="No Transacntions in History"
+        android:text="No Transactions in History"
         android:visibility="gone"
         />
 

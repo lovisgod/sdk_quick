@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.isw_activity_settings.*
 import org.koin.android.ext.android.inject
 import java.util.*
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : MenuActivity() {
 
     private val store: KeyValueStore by inject()
     private val isoService: IsoService by inject()

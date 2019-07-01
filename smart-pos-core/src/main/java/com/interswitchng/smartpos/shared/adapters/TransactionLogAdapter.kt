@@ -1,8 +1,7 @@
-package com.interswitchng.smartpos.modules.history
+package com.interswitchng.smartpos.shared.adapters
 
 import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapter
-import android.os.Handler
 import android.support.v4.content.ContextCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
@@ -117,7 +116,7 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
 
     inner class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val progressBar: ProgressBar = view.findViewById(R.id.pbTransaction)
+        private val progressBar: ProgressBar = view.findViewById(R.id.pbTransaction)
 
 
         fun bind(loadingStatus: Boolean) {

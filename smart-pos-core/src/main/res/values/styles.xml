@@ -136,4 +136,9 @@
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
+    <style name="IswDatePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/iswTextColorSecondaryLight</item>
+        <!--<item name="android:textColorPrimary">@android:color/white</item>-->
+    </style>
+
 </resources>

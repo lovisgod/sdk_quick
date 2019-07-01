@@ -6,18 +6,20 @@ import java.util.*
 internal object DateUtils {
 
     @JvmField
-    val timeAndDateFormatter = SimpleDateFormat("MMddHHmmss", Locale.getDefault()) // field 7
+    val timeAndDateFormatter = SimpleDateFormat("MMddHHmmss", Locale.ENGLISH) // field 7
 
     @JvmField
-    val timeFormatter = SimpleDateFormat("HHmmss", Locale.getDefault()) // field 12
+    val timeFormatter = SimpleDateFormat("HHmmss", Locale.ENGLISH) // field 12
 
     @JvmField
-    val monthFormatter = SimpleDateFormat("MMdd", Locale.getDefault()) // field 13
+    val monthFormatter = SimpleDateFormat("MMdd", Locale.ENGLISH) // field 13
 
-    val dateFormatter = SimpleDateFormat("yyMMdd", Locale.getDefault())
+    val dateFormatter = SimpleDateFormat("yyMMdd", Locale.ENGLISH)
 
-    val yearAndMonthFormatter = SimpleDateFormat("yyMM", Locale.getDefault())
+    val yearAndMonthFormatter = SimpleDateFormat("yyMM", Locale.ENGLISH)
 
-    val timeOfDateFormat = SimpleDateFormat("hh:mm aa, MMMM dd, YYYY")
+    val timeOfDateFormat = SimpleDateFormat("hh:mm aa, MMMM dd, YYYY", Locale.ENGLISH)
+
+    val shortDateFormat = SimpleDateFormat( "dd MMMM, yyyy", Locale.ENGLISH)
 
 }

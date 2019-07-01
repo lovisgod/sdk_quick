@@ -90,6 +90,8 @@
     <string name="isw_hint_default_account">Default</string>
     <string name="isw_title_re_print_receipt">Re-Print Receipt</string>
     <string name="isw_email_end_point">https://api.sendgrid.com/v3/</string>
+    <string name="isw_hint_select_a_date">Select a date</string>
+    <string name="isw_no_report">No Results for:  %1$s</string>
 
 
     <string-array name="isw_account_types">

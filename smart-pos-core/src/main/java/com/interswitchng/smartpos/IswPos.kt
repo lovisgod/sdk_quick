@@ -9,6 +9,7 @@ import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.history.HistoryActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
+import com.interswitchng.smartpos.modules.report.ReportActivity
 import com.interswitchng.smartpos.modules.settings.SettingsActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
@@ -73,6 +74,8 @@ class IswPos private constructor(private val app: Application, internal val devi
     fun gotoSettings() = showSettingsScreen()
 
     fun gotoDashboard() = showDashboardScreen()
+
+    fun gotoReports() = showScreen(ReportActivity::class.java)
 
     fun gotoHistory() = showScreen(HistoryActivity::class.java)
 

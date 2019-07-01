@@ -5,15 +5,16 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.activities.MenuActivity
+import com.interswitchng.smartpos.shared.adapters.TransactionLogAdapter
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import kotlinx.android.synthetic.main.isw_activity_history.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryActivity : MenuActivity() {
 
     private val historyViewModel: HistoryViewModel by viewModel()
     private lateinit var adapter: TransactionLogAdapter
@@ -43,21 +44,10 @@ class HistoryActivity : AppCompatActivity() {
         }
 
         // setup recycler view
-        rvTransactions.layoutManager = LinearLayoutManager(this)
         rvTransactions.adapter = adapter
+        rvTransactions.layoutManager = LinearLayoutManager(this)
         rvTransactions.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
 
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        // set back click to go back
-        if (item?.itemId == android.R.id.home) {
-            finish()
-            return true
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     private fun submitList(list: PagedList<TransactionLog>?){
