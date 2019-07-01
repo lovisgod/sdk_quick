@@ -29,17 +29,14 @@ android {
 
         testInstrumentationRunner "com.interswitchng.smartpos.MockTestRunner"
         testInstrumentationRunnerArguments(shouldMock: 'true')
+        buildConfigField("String", "ISW_EMAIL_API_KEY", emailApiKey)
+        buildConfigField("String", "REALM_KEY", realmKey)
     }
 
     buildTypes {
         release {
             minifyEnabled minified
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "ISW_EMAIL_API_KEY", emailApiKey)
-        }
-        debug {
-            buildConfigField("String", "ISW_EMAIL_API_KEY", emailApiKey)
-            buildConfigField("String", "REALM_KEY", realmKey)
         }
     }
 

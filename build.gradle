@@ -46,7 +46,7 @@ allprojects {
 
         // config
         versionCode = 2
-        versionName = "1.0.0-beta13"
+        versionName = "1.0.0-beta13.1"
 
         // core dependencies
         koin_version = '1.0.1'
