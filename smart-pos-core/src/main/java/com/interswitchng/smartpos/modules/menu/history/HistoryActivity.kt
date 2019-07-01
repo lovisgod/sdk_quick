@@ -1,11 +1,9 @@
-package com.interswitchng.smartpos.modules.history
+package com.interswitchng.smartpos.modules.menu.history
 
 import android.arch.paging.PagedList
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.MenuItem
 import android.view.View
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.MenuActivity

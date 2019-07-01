@@ -1,7 +1,6 @@
-package com.interswitchng.smartpos.modules.settings
+package com.interswitchng.smartpos.modules.menu.settings
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast

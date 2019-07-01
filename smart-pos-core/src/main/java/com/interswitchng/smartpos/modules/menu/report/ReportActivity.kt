@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.modules.report
+package com.interswitchng.smartpos.modules.menu.report
 
 import android.app.DatePickerDialog
 import android.arch.lifecycle.LiveData
@@ -16,7 +16,6 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.isw_activity_report.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ReportActivity : MenuActivity(), DatePickerDialog.OnDateSetListener {

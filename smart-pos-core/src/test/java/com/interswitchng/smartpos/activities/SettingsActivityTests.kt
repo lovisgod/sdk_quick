@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.settings.SettingsActivity
+import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.nhaarman.mockitokotlin2.doAnswer

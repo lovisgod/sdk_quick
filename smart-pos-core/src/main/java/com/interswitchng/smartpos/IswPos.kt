@@ -6,11 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import com.interswitchng.smartpos.di.activityModules
 import com.interswitchng.smartpos.di.appModules
 import com.interswitchng.smartpos.modules.card.CardActivity
-import com.interswitchng.smartpos.modules.history.HistoryActivity
+import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
-import com.interswitchng.smartpos.modules.report.ReportActivity
-import com.interswitchng.smartpos.modules.settings.SettingsActivity
+import com.interswitchng.smartpos.modules.menu.report.ReportActivity
+import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants

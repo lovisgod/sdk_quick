@@ -14,6 +14,10 @@ import java.util.*
 class TransactionLogServiceImpl(private val monarchy: Monarchy): TransactionLogService {
 
     override fun logTransactionResult(result: TransactionLog) = monarchy.writeAsync { realm ->
+        // retrieve the latest id
+        val currentId: Number = realm.where(TransactionLog::class.java).max("id") ?: 0
+        // set the next id
+        result.id = currentId.toInt() + 1
         // save result to realm db
         realm.copyToRealm(result)
     }

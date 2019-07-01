@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".modules.report.ReportActivity">
+    tools:context=".modules.menu.report.ReportActivity">
 
 
     <android.support.v7.widget.Toolbar

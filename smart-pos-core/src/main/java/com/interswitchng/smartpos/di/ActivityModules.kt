@@ -1,9 +1,9 @@
 package com.interswitchng.smartpos.di
 
 import com.interswitchng.smartpos.modules.card.CardViewModel
-import com.interswitchng.smartpos.modules.history.HistoryViewModel
+import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeViewModel
-import com.interswitchng.smartpos.modules.report.ReportViewModel
+import com.interswitchng.smartpos.modules.menu.report.ReportViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.UssdViewModel
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel

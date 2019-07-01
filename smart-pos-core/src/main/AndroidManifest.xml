@@ -53,7 +53,7 @@
             android:theme="@style/ISW.NoActionBar" />
 
         <activity
-            android:name=".modules.settings.SettingsActivity"
+            android:name="com.interswitchng.smartpos.modules.menu.settings.SettingsActivity"
             android:label="Settings"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -64,13 +64,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
         <activity
-            android:name=".modules.history.HistoryActivity"
+            android:name="com.interswitchng.smartpos.modules.menu.history.HistoryActivity"
             android:label="History"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
 
-        <activity android:name=".modules.report.ReportActivity"
+        <activity android:name="com.interswitchng.smartpos.modules.menu.report.ReportActivity"
             android:label="Report"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

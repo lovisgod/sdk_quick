@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.modules.report
+package com.interswitchng.smartpos.modules.menu.report
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
