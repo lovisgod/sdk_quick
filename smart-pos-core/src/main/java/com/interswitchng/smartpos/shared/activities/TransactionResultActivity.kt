@@ -67,7 +67,6 @@ class TransactionResultActivity : AppCompatActivity() {
                 }
                 .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
                     setResult()
-                    finish()
                     dialog.dismiss()
                 }
     }
