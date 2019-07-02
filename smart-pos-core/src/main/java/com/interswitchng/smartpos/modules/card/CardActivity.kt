@@ -106,7 +106,7 @@ class CardActivity : BaseActivity() {
         AlertDialog.Builder(this)
                 .setTitle(R.string.isw_hint_account_type)
                 .setCancelable(false)
-                .setSingleChoiceItems(R.array.isw_account_types, accountType.ordinal) { dialog, selectedIndex ->
+                .setSingleChoiceItems(R.array.isw_account_types, -1) { dialog, selectedIndex ->
                     if (selectedIndex != -1) {
                         // set the selected account
                         accountType = when (selectedIndex) {

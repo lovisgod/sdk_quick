@@ -26,6 +26,9 @@ class ReportActivity : MenuActivity(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var reportLiveData: LiveData<PagedList<TransactionLog>>
 
+    // initialize date as today
+    private var selectedDate = Date()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_report)
@@ -45,16 +48,19 @@ class ReportActivity : MenuActivity(), DatePickerDialog.OnDateSetListener {
 
         // set click listener date selector
         btnSelectDate.setOnClickListener {
-            val dialog = DialogUtils.createDateDialog(this, this)
+            val dialog = DialogUtils.createDateDialog(this, this, selectedDate)
             dialog.datePicker.maxDate = System.currentTimeMillis()
             dialog.show()
         }
 
         // select today's reports
-        showReportFor(Date())
+        showReportFor(selectedDate)
     }
 
     private fun showReportFor(day: Date) {
+        // set selected date
+        selectedDate = day
+
         // set the date string
         tvDate.text = DateUtils.shortDateFormat.format(day)
 
@@ -63,8 +69,10 @@ class ReportActivity : MenuActivity(), DatePickerDialog.OnDateSetListener {
         rvTransactions.visibility = View.GONE
 
         // clear current report
-        adapter.currentList?.clear()
-        adapter.notifyDataSetChanged()
+        if (adapter.itemCount > 0) {
+            adapter.currentList?.dataSource?.invalidate()
+            adapter.notifyDataSetChanged()
+        }
 
         // lifecycle owner
         val owner = { lifecycle }

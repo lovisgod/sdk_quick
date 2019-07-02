@@ -48,16 +48,18 @@ internal object DialogUtils {
     }
 
 
-    fun createDateDialog(context: Context, listener: DatePickerDialog.OnDateSetListener): DatePickerDialog {
+    fun createDateDialog(context: Context, listener: DatePickerDialog.OnDateSetListener, date: Date = Date()): DatePickerDialog {
 
         // Use the current date as the default date in the picker
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
+        return Calendar.getInstance().let {
+            it.time = date
+            val year = it.get(Calendar.YEAR)
+            val month = it.get(Calendar.MONTH)
+            val day = it.get(Calendar.DAY_OF_MONTH)
 
-        // Create a new instance of DatePickerDialog and return it
-        return DatePickerDialog(context, R.style.IswDatePicker, listener, year, month, day)
+            // Create a new instance of DatePickerDialog and return it
+            DatePickerDialog(context, R.style.IswDatePicker, listener, year, month, day)
+        }
     }
 
 }
