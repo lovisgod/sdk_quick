@@ -246,6 +246,7 @@ class CardActivity : BaseActivity() {
             // when user should enter pin
             is EmvMessage.EnterPin -> {
                 showContainer(CardTransactionState.EnterPin)
+                cardPin.setText("")
                 paymentHint.text = getString(R.string.isw_hint_input_pin)
             }
 

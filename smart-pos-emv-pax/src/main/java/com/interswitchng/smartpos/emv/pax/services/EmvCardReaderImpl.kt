@@ -20,6 +20,7 @@ import com.pax.jemv.clcommon.ACType
 import com.pax.jemv.clcommon.RetCode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.sendBlocking
 import kotlin.coroutines.coroutineContext
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
@@ -171,13 +172,11 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             // reset text
             text = ""
             // notify callback to show pin
-            channel.send(EmvMessage.EnterPin)
-            // set empty string as pin
-            channel.send(EmvMessage.PinText(text))
+            channel.sendBlocking(EmvMessage.EnterPin)
 
             // show pin input error
             if (triesCount > 0) {
-                channel.send(EmvMessage.PinError(offlineTriesLeft))
+                channel.sendBlocking(EmvMessage.PinError(offlineTriesLeft))
             } else {
                 // set check interval
                 ped.setIntervalTime(1, 1)
