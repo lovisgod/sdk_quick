@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
@@ -266,6 +267,8 @@ class CardActivity : BaseActivity() {
                 alert.setTitle("Invalid Pin")
                 alert.setMessage("Please ensure you put the right pin.")
                 alert.show()
+
+                val isPosted = Handler().postDelayed({ alert.dismiss() }, 3000)
             }
 
             // when user cancels transaction
