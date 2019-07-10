@@ -21,6 +21,7 @@ import com.pax.jemv.clcommon.RetCode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.sendBlocking
+import kotlin.concurrent.thread
 import kotlin.coroutines.coroutineContext
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
@@ -38,7 +39,6 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     private val emvImpl by lazy { EmvImplementation(context, this) }
     private lateinit var channel: Channel<EmvMessage>
     private lateinit var channelScope: CoroutineScope
-
 
 
     private var pinResult: Int = RetCode.EMV_OK
@@ -151,7 +151,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
     private suspend fun startWatchingCard() {
         // try and detect card
-        while (coroutineContext.isActive) {
+        while (channelScope.isActive) {
             // check if card cannot be detected
             if (!POSDeviceImpl.dal.icc.detect(0x00)) {
                 // notify callback of card removal
@@ -253,6 +253,11 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         channelScope.launch(Dispatchers.IO) {
             // check if the user cancelled pin input
             if (key == EKeyCode.KEY_CANCEL) callTransactionCancelled(RetCode.EMV_USER_CANCEL, "User cancelled PIN input")
+            else if (key == EKeyCode.KEY_ENTER && text.length < 4) {
+                ped.clearScreen()
+                ped.cancelInput()
+                channel.send(EmvMessage.IncompletePin)
+            }
             else channel.send(EmvMessage.PinText(text))
         }
     }

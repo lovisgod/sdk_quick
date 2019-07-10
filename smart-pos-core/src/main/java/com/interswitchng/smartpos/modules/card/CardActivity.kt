@@ -262,6 +262,14 @@ class CardActivity : BaseActivity() {
                 toast("Pin OK")
             }
 
+            // when the user enters an incomplete pin
+            is EmvMessage.IncompletePin -> {
+
+                alert.setTitle("Invalid Pin")
+                alert.setMessage("Please press the CANCEL (X) button and try again")
+                alert.show()
+            }
+
             // when pin is incorrect
             is EmvMessage.PinError -> {
                 alert.setTitle("Invalid Pin")

@@ -28,6 +28,9 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     // communication channel with cardreader
     private val channel = Channel<EmvMessage>()
 
+    // card removed flag
+    private var cardRemoved = false
+
     private val _emvMessage = MutableLiveData<EmvMessage>()
     val emvMessage: LiveData<EmvMessage> = _emvMessage
 
@@ -45,8 +48,10 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
             // launch job in IO thread to listen for messages
             launch(ioScope) {
                 // listen and  publish all received messages
-                for (message in channel)
+                for (message in channel) {
+                    cardRemoved = cardRemoved || message is EmvMessage.CardRemoved
                     _emvMessage.postValue(message)
+                }
             }
 
             // trigger transaction setup in IO thread
@@ -78,8 +83,14 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                 }
                 else -> {
                     context.toast("Error processing card transaction")
-                    // trigger transaction cancel
-                    _emvMessage.value = EmvMessage.TransactionCancelled(-1, "Unable to process card transaction")
+
+                    // show cancelled transaction if its not
+                    // already triggered by card removal
+                    if (!cardRemoved) {
+                        // trigger transaction cancel
+                        val reason = "Unable to process card transaction"
+                        _emvMessage.value = EmvMessage.TransactionCancelled(-1, reason)
+                    }
                 }
             }
         }
@@ -99,7 +110,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
 
             when (response) {
-                null ->  {
+                null -> {
                     _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
                     return None
                 }

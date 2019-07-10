@@ -52,6 +52,11 @@ sealed class EmvMessage {
     class PinError(val remainCount: Int): EmvMessage()
 
     /**
+     * Indicates when a user inputs a incomplete pin
+     */
+    object IncompletePin: EmvMessage()
+
+    /**
      * Indicates when the pin provided has been successfully validated by the card as OK
      */
     object PinOk: EmvMessage()
