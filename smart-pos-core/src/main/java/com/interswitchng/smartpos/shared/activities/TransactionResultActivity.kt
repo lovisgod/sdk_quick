@@ -43,7 +43,7 @@ class TransactionResultActivity : AppCompatActivity() {
     private lateinit var result: TransactionResult
     private lateinit var paymentInfo: PaymentInfo
 
-    private val terminalInfo by lazy {  TerminalInfo.get(store) }
+    private val terminalInfo by lazy { TerminalInfo.get(store) }
     private var printSlip: TransactionSlip? = null
     private var hasPrintedMerchantCopy = false
     private var hasPrintedCustomerCopy = false
@@ -81,7 +81,7 @@ class TransactionResultActivity : AppCompatActivity() {
     private val emailInputDialog by lazy {
         DialogUtils.getEmailInputDialog(this) { email ->
             // handle user interaction here
-            when(email){
+            when (email) {
                 null -> toast("Email cancelled") // user cancelled dialog
                 else -> {
                     // process email
@@ -246,11 +246,11 @@ class TransactionResultActivity : AppCompatActivity() {
             val hasNotPrinted = !hasPrintedCustomerCopy && !hasPrintedCustomerCopy
             if (hasNotPrinted && !hasSentEmail) {
                 DialogUtils.getAlertDialog(this)
-                .setTitle("Close without printing?")
-                .setMessage("Are you sure you want to close without printing")
-                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
-                .setPositiveButton(android.R.string.yes) { dialog, _ -> dialog.dismiss(); setResult(); finish(); }
-                .show()
+                        .setTitle("Close without printing?")
+                        .setMessage("Are you sure you want to close without printing")
+                        .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
+                        .setPositiveButton(android.R.string.yes) { dialog, _ -> dialog.dismiss(); setResult(); finish(); }
+                        .show()
             } else {
                 setResult()
                 finish()

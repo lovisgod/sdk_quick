@@ -3,6 +3,8 @@ package com.interswitchng.smartpos.shared.utilities
 import android.app.DatePickerDialog
 import android.content.Context
 import android.support.v7.app.AlertDialog
+import android.text.TextUtils
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.widget.EditText
 import com.interswitchng.smartpos.R
@@ -26,25 +28,42 @@ internal object DialogUtils {
 
     fun getEmailInputDialog(context: Context, eventHandler: (String?) -> Unit): AlertDialog {
 
+        var emailDialog: AlertDialog? = null
+
         val view = LayoutInflater.from(context).inflate(R.layout.isw_send_email_dialog, null)
         val emailEditText = view.findViewById<EditText>(R.id.emailInputEditText)
 
-        val builder = AlertDialog.Builder(context)
+        // get and return email dialog
+        emailDialog = AlertDialog.Builder(context)
                 .setTitle("Enter Email")
                 .setView(view)
+                .setPositiveButton("SUBMIT") { dialog, _ ->
+                    val email = emailEditText.text.trim().toString()
+                    // validate email
+                    val isValidEmail = !TextUtils.isEmpty(email)
+                            && Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
-        builder.setPositiveButton("SUBMIT") { dialog, _ ->
-            val email = emailEditText.text.trim().toString()
-            eventHandler(email)
-            dialog.dismiss()
-        }
+                    if (isValidEmail) {
+                        eventHandler(email)
+                    } else {
+                        // show alert dialog
+                        getAlertDialog(context)
+                                .setTitle("Invalid Email")
+                                .setMessage("Please input a valid email address")
+                                .setPositiveButton(android.R.string.ok) { _, _ -> emailDialog?.show() }
+                                .show()
 
-        builder.setNegativeButton("CANCEL") { dialog, _ ->
-            eventHandler(null)
-            dialog.dismiss()
-        }
+                        context.toast("Invalid email, please input a valid email address.")
+                    }
+                }
+                .setNegativeButton("CANCEL") { dialog, _ ->
+                    eventHandler(null)
+                    dialog.dismiss()
+                }
+                .create()
 
-        return builder.create()
+
+        return emailDialog
     }
 
 
