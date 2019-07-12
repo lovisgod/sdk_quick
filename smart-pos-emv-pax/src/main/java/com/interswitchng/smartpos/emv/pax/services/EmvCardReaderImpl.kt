@@ -253,11 +253,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         channelScope.launch(Dispatchers.IO) {
             // check if the user cancelled pin input
             if (key == EKeyCode.KEY_CANCEL) callTransactionCancelled(RetCode.EMV_USER_CANCEL, "User cancelled PIN input")
-            else if (key == EKeyCode.KEY_ENTER && text.length < 4) {
-                ped.clearScreen()
-                ped.cancelInput()
-                channel.send(EmvMessage.IncompletePin)
-            }
+            else if (key == EKeyCode.KEY_ENTER && text.length < 4) channel.send(EmvMessage.IncompletePin)
             else channel.send(EmvMessage.PinText(text))
         }
     }
