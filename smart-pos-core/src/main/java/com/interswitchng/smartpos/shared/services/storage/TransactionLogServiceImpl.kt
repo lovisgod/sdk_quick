@@ -6,12 +6,12 @@ import android.arch.paging.PagedList
 import com.interswitchng.smartpos.shared.interfaces.library.TransactionLogService
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.zhuinden.monarchy.Monarchy
+import io.realm.Sort
 import io.realm.kotlin.where
 import java.util.*
 
 
-
-class TransactionLogServiceImpl(private val monarchy: Monarchy): TransactionLogService {
+class TransactionLogServiceImpl(private val monarchy: Monarchy) : TransactionLogService {
 
     override fun logTransactionResult(result: TransactionLog) = monarchy.writeAsync { realm ->
         // retrieve the latest id
@@ -25,7 +25,9 @@ class TransactionLogServiceImpl(private val monarchy: Monarchy): TransactionLogS
     override fun getTransactions(pagedListConfig: PagedList.Config): LiveData<PagedList<TransactionLog>> {
 
         // query for stream of transaction logs by creating dataSource factory
-        val logDataSourceFactory = monarchy.createDataSourceFactory { realm -> realm.where<TransactionLog>() }
+        val logDataSourceFactory = monarchy.createDataSourceFactory { realm ->
+            realm.where<TransactionLog>().sort("time", Sort.DESCENDING)
+        }
 
         // create paged list builder for datasource factory
         val livePagedBuilder = LivePagedListBuilder<Int, TransactionLog>(logDataSourceFactory, pagedListConfig)
@@ -64,7 +66,7 @@ class TransactionLogServiceImpl(private val monarchy: Monarchy): TransactionLogS
             realm.where<TransactionLog>()
                     .greaterThan("time", morning.timeInMillis)
                     .lessThan("time", midnight.timeInMillis)
-
+                    .sort("time", Sort.DESCENDING)
         }
 
         // create paged list builder for datasource factory
