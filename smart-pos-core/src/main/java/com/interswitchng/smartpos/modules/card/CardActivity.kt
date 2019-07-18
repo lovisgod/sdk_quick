@@ -25,10 +25,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
-import com.interswitchng.smartpos.shared.utilities.Logger
-import com.interswitchng.smartpos.shared.utilities.toast
+import com.interswitchng.smartpos.shared.utilities.*
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
@@ -103,7 +100,6 @@ class CardActivity : BaseActivity() {
         // dismiss dialog
         dialog.dismiss()
 
-        // TODO change alert to dialog with grouped radio buttons
         AlertDialog.Builder(this)
                 .setTitle(R.string.isw_hint_account_type)
                 .setCancelable(false)
@@ -119,8 +115,12 @@ class CardActivity : BaseActivity() {
 
                         selectedCardType.text = accountType.toString()
 
-                        // start transaction
-                        cardViewModel.startTransaction(this, paymentInfo, accountType, terminalInfo)
+                        // ensure internet connection
+                        // before starting transaction
+                        runWithInternet {
+                            // try starting transaction
+                            cardViewModel.startTransaction(this, paymentInfo, accountType, terminalInfo)
+                        }
                     }
                     dialog.dismiss()
                 }

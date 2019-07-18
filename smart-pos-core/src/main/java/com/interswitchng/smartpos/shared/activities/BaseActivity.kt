@@ -20,8 +20,8 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
-import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
 import com.interswitchng.smartpos.shared.utilities.CurrencyUtils
+import com.interswitchng.smartpos.shared.utilities.DeviceUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.toast
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
@@ -50,7 +50,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected val iswPos: IswPos by inject()
     protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
-    protected val disposables = IswCompositeDisposable()
     private lateinit var pollingText: PollingText
 
     // getResult payment info
@@ -166,6 +165,21 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun onCheckStopped() {
         // do nothing
+    }
+
+    protected fun runWithInternet(handler: () -> Unit) {
+        // ensure that device is connected to internet
+        if (!DeviceUtils.isConnectedToInternet(this)) {
+            toast("Device is not connected to internet")
+            // show no-network dialog
+            DialogUtils.getNetworkDialog(this) {
+                // trigger handler
+                handler()
+            }.show()
+        } else {
+            // trigger handler
+            handler()
+        }
     }
 
     internal fun handlePaymentStatus(status: PaymentStatus) {

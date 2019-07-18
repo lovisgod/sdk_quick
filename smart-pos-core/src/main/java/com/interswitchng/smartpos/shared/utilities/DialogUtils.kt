@@ -26,6 +26,20 @@ internal object DialogUtils {
                 .setMessage("Unable to generate code")
     }
 
+    fun getNetworkDialog(context: Context, handler: () -> Unit): AlertDialog {
+        return AlertDialog.Builder(context)
+                .setTitle("No Internet Connection")
+                .setMessage("This device is not connected to internet, please put on the mobile data or wifi connection, and try again.")
+                .setPositiveButton("Try Again") { dialog, _ ->
+                    // execute handler
+                    handler()
+                    // dismiss dialog
+                    dialog.dismiss()
+                }
+                .create()
+    }
+
+
     fun getEmailInputDialog(context: Context, eventHandler: (String?) -> Unit): AlertDialog {
 
         var emailDialog: AlertDialog? = null

@@ -9,12 +9,13 @@ import android.telephony.TelephonyManager
 
 object DeviceUtils {
 
-    const val i2G = "`2G`"
+    const val i2G = "2G"
     const val i3G = "3G"
     const val i4G = "4G"
     const val UNKNOWN = "UNKNOWN"
 
 
+    // live data value to observe network state
     private val networkConnectionState = MutableLiveData<Boolean>()
     fun getNetworkConnectionState(): LiveData<Boolean> = networkConnectionState
 

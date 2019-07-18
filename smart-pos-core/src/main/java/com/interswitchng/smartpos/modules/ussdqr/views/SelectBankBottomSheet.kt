@@ -28,6 +28,7 @@ internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
     private val _selectedBank = MutableLiveData<Bank>()
     val selectedBank: LiveData<Bank> get() = _selectedBank
 
+    var hasBanks = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -70,6 +71,7 @@ internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
     }
 
     fun loadBanks(banks: List<Bank>) {
+        hasBanks = banks.isNotEmpty()
         adapter.setBanks(banks)
         progressBarSelectBank.visibility = View.GONE
     }

@@ -7,6 +7,8 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
+import com.interswitchng.smartpos.shared.utilities.DeviceUtils
+import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_activity_pay_code.*
@@ -32,8 +34,19 @@ class PayCodeActivity : BaseActivity(), ScanBottomSheet.ScanResultCallback {
         paymentHint.text = "Type in your Pay Code"
         btnContinue.setOnClickListener {
 
+            // ensure that a paycode has been typed in
             if (payCode.text.isNullOrEmpty() || payCode.text.isNullOrBlank()) {
                 toast("A Paycode is required")
+                return@setOnClickListener
+            }
+            // ensure that device is connected to internet
+            else if (!DeviceUtils.isConnectedToInternet(this)) {
+                toast("Device is not connected to internet")
+                // show no network dialog
+                DialogUtils.getNetworkDialog(this) {
+                    // try submitting again
+                    btnContinue.performClick()
+                }.show()
                 return@setOnClickListener
             }
 

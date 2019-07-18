@@ -62,23 +62,31 @@ class UssdActivity : BaseActivity() {
         val amount = DisplayUtils.getAmountString(paymentInfo)
         amountText.text = getString(R.string.isw_amount, amount)
 
-        // load bank list immediately
-        ussdViewModel.loadBanks()
+        if (DeviceUtils.isConnectedToInternet(this)) {
 
-        paymentHint.text = getString(R.string.isw_select_bank)
-        banks.text = getString(R.string.isw_select_bank)
-        banks.setOnClickListener {
-            // create dialog if not existing
-            if (!::banksDialog.isInitialized)
-                banksDialog = SelectBankBottomSheet.newInstance()
+            paymentHint.text = getString(R.string.isw_select_bank)
+            banks.text = getString(R.string.isw_select_bank)
+            banks.setOnClickListener {
+                // create dialog if not existing
+                if (!::banksDialog.isInitialized)
+                    banksDialog = SelectBankBottomSheet.newInstance()
 
-            //  show dialog
-            banksDialog.show(supportFragmentManager, banksDialog.tag)
+                // load banks if not loaded
+                if (!banksDialog.hasBanks) runWithInternet {
+                    ussdViewModel.loadBanks()
+                }
+
+                //  show dialog
+                banksDialog.show(supportFragmentManager, banksDialog.tag)
+            }
+            banks.performClick()
+
+            // observe viewModel
+            observeViewModel()
+        } else runWithInternet {
+            setupUI()
         }
-        banks.performClick()
 
-        // observe viewModel
-        observeViewModel()
     }
 
     private fun observeViewModel() {
@@ -134,8 +142,6 @@ class UssdActivity : BaseActivity() {
                     onCheckStopped()
                 }
             }
-
-            // observe printer
         }
 
         // observe bank selection
@@ -146,30 +152,44 @@ class UssdActivity : BaseActivity() {
     }
 
     private fun getBankCode(selectedBank: Bank) {
-        // set bank info
-        banks.text = selectedBank.name
-        paymentHint.text = selectedBank.name
+
+        if (DeviceUtils.isConnectedToInternet(this)) {
+
+            // set bank info
+            banks.text = selectedBank.name
+            paymentHint.text = selectedBank.name
 
 
-        // show loading dialog
-        dialog.show()
+            // show loading dialog
+            dialog.show()
 
-        // create payment info with bank code
-        val info = PaymentInfo(paymentInfo.amount, selectedBank.code)
-        val request = CodeRequest.from(iswPos.config.alias, terminalInfo, info, TRANSACTION_USSD)
+            // create payment info with bank code
+            val info = PaymentInfo(paymentInfo.amount, selectedBank.code)
+            val request = CodeRequest.from(iswPos.config.alias, terminalInfo, info, TRANSACTION_USSD)
 
-        // get ussd code
-        ussdViewModel.getBankCode(request)
+            // get ussd code
+            ussdViewModel.getBankCode(request)
+        } else runWithInternet {
+            // re-trigger get bank code
+            getBankCode(selectedBank)
+        }
     }
 
     private fun showButtons(response: CodeResponse) {
         initiateButton.isEnabled = true
         initiateButton.setOnClickListener {
-            initiateButton.isEnabled = false
-            initiateButton.isClickable = false
+            if (DeviceUtils.isConnectedToInternet(this)) {
+                initiateButton.isEnabled = false
+                initiateButton.isClickable = false
 
-            // check transaction status
-            ussdViewModel.checkTransactionStatus(TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode))
+                val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
+                // check transaction status
+                ussdViewModel.checkTransactionStatus(status)
+
+            } else runWithInternet {
+                // re-perform click
+                initiateButton.performClick()
+            }
         }
 
         printCodeButton.isEnabled = true
@@ -183,20 +203,28 @@ class UssdActivity : BaseActivity() {
         when (response.responseCode) {
             CodeResponse.OK -> {
 
-                ussdCode = response.bankShortCode ?: response.defaultShortCode
-                ussdCode?.apply {
-                    ussdText.text = this
-                    val code = substring(lastIndexOf("*") + 1 until lastIndexOf("#"))
-                    paymentHint.text = HtmlCompat.fromHtml(getString(R.string.isw_hint_enter_ussd_code, code), HtmlCompat.FROM_HTML_MODE_LEGACY)
-                    printSlip.add(PrintObject.Data("code \n $this\n", PrintStringConfiguration(isBold = true, isTitle = true)))
+                // ensure internet connection before polling for transaction
+                if (DeviceUtils.isConnectedToInternet(this)) {
+
+                    ussdCode = response.bankShortCode ?: response.defaultShortCode
+                    ussdCode?.apply {
+                        ussdText.text = this
+                        val code = substring(lastIndexOf("*") + 1 until lastIndexOf("#"))
+                        paymentHint.text = HtmlCompat.fromHtml(getString(R.string.isw_hint_enter_ussd_code, code), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                        printSlip.add(PrintObject.Data("code - \n $this\n", PrintStringConfiguration(isBold = true, isTitle = true)))
+                    }
+
+                    // show buttons
+                    showButtons(response)
+
+                    // check transaction status
+                    val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
+                    ussdViewModel.pollTransactionStatus(status)
+
+                } else runWithInternet {
+                    // re-trigger handle response
+                    handleResponse(response)
                 }
-
-                // show buttons
-                showButtons(response)
-
-                // check transaction status
-                val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
-                ussdViewModel.pollTransactionStatus(status)
             }
             else -> {
                 runOnUiThread {

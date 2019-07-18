@@ -21,10 +21,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.Trans
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
-import com.interswitchng.smartpos.shared.utilities.Logger
-import com.interswitchng.smartpos.shared.utilities.toast
+import com.interswitchng.smartpos.shared.utilities.*
 import kotlinx.android.synthetic.main.isw_activity_qr_code.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -108,28 +105,42 @@ class QrCodeActivity : BaseActivity() {
     }
 
     private fun getQrCode() {
-        // show loading dialog
-        dialog.show()
+        // ensure device is connected to internet before
+        if (DeviceUtils.isConnectedToInternet(this)) {
+            // show loading dialog
+            dialog.show()
 
-        // create and request code
-        val request = CodeRequest.from(iswPos.config.alias, terminalInfo,
-                paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
-        qrViewModel.getQrCode(request, this)
+            // create and request code
+            val request = CodeRequest.from(iswPos.config.alias, terminalInfo,
+                    paymentInfo, TRANSACTION_QR, QR_FORMAT_RAW)
+
+            qrViewModel.getQrCode(request, this)
+        } else runWithInternet {
+            getQrCode()
+        }
     }
 
     private fun handleResponse(response: CodeResponse) {
         when (response.responseCode) {
             CodeResponse.OK -> {
-                qrData = response.qrCodeData
-                val bitmap = response.qrCodeImage!!
-                printSlip.add(PrintObject.BitMap(bitmap))
+                if (DeviceUtils.isConnectedToInternet(this)) {
 
-                qrCodeImage.setImageBitmap(response.qrCodeImage)
-                showTransactionMocks(response)
+                    qrData = response.qrCodeData
+                    val bitmap = response.qrCodeImage!!
+                    printSlip.add(PrintObject.BitMap(bitmap))
 
-                // check transaction status
-                val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
-                qrViewModel.pollTransactionStatus(status)
+                    qrCodeImage.setImageBitmap(response.qrCodeImage)
+                    showTransactionMocks(response)
+
+                    // check transaction status
+                    val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
+
+                    // ensure internet connection before
+                    // polling for transaction result
+                    qrViewModel.pollTransactionStatus(status)
+                } else runWithInternet {
+                    handleResponse(response)
+                }
             }
             else -> {
                 val errorMessage = "An error occured: ${response.responseDescription}"
@@ -146,18 +157,21 @@ class QrCodeActivity : BaseActivity() {
     }
 
 
-
     private fun showTransactionMocks(response: CodeResponse) {
         mockButtonsContainer.visibility = View.VISIBLE
         initiateButton.isEnabled = true
 
         initiateButton.setOnClickListener {
-            initiateButton.isEnabled = false
-            initiateButton.isClickable = false
+            if (DeviceUtils.isConnectedToInternet(this)) {
+                initiateButton.isEnabled = false
+                initiateButton.isClickable = false
 
-            // check transaction status
-            val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
-            qrViewModel.checkTransactionStatus(status)
+                // check transaction status
+                val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
+                qrViewModel.checkTransactionStatus(status)
+            } else runWithInternet {
+                initiateButton.performClick()
+            }
         }
 
         printCodeButton.isEnabled = true

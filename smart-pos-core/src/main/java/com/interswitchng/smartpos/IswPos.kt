@@ -3,8 +3,9 @@ package com.interswitchng.smartpos
 import android.app.Application
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
-import com.interswitchng.smartpos.di.activityModules
-import com.interswitchng.smartpos.di.appModules
+import com.interswitchng.smartpos.di.networkModule
+import com.interswitchng.smartpos.di.serviceModule
+import com.interswitchng.smartpos.di.viewModels
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
@@ -116,7 +117,7 @@ class IswPos private constructor(private val app: Application, internal val devi
                 }
 
                 // set up koin
-                val modules = listOf(appContext) + appModules + activityModules
+                val modules = listOf(appContext, serviceModule, networkModule, viewModels)
                 loadKoinModules(modules)
 
                 // setup monarchy and realmdb
