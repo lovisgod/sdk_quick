@@ -11,7 +11,7 @@ import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
 
-private val viewModels = module {
+internal val viewModels = module {
 
     viewModel { UssdViewModel(get()) }
 
@@ -27,6 +27,3 @@ private val viewModels = module {
 
     viewModel { ReportViewModel(get()) }
 }
-
-
-val activityModules = listOf(viewModels)

@@ -1,18 +1,14 @@
 package com.interswitchng.smartpos.di
 
+import android.util.Base64
 import com.igweze.ebi.simplecalladapter.SimpleCallAdapterFactory
+import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.interfaces.library.*
+import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.services.HttpServiceImpl
-import com.interswitchng.smartpos.shared.services.storage.SharePreferenceManager
-import com.interswitchng.smartpos.shared.services.UserStoreImpl
-import com.interswitchng.smartpos.shared.services.iso8583.IsoServiceImpl
-import com.interswitchng.smartpos.shared.services.iso8583.tcp.IsoSocketImpl
-import com.interswitchng.smartpos.shared.services.storage.KeyValueStoreImpl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -20,57 +16,13 @@ import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import android.util.Base64
-import com.interswitchng.smartpos.BuildConfig
-import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
-import com.interswitchng.smartpos.shared.services.EmailServiceImpl
-import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.services.storage.TransactionLogServiceImpl
-import com.zhuinden.monarchy.Monarchy
-import io.realm.RealmConfiguration
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
 const val RETROFIT_PAYMENT = "payment_retrofit"
 
-private val serviceModule = module {
-    single { IswPos.getInstance() }
-    single<HttpService> { HttpServiceImpl(get()) }
-    single<UserStore> { UserStoreImpl(get()) }
-    single { SharePreferenceManager(androidContext()) }
-    single<KeyValueStore> { KeyValueStoreImpl(get()) }
-    single<EmailService> { EmailServiceImpl(get()) }
-    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
-    single<TransactionLogService> {
 
-        val realmKey = IsoUtils.hexToBytes(BuildConfig.REALM_KEY)
-        // create realm configuration
-        val realmConfig = RealmConfiguration.Builder()
-                .encryptionKey(realmKey)
-                .build()
-
-        // build monarchy
-        val monarchy = Monarchy.Builder()
-                .setRealmConfiguration(realmConfig)
-                .build()
-
-        TransactionLogServiceImpl(monarchy)
-    }
-    factory<IsoSocket> {
-        val resource = androidContext().resources
-        val serverIp = resource.getString(R.string.isw_nibss_ip)
-        val port = resource.getInteger(R.integer.iswNibssPort)
-        // try getting terminal info
-        val store: KeyValueStore = get()
-        val terminalInfo = TerminalInfo.get(store)
-        // getResult timeout based on terminal info
-        val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.iswTimeout)
-
-        return@factory IsoSocketImpl(serverIp, port, timeout * 1000)
-    }
-}
-
-private val networkModule = module {
+internal val networkModule = module {
 
     factory {
         OkHttpClient.Builder()
@@ -190,6 +142,3 @@ private val networkModule = module {
     }
 
 }
-
-
-internal val appModules = listOf(serviceModule, networkModule)
