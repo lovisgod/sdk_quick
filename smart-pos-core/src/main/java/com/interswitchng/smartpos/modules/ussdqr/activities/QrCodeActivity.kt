@@ -207,6 +207,7 @@ class QrCodeActivity : BaseActivity() {
         super.onCheckStopped()
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
+        qrViewModel.cancelPoll()
     }
 
 }

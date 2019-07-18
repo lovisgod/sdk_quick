@@ -9,6 +9,6 @@ internal sealed class PaymentStatus {
 
     class Complete(val transaction: Transaction): PaymentStatus()
     class Pending(val transaction: Transaction): PaymentStatus()
-    class Error(val transaction: Transaction?): PaymentStatus()
+    class Error(val transaction: Transaction?, val errorMsg: String?): PaymentStatus()
     object Timeout: PaymentStatus()
 }

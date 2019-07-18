@@ -23,55 +23,64 @@ internal class HttpServiceImpl(private val httpService: IHttpService) : HttpServ
 
     override suspend fun getBanks(): Optional<List<Bank>> {
         val banks = httpService.getBanks().await()
-        return when (banks) {
+        val banksResponse = banks.first
+        return when (banksResponse) {
             null -> None
-            else -> Some(banks)
+            else -> Some(banksResponse)
         }
     }
 
     override suspend fun initiateQrPayment(request: CodeRequest): Optional<CodeResponse> {
         val code = httpService.getQrCode(request).await()
-        return when (code) {
+        val codeResponse = code.first
+        return when (codeResponse) {
             null -> None
-            else -> Some(code)
+            else -> Some(codeResponse)
         }
     }
 
     override suspend fun initiateUssdPayment(request: CodeRequest): Optional<CodeResponse> {
         val response = httpService.getUssdCode(request).await()
-        return when (response) {
+        val codeResponse = response.first
+        return when (codeResponse) {
             null -> None
-            else -> Some(response)
+            else -> Some(codeResponse)
         }
     }
 
     override suspend fun checkPayment(type: PaymentType, status: TransactionStatus): PaymentStatus {
 
         // check status based on the transaction type
-        val transaction: Transaction? = when (type) {
+        val transactionResponse = when (type) {
             PaymentType.USSD -> httpService.getUssdTransactionStatus(status.merchantCode, status.reference).await()
             else -> httpService.getQrTransactionStatus(status.merchantCode, status.reference).await()
         }
 
+        val transaction = transactionResponse.first
         return when {
-            transaction == null || transaction.isError() -> PaymentStatus.Error(transaction)
+            transaction == null || transaction.isError() -> PaymentStatus.Error(transaction, transactionResponse.second)
             transaction.isCompleted() -> PaymentStatus.Complete(transaction)
             transaction.isPending() -> PaymentStatus.Pending(transaction)
             else -> {
                 // some other error occurred
                 // terminate loop and return
-                PaymentStatus.Error(transaction)
+                PaymentStatus.Error(transaction, transactionResponse.second)
             }
         }
     }
 
-    private suspend fun <T> Simple<T>.await(): T? {
+
+    private suspend fun <T> Simple<T>.await(): Pair<T?, String?> {
         return suspendCoroutine { continuation ->
             process { response, t ->
+                val message =  t?.message ?: t?.localizedMessage
+
                 // log errors
-                if (t != null) logger.log(t.localizedMessage)
+                if (message != null) logger.log(message)
+                // pair result and error
+                val result = Pair(response, message)
                 // return response
-                continuation.resume(response)
+                continuation.resume(result)
             }
         }
     }

@@ -212,13 +212,19 @@ abstract class BaseActivity : AppCompatActivity() {
             }
 
             is PaymentStatus.Error -> {
+                // get alert title
+                val title =
+                        if (status.errorMsg != null) "Network Error"
+                        else getString(R.string.isw_title_transaction_error)
+
                 // getResult error message
-                val message = status.transaction?.responseDescription
+                val message = status.errorMsg
+                        ?: status.transaction?.responseDescription
                         ?: "An error occurred, please try again"
 
                 // change notification to error notification
                 Alerter.create(this@BaseActivity)
-                        .setTitle(getString(R.string.isw_title_transaction_error))
+                        .setTitle(title)
                         .setText(message)
                         .setIcon(R.drawable.isw_ic_error)
                         .setDismissable(true)

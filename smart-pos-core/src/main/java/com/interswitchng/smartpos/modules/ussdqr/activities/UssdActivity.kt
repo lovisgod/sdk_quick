@@ -268,5 +268,6 @@ class UssdActivity : BaseActivity() {
         super.onCheckStopped()
         initiateButton.isEnabled = true
         initiateButton.isClickable = true
+        ussdViewModel.cancelPoll()
     }
 }
