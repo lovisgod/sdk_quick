@@ -92,6 +92,8 @@
     <string name="isw_email_end_point">https://api.sendgrid.com/v3/</string>
     <string name="isw_hint_select_a_date">Select a date</string>
     <string name="isw_no_report">No Results for:  %1$s</string>
+    <string name="isw_terminal_config">Terminal Config</string>
+    <string name="isw_sdk_config">SDK Config</string>
 
 
     <string-array name="isw_account_types">

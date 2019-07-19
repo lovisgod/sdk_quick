@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,141 +14,204 @@
         android:theme="@style/ISW.AppBarOverlay"
         app:popupTheme="@style/ISW.PopupOverlay" />
 
-    <EditText
-        android:id="@+id/etTerminalId"
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLength="8"
-        android:hint="@string/isw_title_terminal_id"
-        android:layout_margin="15dp"
-        tools:text="210239CB"
-        android:textSize="22sp"
-        android:inputType="textCapCharacters" />
+        android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tvKeys"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="@dimen/isw_content_padding"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="@string/isw_title_download_keys"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnDownloadKeys"
-            />
-
-        <TextView
-            android:id="@+id/tvKeyDate"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:paddingRight="@dimen/isw_content_padding"
-            android:paddingEnd="@dimen/isw_content_padding"
-            android:paddingLeft="@dimen/isw_content_padding"
-            android:paddingStart="@dimen/isw_content_padding"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/tvKeys"
-            tools:text="Mon 23, 2018" />
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/btnDownloadKeys"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="15dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/isw_ic_download"
-            android:tint="@color/iswColorPrimaryDark"
-            android:background="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_margin"
+                android:layout_marginEnd="@dimen/isw_content_margin"
+                android:layout_marginTop="@dimen/isw_content_margin"
+                android:layout_marginBottom="@dimen/isw_content_small_margin"
+                android:text="@string/isw_terminal_config"
+                android:textSize="12sp"
+                android:textColor="@color/iswColorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btnDownloadKeys"
+                app:layout_constraintStart_toStartOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/progressKeyDownload"
-            style="@style/ISW.Progress"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="@dimen/isw_content_padding"
-            android:layout_marginEnd="@dimen/isw_content_padding"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            <EditText
+                android:id="@+id/etTerminalId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginEnd="@dimen/isw_content_padding"
+                android:layout_marginBottom="@dimen/isw_content_padding"
+                android:hint="@string/isw_title_terminal_id"
+                android:inputType="textCapCharacters"
+                android:maxLength="8"
+                android:textSize="22sp"
+                tools:text="210239CB" />
 
-    </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginEnd="@dimen/isw_content_padding">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/iswColorSecondaryIcon" />
+                <TextView
+                    android:id="@+id/tvKeys"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/btnDownloadKeys"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="@string/isw_title_download_keys" />
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tvKeyDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvKeys"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="Mon 23, 2018" />
 
-        <TextView
-            android:id="@+id/tvTerminalInfo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="@dimen/isw_content_padding"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="@string/isw_title_download_terminal_configuration"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnDownloadTerminalConfig"
-            />
+                <ImageView
+                    android:id="@+id/btnDownloadKeys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="15dp"
+                    android:src="@drawable/isw_ic_download"
+                    android:tint="@color/iswColorPrimaryDark"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/tvTerminalInfoDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:paddingRight="@dimen/isw_content_padding"
-            android:paddingEnd="@dimen/isw_content_padding"
-            android:paddingLeft="@dimen/isw_content_padding"
-            android:paddingStart="@dimen/isw_content_padding"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/tvTerminalInfo"
-            tools:text="Mon 23, 2018" />
+                <ProgressBar
+                    android:id="@+id/progressKeyDownload"
+                    style="@style/ISW.Progress"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="15dp"
+                    android:layout_marginStart="@dimen/isw_content_padding"
+                    android:layout_marginEnd="@dimen/isw_content_padding"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
-        <ImageView
-            android:id="@+id/btnDownloadTerminalConfig"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="15dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/isw_ic_download"
-            android:tint="@color/iswColorPrimaryDark"
-            android:background="?attr/selectableItemBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            </android.support.constraint.ConstraintLayout>
 
-        <ProgressBar
-            android:id="@+id/progressTerminalDownload"
-            style="@style/ISW.Progress"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:indeterminateOnly="true"
-            android:layout_marginStart="@dimen/isw_content_padding"
-            android:layout_marginEnd="@dimen/isw_content_padding"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginEnd="@dimen/isw_content_padding"
+                android:layout_marginBottom="@dimen/isw_content_padding"
+                android:background="@color/iswColorSecondaryIcon" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginEnd="@dimen/isw_content_padding">
+
+                <TextView
+                    android:id="@+id/tvTerminalInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/btnDownloadTerminalConfig"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="@string/isw_title_download_terminal_configuration" />
+
+                <TextView
+                    android:id="@+id/tvTerminalInfoDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTerminalInfo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="Mon 23, 2018" />
+
+                <ImageView
+                    android:id="@+id/btnDownloadTerminalConfig"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="15dp"
+                    android:src="@drawable/isw_ic_download"
+                    android:tint="@color/iswColorPrimaryDark"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/progressTerminalDownload"
+                    style="@style/ISW.Progress"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="15dp"
+                    android:layout_marginStart="@dimen/isw_content_padding"
+                    android:layout_marginEnd="@dimen/isw_content_padding"
+                    android:indeterminateOnly="true"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-    </android.support.constraint.ConstraintLayout>
+            </android.support.constraint.ConstraintLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/iswColorSecondaryIcon" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginEnd="@dimen/isw_content_padding"
+                android:layout_marginBottom="@dimen/isw_content_padding"
+                android:background="@color/iswColorSecondaryIcon" />
+
+
+
+
+            <!-- SDK configuration -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_margin"
+                android:layout_marginEnd="@dimen/isw_content_margin"
+                android:layout_marginTop="@dimen/isw_content_margin"
+                android:layout_marginBottom="@dimen/isw_content_small_margin"
+                android:text="@string/isw_sdk_config"
+                android:textSize="12sp"
+                android:textColor="@color/iswColorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/btnDownloadKeys"
+                app:layout_constraintStart_toStartOf="parent"
+
+                android:visibility="gone"
+
+                />
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginEnd="@dimen/isw_content_padding"
+
+                android:visibility="gone"
+                >
+
+
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>
