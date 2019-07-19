@@ -4,6 +4,7 @@ import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeViewModel
 import com.interswitchng.smartpos.modules.menu.report.ReportViewModel
+import com.interswitchng.smartpos.modules.menu.settings.SettingsViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.UssdViewModel
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
@@ -26,4 +27,6 @@ internal val viewModels = module {
     viewModel { HistoryViewModel(get()) }
 
     viewModel { ReportViewModel(get()) }
+
+    viewModel { SettingsViewModel(get()) }
 }

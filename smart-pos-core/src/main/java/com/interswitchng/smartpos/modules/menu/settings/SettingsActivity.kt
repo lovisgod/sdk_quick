@@ -1,26 +1,27 @@
 package com.interswitchng.smartpos.modules.menu.settings
 
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v4.widget.ImageViewCompat
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
-import com.interswitchng.smartpos.shared.interfaces.library.IsoService
-import com.interswitchng.smartpos.shared.models.utils.IswCompositeDisposable
+import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
-import com.interswitchng.smartpos.shared.utilities.ThreadUtils
 import kotlinx.android.synthetic.main.isw_activity_settings.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class SettingsActivity : MenuActivity() {
 
     private val store: KeyValueStore by inject()
-    private val isoService: IsoService by inject()
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
-    private val disposables = IswCompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,15 +30,27 @@ class SettingsActivity : MenuActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-    }
 
-    override fun onStart() {
-        super.onStart()
 
         // set the text values
         setupTexts()
         // setup button listeners
         setupButtons()
+
+        // observe view model
+        with(settingsViewModel) {
+            val owner = { lifecycle }
+
+            // observe key download status
+            keysDownloadSuccess.observe(owner) {
+                it?.apply(::keysDownloaded)
+            }
+
+            // observe config download status
+            configDownloadSuccess.observe(owner) {
+                it?.apply(::terminalConfigDownloaded)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -54,7 +67,7 @@ class SettingsActivity : MenuActivity() {
         // set up buttons
         btnDownloadKeys.setOnClickListener {
             // validate that a terminal id is present
-            val terminalID: String = terminalId.text.toString()
+            val terminalID: String = etTerminalId.text.toString()
 
             if (terminalID.isEmpty() || terminalID.length != 8) {
                 // validate terminal id
@@ -71,14 +84,17 @@ class SettingsActivity : MenuActivity() {
                 // hide download date
                 tvKeyDate.visibility = View.GONE
 
+                // save terminal id
+                store.saveString(KEY_TERMINAL_ID, terminalID)
+
                 // trigger download keys
-                downloadKeys(terminalID)
+                settingsViewModel.downloadKeys(terminalID)
             }
         }
 
         btnDownloadTerminalConfig.setOnClickListener {
             // validate that a terminal id is present
-            val terminalID: String = terminalId.text.toString()
+            val terminalID: String = etTerminalId.text.toString()
 
             // validate terminal id
             if (terminalID.isEmpty() || terminalID.length != 8) {
@@ -96,18 +112,22 @@ class SettingsActivity : MenuActivity() {
                 tvTerminalInfoDate.visibility = View.GONE
 
                 // trigger download terminal config
-                downloadTerminalConfig(terminalID)
+                settingsViewModel.downloadTerminalConfig(terminalID)
             }
         }
     }
 
     private fun setupTexts() {
         val terminalDate = store.getNumber(KEY_DATE_TERMINAL, -1)
+        val terminalId = store.getString(KEY_TERMINAL_ID, "")
         val keysDate = store.getNumber(KEY_DATE_KEYS, -1)
+
+        // set the value of terminal
+        etTerminalId.setText(terminalId)
 
         if (terminalDate != -1L) {
             val date = Date(terminalDate)
-            val dateStr = DisplayUtils.getIsoString(date)
+            val dateStr = DateUtils.timeOfDateFormat.format(date)
             tvTerminalInfoDate.text = getString(R.string.isw_title_date, dateStr)
             tvTerminalInfo.text = getString(R.string.isw_title_terminal_config_downloaded)
         } else {
@@ -118,7 +138,7 @@ class SettingsActivity : MenuActivity() {
 
         if (keysDate != -1L) {
             val date = Date(terminalDate)
-            val dateStr = DisplayUtils.getIsoString(date)
+            val dateStr = DateUtils.timeOfDateFormat.format(date)
             tvKeyDate.text = getString(R.string.isw_title_date, dateStr)
             tvKeys.text = getString(R.string.isw_title_keys_downloaded)
         } else {
@@ -128,27 +148,6 @@ class SettingsActivity : MenuActivity() {
         }
     }
 
-
-    private fun downloadKeys(terminalId: String) {
-        val disposable = ThreadUtils.createExecutor {
-            // download keys and update ui
-            val isSuccessful = isoService.downloadKey(terminalId)
-            runOnUiThread { keysDownloaded(isSuccessful) }
-        }
-
-        disposables.add(disposable)
-    }
-
-    private fun downloadTerminalConfig(terminalId: String) {
-        val disposable = ThreadUtils.createExecutor {
-            val isSuccessful = isoService.downloadTerminalParameters(terminalId)
-            runOnUiThread {
-                terminalConfigDownloaded(isSuccessful)
-            }
-        }
-
-        disposables.add(disposable)
-    }
 
     private fun keysDownloaded(isSuccessful: Boolean) {
         // enable and show button
@@ -172,7 +171,8 @@ class SettingsActivity : MenuActivity() {
 
             // set the drawable and color
             btnDownloadKeys.setImageResource(R.drawable.isw_ic_check)
-            btnDownloadKeys.setColorFilter(android.R.color.holo_green_dark)
+            val color = ContextCompat.getColor(this, R.color.iswTextColorSuccessDark)
+            ImageViewCompat.setImageTintList(btnDownloadKeys, ColorStateList.valueOf(color))
         } else {
             val message = "No keys downloaded"
             tvKeyDate.text = getString(R.string.isw_title_date, message)
@@ -180,7 +180,8 @@ class SettingsActivity : MenuActivity() {
 
             // set the drawable and color
             btnDownloadKeys.setImageResource(R.drawable.isw_ic_error)
-            btnDownloadKeys.setColorFilter(android.R.color.holo_red_dark)
+            val color = ContextCompat.getColor(this, R.color.iswTextColorError)
+            ImageViewCompat.setImageTintList(btnDownloadKeys, ColorStateList.valueOf(color))
         }
 
     }
@@ -207,20 +208,23 @@ class SettingsActivity : MenuActivity() {
 
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_check)
-            btnDownloadTerminalConfig.setColorFilter(android.R.color.holo_green_dark)
+            val color = ContextCompat.getColor(this, R.color.iswTextColorSuccessDark)
+            ImageViewCompat.setImageTintList(btnDownloadTerminalConfig, ColorStateList.valueOf(color))
         } else {
             val message = "No terminal configuration"
             tvTerminalInfoDate.text = getString(R.string.isw_title_date, message)
             tvTerminalInfo.text = getString(R.string.isw_title_error_downloading_terminal_config)
 
             // set the drawable and color
-            btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_warning)
-            btnDownloadTerminalConfig.setColorFilter(android.R.color.holo_red_dark)
+            btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_error)
+            val color = ContextCompat.getColor(this, R.color.iswTextColorError)
+            ImageViewCompat.setImageTintList(btnDownloadTerminalConfig, ColorStateList.valueOf(color))
         }
     }
 
     companion object {
         const val KEY_DATE_TERMINAL = "key_download_terminal_date"
         const val KEY_DATE_KEYS = "key_download_key_date"
+        const val KEY_TERMINAL_ID = "key_terminal_id"
     }
 }

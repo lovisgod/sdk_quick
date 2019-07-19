@@ -16,7 +16,7 @@
         app:popupTheme="@style/ISW.PopupOverlay" />
 
     <EditText
-        android:id="@+id/terminalId"
+        android:id="@+id/etTerminalId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLength="8"
@@ -51,6 +51,7 @@
             android:paddingEnd="@dimen/isw_content_padding"
             android:paddingLeft="@dimen/isw_content_padding"
             android:paddingStart="@dimen/isw_content_padding"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/tvKeys"
             tools:text="Mon 23, 2018" />
 
@@ -112,6 +113,7 @@
             android:paddingEnd="@dimen/isw_content_padding"
             android:paddingLeft="@dimen/isw_content_padding"
             android:paddingStart="@dimen/isw_content_padding"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/tvTerminalInfo"
             tools:text="Mon 23, 2018" />
 

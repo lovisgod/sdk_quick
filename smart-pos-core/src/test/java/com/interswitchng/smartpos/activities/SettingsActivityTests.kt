@@ -76,7 +76,7 @@ class SettingsActivityTests {
     @Test
     fun `should show error message and icon when 'keys download' is not successful`() {
 
-        val terminalIdText = activity.findViewById<EditText>(R.id.terminalId)
+        val terminalIdText = activity.findViewById<EditText>(R.id.etTerminalId)
         val keyButton = activity.findViewById<ImageView>(R.id.btnDownloadKeys)
         val keyText = activity.findViewById<TextView>(R.id.tvKeys)
         val keyDateText = activity.findViewById<TextView>(R.id.tvKeyDate)
@@ -113,7 +113,7 @@ class SettingsActivityTests {
     @Test
     fun `should show correct error message and icon when 'terminal config download' is not successful`() {
 
-        val terminalIdText = activity.findViewById<EditText>(R.id.terminalId)
+        val terminalIdText = activity.findViewById<EditText>(R.id.etTerminalId)
         val terminalButton = activity.findViewById<ImageView>(R.id.btnDownloadTerminalConfig)
         val terminalText = activity.findViewById<TextView>(R.id.tvTerminalInfo)
         val terminalDateText = activity.findViewById<TextView>(R.id.tvTerminalInfoDate)
@@ -153,7 +153,7 @@ class SettingsActivityTests {
     @Test
     fun `should have correct workflow when 'key-download' button is clicked`() {
 
-        val terminalIdText = activity.findViewById<EditText>(R.id.terminalId)
+        val terminalIdText = activity.findViewById<EditText>(R.id.etTerminalId)
         val keyProgress = activity.findViewById<ProgressBar>(R.id.progressKeyDownload)
         val keyButton = activity.findViewById<ImageView>(R.id.btnDownloadKeys)
         val keyText = activity.findViewById<TextView>(R.id.tvKeys)
@@ -205,7 +205,7 @@ class SettingsActivityTests {
     @Test
     fun `should have correct workflow when download_terminal config is clicked`() {
 
-        val terminalIdText = activity.findViewById<EditText>(R.id.terminalId)
+        val terminalIdText = activity.findViewById<EditText>(R.id.etTerminalId)
         val terminalProgress = activity.findViewById<ProgressBar>(R.id.progressTerminalDownload)
         val terminalButton = activity.findViewById<ImageView>(R.id.btnDownloadTerminalConfig)
         val terminalText = activity.findViewById<TextView>(R.id.tvTerminalInfo)
