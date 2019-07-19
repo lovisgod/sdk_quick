@@ -26,6 +26,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeR
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.*
@@ -45,7 +46,7 @@ class UssdActivity : BaseActivity() {
     private val logger by lazy { Logger.with("USSD") }
 
 
-    private val printSlip = mutableListOf<PrintObject>()
+    private var printSlip = mutableListOf<PrintObject>()
     // bottom sheet dialog for banks
     private lateinit var banksDialog: SelectBankBottomSheet
 
@@ -133,7 +134,26 @@ class UssdActivity : BaseActivity() {
 
             // observe payment status
             paymentStatus.observe(owner) {
-                it?.apply(::handlePaymentStatus)
+                it?.let { status ->
+
+                    // setup payment slip
+                    if (it is PaymentStatus.Timeout) {
+                        val transaction = Transaction(
+                                -1, paymentInfo.amount,
+                                "",
+                                "0X0X",
+                                terminalInfo.currencyCode,
+                                true,
+                                null,
+                                0,
+                                "Pending")
+
+                        val result = getTransactionResult(transaction)
+                        printSlip = result?.getSlip(terminalInfo)?.getSlipItems() ?: printSlip
+                    }
+
+                    handlePaymentStatus(status)
+                }
             }
 
             // observe progress bar

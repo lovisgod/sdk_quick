@@ -19,6 +19,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeR
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest.Companion.TRANSACTION_QR
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
+import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.*
@@ -38,7 +39,7 @@ class QrCodeActivity : BaseActivity() {
     private val alert by lazy { DialogUtils.getAlertDialog(this) }
 
     private var qrData: String? = null
-    private val printSlip = mutableListOf<PrintObject>()
+    private var printSlip = mutableListOf<PrintObject>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +86,25 @@ class QrCodeActivity : BaseActivity() {
             // observe payment status
             paymentStatus.observe(owner) {
                 // handle updates of payment status
-                it?.let(::handlePaymentStatus)
+                it?.let { status ->
+                    // setup payment slip
+                    if (it is PaymentStatus.Timeout) {
+                        val transaction = Transaction(
+                                -1, paymentInfo.amount,
+                                "",
+                                "0X0X",
+                                terminalInfo.currencyCode,
+                                true,
+                                null,
+                                0,
+                                "Pending")
+
+                        val result = getTransactionResult(transaction)
+                        printSlip = result?.getSlip(terminalInfo)?.getSlipItems() ?: printSlip
+                    }
+
+                    handlePaymentStatus(status)
+                }
             }
 
             showProgress.observe(owner) {
@@ -184,7 +203,7 @@ class QrCodeActivity : BaseActivity() {
 
     override fun getTransactionResult(transaction: Transaction): TransactionResult? {
         val now = Date()
-        val responseMsg = IsoUtils.getIsoResult(transaction.responseCode)?.second
+        val responseMsg = IsoUtils.getIsoResultMsg(transaction.responseCode)
                 ?: transaction.responseDescription
                 ?: "Error"
 
