@@ -40,11 +40,12 @@ internal abstract class BaseViewModel(protected val paymentService: HttpService)
             repeat(10) {
 
                 // start polling for payment status
-                poll(status)
+                poll(status, PaymentStatus.OngoingTimeout)
 
                 // delay for 5 seconds before next polling process
                 // if its not the last iteration
                 if (it < 9) delay(5_000)
+                else _paymentStatus.postValue(PaymentStatus.Timeout)
             }
 
             pollingJob?.cancel()
@@ -57,11 +58,11 @@ internal abstract class BaseViewModel(protected val paymentService: HttpService)
 
         // start new job
         pollingJob = uiScope.launch (ioScope) {
-            poll(status)
+            poll(status, PaymentStatus.Timeout)
         }
     }
 
-    private suspend fun poll(status: TransactionStatus) {
+    private suspend fun poll(status: TransactionStatus, timeoutMessage: PaymentStatus) {
 
         // get the type of payment
         val type = when (this) {
@@ -85,7 +86,7 @@ internal abstract class BaseViewModel(protected val paymentService: HttpService)
             delay(3_000)
 
             // trigger timeout if its third iteration starting from 0
-            if (it == 2) _paymentStatus.postValue(PaymentStatus.Timeout)
+            if (it == 2) _paymentStatus.postValue(timeoutMessage)
         }
 
         // hide progress indicator

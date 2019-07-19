@@ -196,8 +196,8 @@ abstract class BaseActivity : AppCompatActivity() {
                 showTransactionResult(status.transaction)
             }
 
-            is PaymentStatus.Timeout -> {
-                // change notification to error notification
+            is PaymentStatus.OngoingTimeout -> {
+                // change notification to info notification
                 Alerter.create(this@BaseActivity)
                         .setTitle(getString(R.string.isw_title_transaction_timeout))
                         .setText(getString(R.string.isw_content_transaction_in_progress_time_out))
@@ -206,6 +206,22 @@ abstract class BaseActivity : AppCompatActivity() {
                         .enableSwipeToDismiss()
                         .setBackgroundColorRes(android.R.color.holo_orange_dark)
                         .setDuration(5 * 1000)
+                        .show()
+            }
+
+            is PaymentStatus.Timeout -> {
+                val title = "Payment not Confirmed"
+                val message = "Unable to confirm payment at the moment, please try again later by manually clicking the button below"
+
+                // change notification to error
+                Alerter.create(this@BaseActivity)
+                        .setTitle(title)
+                        .setText(message)
+                        .setIcon(R.drawable.isw_ic_warning)
+                        .setDismissable(true)
+                        .enableSwipeToDismiss()
+                        .setBackgroundColorRes(android.R.color.holo_orange_dark)
+                        .setDuration(15 * 1000)
                         .show()
 
                 onCheckStopped()
@@ -229,7 +245,7 @@ abstract class BaseActivity : AppCompatActivity() {
                         .setIcon(R.drawable.isw_ic_error)
                         .setDismissable(true)
                         .enableSwipeToDismiss()
-                        .setBackgroundColorRes(android.R.color.holo_red_dark)
+                        .setBackgroundColorRes(R.color.iswTextColorError)
                         .setDuration(15 * 1000)
                         .show()
 
