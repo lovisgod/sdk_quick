@@ -1,8 +1,12 @@
 package com.interswitchng.smartpos.modules.ussdqr.activities
 
+import android.graphics.Typeface
 import android.os.Bundle
-import android.support.v4.text.HtmlCompat
-import android.widget.Toast
+import android.support.v4.content.ContextCompat
+import android.text.SpannableString
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
@@ -210,7 +214,23 @@ class UssdActivity : BaseActivity() {
                     ussdCode?.apply {
                         ussdText.text = this
                         val code = substring(lastIndexOf("*") + 1 until lastIndexOf("#"))
-                        paymentHint.text = HtmlCompat.fromHtml(getString(R.string.isw_hint_enter_ussd_code, code), HtmlCompat.FROM_HTML_MODE_LEGACY)
+
+                        // get the entire hint as spannable string
+                        val hint = getString(R.string.isw_hint_enter_ussd_code, code)
+                        val spannableHint = SpannableString(hint)
+
+
+                        // increase font size and change font color
+                        val startIndex = 16
+                        val endIndex = startIndex + code.length + 1
+                        val codeColor = ContextCompat.getColor(this@UssdActivity, R.color.iswColorPrimaryDark)
+                        spannableHint.setSpan(AbsoluteSizeSpan(24, true), startIndex, endIndex, 0)
+                        spannableHint.setSpan(StyleSpan(Typeface.BOLD), startIndex, endIndex, 0)
+                        spannableHint.setSpan(ForegroundColorSpan(codeColor), startIndex, endIndex, 0)
+
+
+                        // set the text value
+                        paymentHint.text = spannableHint
                         printSlip.add(PrintObject.Data("code - \n $this\n", PrintStringConfiguration(isBold = true, isTitle = true)))
                     }
 
