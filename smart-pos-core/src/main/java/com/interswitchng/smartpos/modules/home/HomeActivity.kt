@@ -3,10 +3,10 @@ package com.interswitchng.smartpos.modules.home
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.view.Gravity
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import kotlinx.android.synthetic.main.isw_activity_home.*
@@ -69,7 +69,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         // hide the drawer
-        drawerLayout.closeDrawer(Gravity.START)
+        drawerLayout.closeDrawer(GravityCompat.START)
     }
 }
 
