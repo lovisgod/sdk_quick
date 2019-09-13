@@ -1,7 +1,7 @@
 <resources>
 
 
-    <style name="ISW" parent="Theme.AppCompat.Light">
+    <style name="ISW" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="android:windowBackground">@color/iswColorMainBackground</item>
         <item name="colorPrimary">@color/iswColorPrimary</item>
         <item name="colorPrimaryDark">@color/iswColorPrimaryDark</item>

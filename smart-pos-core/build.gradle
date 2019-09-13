@@ -33,6 +33,10 @@ android {
         buildConfigField("String", "REALM_KEY", realmKey)
     }
 
+    dataBinding {
+        enabled true
+    }
+
     buildTypes {
         release {
             minifyEnabled minified

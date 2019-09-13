@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="Version"
+            type="String" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/iswColorPrimary">
+
+        <View
+            android:id="@+id/isw_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/isw_card_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/isw_guideline"
+            tools:layout_editor_absoluteX="30dp" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/isw_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.40" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/isw_guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/isw_guideline" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/isw_guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/isw_guideline" />
+
+        <TextView
+            android:id="@+id/isw_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/isw_smartpos"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/isw_textview2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/isw_textview2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#B3FFFFFF"
+            android:textSize="14sp"
+            android:text='@{"Version " + Version}'
+            app:layout_constraintBottom_toTopOf="@+id/isw_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/isw_textview"
+            tools:text="Version 2.1" />
+
+        <ImageView
+            android:id="@+id/isw_imageview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/isw_ic_login_lock"
+            app:layout_constraintBottom_toTopOf="@+id/isw_textview3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/isw_view"
+            app:layout_constraintTop_toBottomOf="@+id/isw_guideline" />
+
+        <TextView
+            android:id="@+id/isw_textview3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Enter Passcode"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/isw_textinputlayout"
+            app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/isw_imageview" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/isw_textinputlayout"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            app:layout_constraintBottom_toTopOf="@+id/isw_materialbutton"
+            app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/isw_textview3"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="#E0E7FF"
+            app:passwordToggleTintMode="src_atop">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Digits" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/isw_materialbutton"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            android:text="@string/isw_get_started"
+            app:layout_constraintBottom_toTopOf="@+id/isw_materialbutton2"
+            app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/isw_textinputlayout" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/isw_materialbutton2"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            android:text="@string/isw_link_fingerprint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/isw_materialbutton" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
