@@ -11,15 +11,15 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
@@ -47,7 +47,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.homeToolbar));
+        setSupportActionBar(findViewById(R.id.homeToolbar));
 
         configureTerminal();
         setupUI();
@@ -254,6 +254,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             // handle success
             if (data != null) {

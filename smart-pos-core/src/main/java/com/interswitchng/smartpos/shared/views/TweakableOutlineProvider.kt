@@ -3,10 +3,10 @@ package com.interswitchng.smartpos.shared.views
 import android.graphics.Outline
 import android.graphics.Rect
 import android.os.Build
-import android.support.annotation.FloatRange
-import android.support.annotation.RequiresApi
 import android.view.View
 import android.view.ViewOutlineProvider
+import androidx.annotation.FloatRange
+import androidx.annotation.RequiresApi
 
 /**
  * This class represents the shadow outline for

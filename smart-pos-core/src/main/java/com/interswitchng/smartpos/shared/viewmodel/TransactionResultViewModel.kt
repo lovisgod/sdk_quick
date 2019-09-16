@@ -1,7 +1,7 @@
 package com.interswitchng.smartpos.shared.viewmodel
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.EmailService
 import com.interswitchng.smartpos.shared.interfaces.library.TransactionLogService

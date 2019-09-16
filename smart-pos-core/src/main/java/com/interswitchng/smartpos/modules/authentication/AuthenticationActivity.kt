@@ -1,9 +1,9 @@
 package com.interswitchng.smartpos.modules.authentication
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.text.HtmlCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
+import androidx.databinding.DataBindingUtil
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.databinding.IswActivityLoginBinding

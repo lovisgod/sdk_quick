@@ -1,7 +1,7 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
-import android.arch.lifecycle.LiveData
-import android.arch.paging.PagedList
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import java.util.*
 
