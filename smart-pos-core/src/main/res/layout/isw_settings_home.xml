@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/iswColorTopBackground"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/isw_smart_pos_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="48dp"
+        android:textSize="18sp"
+        tools:text="SmartPos"
+        android:textColor="@color/alert_default_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <TextView
+        android:id="@+id/isw_activity_customer_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="116dp"
+        android:textColor="@color/alert_default_text_color"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isw_smart_pos_label"
+        tools:text="Settings" />
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/isw_bottom_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isw_activity_customer_name_text"
+        app:layout_constraintVertical_bias="1.0">
+
+        <ImageView
+            android:id="@+id/isw_settings_rectangle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/isw_settings_rectangle" />
+
+        <ImageView
+            android:id="@+id/isw_account_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="83dp"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/isw_ic_account" />
+
+        <ImageView
+            android:id="@+id/isw_customization_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/isw_account_label_sub_text"
+            app:srcCompat="@drawable/isw_ic_account" />
+
+        <ImageView
+            android:id="@+id/isw_help_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/isw_customization_sub_text"
+            app:srcCompat="@drawable/isw_ic_account" />
+
+        <TextView
+            android:id="@+id/isw_account_label_sub_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/isw_account_icon"
+            app:layout_constraintTop_toBottomOf="@+id/isw_account_label"
+            tools:text="Profile, Passcode, Fingerprint" />
+
+        <TextView
+            android:id="@+id/isw_account_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="80dp"
+            android:textColor="#0D0E11"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/isw_account_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Account" />
+
+        <TextView
+            android:id="@+id/isw_customization_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="20dp"
+            android:textColor="#0D0E11"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/isw_customization_icon"
+            app:layout_constraintTop_toBottomOf="@+id/isw_account_label_sub_text"
+            tools:text="Customization" />
+
+        <TextView
+            android:id="@+id/isw_customization_sub_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/isw_customization_icon"
+            app:layout_constraintTop_toBottomOf="@+id/isw_customization_label"
+            tools:text="Colors, icons" />
+
+
+        <TextView
+            android:id="@+id/isw_help_sub_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/isw_help_icon"
+            app:layout_constraintTop_toBottomOf="@+id/isw_help_label"
+            tools:text="FAQ, About SmartPOS, Contact us." />
+
+        <TextView
+            android:id="@+id/isw_help_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="25dp"
+            android:textColor="#0D0E11"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/isw_help_icon"
+            app:layout_constraintTop_toBottomOf="@+id/isw_customization_sub_text"
+            tools:text="Help" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/isw_guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp" />
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/isw_settings_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/isw_settings_image" />
+
+</android.support.constraint.ConstraintLayout>
