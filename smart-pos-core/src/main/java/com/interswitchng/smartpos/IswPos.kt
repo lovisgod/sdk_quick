@@ -2,7 +2,7 @@ package com.interswitchng.smartpos
 
 import android.app.Application
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.interswitchng.smartpos.di.networkModule
 import com.interswitchng.smartpos.di.serviceModule
 import com.interswitchng.smartpos.di.viewModels

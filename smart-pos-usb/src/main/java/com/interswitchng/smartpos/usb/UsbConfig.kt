@@ -5,7 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.usb.interfaces.MessageListener
 import com.interswitchng.smartpos.usb.interfaces.UsbConnector

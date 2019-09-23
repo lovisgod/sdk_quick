@@ -1,8 +1,7 @@
 package com.interswitchng.smartpos.modules.ussdqr.viewModels
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.gojuno.koptional.Optional
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest

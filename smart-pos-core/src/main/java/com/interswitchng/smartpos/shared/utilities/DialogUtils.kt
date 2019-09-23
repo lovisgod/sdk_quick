@@ -2,11 +2,11 @@ package com.interswitchng.smartpos.shared.utilities
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import com.interswitchng.smartpos.R
 import java.util.*
 

@@ -2,11 +2,13 @@
     <dimen name="isw_content_margin">16dp</dimen>
     <dimen name="isw_content_padding">16dp</dimen>
     <dimen name="isw_corner_radius">5dp</dimen>
+    <dimen name="isw_big_corner_radius">25dp</dimen>
     <dimen name="isw_elevation">5dp</dimen>
     <dimen name="isw_content_small_margin">10dp</dimen>
     <dimen name="isw_content_small_padding">5dp</dimen>
     <dimen name="isw_content_text_size">18sp</dimen>
     <dimen name="isw_payment_icon_length">64dp</dimen>
+    <dimen name="isw_guideline">32dp</dimen>
 
     <dimen name="design_navigation_padding_top_default" tools:override="true" tools:ignore="ResourceName">25dp</dimen>
     <dimen name="design_navigation_padding_bottom" tools:override="true" tools:ignore="ResourceName">25dp</dimen>

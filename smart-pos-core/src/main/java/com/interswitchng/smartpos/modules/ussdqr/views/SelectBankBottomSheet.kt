@@ -1,18 +1,18 @@
 package com.interswitchng.smartpos.modules.ussdqr.views
 
 import android.app.Dialog
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
-import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.ussdqr.adapters.BankListAdapter
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
@@ -35,7 +35,7 @@ internal class SelectBankBottomSheet : BottomSheetDialogFragment() {
 
         dialog.setOnShowListener {
             val sheetDialog = it as BottomSheetDialog
-            val bottomSheet: FrameLayout? = sheetDialog.findViewById(android.support.design.R.id.design_bottom_sheet)
+            val bottomSheet: FrameLayout = sheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
             BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED)
         }
 

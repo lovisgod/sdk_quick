@@ -1,7 +1,7 @@
 package com.interswitchng.smartpos.shared.activities
 
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 
 abstract class MenuActivity: AppCompatActivity() {
 

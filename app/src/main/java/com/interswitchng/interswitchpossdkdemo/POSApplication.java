@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
@@ -37,7 +37,7 @@ public class POSApplication extends Application   {
     public void onCreate() {
         super.onCreate();
 
-        configureTerminal();
+//        configureTerminal();
     }
 
     private void configureTerminal() {

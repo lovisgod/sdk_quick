@@ -4,8 +4,9 @@
  */
 package com.interswitchng.smartpos.shared.services.iso8583.tcp;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket;
 

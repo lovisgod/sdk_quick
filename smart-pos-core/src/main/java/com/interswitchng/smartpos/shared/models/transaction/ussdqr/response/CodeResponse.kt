@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.shared.models.transaction.ussdqr.response
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException

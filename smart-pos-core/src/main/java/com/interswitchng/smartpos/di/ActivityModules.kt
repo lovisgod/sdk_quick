@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.di
 
+import com.interswitchng.smartpos.modules.authentication.AuthenticationViewModel
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeViewModel
@@ -29,4 +30,6 @@ internal val viewModels = module {
     viewModel { ReportViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
+
+    viewModel { AuthenticationViewModel() }
 }

@@ -8,7 +8,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import java.util.*
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.interswitchng.smartpos.usb.BuildConfig
 import com.interswitchng.smartpos.usb.R
 import com.interswitchng.smartpos.usb.UsbService

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import com.interswitchng.smartpos.emv.pax.R
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter

@@ -2,16 +2,15 @@ package com.interswitchng.smartpos.modules.ussdqr.adapters
 
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.views.TweakableOutlineProvider
 import com.squareup.picasso.Picasso
 

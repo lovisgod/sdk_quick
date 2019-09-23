@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/isw_main_nav_graph"
+    app:startDestination="@id/isw_transaction">
+
+    <fragment
+        android:id="@+id/isw_transaction"
+        tools:layout="@layout/isw_fragment_transaction"
+        android:name="com.interswitchng.smartpos.modules.main.fragments.TransactionFragment">
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_transaction"
+            app:destination="@id/isw_fragment_amount"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment android:id="@+id/isw_fragment_amount"
+        tools:layout="@layout/isw_fragment_amount"
+        android:name="com.interswitchng.smartpos.modules.main.fragments.AmountFragment">
+        <argument android:name="PaymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+    </fragment>
+
+</navigation>

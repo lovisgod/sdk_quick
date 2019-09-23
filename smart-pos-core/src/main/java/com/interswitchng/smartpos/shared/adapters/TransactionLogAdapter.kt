@@ -1,15 +1,15 @@
 package com.interswitchng.smartpos.shared.adapters
 
-import android.arch.paging.PagedList
-import android.arch.paging.PagedListAdapter
-import android.support.v4.content.ContextCompat
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils

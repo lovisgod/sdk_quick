@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="iswColorPrimary">#004570</color>
-    <color name="iswColorPrimaryDark">#00365b</color>
+    <color name="iswColorPrimary">#2E5BFF</color>
+    <color name="iswColorPrimaryDark">#2E5BFF</color>
     <color name="iswColorMainBackground">#FFF</color>
-    <color name="iswColorTextSecondary">#FF00425F</color>
+    <color name="iswColorTextSecondary">#2E5BFF</color>
     <color name="iswColorSecondaryIcon">#dfdfdf</color>
     <color name="iswColorQrCodeBackground">#f8f8f9</color>
     <color name="iswTextColorDark">#363636</color>

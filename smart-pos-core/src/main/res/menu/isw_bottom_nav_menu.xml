@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="@string/isw_transaction"
+        android:id="@+id/isw_transaction"
+        android:icon="@drawable/isw_ic_bottom_nav_transaction"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="@string/isw_report"
+        android:id="@+id/isw_report"
+        android:icon="@drawable/isw_ic_bottom_nav_report"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="@string/isw_activity"
+        android:id="@+id/isw_activity"
+        android:icon="@drawable/isw_ic_bottom_nav_activity"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="@string/isw_settings"
+        android:id="@+id/isw_settings"
+        android:icon="@drawable/isw_ic_bottom_nav_settings"
+        app:showAsAction="always"/>
+</menu>

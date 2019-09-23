@@ -1,9 +1,8 @@
 package com.interswitchng.smartpos.modules.ussdqr.viewModels
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.models.core.UserType
@@ -14,7 +13,10 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.Trans
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.utilities.toast
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal abstract class BaseViewModel(protected val paymentService: HttpService) : RootViewModel() {
 

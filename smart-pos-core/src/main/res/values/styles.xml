@@ -1,7 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
 
-    <style name="ISW" parent="Theme.AppCompat.Light">
+    <style name="ISW" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="android:windowBackground">@color/iswColorMainBackground</item>
         <item name="colorPrimary">@color/iswColorPrimary</item>
         <item name="colorPrimaryDark">@color/iswColorPrimaryDark</item>
@@ -138,6 +138,17 @@
 
     <style name="IswDatePicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/iswTextColorSecondaryLight</item>
+    </style>
+    
+    <style name="IswBottomSheetBackground" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="android:background">@drawable/isw_card_background</item>
+    </style>
+
+    <style name="IswBottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/IswBottomSheetBackground</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="lollipop">@android:color/white</item>
     </style>
 
 </resources>

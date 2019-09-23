@@ -1,10 +1,10 @@
 package com.interswitchng.smartpos.shared.utilities
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 
 object DeviceUtils {
