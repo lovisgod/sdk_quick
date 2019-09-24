@@ -12,7 +12,7 @@ abstract class BaseBottomSheetDialog : BottomSheetDialogFragment() {
 
     protected lateinit var rootView: View
 
-    @LayoutRes abstract fun getLayoutId(): Int
+    abstract val layoutId: Int
 
     override fun getTheme(): Int = R.style.IswBottomSheet
 
@@ -21,7 +21,7 @@ abstract class BaseBottomSheetDialog : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        rootView = inflater.inflate(getLayoutId(), container, false)
+        rootView = inflater.inflate(layoutId, container, false)
         return rootView
     }
 }

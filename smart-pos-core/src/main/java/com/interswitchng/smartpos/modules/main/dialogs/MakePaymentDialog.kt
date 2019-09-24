@@ -5,13 +5,14 @@ import android.view.View
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseBottomSheetDialog
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
-import kotlinx.android.synthetic.main.isw_layout_payment_options_sheet.*
+import kotlinx.android.synthetic.main.isw_sheet_layout_payment_options.*
 
 class MakePaymentDialog constructor(
     private val optionClickListener: SingleArgsClickListener<Int>
 ) : BaseBottomSheetDialog() {
 
-    override fun getLayoutId(): Int = R.layout.isw_layout_payment_options_sheet
+    override val layoutId: Int
+        get() = R.layout.isw_sheet_layout_payment_options
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_purchase.setOnClickListener {
