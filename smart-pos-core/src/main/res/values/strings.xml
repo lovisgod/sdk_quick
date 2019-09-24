@@ -112,6 +112,13 @@
     <string name="isw_card_not_present">Card Not Present</string>
     <string name="isw_completion">Completion</string>
     <string name="isw_enter_amount">Enter Amount</string>
+    <string name="isw_proceed">PROCEED</string>
+    <string name="isw_ussd">USSD</string>
+    <string name="isw_pay_code">Pay Code</string>
+    <string name="isw_qr_code">QR Code</string>
+    <string name="isw_card_payment">Card Payment</string>
+    <string name="isw_continue">CONTINUE</string>
+    <string name="isw_make_payment">Make Payment</string>
 
 
     <string-array name="isw_account_types">

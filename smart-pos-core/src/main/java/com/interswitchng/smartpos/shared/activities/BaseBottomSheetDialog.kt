@@ -5,14 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.interswitchng.smartpos.R
 
-abstract class BaseBottomSheetDialog <BINDING: ViewDataBinding> : BottomSheetDialogFragment() {
+abstract class BaseBottomSheetDialog : BottomSheetDialogFragment() {
 
-    protected lateinit var binding: BINDING
+    protected lateinit var rootView: View
 
     @LayoutRes abstract fun getLayoutId(): Int
 
@@ -23,7 +21,7 @@ abstract class BaseBottomSheetDialog <BINDING: ViewDataBinding> : BottomSheetDia
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
-        return binding.root
+        rootView = inflater.inflate(getLayoutId(), container, false)
+        return rootView
     }
 }

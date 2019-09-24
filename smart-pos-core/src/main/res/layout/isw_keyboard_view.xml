@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_one"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="1"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/isw_keypad_four"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_seven"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="7"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/isw_keypad_zero"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/isw_keypad_four"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_zero"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="0"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/isw_keypad_nine"
+            app:layout_constraintStart_toEndOf="@+id/isw_keypad_seven"
+            app:layout_constraintTop_toBottomOf="@+id/isw_keypad_seven"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_four"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="4"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/isw_keypad_seven"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/isw_keypad_one"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_two"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="2"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_keypad_one"
+            app:layout_constraintEnd_toStartOf="@+id/isw_keypad_three"
+            app:layout_constraintStart_toEndOf="@+id/isw_keypad_one"
+            app:layout_constraintTop_toTopOf="@+id/isw_keypad_one"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_three"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="3"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_keypad_two"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/isw_keypad_two"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_five"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="5"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_keypad_four"
+            app:layout_constraintEnd_toStartOf="@+id/isw_keypad_six"
+            app:layout_constraintStart_toEndOf="@+id/isw_keypad_four"
+            app:layout_constraintTop_toTopOf="@+id/isw_keypad_four"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_six"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="6"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_keypad_five"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/isw_keypad_five"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_eight"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="8"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_keypad_seven"
+            app:layout_constraintEnd_toStartOf="@+id/isw_keypad_nine"
+            app:layout_constraintStart_toEndOf="@+id/isw_keypad_seven"
+            app:layout_constraintTop_toTopOf="@+id/isw_keypad_seven"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_keypad_nine"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="90dp"
+            android:layout_height="100dp"
+            android:background="@drawable/isw_keypad_background"
+            android:text="9"
+            android:textColor="@color/isw_keypad_color_statelist"
+            android:textSize="40sp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_keypad_eight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/isw_keypad_eight"
+            app:strokeColor="@color/iswColorPrimary"
+            app:strokeWidth="1dp"
+            tools:textColor="@android:color/black" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

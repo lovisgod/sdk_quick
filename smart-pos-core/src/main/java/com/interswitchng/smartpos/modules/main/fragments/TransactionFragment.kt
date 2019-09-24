@@ -1,31 +1,31 @@
 package com.interswitchng.smartpos.modules.main.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.databinding.IswFragmentTransactionBinding
 import com.interswitchng.smartpos.modules.main.dialogs.MakePaymentDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.payment
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.utilities.Logger
+import kotlinx.android.synthetic.main.isw_fragment_transaction.*
+import java.text.DateFormat
+import java.util.*
 
-class TransactionFragment: BaseFragment<IswFragmentTransactionBinding>(TAG) {
+class TransactionFragment: BaseFragment(TAG) {
 
     override fun getLayoutId(): Int = R.layout.isw_fragment_transaction
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.iswMakePaymentCard.setOnClickListener {
+        isw_date.text = DateFormat.getDateInstance(DateFormat.LONG).format(Date(System.currentTimeMillis()))
+        isw_merchant_name.text = "SmartWare Solutions"
+        isw_make_payment_card.setOnClickListener {
             val sheet = MakePaymentDialog {
                 //Handle click listener here
                 logger.logErr("Item number clicked ===== $it")
                 when (it) {
                     0 -> {
                         val payment = payment {
-                            type = 0
+                            type = PaymentModel.Type.MAKE_PAYMENT
                         }
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentTransaction(payment))
                     }

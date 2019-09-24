@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <variable
-            name="Version"
-            type="String" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,7 +45,7 @@
             android:text="@string/isw_smartpos"
             android:textColor="@android:color/white"
             android:textSize="25sp"
-            app:layout_constraintBottom_toTopOf="@+id/isw_textview2"
+            app:layout_constraintBottom_toTopOf="@+id/isw_sdk_version"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,12 +53,11 @@
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
-            android:id="@+id/isw_textview2"
+            android:id="@+id/isw_sdk_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#B3FFFFFF"
             android:textSize="14sp"
-            android:text='@{"Version " + Version}'
             app:layout_constraintBottom_toTopOf="@+id/isw_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
