@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,9 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:textSize="18sp"
-        tools:text="SmartPos"
+        android:text="@string/isw_smartpos"
         android:textColor="@color/alert_default_text_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,11 +26,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="90dp"
         android:layout_marginBottom="8dp"
         android:textSize="12sp"
         android:textColor="@color/iswColorLightGrey"
-        tools:text="Monday, July 2019"
+        android:text="@string/isw_date_text"
         app:layout_constraintBottom_toTopOf="@+id/isw_activity_customer_name_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/isw_" />
@@ -46,7 +46,7 @@
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/isw_activity_date_text"
-        tools:text="Activity" />
+        android:text="@string/isw_activity" />
 
     <ImageButton
         android:id="@+id/isw_activity_filter_btn"
@@ -73,26 +73,26 @@
         app:layout_constraintTop_toTopOf="@+id/isw_activity_customer_name_text"
         app:srcCompat="@drawable/isw_ic_search" />
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/isw_bottom_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/isw_activity_customer_name_text">
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/activity_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="45dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/isw_activity_home_list_item" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
@@ -109,4 +109,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/isw_ic_activity_logo" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

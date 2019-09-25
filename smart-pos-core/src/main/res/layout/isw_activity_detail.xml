@@ -1,220 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/iswColorTopBackground"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/isw_activity_nav"
-        android:contentDescription=""
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="48dp"
-        android:textColor="@color/alert_default_text_color"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:drawableStart="@drawable/isw_ic_navback"
-        android:drawablePadding="19dp"
-        tools:text="Activity"
-        android:drawableLeft="@drawable/isw_ic_navback" />
-
-    <TextView
-        android:id="@+id/isw_activity_customer_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="118dp"
-        android:textColor="@color/alert_default_text_color"
-        android:textSize="28sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/isw_activity_nav"
-        tools:text="Adeleye Samuel" />
-
-
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/isw_bottom_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/isw_activity_customer_name_text">
-
-        <android.support.constraint.Guideline
-            android:id="@+id/isw_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="25dp"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/isw_transaction_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="29dp"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/isw_ic_payment_card"
-            android:contentDescription="TODO" />
-
+        android:background="@color/iswColorTopBackground"
+        android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/isw_transaction_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginLeft="17dp"
-            android:layout_marginTop="36dp"
-            android:textSize="16sp"
-            android:textColor="#0D0E11"
-            tools:text="Verve Debit Card (6810)"
-            app:layout_constraintStart_toEndOf="@+id/isw_transaction_icon"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/isw_transaction_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginLeft="17dp"
-            android:textSize="12sp"
-            tools:text="Payment Method"
-            app:layout_constraintStart_toEndOf="@+id/isw_transaction_icon"
-            app:layout_constraintTop_toBottomOf="@+id/isw_transaction_name" />
-
-        <TextView
-            android:id="@+id/isw_amount_paid_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#0D0E11"
-            android:textSize="16sp"
-            android:layout_marginTop="44dp"
-            tools:text="Amount Paid"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/isw_transaction_icon" />
-
-        <TextView
-            android:id="@+id/isw_amount_paid_value_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="28sp"
-            android:textColor="#0D0E11"
-            tools:text="90,499.99"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_text" />
-
-        <TextView
-            android:id="@+id/isw_reference_id_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            android:textColor="#0D0E11"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_value_text"
-            tools:text="REF ID: #00ISJOJSNJDNU8DW904" />
-
-        <TextView
-            android:id="@+id/isw_textview6"
+            android:id="@+id/isw_activity_nav"
+            android:contentDescription=""
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="53dp"
-            android:textColor="#0D0E11"
-            android:textSize="16sp"
-            tools:text="Other details"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/isw_reference_id_text" />
-
-        <View
-            android:id="@+id/isw_divider"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:background="#E0E7FF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/isw_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/isw_textview6" />
-
-        <TextView
-            android:id="@+id/isw_date_label_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textSize="16sp"
-            android:textColor="#8097B1"
-            tools:text="Date"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/isw_divider" />
-
-        <TextView
-            android:id="@+id/isw_date_value_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:textColor="#8097B1"
-            android:textSize="16sp"
-            tools:text="7 Mar 2019"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/isw_divider" />
-
-        <TextView
-            android:id="@+id/isw_time_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textColor="#8097B1"
-            tools:text="Time"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/isw_date_label_text" />
-
-        <TextView
-            android:id="@+id/isw_time_value_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:textColor="#8097B1"
-            android:textSize="16sp"
-            tools:text="10:26:30 AM WAT"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/isw_date_value_text" />
-
-        <TextView
-            android:id="@+id/isw_print_receipt_labbel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/isw_print_receipt_bg"
-            android:drawableStart="@drawable/isw_ic_printer_white"
-            android:drawableLeft="@drawable/isw_ic_printer_white"
-            android:drawablePadding="10dp"
-            android:paddingLeft="85dp"
-            android:paddingTop="11dp"
-            android:paddingRight="85dp"
-            android:paddingBottom="11dp"
-            android:textSize="12sp"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="24dp"
             android:textColor="@color/alert_default_text_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.616"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/isw_time_label"
-            tools:text="PRINT RECEIPT" />
-    </android.support.constraint.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            android:drawableStart="@drawable/isw_ic_navback"
+            android:drawablePadding="6dp"
+            android:text="@string/isw_activity"
+            android:drawableLeft="@drawable/isw_ic_navback" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/isw_activity_customer_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="70dp"
+            android:textColor="@color/alert_default_text_color"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/isw_activity_nav"
+            android:text="Adeleye Samuel" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/isw_bottom_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/isw_activity_customer_name_text">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/isw_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="25dp"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/isw_transaction_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="@+id/isw_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/isw_ic_payment_card"
+                android:contentDescription="TODO" />
+
+            <TextView
+                android:id="@+id/isw_transaction_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginTop="32dp"
+                android:textSize="16sp"
+                android:textColor="#0D0E11"
+                android:text="Verve Debit Card (6810)"
+                app:layout_constraintStart_toEndOf="@+id/isw_transaction_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/isw_transaction_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginLeft="17dp"
+                android:textSize="12sp"
+                android:text="Payment Method"
+                app:layout_constraintStart_toEndOf="@+id/isw_transaction_icon"
+                app:layout_constraintTop_toBottomOf="@+id/isw_transaction_name" />
+
+            <TextView
+                android:id="@+id/isw_amount_paid_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#0D0E11"
+                android:textSize="14sp"
+                android:layout_marginTop="32dp"
+                android:text="Amount Paid"
+                app:layout_constraintStart_toStartOf="@+id/isw_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/isw_transaction_icon" />
+
+            <TextView
+                android:id="@+id/isw_amount_paid_value_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="20sp"
+                android:textColor="#0D0E11"
+                android:text="90,499.99"
+                app:layout_constraintStart_toStartOf="@+id/isw_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_text" />
+
+            <TextView
+                android:id="@+id/isw_reference_id_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="#0D0E11"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/isw_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_value_text"
+                android:text="REF ID: #00ISJOJSNJDNU8DW904" />
+
+            <TextView
+                android:id="@+id/isw_textview6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:textColor="#0D0E11"
+                android:textSize="16sp"
+                android:text="Other details"
+                app:layout_constraintStart_toStartOf="@+id/isw_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/isw_reference_id_text" />
+
+            <View
+                android:id="@+id/isw_divider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:background="#E0E7FF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/isw_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/isw_textview6" />
+
+            <TextView
+                android:id="@+id/isw_date_label_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textSize="14sp"
+                android:textColor="#8097B1"
+                android:text="Date"
+                app:layout_constraintStart_toStartOf="@+id/isw_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/isw_divider" />
+
+            <TextView
+                android:id="@+id/isw_date_value_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:textColor="#8097B1"
+                android:textSize="14sp"
+                android:text="7 Mar 2019"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_divider" />
+
+            <TextView
+                android:id="@+id/isw_time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="#8097B1"
+                android:textSize="14sp"
+                android:text="Time"
+                app:layout_constraintStart_toStartOf="@+id/isw_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/isw_date_label_text" />
+
+            <TextView
+                android:id="@+id/isw_time_value_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:textColor="#8097B1"
+                android:textSize="14sp"
+                android:text="10:26:30 AM WAT"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_date_value_text" />
+
+            <TextView
+                android:id="@+id/isw_print_receipt_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/isw_print_receipt_bg"
+                android:drawableStart="@drawable/isw_ic_printer_white"
+                android:drawableLeft="@drawable/isw_ic_printer_white"
+                android:drawablePadding="10dp"
+                android:paddingLeft="85dp"
+                android:paddingTop="11dp"
+                android:paddingRight="85dp"
+                android:paddingBottom="11dp"
+                android:textSize="12sp"
+                android:textColor="@color/alert_default_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_time_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="PRINT RECEIPT" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

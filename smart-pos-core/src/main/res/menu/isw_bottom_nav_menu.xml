@@ -21,7 +21,7 @@
 
     <item
         android:title="@string/isw_settings"
-        android:id="@+id/isw_settings"
+        android:id="@+id/isw_settings_home"
         android:icon="@drawable/isw_ic_bottom_nav_settings"
         app:showAsAction="always"/>
 </menu>

@@ -27,4 +27,57 @@
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/isw_settings_home"
+        tools:layout="@layout/isw_settings_home"
+        android:name="com.interswitchng.smartpos.modules.main.settings.SettingsHomeFragment">
+
+        <action
+            android:id="@+id/isw_goto_account_fragment_action"
+            app:destination="@id/isw_settings_account"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/isw_settings_account"
+        tools:layout="@layout/isw_settings_account"
+        android:name="com.interswitchng.smartpos.modules.main.settings.AccountFragment">
+
+        <action
+            android:id="@+id/isw_goto_account_fingerprint_fragment_action"
+            app:destination="@id/isw_settings_account_fingerprint"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/isw_settings_account_fingerprint"
+        tools:layout="@layout/isw_settings_account"
+        android:name="com.interswitchng.smartpos.modules.main.settings.FingerprintFragment"/>
+
+    <fragment
+        android:id="@+id/isw_activity"
+        tools:layout="@layout/isw_activity_home_new"
+        android:name="com.interswitchng.smartpos.modules.main.settings.ActivityFragment">
+        <action
+            android:id="@+id/isw_goto_activity_detail_fragment_action"
+            app:destination="@id/isw_activity_detail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/isw_activity_detail"
+        tools:layout="@layout/isw_activity_detail"
+        android:name="com.interswitchng.smartpos.modules.main.settings.ActivityDetailFragment"/>
+
 </navigation>
