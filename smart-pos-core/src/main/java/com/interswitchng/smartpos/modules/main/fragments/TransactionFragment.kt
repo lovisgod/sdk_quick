@@ -13,7 +13,8 @@ import java.util.*
 
 class TransactionFragment: BaseFragment(TAG) {
 
-    override fun getLayoutId(): Int = R.layout.isw_fragment_transaction
+    override val layoutId: Int
+        get() = R.layout.isw_fragment_transaction
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_date.text = DateFormat.getDateInstance(DateFormat.LONG).format(Date(System.currentTimeMillis()))
@@ -27,7 +28,7 @@ class TransactionFragment: BaseFragment(TAG) {
                         val payment = payment {
                             type = PaymentModel.Type.MAKE_PAYMENT
                         }
-                        navigate(TransactionFragmentDirections.iswActionGotoFragmentTransaction(payment))
+                        navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
                 }
             }

@@ -13,7 +13,8 @@ class AmountFragment : BaseFragment(TAG) {
     private val amountFragmentArgs by navArgs<AmountFragmentArgs>()
     private val payment by lazy { amountFragmentArgs.PaymentModel }
 
-    override fun getLayoutId(): Int = R.layout.isw_fragment_amount
+    override val layoutId: Int
+        get() = R.layout.isw_fragment_amount
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_proceed.setOnClickListener {

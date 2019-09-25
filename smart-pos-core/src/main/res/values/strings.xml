@@ -123,6 +123,10 @@
     <string name="isw_savings_account">Savings Account</string>
     <string name="isw_current_account">Current Account</string>
     <string name="isw_select_account_type">Select Account Type</string>
+    <string name="isw_enter">ENTER</string>
+    <string name="isw_status">Status</string>
+    <string name="isw_processing_transaction">Processing Transaction</string>
+    <string name="isw_share_receipt">Share Receipt</string>
 
 
     <string-array name="isw_account_types">

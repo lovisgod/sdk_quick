@@ -13,8 +13,10 @@ import kotlinx.android.synthetic.main.isw_layout_card_found.*
 class CardPaymentFragment : BaseFragment(TAG) {
 
     private val cardPaymentFragmentArgs by navArgs<CardPaymentFragmentArgs>()
+    private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
-    override fun getLayoutId(): Int = R.layout.isw_fragment_card_payment
+    override val layoutId: Int
+        get() = R.layout.isw_fragment_card_payment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         change_payment_method.setOnClickListener {
@@ -25,7 +27,8 @@ class CardPaymentFragment : BaseFragment(TAG) {
         }
         isw_card_found_continue.setOnClickListener {
             val dialog = AccountTypeDialog {
-
+                val direction = CardPaymentFragmentDirections.iswActionGotoFragmentPin(paymentModel)
+                navigate(direction)
             }
             dialog.show(childFragmentManager, TAG)
         }
