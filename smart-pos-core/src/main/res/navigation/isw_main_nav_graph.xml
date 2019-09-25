@@ -149,6 +149,16 @@
     <fragment
         android:id="@+id/isw_activity_detail"
         tools:layout="@layout/isw_activity_detail"
-        android:name="com.interswitchng.smartpos.modules.main.settings.ActivityDetailFragment"/>
+        android:name="com.interswitchng.smartpos.modules.main.settings.ActivityDetailFragment">
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_receipt"
+            app:destination="@id/isw_fragment_receipt"
+            app:popUpTo="@id/isw_transaction"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 
 </navigation>
