@@ -1,310 +1,329 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/iswColorPrimary">
 
-    <data>
-        <variable name="Date" type="String" />
-        <variable name="Merchant" type="String" />
-    </data>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/isw_guideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/isw_guideline" />
+
+    <TextView
+        android:id="@+id/isw_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/isw_smartpos"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/isw_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_merchant_name"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        tools:text="Sunday, July 2019" />
+
+    <TextView
+        android:id="@+id/isw_merchant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/isw_guideline"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        tools:text="Smartware Solutions" />
+
+    <View
+        android:id="@+id/isw_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/iswColorPrimary">
+        android:layout_height="0dp"
+        android:background="@drawable/isw_card_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/isw_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.30" />
+    <View
+        android:id="@+id/isw_view2"
+        android:layout_width="80dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/isw_round_handle_blue"
+        app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@id/isw_guideline2"
+        app:layout_constraintTop_toTopOf="@id/isw_view" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/isw_guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/isw_guideline" />
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/isw_make_payment_card"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_bill_payment_card"
+        app:layout_constraintEnd_toStartOf="@+id/isw_transfer_money_card"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_view2"
+        app:rippleColor="@android:color/darker_gray"
+        app:strokeColor="@color/iswSelectedTypeColor"
+        app:strokeWidth="0.2dp">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/isw_guideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="@dimen/isw_guideline" />
-
-        <TextView
-            android:id="@+id/isw_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/isw_smartpos"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/isw_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@{Date}"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/isw_merchant_name"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-            tools:text="Sunday, July 2019" />
-
-        <TextView
-            android:id="@+id/isw_merchant_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:text="@{Merchant}"
-            android:textColor="@android:color/white"
-            android:textSize="25sp"
-            app:layout_constraintBottom_toTopOf="@id/isw_guideline"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-            tools:text="Smartware Solutions" />
-
-        <View
-            android:id="@+id/isw_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@drawable/isw_card_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/isw_guideline" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <View
-            android:id="@+id/isw_view2"
-            android:layout_width="100dp"
-            android:layout_height="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/isw_round_handle_blue"
-            app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
-            app:layout_constraintStart_toStartOf="@id/isw_guideline2"
-            app:layout_constraintTop_toTopOf="@id/isw_view" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/isw_make_payment_card"
-            style="@style/Widget.MaterialComponents.CardView"
-            android:layout_width="160dp"
-            android:layout_height="180dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/isw_bill_payment_card"
-            app:layout_constraintStart_toEndOf="@+id/isw_guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/isw_view2"
-            app:rippleColor="@android:color/darker_gray"
-            android:focusable="true"
-            android:clickable="true"
-            app:strokeColor="@color/iswColorPrimary"
-            app:strokeWidth="0.5dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/isw_make_payment_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_height="wrap_content"
+                android:text="@string/isw_make_payment"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/isw_make_payment_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Make Payment"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Pay for items purchased or refund"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/isw_make_payment_text" />
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="bottom"
-                    android:src="@drawable/isw_ic_payment"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/isw_transfer_money_card"
-            style="@style/Widget.MaterialComponents.CardView"
-            android:layout_width="160dp"
-            android:layout_height="180dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="10dp"
-            android:focusable="true"
-            android:clickable="true"
-            app:layout_constraintBottom_toTopOf="@+id/isw_cash_out_card"
-            app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
-            app:layout_constraintTop_toBottomOf="@+id/isw_view2"
-            app:rippleColor="@android:color/darker_gray"
-            app:strokeColor="@color/iswColorPrimary"
-            app:strokeWidth="0.5dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_height="wrap_content"
+                android:text="Pay for items purchased or refund"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_make_payment_text" />
 
-                <TextView
-                    android:id="@+id/isw_transfer_money_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/isw_transfer_money"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/isw_ic_payment"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/isw_transfer_funds_from_one_account_to_another"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/isw_transfer_money_text" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="bottom"
-                    android:tint="#00C1D4"
-                    android:src="@drawable/isw_ic_payment"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+    </com.google.android.material.card.MaterialCardView>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/isw_transfer_money_card"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_cash_out_card"
+        app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/isw_make_payment_card"
+        app:layout_constraintTop_toBottomOf="@+id/isw_view2"
+        app:rippleColor="@android:color/darker_gray"
+        app:strokeColor="@color/iswSelectedTypeColor"
+        app:strokeWidth="0.2dp">
 
-        </com.google.android.material.card.MaterialCardView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/isw_bill_payment_card"
-            style="@style/Widget.MaterialComponents.CardView"
-            android:layout_width="160dp"
-            android:layout_height="180dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="10dp"
-            android:focusable="true"
-            android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="@+id/isw_view"
-            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/isw_make_payment_card"
-            app:rippleColor="@android:color/darker_gray"
-            app:strokeColor="@color/iswColorPrimary"
-            app:strokeWidth="0.5dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/isw_transfer_money_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_height="wrap_content"
+                android:text="@string/isw_transfer_money"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/isw_bill_payment_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/isw_bill_payment"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/isw_pay_for_electricity_toll_tax_and_other_bills"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/isw_bill_payment_text" />
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:tint="#F36"
-                    android:layout_gravity="bottom"
-                    android:src="@drawable/isw_ic_payment"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/isw_cash_out_card"
-            style="@style/Widget.MaterialComponents.CardView"
-            android:layout_width="160dp"
-            android:layout_height="180dp"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="10dp"
-            android:focusable="true"
-            android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
-            app:layout_constraintTop_toBottomOf="@+id/isw_transfer_money_card"
-            app:rippleColor="@android:color/darker_gray"
-            app:strokeColor="@color/iswColorPrimary"
-            app:strokeWidth="0.5dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_height="wrap_content"
+                android:text="@string/isw_transfer_funds_from_one_account_to_another"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_transfer_money_text" />
 
-                <TextView
-                    android:id="@+id/isw_cash_out_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/isw_cash_out"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/isw_ic_payment"
+                android:tint="#00C1D4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/isw_make_a_cash_withdrawal_from_this_terminal"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/isw_cash_out_text" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="bottom"
-                    android:tint="#F7C137"
-                    android:src="@drawable/isw_ic_payment"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+    </com.google.android.material.card.MaterialCardView>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/isw_bill_payment_card"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_view"
+        app:layout_constraintEnd_toStartOf="@+id/isw_cash_out_card"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_make_payment_card"
+        app:rippleColor="@android:color/darker_gray"
+        app:strokeColor="@color/iswSelectedTypeColor"
+        app:strokeWidth="0.2dp">
 
-        </com.google.android.material.card.MaterialCardView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+            <TextView
+                android:id="@+id/isw_bill_payment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/isw_bill_payment"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/isw_pay_for_electricity_toll_tax_and_other_bills"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_bill_payment_text" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/isw_ic_payment"
+                android:tint="#F36"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/isw_cash_out_card"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/isw_bill_payment_card"
+        app:layout_constraintTop_toBottomOf="@+id/isw_transfer_money_card"
+        app:rippleColor="@android:color/darker_gray"
+        app:strokeColor="@color/iswSelectedTypeColor"
+        app:strokeWidth="0.2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/isw_cash_out_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/isw_cash_out"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/isw_make_a_cash_withdrawal_from_this_terminal"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_cash_out_text" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/isw_ic_payment"
+                android:tint="#F7C137"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

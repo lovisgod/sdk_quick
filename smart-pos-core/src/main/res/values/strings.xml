@@ -130,7 +130,21 @@
     <string name="isw_enable_contactless_label">Enable Contacless</string>
     <string name="isw_enable_contactless_sub_text">Authorize contactless transaction with Fingerprint</string>
     <string name="isw_date_text">Monday, July 2019</string>
-
+    <string name="isw_proceed">PROCEED</string>
+    <string name="isw_ussd">USSD</string>
+    <string name="isw_pay_code">Pay Code</string>
+    <string name="isw_qr_code">QR Code</string>
+    <string name="isw_card_payment">Card Payment</string>
+    <string name="isw_continue">CONTINUE</string>
+    <string name="isw_make_payment">Make Payment</string>
+    <string name="isw_default_account">Default Account</string>
+    <string name="isw_savings_account">Savings Account</string>
+    <string name="isw_current_account">Current Account</string>
+    <string name="isw_select_account_type">Select Account Type</string>
+    <string name="isw_enter">ENTER</string>
+    <string name="isw_status">Status</string>
+    <string name="isw_processing_transaction">Processing Transaction</string>
+    <string name="isw_share_receipt">Share Receipt</string>
 
     <string-array name="isw_account_types">
         <item name="default_account">Default Account</item>

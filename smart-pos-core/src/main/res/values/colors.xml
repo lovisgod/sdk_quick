@@ -15,6 +15,7 @@
     <color name="iswTextColorSecondaryLight">#00b0f8</color>
     <color name="iswTextColorError">#EE312A</color>
     <color name="iswGrey">#80B6B6B6</color>
+    <color name="iswSelectedTypeColor">#A2A7B8</color>
     <color name="iswTransparent">#66000000</color>
     <color name="iswColorTopBackground">#2E5BFF</color>
     <color name="iswColorLightGrey">#B3FFFFFF</color>

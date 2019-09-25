@@ -16,10 +16,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    dataBinding {
-        enabled true
-    }
-
     signingConfigs {
         paxConfig {
             keyAlias 'PAX'
@@ -35,12 +31,12 @@ android {
             minifyEnabled minified
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.paxConfig
-            applicationIdSuffix '.release'
+            applicationIdSuffix '.v2.release'
             buildConfigField("boolean", "MOCK", "false") // mock device
         }
         debug {
             buildConfigField("boolean", "MOCK", "false") // mock device
-            applicationIdSuffix '.debug'
+            applicationIdSuffix '.v2.debug'
         }
     }
     compileOptions {
@@ -65,7 +61,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
@@ -88,9 +84,9 @@ dependencies {
     testImplementation "org.koin:koin-test:$koin_version"
 
 
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
 }
 repositories {
     mavenCentral()
