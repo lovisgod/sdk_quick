@@ -194,7 +194,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/isw_date_value_text" />
 
-            <TextView
+            <Button
                 android:id="@+id/isw_print_receipt_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

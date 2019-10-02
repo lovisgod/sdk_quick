@@ -28,6 +28,7 @@ android {
         targetSdkVersion targetSdk
         versionCode versionCode
         versionName versionName
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "com.interswitchng.smartpos.MockTestRunner"
         testInstrumentationRunnerArguments(shouldMock: 'true')
