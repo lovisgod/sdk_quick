@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.main.fragments
 import android.os.Bundle
 import android.view.View
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.dialogs.AdminAccessDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MakePaymentDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.payment
@@ -21,18 +22,39 @@ class TransactionFragment: BaseFragment(TAG) {
         isw_merchant_name.text = "SmartWare Solutions"
         isw_make_payment_card.setOnClickListener {
             val sheet = MakePaymentDialog {
-                //Handle click listener here
-                logger.logErr("Item number clicked ===== $it")
                 when (it) {
                     0 -> {
                         val payment = payment {
-                            type = PaymentModel.Type.MAKE_PAYMENT
+                            type = PaymentModel.MakePayment.PURCHASE
                         }
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
+                    1 -> {
+                        val payment = payment {
+                            type = PaymentModel.MakePayment.PRE_AUTHORIZATION
+                        }
+                        navigate(TransactionFragmentDirections.iswActionGotoFragmentCardPayment(payment))
+                    }
+                    2 -> {
+                        val payment = payment {
+                            type = PaymentModel.MakePayment.CARD_NOT_PRESENT
+                        }
+                        val dialog = AdminAccessDialog {
+                            val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
+                            navigate(direction)
+                        }
+                        dialog.show(childFragmentManager, AdminAccessDialog.TAG)
+                    }
+                    3 -> {
+                        val payment = payment {
+                            type = PaymentModel.MakePayment.COMPLETION
+                        }
+                        val direction = TransactionFragmentDirections.iswActionGotoFragmentCardPayment(payment)
+                        navigate(direction)
+                    }
                 }
             }
-            sheet.show(childFragmentManager, TAG)
+            sheet.show(childFragmentManager, MakePaymentDialog.TAG)
         }
     }
 

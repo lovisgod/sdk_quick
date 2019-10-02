@@ -57,6 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="DONE"
+            android:id="@+id/isw_done"
             android:textColor="@android:color/white" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -81,7 +82,7 @@
         app:layout_constraintTop_toTopOf="@+id/isw_guideline5" />
 
     <TextView
-        android:id="@+id/isw_textview2"
+        android:id="@+id/isw_receipt_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Thank You!"
@@ -99,7 +100,7 @@
         android:textColor="#8097B1"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_textview2" />
+        app:layout_constraintTop_toBottomOf="@+id/isw_receipt_text" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/isw_materialcardview"
@@ -109,6 +110,7 @@
         android:layout_marginBottom="50dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintBottom_toTopOf="@+id/isw_print_receipt"
         app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
@@ -214,7 +216,6 @@
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginBottom="24dp"
         app:icon="@drawable/isw_ic_print"
         app:iconGravity="textStart"
         android:text="@string/isw_title_print_receipt"
@@ -230,7 +231,7 @@
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="5dp"
         android:text="@string/isw_share_receipt"
         app:strokeWidth="1dp"
         app:strokeColor="@color/iswColorPrimary"

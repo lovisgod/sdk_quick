@@ -17,15 +17,23 @@ class MakePaymentDialog constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_purchase.setOnClickListener {
             optionClickListener.invoke(0)
+            dismiss()
         }
         isw_pre_authorization.setOnClickListener {
             optionClickListener.invoke(1)
+            dismiss()
         }
         isw_card_not_present.setOnClickListener {
             optionClickListener.invoke(2)
+            dismiss()
         }
         isw_completion.setOnClickListener {
             optionClickListener.invoke(3)
+            dismiss()
         }
+    }
+
+    companion object {
+        const val TAG = "Make Payment Dialog"
     }
 }

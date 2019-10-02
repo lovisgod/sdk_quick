@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/iswColorPrimary">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.20" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/isw_guideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/isw_guideline" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/isw_card_details_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:contentInsetStartWithNavigation="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/isw_ic_navback" />
+
+    <View
+        android:id="@+id/isw_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/isw_card_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/isw_merchant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Completion Details"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/isw_guideline"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2" />
+
+    <TextView
+        android:id="@+id/isw_textview14"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Pre-Auth Amount"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline" />
+
+    <TextView
+        android:id="@+id/isw_pre_authorization_amount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="90,000.00"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview14" />
+
+    <TextView
+        android:id="@+id/isw_textview15"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Amount Spent"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@id/isw_pre_authorization_amount" />
+
+    <TextView
+        android:id="@+id/isw_amount_spent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="90,000.00"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview15" />
+
+    <View
+        android:id="@+id/isw_view3"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        android:background="#50F44C4C"
+        app:layout_constraintTop_toBottomOf="@id/isw_amount_spent" />
+
+    <TextView
+        android:id="@+id/isw_textview16"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Balance Bill"
+        android:textColor="#F44C4C"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintBottom_toTopOf="@+id/isw_balance_bill"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toTopOf="@+id/isw_view3" />
+
+    <TextView
+        android:id="@+id/isw_balance_bill"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="90,000.00"
+        android:textColor="#F44C4C"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_view3"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview16" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_pay_balance"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginBottom="24dp"
+        android:text="PAY BALANCE"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_view"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:rippleColor="@android:color/white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

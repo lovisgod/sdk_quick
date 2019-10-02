@@ -6,12 +6,17 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class PaymentModel (
     var amount: String? = null,
-    var type: Type? = null,
-    var paymentType: PaymentType? = null
+    var type: MakePayment? = null,
+    var paymentType: PaymentType? = null,
+    var card: CardModel? = null
 ): Parcelable {
 
     enum class Type {
         MAKE_PAYMENT, TRANSFER_MONEY, BILL_PAYMENT, CASH_OUT
+    }
+
+    enum class MakePayment {
+        PURCHASE, PRE_AUTHORIZATION, CARD_NOT_PRESENT, COMPLETION
     }
 
     enum class PaymentType {

@@ -19,6 +19,15 @@ class CardPaymentFragment : BaseFragment(TAG) {
         get() = R.layout.isw_fragment_card_payment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        when (paymentModel.type) {
+            PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
+                isw_change_payment_method_group.visibility = View.GONE
+            }
+            PaymentModel.MakePayment.COMPLETION -> {
+                isw_change_payment_method_group.visibility = View.GONE
+                isw_detection_text.text = "Completion Detected"
+            }
+        }
         change_payment_method.setOnClickListener {
             val dialog = PaymentTypeDialog (PaymentModel.PaymentType.CARD) {
 
@@ -26,11 +35,23 @@ class CardPaymentFragment : BaseFragment(TAG) {
             dialog.show(childFragmentManager, TAG)
         }
         isw_card_found_continue.setOnClickListener {
-            val dialog = AccountTypeDialog {
-                val direction = CardPaymentFragmentDirections.iswActionGotoFragmentPin(paymentModel)
-                navigate(direction)
+            when (paymentModel.type) {
+                PaymentModel.MakePayment.PURCHASE -> {
+                    val dialog = AccountTypeDialog {
+                        val direction = CardPaymentFragmentDirections.iswActionGotoFragmentPin(paymentModel)
+                        navigate(direction)
+                    }
+                    dialog.show(childFragmentManager, TAG)
+                }
+                PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
+                    val direction = CardPaymentFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
+                    navigate(direction)
+                }
+                else -> {
+                    val direction = CardPaymentFragmentDirections.iswActionGotoFragmentPin(paymentModel)
+                    navigate(direction)
+                }
             }
-            dialog.show(childFragmentManager, TAG)
         }
     }
 

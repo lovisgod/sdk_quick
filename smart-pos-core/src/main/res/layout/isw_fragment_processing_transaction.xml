@@ -62,7 +62,7 @@
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2" />
 
     <TextView
-        android:id="@+id/isw_amount_text"
+        android:id="@+id/isw_processing_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -83,13 +83,13 @@
         android:progressTint="@color/iswColorPrimary"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_amount_text" />
+        app:layout_constraintTop_toBottomOf="@+id/isw_processing_text" />
 
     <TextView
         android:layout_width="0dp"
         android:id="@+id/isw_connecting"
         android:layout_height="wrap_content"
-        tools:text="Connecting..."
+        android:text="Connecting..."
         android:layout_marginTop="20dp"
         android:drawableLeft="@drawable/isw_round_gray_stroke"
         android:drawableStart="@drawable/isw_round_gray_stroke"
@@ -107,7 +107,7 @@
         android:layout_width="0dp"
         android:id="@+id/isw_authenticating"
         android:layout_height="wrap_content"
-        tools:text="Authenticating..."
+        android:text="Authenticating..."
         android:layout_marginTop="20dp"
         android:drawableLeft="@drawable/isw_round_gray_stroke"
         android:drawableStart="@drawable/isw_round_gray_stroke"
@@ -125,7 +125,7 @@
         android:layout_width="0dp"
         android:id="@+id/isw_receiving"
         android:layout_height="wrap_content"
-        tools:text="Receiving..."
+        android:text="Receiving..."
         android:layout_marginTop="20dp"
         android:drawableLeft="@drawable/isw_round_gray_stroke"
         android:drawableStart="@drawable/isw_round_gray_stroke"

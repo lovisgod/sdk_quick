@@ -18,6 +18,22 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
 
+        <action
+            android:id="@+id/isw_action_goto_fragment_card_payment"
+            app:destination="@id/isw_fragment_card_payment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_card_details"
+            app:destination="@id/isw_fragment_card_details"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
 
     <fragment android:id="@+id/isw_fragment_amount"
@@ -32,6 +48,22 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
 
+        <action
+            android:id="@+id/isw_action_goto_fragment_pin"
+            app:destination="@id/isw_fragment_pin"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_processing_transaction"
+            app:destination="@id/isw_fragment_processing_transaction"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
         <argument android:name="PaymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
 
@@ -40,6 +72,14 @@
     <fragment android:id="@+id/isw_fragment_card_payment"
         tools:layout="@layout/isw_fragment_card_payment"
         android:name="com.interswitchng.smartpos.modules.main.fragments.CardPaymentFragment">
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_amount"
+            app:destination="@id/isw_fragment_amount"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
 
         <action
             android:id="@+id/isw_action_goto_fragment_pin"
@@ -61,6 +101,14 @@
         <action
             android:id="@+id/isw_action_goto_fragment_processing_transaction"
             app:destination="@id/isw_fragment_processing_transaction"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_completion_details"
+            app:destination="@id/isw_fragment_completion_details"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -92,6 +140,40 @@
     <fragment android:id="@+id/isw_fragment_receipt"
         tools:layout="@layout/isw_fragment_receipt"
         android:name="com.interswitchng.smartpos.modules.main.fragments.ReceiptFragment">
+
+        <argument android:name="PaymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+
+    </fragment>
+
+    <fragment android:id="@+id/isw_fragment_card_details"
+        tools:layout="@layout/isw_fragment_card_details"
+        android:name="com.interswitchng.smartpos.modules.main.fragments.CardDetailsFragment">
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_processing_transaction"
+            app:destination="@id/isw_fragment_processing_transaction"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <argument android:name="PaymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+
+    </fragment>
+
+    <fragment android:name="com.interswitchng.smartpos.modules.main.fragments.CompletionDetailsFragment"
+        tools:layout="@layout/isw_fragment_completion_details"
+        android:id="@+id/isw_fragment_completion_details">
+
+        <action
+            android:id="@+id/isw_action_goto_fragment_amount"
+            app:destination="@id/isw_fragment_amount"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
 
         <argument android:name="PaymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>

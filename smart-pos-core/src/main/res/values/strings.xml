@@ -125,8 +125,14 @@
     <string name="isw_select_account_type">Select Account Type</string>
     <string name="isw_enter">ENTER</string>
     <string name="isw_status">Status</string>
-    <string name="isw_processing_transaction">Processing Transaction</string>
+    <string name="isw_processing_transaction">Processing %s</string>
     <string name="isw_share_receipt">Share Receipt</string>
+    <string name="isw_pre_authorize">PRE-AUTHORIZE</string>
+    <string name="isw_pre_authorization_completed">Pre-Authorization Completed!</string>
+    <string name="isw_thank_you">Thank You!</string>
+    <string name="isw_admin_access_required">Admin access required</string>
+    <string name="isw_enter_card_details">Enter Card Details</string>
+    <string name="isw_card_not_present_completed">Card Not Present Completed</string>
 
 
     <string-array name="isw_account_types">
