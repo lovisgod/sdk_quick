@@ -28,6 +28,7 @@ android {
         targetSdkVersion targetSdk
         versionCode versionCode
         versionName versionName
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "com.interswitchng.smartpos.MockTestRunner"
         testInstrumentationRunnerArguments(shouldMock: 'true')
@@ -127,6 +128,7 @@ dependencies {
         exclude group: 'stax', module: 'stax'
     }
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_version"
     testImplementation "org.robolectric:robolectric:4.0.2"
@@ -134,14 +136,13 @@ dependencies {
     testImplementation "androidx.test:core:$androidx_version"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     testImplementation "net.jodah:concurrentunit:$concurrent_version"
-
-
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestUtil 'androidx.test:orchestrator:1.2.0'
 
     kaptAndroidTest "androidx.databinding:databinding-compiler:3.5.0"
+
 }
 
 // maven-installer
