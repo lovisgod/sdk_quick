@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.modules.main.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
@@ -22,8 +23,18 @@ class ReceiptFragment : BaseFragment(TAG) {
             PaymentModel.MakePayment.PRE_AUTHORIZATION -> isw_receipt_text.text = getString(R.string.isw_pre_authorization_completed)
             PaymentModel.MakePayment.CARD_NOT_PRESENT -> isw_receipt_text.text = getString(R.string.isw_card_not_present_completed)
         }
+
         isw_done.setOnClickListener {
             navigateUp()
+        }
+
+        isw_share_receipt.setOnClickListener {
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, "")
+                type = "image/*"
+            }
+            startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
     }
 

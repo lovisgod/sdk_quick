@@ -37,7 +37,7 @@ public class POSApplication extends Application   {
     public void onCreate() {
         super.onCreate();
 
-//        configureTerminal();
+//       configureTerminal();
     }
 
     private void configureTerminal() {

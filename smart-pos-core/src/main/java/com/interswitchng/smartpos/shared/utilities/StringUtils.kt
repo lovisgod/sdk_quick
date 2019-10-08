@@ -13,12 +13,16 @@ fun String.removeComma(): String {
     return cont
 }
 
+fun String.beforeDot(): String {
+    return this.substringBefore('.')
+}
+
 fun String.addComma(): String {
     var digitsBeforeDot = ""
     var digitsAfterDot = ""
 
     if (this.contains(".")) {
-        digitsBeforeDot = this.substringBefore(".")
+        digitsBeforeDot = this.beforeDot()
         digitsAfterDot = this.substringAfter(".")
     } else {
         digitsBeforeDot = this

@@ -3,12 +3,18 @@ package com.interswitchng.smartpos
 import android.app.Application
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.di.networkModule
 import com.interswitchng.smartpos.di.serviceModule
 import com.interswitchng.smartpos.di.viewModels
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
+import com.interswitchng.smartpos.modules.main.fragments.AmountFragment
+import com.interswitchng.smartpos.modules.main.fragments.AmountFragmentDirections
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.menu.report.ReportActivity
 import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
@@ -41,7 +47,7 @@ import java.util.*
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
-    fun initiatePayment(activity: AppCompatActivity, amount: Int, paymentType: PaymentType?) {
+    fun initiatePayment(activity: FragmentActivity, amount: Int, paymentType: PaymentType?) {
 
         if (!isConfigured()) throw NotConfiguredException()
 
@@ -61,14 +67,23 @@ class IswPos private constructor(private val app: Application, internal val devi
                 PaymentType.PayCode -> PayCodeActivity::class.java
                 PaymentType.QR -> QrCodeActivity::class.java
                 PaymentType.USSD -> UssdActivity::class.java
-                PaymentType.Card -> CardActivity::class.java
+                PaymentType.Card -> {
+                    val fragment =
+                        activity.supportFragmentManager.findFragmentById(R.id.isw_fragment_amount) as AmountFragment
+
+                    if (fragment != null) {
+                        fragment.navigateToDestination(PaymentModel.PaymentType.CARD)
+                    } else {
+                        return
+                    }
+                }
             }
 
             // create intent with payment info and flags
-            val intent = Intent(app, typeClass).putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
+            //val intent = Intent(app, typeClass).putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
 
             // start activity
-            activity.startActivityForResult(intent, CODE_PURCHASE)
+            //activity.startActivityForResult(intent, CODE_PURCHASE)
         }
     }
 
