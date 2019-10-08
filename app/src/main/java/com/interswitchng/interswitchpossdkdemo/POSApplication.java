@@ -21,6 +21,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessa
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
+import com.interswitchng.smartpos.usb.UsbConfig;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +38,7 @@ public class POSApplication extends Application   {
     public void onCreate() {
         super.onCreate();
 
-//        configureTerminal();
+        configureTerminal();
     }
 
     private void configureTerminal() {
