@@ -5,6 +5,8 @@
         <item name="android:windowBackground">@color/iswColorMainBackground</item>
         <item name="colorPrimary">@color/iswColorPrimary</item>
         <item name="colorPrimaryDark">@color/iswColorPrimaryDark</item>
+        <item name="colorAccent">@color/iswColorPrimary</item>
+
     </style>
 
     <style name="ISW.NoActionBar">

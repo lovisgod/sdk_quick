@@ -194,7 +194,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/isw_date_value_text" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button"
                 android:id="@+id/isw_print_receipt_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -205,9 +206,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/isw_print_receipt_bg"
-                android:drawableStart="@drawable/isw_ic_printer_white"
-                android:drawableLeft="@drawable/isw_ic_printer_white"
-                android:drawablePadding="10dp"
                 android:paddingLeft="85dp"
                 android:paddingTop="11dp"
                 android:paddingRight="85dp"
@@ -218,7 +216,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/isw_time_label"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:rippleColor="@android:color/white"
+                app:icon="@drawable/isw_ic_print"
+                app:iconGravity="textStart"
                 android:text="PRINT RECEIPT" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

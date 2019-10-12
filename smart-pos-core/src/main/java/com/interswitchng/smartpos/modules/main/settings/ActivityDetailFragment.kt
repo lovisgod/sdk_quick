@@ -7,9 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_activity_detail.*
 
-class ActivityDetailFragment : Fragment() {
+class ActivityDetailFragment : BaseFragment(TAG) {
+
+    override val layoutId: Int
+        get() = R.layout.isw_activity_detail
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,7 +30,17 @@ class ActivityDetailFragment : Fragment() {
 
     private fun handlePrintReceiptClick() {
         isw_print_receipt_label.setOnClickListener {
-            it.findNavController().navigate(R.id.isw_action_goto_fragment_receipt)
+            val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentReceipt(PaymentModel())
+            navigate(direction)
         }
+
+        isw_activity_nav.setOnClickListener {
+            navigateUp()
+        }
+
+    }
+
+    companion object {
+        const val TAG = "ACTIVITY DETAIL FRAGMENT"
     }
 }
