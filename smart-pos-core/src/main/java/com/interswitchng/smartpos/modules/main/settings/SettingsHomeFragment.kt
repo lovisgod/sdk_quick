@@ -1,11 +1,13 @@
 package com.interswitchng.smartpos.modules.main.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_settings_home.*
 
@@ -33,6 +35,10 @@ class SettingsHomeFragment : BaseFragment(TAG) {
 
         isw_settings_toolbar_label.setOnClickListener {
             navigateUp()
+        }
+
+        isw_download_settings_btn.setOnClickListener {
+            iswPos.gotoSettings()
         }
     }
 

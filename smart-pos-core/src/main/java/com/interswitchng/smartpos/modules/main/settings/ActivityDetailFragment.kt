@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.models.TransactionSuccessModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_activity_detail.*
 
@@ -30,7 +31,9 @@ class ActivityDetailFragment : BaseFragment(TAG) {
 
     private fun handlePrintReceiptClick() {
         isw_print_receipt_label.setOnClickListener {
-            val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentReceipt(PaymentModel())
+            val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentReceipt(
+                TransactionSuccessModel(amount = 5000)
+            )
             navigate(direction)
         }
 

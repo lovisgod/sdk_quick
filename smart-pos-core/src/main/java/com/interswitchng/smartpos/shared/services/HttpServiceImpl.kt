@@ -69,7 +69,6 @@ internal class HttpServiceImpl(private val httpService: IHttpService) : HttpServ
         }
     }
 
-
     private suspend fun <T> Simple<T>.await(): Pair<T?, String?> {
         return suspendCoroutine { continuation ->
             process { response, t ->

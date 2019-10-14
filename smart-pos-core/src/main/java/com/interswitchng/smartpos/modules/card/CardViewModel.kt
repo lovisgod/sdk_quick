@@ -78,6 +78,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                     // publish transaction response
                     _transactionResponse.value = response
                 }
+
                 EmvResult.CANCELLED -> {
                     // transaction has already been cancelled
                     context.toast("Transaction was cancelled")
@@ -144,7 +145,6 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         // cancel any ongoing transaction
         emv.cancelTransaction()
     }
-
 
     enum class OnlineProcessResult {
         NO_EMV,

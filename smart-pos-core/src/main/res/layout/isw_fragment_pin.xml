@@ -83,39 +83,27 @@
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_amount_text" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-        android:layout_width="0dp"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginTop="24dp"
-        app:boxBackgroundColor="#F4F4F4"
-        app:boxStrokeColor="#F4F4F4"
-        app:endIconMode="clear_text"
-        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_amount">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="15sp"
-            android:inputType="numberPassword"
-            android:textColor="@android:color/black" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/isw_enter"
-        style="@style/Widget.MaterialComponents.Button"
+    <com.interswitchng.smartpos.modules.card.PinEditText
+        app:layout_constraintTop_toBottomOf="@id/isw_amount"
+        app:layout_constraintStart_toStartOf="@id/isw_guideline2"
+        app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
+        android:layout_marginTop="32dp"
+        android:id="@+id/cardPin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/isw_enter"
-        app:layout_constraintBottom_toBottomOf="@+id/isw_view"
-        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:rippleColor="@android:color/white" />
+        android:layout_gravity="center"
+        android:cursorVisible="false"
+        android:digits="0123456789"
+        android:gravity="center"
+        android:inputType="numberPassword"
+        android:maxLength="4"
+        android:textIsSelectable="false"
+        android:clickable="false"
+        android:focusable="false"
+        android:textSize="20sp"
+        tools:text="44445" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

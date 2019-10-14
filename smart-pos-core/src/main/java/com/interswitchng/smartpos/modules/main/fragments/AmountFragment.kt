@@ -56,21 +56,19 @@ class AmountFragment : BaseFragment(TAG) {
 
     private fun proceedWithPayment() {
         payment.newPayment {
-            amount = isw_amount.text.toString()
+            amount = isw_amount.text.toString().toInt()
         }
 
         when (payment.type) {
             PaymentModel.MakePayment.PURCHASE -> {
-                val bottomDialog = PaymentTypeDialog { payment.newPayment {
-                    paymentType = it
-
-                    val amountAsInt = isw_amount.text.toString().removeComma().beforeDot().toInt()
-
-                    //makePayment(amountAsInt, getPaymentType(paymentType as PaymentModel.PaymentType))
+                val bottomDialog = PaymentTypeDialog {
+                    payment.newPayment {
+                        paymentType = it
+                    }
 
                     val direction = AmountFragmentDirections.iswActionGotoFragmentCardPayment(payment)
                     navigate(direction)
-                } }
+                 }
                 bottomDialog.show(childFragmentManager, TAG)
             }
 
@@ -83,34 +81,15 @@ class AmountFragment : BaseFragment(TAG) {
                 val direction = AmountFragmentDirections.iswActionGotoFragmentProcessingTransaction(payment)
                 navigate(direction)
             }
-        }
-    }
 
-    private fun getPaymentType(paymentType: PaymentModel.PaymentType): PaymentType {
-        return when (paymentType) {
-            PaymentModel.PaymentType.CARD -> PaymentType.Card
-            PaymentModel.PaymentType.USSD -> PaymentType.USSD
-            PaymentModel.PaymentType.QR_CODE -> PaymentType.QR
-            PaymentModel.PaymentType.PAY_CODE -> PaymentType.PayCode
+            PaymentModel.MakePayment.CARD_NOT_PRESENT -> {
+
+            }
         }
     }
 
     private fun displayInvalidAmountToast() {
         toast("Enter a valid amount")
-    }
-
-    private fun makePayment(amount: Int, type: PaymentType?) {
-        try {
-            // trigger payment
-            activity?.let {
-                IswPos.getInstance().initiatePayment(it, amount, type)
-            }
-
-        } catch (e: NotConfiguredException) {
-            val message = "Pos has not been configured"
-            toast(message)
-            logger.log(e.message ?: e.localizedMessage ?: message)
-        }
     }
 
     private fun toast(msg: String) = Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -200,26 +179,5 @@ class AmountFragment : BaseFragment(TAG) {
 
     companion object {
         const val TAG = "AMOUNT FRAGMENT"
-    }
-
-    fun navigateToDestination(paymentType: PaymentModel.PaymentType) {
-        when (paymentType) {
-            PaymentModel.PaymentType.CARD -> {
-                val direction = AmountFragmentDirections.iswActionGotoFragmentCardPayment(payment)
-                    navigate(direction)
-            }
-
-            PaymentModel.PaymentType.QR_CODE -> {
-
-            }
-
-            PaymentModel.PaymentType.PAY_CODE -> {
-
-            }
-
-            PaymentModel.PaymentType.USSD -> {
-
-            }
-        }
     }
 }

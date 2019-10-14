@@ -25,3 +25,4 @@ abstract class BaseBottomSheetDialog : BottomSheetDialogFragment() {
         return rootView
     }
 }
+

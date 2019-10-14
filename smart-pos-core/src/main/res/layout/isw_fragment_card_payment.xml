@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewAnimator
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/iswCardPaymentViewAnimator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:animateFirstView="true"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/iswColorPrimary">
 
     <androidx.constraintlayout.widget.Guideline
@@ -36,12 +44,17 @@
 
     <include layout="@layout/isw_layout_scanning_card"
         android:id="@+id/isw_scanning_card"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:visibility="gone"/>
 
     <include layout="@layout/isw_layout_card_found"
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/isw_card_found"
         tools:visibility="visible"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <include layout="@layout/isw_fragment_pin"
+        android:id="@+id/isw_pin_fragment"
+        tools:visibility="visible"/>
+</ViewAnimator>
