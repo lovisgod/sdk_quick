@@ -22,6 +22,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
             PaymentModel.MakePayment.PURCHASE -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Transaction")
             PaymentModel.MakePayment.PRE_AUTHORIZATION -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Pre-Authorization")
             PaymentModel.MakePayment.CARD_NOT_PRESENT -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Card-Not-Present")
+            else -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Completion")
         }
         isw_connecting.setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_gray_stroke, 0, 0, 0)
         isw_authenticating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_gray_stroke, 0, 0, 0)

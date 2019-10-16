@@ -23,9 +23,12 @@ class ReceiptFragment : BaseFragment(TAG) {
             PaymentModel.MakePayment.PURCHASE -> isw_receipt_text.text = getString(R.string.isw_thank_you)
             PaymentModel.MakePayment.PRE_AUTHORIZATION -> isw_receipt_text.text = getString(R.string.isw_pre_authorization_completed)
             PaymentModel.MakePayment.CARD_NOT_PRESENT -> isw_receipt_text.text = getString(R.string.isw_card_not_present_completed)
+
         }*/
 
         displayTransactionResult()
+
+           // else -> isw_receipt_text.text = getString(R.string.isw_completion_completed)
 
         isw_done.setOnClickListener {
             navigateUp()

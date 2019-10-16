@@ -108,13 +108,25 @@ class CardPaymentFragment : BaseFragment(TAG) {
 
         } else {
             context?.toast("POS is not configured")
+
+            observeViewModel()
+            when (paymentModel.type) {
+                PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
+                    isw_change_payment_method_group.visibility = View.GONE
+                }
+                PaymentModel.MakePayment.COMPLETION -> {
+                    isw_change_payment_method_group.visibility = View.GONE
+                    isw_detection_text.text = "Completion Detected"
+                }
+            }
+
         }
 
     }
 
     private fun showPaymentOptions() {
         change_payment_method.setOnClickListener {
-            paymentTypeDialog = PaymentTypeDialog (PaymentModel.PaymentType.CARD) {
+            paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
 
             }
             paymentTypeDialog.show(childFragmentManager, TAG)
@@ -137,14 +149,20 @@ class CardPaymentFragment : BaseFragment(TAG) {
                         }
 
                         runWithInternet {
-                            cardViewModel.startTransaction(context!!, paymentInfo, accountType, terminalInfo)
+                            cardViewModel.startTransaction(
+                                context!!,
+                                paymentInfo,
+                                accountType,
+                                terminalInfo
+                            )
                         }
                     }
                     accountTypeDialog.show(childFragmentManager, TAG)
                 }
 
                 PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
-                    val direction = CardPaymentFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
+                    val direction =
+                        CardPaymentFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
                     navigate(direction)
                 }
 
@@ -316,7 +334,8 @@ class CardPaymentFragment : BaseFragment(TAG) {
                 // extract info
                 val response = transactionResponse.value.first
                 val emvData = transactionResponse.value.second
-                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+                val txnInfo =
+                    TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
                 val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
                 val pinStatus = when {
@@ -335,8 +354,8 @@ class CardPaymentFragment : BaseFragment(TAG) {
                     responseCode = response.responseCode,
                     cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                     stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone)
-
+                    telephone = iswPos.config.merchantTelephone
+                )
 
 
                 val direction = CardPaymentFragmentDirections.iswActionGotoFragmentReceipt(

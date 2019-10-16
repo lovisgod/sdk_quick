@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/iswColorPrimary">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.20" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/isw_guideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/isw_guideline" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/isw_card_details_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:contentInsetStartWithNavigation="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/isw_ic_navback" />
+
+    <View
+        android:id="@+id/isw_view"
+        android:layout_width="match_parent"
+        android:layout_height="585dp"
+        android:background="@drawable/isw_card_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline" />
+
+    <TextView
+        android:id="@+id/isw_merchant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="QR Code"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_guideline"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2" />
+
+    <TextView
+        android:id="@+id/isw_textview14"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Paying"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toTopOf="@+id/isw_view" />
+
+    <TextView
+        android:id="@+id/isw_pre_authorization_amount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="90,000.00"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview14" />
+
+    <TextView
+        android:id="@+id/isw_amount_spent"
+        android:layout_width="347dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Scan this QR Code with your\nmobile banking app to pay."
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_pre_authorization_amount" />
+
+    <ImageView
+        android:id="@+id/isw_imageview4"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/isw_ic_qr_code"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_amount_spent" />
+
+    <TextView
+        android:id="@+id/isw_textview20"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Waiting..."
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_imageview4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.88" />
+
+    <View
+        android:id="@+id/isw_view4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/isw_card_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline4" />
+
+    <View
+        android:id="@+id/isw_view2"
+        android:layout_width="100dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/isw_round_handle_blue"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/isw_view4" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/change_payment_method"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Change Payment Method"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_view"
+        app:layout_constraintEnd_toEndOf="@+id/isw_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isw_view2" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/isw_change_payment_method_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="isw_view,change_payment_method,isw_view2"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="52dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_pay_balance"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="347dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginBottom="8dp"
+        android:text="SHARE QRCODE"
+        app:icon="@drawable/isw_ic_share"
+        app:iconGravity="textStart"
+        app:layout_constraintBottom_toTopOf="@+id/isw_guideline4"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:rippleColor="@android:color/white"
+        app:strokeColor="@color/iswColorPrimary"
+        app:strokeWidth="1dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

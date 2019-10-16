@@ -151,6 +151,7 @@
     <string name="isw_admin_access_required">Admin access required</string>
     <string name="isw_enter_card_details">Enter Card Details</string>
     <string name="isw_card_not_present_completed">Card Not Present Completed</string>
+    <string name="isw_completion_completed">Completion Completed</string>
 
     <string-array name="isw_account_types">
         <item name="default_account">Default Account</item>
