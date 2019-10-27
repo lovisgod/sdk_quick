@@ -5,7 +5,7 @@ import android.view.View
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseBottomSheetDialog
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
-import kotlinx.android.synthetic.main.isw_select_bank_bottom_sheet.*
+import kotlinx.android.synthetic.main.isw_select_bank_view.*
 import kotlinx.android.synthetic.main.isw_sheet_layout_account_type.*
 
 class AccountTypeDialog constructor(

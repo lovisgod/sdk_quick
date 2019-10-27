@@ -1,26 +1,20 @@
 package com.interswitchng.smartpos.modules.main.fragments
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.IswPos
-import com.interswitchng.smartpos.IswPos.Companion.setResult
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
-import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionSuccessModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
@@ -32,24 +26,29 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
-import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.*
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
-import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_activity_card.cardPin
-import kotlinx.android.synthetic.main.isw_content_amount.*
 import kotlinx.android.synthetic.main.isw_fragment_card_payment.*
 import kotlinx.android.synthetic.main.isw_fragment_pin.*
 import kotlinx.android.synthetic.main.isw_layout_card_found.*
-import kotlinx.android.synthetic.main.isw_settings_account.*
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class CardPaymentFragment : BaseFragment(TAG) {
+
+    private var accountType = AccountType.Default
+    private var cardType = CardType.None
+    private lateinit var transactionResult: TransactionResult
+    private var pinOk = false
+    private var isCancelled = false
+
+    private lateinit var accountTypeDialog: AccountTypeDialog
+    private lateinit var paymentTypeDialog: PaymentTypeDialog
+    private val dialog by lazy { DialogUtils.getLoadingDialog(context!!) }
+    private val alert by lazy { DialogUtils.getAlertDialog(context!!).create() }
+
 
     private val cardViewModel: CardViewModel by viewModel()
 
@@ -76,19 +75,6 @@ class CardPaymentFragment : BaseFragment(TAG) {
                 resetTransaction()
             }.create()
     }
-
-    private var accountType = AccountType.Default
-    private var cardType = CardType.None
-    private lateinit var transactionResult: TransactionResult
-    private var pinOk = false
-    private var isCancelled = false
-
-
-    private lateinit var accountTypeDialog: AccountTypeDialog
-    private lateinit var paymentTypeDialog: PaymentTypeDialog
-    private val dialog by lazy { DialogUtils.getLoadingDialog(context!!) }
-    private val alert by lazy { DialogUtils.getAlertDialog(context!!).create() }
-
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_card_payment
@@ -273,7 +259,7 @@ class CardPaymentFragment : BaseFragment(TAG) {
             is EmvMessage.EnterPin -> {
                 accountTypeDialog.dismiss()
                 iswCardPaymentViewAnimator.displayedChild = 1
-                isw_amount.text = paymentModel.amount.toString()
+                isw_amount.text = paymentModel.formattedAmount
                 context?.toast("Enter your pin")
             }
 
@@ -357,6 +343,7 @@ class CardPaymentFragment : BaseFragment(TAG) {
                     telephone = iswPos.config.merchantTelephone
                 )
 
+                dismissAlert()
 
                 val direction = CardPaymentFragmentDirections.iswActionGotoFragmentReceipt(
                     TransactionSuccessModel(amount = paymentInfo.amount)
@@ -407,4 +394,5 @@ class CardPaymentFragment : BaseFragment(TAG) {
     companion object {
         const val TAG = "Card Payment"
     }
+
 }

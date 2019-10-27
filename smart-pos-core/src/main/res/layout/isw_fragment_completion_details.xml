@@ -70,7 +70,7 @@
         app:layout_constraintTop_toTopOf="@+id/isw_guideline" />
 
     <TextView
-        android:id="@+id/isw_pre_authorization_amount"
+        android:id="@+id/isw_pay_code_amount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="90,000.00"
@@ -88,7 +88,7 @@
         android:text="Amount Spent"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@id/isw_pre_authorization_amount" />
+        app:layout_constraintTop_toBottomOf="@id/isw_pay_code_amount" />
 
     <TextView
         android:id="@+id/isw_amount_spent"

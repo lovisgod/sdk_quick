@@ -9,10 +9,8 @@ import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.utilities.addComma
-import com.interswitchng.smartpos.shared.utilities.beforeDot
-import com.interswitchng.smartpos.shared.utilities.removeComma
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
+import java.text.NumberFormat
 
 class AmountFragment : BaseFragment(TAG) {
 
@@ -49,23 +47,62 @@ class AmountFragment : BaseFragment(TAG) {
         }
     }
 
-
     private fun proceedWithPayment() {
+        val latestAmount = isw_amount.text.toString()
+        val latestAmountWithoutComma = latestAmount.replace("[$,]".toRegex(), "")
+        val dotIndex = latestAmountWithoutComma.indexOfFirst {
+            it == '.'
+        }
+
+        val stringWithoutCommaAndDot =  latestAmountWithoutComma.substring(0, dotIndex)
         payment.newPayment {
-            amount = isw_amount.text.toString().toInt()
+            amount = Integer.valueOf(stringWithoutCommaAndDot)
+            formattedAmount = latestAmount
         }
 
         when (payment.type) {
             PaymentModel.MakePayment.PURCHASE -> {
                 val bottomDialog = PaymentTypeDialog {
-                    payment.newPayment {
-                        paymentType = it
-                    }
 
-                    val direction = AmountFragmentDirections.iswActionGotoFragmentCardPayment(payment)
-                    navigate(direction)
-                 }
+
+                    when (it) {
+                        PaymentModel.PaymentType.QR_CODE -> {
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentQrCodeFragment(payment)
+                            navigate(direction)
+                        }
+                        PaymentModel.PaymentType.PAY_CODE -> {
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentPayCode(payment)
+                            navigate(direction)
+                        }
+                        PaymentModel.PaymentType.USSD -> {
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentUssd(payment)
+                            navigate(direction)
+                        }
+
+                        PaymentModel.PaymentType.CARD -> {
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentCardPayment(payment)
+                            navigate(direction)
+                        }
+                    }
+                }
                 bottomDialog.show(childFragmentManager, TAG)
+
             }
 
             PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
@@ -74,7 +111,8 @@ class AmountFragment : BaseFragment(TAG) {
             }
 
             PaymentModel.MakePayment.COMPLETION -> {
-                val direction = AmountFragmentDirections.iswActionGotoFragmentProcessingTransaction(payment)
+                val direction =
+                    AmountFragmentDirections.iswActionGotoFragmentProcessingTransaction(payment)
                 navigate(direction)
             }
 
@@ -95,82 +133,86 @@ class AmountFragment : BaseFragment(TAG) {
         isw_amount.text = amount
     }
 
-    private fun updateAmount(digit: String) {
-        amount += digit
+    private fun updateAmount() {
+        val cleanString = amount.replace("[$,.]".toRegex(), "")
 
-        amount = amount.removeComma()
+        val parsed = java.lang.Double.parseDouble(cleanString)
+        val numberFormat = NumberFormat.getInstance()
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 2
+        val formatted = numberFormat.format(parsed / 100)
 
-        val amountBeforeDot = amount.beforeDot()
-
-        if (amountBeforeDot.length >= 4) amount = amount.addComma()
-
-        isw_amount.text = amount
+        isw_amount.text = formatted
     }
 
     private fun handleDigitsClicks() {
         isw_keypad_zero.setOnClickListener {
-            updateAmount("0")
+            amount+= "0"
+            updateAmount()
         }
 
         isw_keypad_one.setOnClickListener {
-            updateAmount("1")
-        }
-
-        isw_keypad_one.setOnClickListener {
-            updateAmount("1")
+            amount+= "1"
+            updateAmount()
         }
 
         isw_keypad_two.setOnClickListener {
-            updateAmount("2")
+            amount+= "2"
+            updateAmount()
         }
 
         isw_keypad_three.setOnClickListener {
-            updateAmount("3")
+            amount+= "3"
+            updateAmount()
         }
 
         isw_keypad_four.setOnClickListener {
-            updateAmount("4")
+            amount+= "4"
+            updateAmount()
         }
 
         isw_keypad_five.setOnClickListener {
-            updateAmount("5")
+            amount+= "5"
+            updateAmount()
         }
 
         isw_keypad_six.setOnClickListener {
-            updateAmount("6")
+            amount+= "6"
+            updateAmount()
         }
 
         isw_keypad_seven.setOnClickListener {
-            updateAmount("7")
+            amount+= "7"
+            updateAmount()
         }
 
         isw_keypad_eight.setOnClickListener {
-            updateAmount("8")
+            amount+= "8"
+            updateAmount()
         }
 
         isw_keypad_nine.setOnClickListener {
-            updateAmount("9")
+            amount+= "9"
+            updateAmount()
         }
 
         isw_dot_button.setOnClickListener {
-            updateAmount(".")
+            amount+= "."
+            updateAmount()
         }
 
         isw_back_delete_button.setOnClickListener {
             if (amount.isNotEmpty()) {
                 amount = amount.substring(0 until amount.length - 1)
-
-                amount = amount.removeComma()
-
-                val amountBeforeDot = amount.beforeDot()
-
-                if (amountBeforeDot.length >= 4) amount = amount.addComma()
-
-                isw_amount.text = amount
+                updateAmount()
             }
-
         }
 
+        isw_back_delete_button.setOnLongClickListener {
+            amount = DEFAULT_AMOUNT
+            isw_amount.text = amount
+            true
+        }
     }
 
     companion object {

@@ -34,12 +34,7 @@ class PinFragment : BaseFragment(TAG) {
 
     private val pinFragmentArgs by navArgs<PinFragmentArgs>()
     private val payment by lazy { pinFragmentArgs.PaymentModel }
-
-
-    private val paymentInfo by lazy {
-        PaymentInfo(payment.amount, IswPos.getNextStan())
-    }
-
+    
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false
     private var isCancelled = false
@@ -53,8 +48,8 @@ class PinFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         showAmount()
 
-        cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
-        cardViewModel.startTransaction(context!!, paymentInfo, AccountType.Savings, terminalInfo)
+        //cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
+       // cardViewModel.startTransaction(context!!, paymentInfo, AccountType.Savings, terminalInfo)
 
         // observe view model
         observeViewModel()
@@ -62,7 +57,7 @@ class PinFragment : BaseFragment(TAG) {
     }
 
     private fun showAmount() {
-        isw_amount.text = payment.amount.toString()
+        isw_amount.text = getAmount(payment.amount)
     }
 
     private fun observeViewModel() {
