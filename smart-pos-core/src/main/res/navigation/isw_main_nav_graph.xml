@@ -65,6 +65,14 @@
             app:popExitAnim="@anim/slide_out_right"/>
 
         <action
+            android:id="@+id/isw_action_goto_fragment_ussd"
+            app:destination="@id/isw_ussd_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
             android:id="@+id/isw_action_goto_fragment_pin"
             app:destination="@id/isw_fragment_pin"
             app:enterAnim="@anim/slide_in_right"
@@ -98,12 +106,13 @@
             app:popExitAnim="@anim/slide_out_right"/>
 
         <action
-            android:id="@+id/isw_action_goto_fragment_pin"
-            app:destination="@id/isw_fragment_pin"
+            android:id="@+id/isw_action_goto_fragment_receipt"
+            app:destination="@id/isw_fragment_receipt"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+
 
         <argument android:name="PaymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
@@ -112,11 +121,19 @@
 
     <fragment android:id="@+id/isw_fragment_qr_code"
         tools:layout="@layout/isw_fragment_card_payment"
-        android:name="com.interswitchng.smartpos.modules.main.fragments.QrCodeFragment"/>
+        android:name="com.interswitchng.smartpos.modules.main.fragments.QrCodeFragment">
+
+        <argument android:name="PaymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+    </fragment>
 
     <fragment android:id="@+id/isw_fragment_pay_code"
         tools:layout="@layout/isw_fragment_card_payment"
-        android:name="com.interswitchng.smartpos.modules.main.fragments.PayCodeFragment"/>
+        android:name="com.interswitchng.smartpos.modules.main.fragments.PayCodeFragment">
+
+        <argument android:name="PaymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+    </fragment>
 
     <fragment android:id="@+id/isw_fragment_pin"
         tools:layout="@layout/isw_fragment_pin"
@@ -147,15 +164,6 @@
         tools:layout="@layout/isw_fragment_processing_transaction"
         android:name="com.interswitchng.smartpos.modules.main.fragments.ProcessingRequestFragment">
 
-        <action
-            android:id="@+id/isw_action_goto_fragment_receipt"
-            app:destination="@id/isw_fragment_receipt"
-            app:popUpTo="@id/isw_transaction"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-
         <argument android:name="PaymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
 
@@ -165,8 +173,8 @@
         tools:layout="@layout/isw_fragment_receipt"
         android:name="com.interswitchng.smartpos.modules.main.fragments.ReceiptFragment">
 
-        <argument android:name="PaymentModel"
-            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+        <argument android:name="TransactionSuccessModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.TransactionSuccessModel"/>
 
     </fragment>
 
@@ -267,6 +275,15 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+
+        <argument android:name="PaymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/isw_ussd_fragment"
+        tools:layout="@layout/isw_fragment_ussd"
+        android:name="com.interswitchng.smartpos.modules.main.fragments.UssdFragment">
 
         <argument android:name="PaymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>

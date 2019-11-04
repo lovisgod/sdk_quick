@@ -12,18 +12,23 @@ import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 class ReceiptFragment : BaseFragment(TAG) {
 
     private val receiptFragmentArgs by navArgs<ReceiptFragmentArgs>()
-    private val paymentModel by lazy { receiptFragmentArgs.PaymentModel }
+    private val transactionSuccessResponse by lazy { receiptFragmentArgs.TransactionSuccessModel }
+    //private val transactionResult by lazy { receiptFragmentArgs.TransactionResult }
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_receipt
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        when (paymentModel.type) {
+       /* when (transactionSuccessResponse.type) {
             PaymentModel.MakePayment.PURCHASE -> isw_receipt_text.text = getString(R.string.isw_thank_you)
             PaymentModel.MakePayment.PRE_AUTHORIZATION -> isw_receipt_text.text = getString(R.string.isw_pre_authorization_completed)
             PaymentModel.MakePayment.CARD_NOT_PRESENT -> isw_receipt_text.text = getString(R.string.isw_card_not_present_completed)
-            else -> isw_receipt_text.text = getString(R.string.isw_completion_completed)
-        }
+
+        }*/
+
+        displayTransactionResult()
+
+           // else -> isw_receipt_text.text = getString(R.string.isw_completion_completed)
 
         isw_done.setOnClickListener {
             navigateUp()
@@ -37,6 +42,10 @@ class ReceiptFragment : BaseFragment(TAG) {
             }
             startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
+    }
+
+    private fun displayTransactionResult() {
+        isw_amount_paid.text = transactionSuccessResponse.amount.toString()
     }
 
     companion object {

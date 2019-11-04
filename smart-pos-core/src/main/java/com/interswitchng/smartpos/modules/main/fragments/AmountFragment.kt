@@ -4,19 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
-import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.errors.NotConfiguredException
-import com.interswitchng.smartpos.shared.models.transaction.PaymentType
-import com.interswitchng.smartpos.shared.utilities.addComma
-import com.interswitchng.smartpos.shared.utilities.beforeDot
-import com.interswitchng.smartpos.shared.utilities.removeComma
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
+import java.text.NumberFormat
 
 class AmountFragment : BaseFragment(TAG) {
 
@@ -53,39 +47,62 @@ class AmountFragment : BaseFragment(TAG) {
         }
     }
 
-
     private fun proceedWithPayment() {
+        val latestAmount = isw_amount.text.toString()
+        val latestAmountWithoutComma = latestAmount.replace("[$,]".toRegex(), "")
+        val dotIndex = latestAmountWithoutComma.indexOfFirst {
+            it == '.'
+        }
+
+        val stringWithoutCommaAndDot =  latestAmountWithoutComma.substring(0, dotIndex)
         payment.newPayment {
-            amount = isw_amount.text.toString()
+            amount = Integer.valueOf(stringWithoutCommaAndDot)
+            formattedAmount = latestAmount
         }
 
         when (payment.type) {
             PaymentModel.MakePayment.PURCHASE -> {
                 val bottomDialog = PaymentTypeDialog {
+
+
                     when (it) {
                         PaymentModel.PaymentType.QR_CODE -> {
-                            val direction = AmountFragmentDirections.iswActionGotoFragmentQrCodeFragment()
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentQrCodeFragment(payment)
                             navigate(direction)
                         }
                         PaymentModel.PaymentType.PAY_CODE -> {
-                            val direction = AmountFragmentDirections.iswActionGotoFragmentPayCode()
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentPayCode(payment)
                             navigate(direction)
                         }
                         PaymentModel.PaymentType.USSD -> {
-
-                        }
-                        else -> {
                             payment.newPayment {
                                 paymentType = it
-                                val amountAsInt = isw_amount.text.toString().removeComma().beforeDot().toInt()
-                                makePayment(amountAsInt, getPaymentType(paymentType as PaymentModel.PaymentType))
                             }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentUssd(payment)
+                            navigate(direction)
+                        }
+
+                        PaymentModel.PaymentType.CARD -> {
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
                             val direction = AmountFragmentDirections.iswActionGotoFragmentCardPayment(payment)
                             navigate(direction)
                         }
                     }
                 }
                 bottomDialog.show(childFragmentManager, TAG)
+
             }
 
             PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
@@ -94,37 +111,19 @@ class AmountFragment : BaseFragment(TAG) {
             }
 
             PaymentModel.MakePayment.COMPLETION -> {
-                val direction = AmountFragmentDirections.iswActionGotoFragmentProcessingTransaction(payment)
+                val direction =
+                    AmountFragmentDirections.iswActionGotoFragmentProcessingTransaction(payment)
                 navigate(direction)
             }
-        }
-    }
 
-    private fun getPaymentType(paymentType: PaymentModel.PaymentType): PaymentType {
-        return when (paymentType) {
-            PaymentModel.PaymentType.CARD -> PaymentType.Card
-            PaymentModel.PaymentType.USSD -> PaymentType.USSD
-            PaymentModel.PaymentType.QR_CODE -> PaymentType.QR
-            PaymentModel.PaymentType.PAY_CODE -> PaymentType.PayCode
+            PaymentModel.MakePayment.CARD_NOT_PRESENT -> {
+
+            }
         }
     }
 
     private fun displayInvalidAmountToast() {
         toast("Enter a valid amount")
-    }
-
-    private fun makePayment(amount: Int, type: PaymentType?) {
-        try {
-            // trigger payment
-            activity?.let {
-                IswPos.getInstance().initiatePayment(it, amount, type)
-            }
-
-        } catch (e: NotConfiguredException) {
-            val message = "Pos has not been configured"
-            toast(message)
-            logger.log(e.message ?: e.localizedMessage ?: message)
-        }
     }
 
     private fun toast(msg: String) = Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -134,106 +133,89 @@ class AmountFragment : BaseFragment(TAG) {
         isw_amount.text = amount
     }
 
-    private fun updateAmount(digit: String) {
-        amount += digit
+    private fun updateAmount() {
+        val cleanString = amount.replace("[$,.]".toRegex(), "")
 
-        amount = amount.removeComma()
+        val parsed = java.lang.Double.parseDouble(cleanString)
+        val numberFormat = NumberFormat.getInstance()
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 2
+        val formatted = numberFormat.format(parsed / 100)
 
-        val amountBeforeDot = amount.beforeDot()
-
-        if (amountBeforeDot.length >= 4) amount = amount.addComma()
-
-        isw_amount.text = amount
+        isw_amount.text = formatted
     }
 
     private fun handleDigitsClicks() {
         isw_keypad_zero.setOnClickListener {
-            updateAmount("0")
+            amount+= "0"
+            updateAmount()
         }
 
         isw_keypad_one.setOnClickListener {
-            updateAmount("1")
-        }
-
-        isw_keypad_one.setOnClickListener {
-            updateAmount("1")
+            amount+= "1"
+            updateAmount()
         }
 
         isw_keypad_two.setOnClickListener {
-            updateAmount("2")
+            amount+= "2"
+            updateAmount()
         }
 
         isw_keypad_three.setOnClickListener {
-            updateAmount("3")
+            amount+= "3"
+            updateAmount()
         }
 
         isw_keypad_four.setOnClickListener {
-            updateAmount("4")
+            amount+= "4"
+            updateAmount()
         }
 
         isw_keypad_five.setOnClickListener {
-            updateAmount("5")
+            amount+= "5"
+            updateAmount()
         }
 
         isw_keypad_six.setOnClickListener {
-            updateAmount("6")
+            amount+= "6"
+            updateAmount()
         }
 
         isw_keypad_seven.setOnClickListener {
-            updateAmount("7")
+            amount+= "7"
+            updateAmount()
         }
 
         isw_keypad_eight.setOnClickListener {
-            updateAmount("8")
+            amount+= "8"
+            updateAmount()
         }
 
         isw_keypad_nine.setOnClickListener {
-            updateAmount("9")
+            amount+= "9"
+            updateAmount()
         }
 
         isw_dot_button.setOnClickListener {
-            updateAmount(".")
+            amount+= "."
+            updateAmount()
         }
 
         isw_back_delete_button.setOnClickListener {
             if (amount.isNotEmpty()) {
                 amount = amount.substring(0 until amount.length - 1)
-
-                amount = amount.removeComma()
-
-                val amountBeforeDot = amount.beforeDot()
-
-                if (amountBeforeDot.length >= 4) amount = amount.addComma()
-
-                isw_amount.text = amount
+                updateAmount()
             }
-
         }
 
+        isw_back_delete_button.setOnLongClickListener {
+            amount = DEFAULT_AMOUNT
+            isw_amount.text = amount
+            true
+        }
     }
 
     companion object {
         const val TAG = "AMOUNT FRAGMENT"
-    }
-
-    fun navigateToDestination(paymentType: PaymentModel.PaymentType) {
-        when (paymentType) {
-            PaymentModel.PaymentType.CARD -> {
-                val direction = AmountFragmentDirections.iswActionGotoFragmentCardPayment(payment)
-                    navigate(direction)
-            }
-
-            PaymentModel.PaymentType.QR_CODE -> {
-
-            }
-
-            PaymentModel.PaymentType.PAY_CODE -> {
-
-            }
-
-            PaymentModel.PaymentType.USSD -> {
-
-            }
-        }
     }
 }

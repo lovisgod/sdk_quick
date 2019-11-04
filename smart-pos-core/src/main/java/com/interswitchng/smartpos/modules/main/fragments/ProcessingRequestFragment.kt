@@ -53,8 +53,8 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
         }, 6000)
 
         Handler().postDelayed({
-            val direction = ProcessingRequestFragmentDirections.iswActionGotoFragmentReceipt(payment)
-            navigate(direction)
+            //val direction = ProcessingRequestFragmentDirections.iswActionGotoFragmentReceipt(payment)
+            //navigate(direction)
         }, 7000)
     }
 

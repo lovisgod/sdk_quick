@@ -23,3 +23,14 @@ fun View.showMe() {
             .withEndAction { visibility = View.VISIBLE }
     }
 }
+
+fun View.hide() {
+    this.visibility = View.GONE
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.isVisible(): Boolean = this.visibility == View.VISIBLE
+fun View.isNotVisible(): Boolean = this.visibility != View.VISIBLE

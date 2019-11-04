@@ -1,11 +1,14 @@
 package com.interswitchng.smartpos.modules.main.models
 
 import android.os.Parcelable
+import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import kotlinx.android.parcel.Parcelize
+import java.text.NumberFormat
 
 @Parcelize
 data class PaymentModel (
-    var amount: String? = null,
+    var amount: Int = 0,
+    var formattedAmount: String = EMPTY_STRING,
     var type: MakePayment? = null,
     var paymentType: PaymentType? = null,
     var card: CardModel? = null

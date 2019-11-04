@@ -67,23 +67,14 @@ class IswPos private constructor(private val app: Application, internal val devi
                 PaymentType.PayCode -> PayCodeActivity::class.java
                 PaymentType.QR -> QrCodeActivity::class.java
                 PaymentType.USSD -> UssdActivity::class.java
-                PaymentType.Card -> {
-                    val fragment =
-                        activity.supportFragmentManager.findFragmentById(R.id.isw_fragment_amount) as AmountFragment
-
-                    if (fragment != null) {
-                        fragment.navigateToDestination(PaymentModel.PaymentType.CARD)
-                    } else {
-                        return
-                    }
-                }
+                PaymentType.Card -> CardActivity::class.java
             }
 
             // create intent with payment info and flags
-            //val intent = Intent(app, typeClass).putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
+            val intent = Intent(app, typeClass).putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
 
             // start activity
-            //activity.startActivityForResult(intent, CODE_PURCHASE)
+            activity.startActivityForResult(intent, CODE_PURCHASE)
         }
     }
 

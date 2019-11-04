@@ -34,11 +34,11 @@ interface EmvCardReader {
 
 
     /**
-     * Starts the new transaction that has be setup. It uses the transaction amount and terminal information to
-     * communicate with the card's chip, in order to perform the transaction. This returns an result
+     * Starts the new transaction that has been setup. It uses the transaction amount and terminal information to
+     * communicate with the card's chip, in order to perform the transaction. This returns an emv result
      * status [EmvResult] indicating what to do about the new transaction.
      *
-     * @return   a emv result status indicating what action to take regarding the transaction
+     * @return   an emv result status indicating what action to take regarding the transaction
      * @see EmvResult
      */
     fun startTransaction(): EmvResult

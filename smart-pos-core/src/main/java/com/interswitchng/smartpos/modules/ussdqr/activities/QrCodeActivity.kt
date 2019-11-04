@@ -1,6 +1,5 @@
 package com.interswitchng.smartpos.modules.ussdqr.activities
 
-
 import android.os.Bundle
 import android.view.View
 import com.gojuno.koptional.None
@@ -27,7 +26,6 @@ import kotlinx.android.synthetic.main.isw_activity_qr_code.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
-
 
 class QrCodeActivity : BaseActivity() {
 

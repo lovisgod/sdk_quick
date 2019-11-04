@@ -4,6 +4,7 @@ import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
@@ -21,6 +22,8 @@ class TelpoEmvCardReaderImpl (context: Context) : EmvCardReader, TelpoPinCallbac
     private val telpoEmvImplementation by lazy { TelpoEmvImplementation(context, this) }
     private lateinit var channel: Channel<EmvMessage>
     private lateinit var channelScope: CoroutineScope
+
+    private var isCancelled = false
 
     private val emvListener by lazy { object: TelpoEmvServiceListener() {
         override fun onInputAmount(p0: EmvAmountData?): Int {
@@ -66,17 +69,21 @@ class TelpoEmvCardReaderImpl (context: Context) : EmvCardReader, TelpoPinCallbac
 
         val result = telpoEmvImplementation.setupContactEmvTransaction(terminalInfo)
 
-//        val resultMsg = when (setupResult) {
-//            EmvResult.EMV_ERR_ICC_CMD.errCode -> EmvResult.EMV_ERR_ICC_CMD
-//            EmvResult.EMV_ERR_NO_APP.errCode -> EmvResult.EMV_ERR_NO_APP
-//            EmvResult.EMV_ERR_NO_PASSWORD.errCode -> EmvResult.EMV_ERR_NO_PASSWORD
-//            EmvResult.EMV_ERR_TIME_OUT.errCode -> EmvResult.EMV_ERR_TIME_OUT
-//            EmvResult.EMV_ERR_NO_DATA.errCode -> EmvResult.EMV_ERR_NO_DATA
-//            else -> null
-//        }
-//
-//        if (resultMsg != null) callTransactionCancelled(resultMsg.errCode, "Unable to read Card")
-//        else channel.send(EmvMessage.CardRead(emvImpl.getCardType()))
+        val resultMsg = when (result) {
+            EmvService.ERR_ICCCMD, EmvService.ERR_NOAPP,
+            EmvService.ERR_NOPIN, EmvService.ERR_TIMEOUT, EmvService.ERR_NODATA -> 1
+            else -> null
+        }
+
+        if (resultMsg != null) callTransactionCancelled(resultMsg, "Unable to read Card")
+        else channel.send(EmvMessage.CardRead(CardType.None)) /*Still working on how to get card type*/
+    }
+
+    private suspend fun callTransactionCancelled(code: Int, reason: String) {
+        if (!isCancelled) {
+            channel.send(EmvMessage.TransactionCancelled(code, reason))
+            cancelTransaction()
+        }
     }
 
     override fun startTransaction(): EmvResult {
@@ -88,7 +95,10 @@ class TelpoEmvCardReaderImpl (context: Context) : EmvCardReader, TelpoPinCallbac
     }
 
     override fun cancelTransaction() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (!isCancelled) {
+            isCancelled = true
+//            ped.setInputPinListener(null) // remove the pin pad
+        }
     }
 
     override fun getTransactionInfo(): EmvData? {

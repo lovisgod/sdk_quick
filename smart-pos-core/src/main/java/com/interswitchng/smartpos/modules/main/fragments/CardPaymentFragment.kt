@@ -7,14 +7,16 @@ import androidx.navigation.fragment.navArgs
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
+import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
-import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.models.TransactionSuccessModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
@@ -24,23 +26,17 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
-import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.utilities.*
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
-import com.interswitchng.smartpos.shared.utilities.toast
-import kotlinx.android.synthetic.main.isw_activity_card.*
-import kotlinx.android.synthetic.main.isw_content_amount.*
+import kotlinx.android.synthetic.main.isw_activity_card.cardPin
+import kotlinx.android.synthetic.main.isw_fragment_card_payment.*
+import kotlinx.android.synthetic.main.isw_fragment_pin.*
 import kotlinx.android.synthetic.main.isw_layout_card_found.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class CardPaymentFragment : BaseFragment(TAG) {
-
-    private val cardViewModel: CardViewModel by viewModel()
-
-    private val cardPaymentFragmentArgs by navArgs<CardPaymentFragmentArgs>()
-    private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
     private var accountType = AccountType.Default
     private var cardType = CardType.None
@@ -48,52 +44,146 @@ class CardPaymentFragment : BaseFragment(TAG) {
     private var pinOk = false
     private var isCancelled = false
 
-
+    private lateinit var accountTypeDialog: AccountTypeDialog
+    private lateinit var paymentTypeDialog: PaymentTypeDialog
     private val dialog by lazy { DialogUtils.getLoadingDialog(context!!) }
     private val alert by lazy { DialogUtils.getAlertDialog(context!!).create() }
 
+
+    private val cardViewModel: CardViewModel by viewModel()
+
+    private val cardPaymentFragmentArgs by navArgs<CardPaymentFragmentArgs>()
+    private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
+
+    private val paymentInfo by lazy {
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+    }
+
+    private val cancelDialog by lazy {
+        DialogUtils.getAlertDialog(context!!)
+            .setMessage("Would you like to change payment method, or try again?")
+            .setCancelable(false)
+            .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
+                dialog.dismiss()
+                showPaymentOptions()
+            }
+            .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
+                dialog.dismiss()
+                resetTransaction()
+            }.create()
+    }
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_card_payment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        observeViewModel()
+        showViewBasedOnPaymentType()
+
+        if (isPOSConfigured()) {
+            // Handle clicks
+            handleClicks()
+
+            // observe view model
+            observeViewModel()
+
+            // setup transaction
+            cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
+
+        } else {
+            context?.toast("POS is not configured")
+
+            observeViewModel()
+            when (paymentModel.type) {
+                PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
+                    isw_change_payment_method_group.visibility = View.GONE
+                }
+                PaymentModel.MakePayment.COMPLETION -> {
+                    isw_change_payment_method_group.visibility = View.GONE
+                    isw_detection_text.text = "Completion Detected"
+                }
+            }
+
+        }
+
+    }
+
+    private fun showPaymentOptions() {
+        change_payment_method.setOnClickListener {
+            paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
+
+            }
+            paymentTypeDialog.show(childFragmentManager, TAG)
+        }
+    }
+
+    private fun handleClicks() {
+        // show PaymentTypeDialog and listen for clicks
+        showPaymentOptions()
+
+        isw_card_found_continue.setOnClickListener {
+            when (paymentModel.type) {
+                PaymentModel.MakePayment.PURCHASE -> {
+                    accountTypeDialog = AccountTypeDialog {
+                        accountType = when (it) {
+                            0 -> AccountType.Default
+                            1 -> AccountType.Savings
+                            2 -> AccountType.Current
+                            else -> AccountType.Default
+                        }
+
+                        runWithInternet {
+                            cardViewModel.startTransaction(
+                                context!!,
+                                paymentInfo,
+                                accountType,
+                                terminalInfo
+                            )
+                        }
+                    }
+                    accountTypeDialog.show(childFragmentManager, TAG)
+                }
+
+                PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
+                    val direction =
+                        CardPaymentFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
+                    navigate(direction)
+                }
+
+                else -> {
+                    //val direction = CardPaymentFragmentDirections.iswActionGotoFragmentPin(paymentModel)
+                    //navigate(direction)
+                }
+            }
+        }
+
+    }
+
+    private fun showViewBasedOnPaymentType() {
         when (paymentModel.type) {
             PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
                 isw_change_payment_method_group.visibility = View.GONE
             }
+
             PaymentModel.MakePayment.COMPLETION -> {
                 isw_change_payment_method_group.visibility = View.GONE
                 isw_detection_text.text = "Completion Detected"
             }
-        }
-        change_payment_method.setOnClickListener {
-            val dialog = PaymentTypeDialog (PaymentModel.PaymentType.CARD) {
+
+            PaymentModel.MakePayment.CARD_NOT_PRESENT -> {
 
             }
-            dialog.show(childFragmentManager, TAG)
-        }
-        isw_card_found_continue.setOnClickListener {
-            when (paymentModel.type) {
-                PaymentModel.MakePayment.PURCHASE -> {
-                    val dialog = AccountTypeDialog {
-                        val direction = CardPaymentFragmentDirections.iswActionGotoFragmentPin(paymentModel)
-                        navigate(direction)
-                    }
-                    dialog.show(childFragmentManager, TAG)
-                }
-                PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
-                    val direction = CardPaymentFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
-                    navigate(direction)
-                }
-                else -> {
-                    val direction = CardPaymentFragmentDirections.iswActionGotoFragmentPin(paymentModel)
-                    navigate(direction)
-                }
+
+            PaymentModel.MakePayment.PURCHASE -> {
+
             }
         }
     }
 
+
+    private fun isPOSConfigured() = IswPos.isConfigured()
 
     private fun observeViewModel() {
         with(cardViewModel) {
@@ -124,7 +214,7 @@ class CardPaymentFragment : BaseFragment(TAG) {
                         }
                         CardViewModel.OnlineProcessResult.ONLINE_DENIED -> {
                             context?.toast("Transaction Declined")
-                            showContainer(CardTransactionState.Default)
+                            //showContainer(CardTransactionState.Default)
                         }
                         CardViewModel.OnlineProcessResult.ONLINE_APPROVED -> {
                             context?.toast("Transaction Approved")
@@ -135,16 +225,6 @@ class CardPaymentFragment : BaseFragment(TAG) {
         }
     }
 
-    private fun showContainer(state: CardTransactionState) {
-        val container = when (state) {
-            CardTransactionState.ShowInsertCard -> insertCardContainer
-            CardTransactionState.EnterPin -> insertPinContainer
-            CardTransactionState.Default -> blankContainer
-        }
-
-        container.bringToFront()
-    }
-
     private fun processMessage(message: EmvMessage) {
 
         // assigns value to ensure the when expression is exhausted
@@ -152,44 +232,35 @@ class CardPaymentFragment : BaseFragment(TAG) {
 
             // when card is detected
             is EmvMessage.CardDetected -> {
-                showContainer(CardTransactionState.Default)
                 showLoader("Reading Card", "Loading...")
             }
 
             // when card should be inserted
             is EmvMessage.InsertCard -> {
-                showContainer(CardTransactionState.ShowInsertCard)
-                paymentHint.text = getString(R.string.isw_hint_insert_card)
+
             }
 
             // when card has been read
             is EmvMessage.CardRead -> {
+                //Dismiss the dialog showing "Reading Card"
+                dialog.dismiss()
 
-                cardType = message.cardType
-                val cardIcon = when (cardType) {
-                    CardType.MASTER -> R.drawable.isw_ic_card_mastercard
-                    CardType.VISA -> R.drawable.isw_ic_card_visa
-                    CardType.VERVE -> R.drawable.isw_ic_card_verve
-                    else -> R.drawable.isw_ic_card
-                }
-
-                // set the card icon
-                cardTypeIcon.setImageResource(cardIcon)
-
-                // show account type selection
-                //chooseAccount()
+                //Show Card detected view
+                showCardDetectedView()
             }
 
             // when card gets removed
             is EmvMessage.CardRemoved -> {
+                showInsertCardView()
                 cancelTransaction("Transaction Cancelled: Card was removed")
             }
 
             // when user should enter pin
             is EmvMessage.EnterPin -> {
-                showContainer(CardTransactionState.EnterPin)
-                cardPin.setText("")
-                paymentHint.text = getString(R.string.isw_hint_input_pin)
+                accountTypeDialog.dismiss()
+                iswCardPaymentViewAnimator.displayedChild = 1
+                isw_amount.text = paymentModel.formattedAmount
+                context?.toast("Enter your pin")
             }
 
             // when user types in pin
@@ -199,6 +270,7 @@ class CardPaymentFragment : BaseFragment(TAG) {
 
             // when pin has been validated
             is EmvMessage.PinOk -> {
+                println("Called PIN OKAY")
                 pinOk = true
                 context?.toast("Pin OK")
             }
@@ -227,14 +299,16 @@ class CardPaymentFragment : BaseFragment(TAG) {
 
             // when transaction is processing
             is EmvMessage.ProcessingTransaction -> {
-                // change hint text
-                paymentHint.text = getString(R.string.isw_title_processing_transaction)
-                // hide other layouts: show default screen
-                showContainer(CardTransactionState.Default)
+
                 // show transaction progress alert
-                //showProgressAlert(false)
+                showProgressAlert(false)
             }
         }
+    }
+
+    private fun showInsertCardView() {
+        isw_card_found.hide()
+        isw_scanning_card.show()
     }
 
 
@@ -246,7 +320,8 @@ class CardPaymentFragment : BaseFragment(TAG) {
                 // extract info
                 val response = transactionResponse.value.first
                 val emvData = transactionResponse.value.second
-                //val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+                val txnInfo =
+                    TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
                 val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
                 val pinStatus = when {
@@ -255,7 +330,7 @@ class CardPaymentFragment : BaseFragment(TAG) {
                 }
 
                 val now = Date()
-              /*  transactionResult = TransactionResult(
+                transactionResult = TransactionResult(
                     paymentType = PaymentType.Card,
                     dateTime = DisplayUtils.getIsoString(now),
                     amount = DisplayUtils.getAmountString(paymentInfo),
@@ -265,13 +340,29 @@ class CardPaymentFragment : BaseFragment(TAG) {
                     responseCode = response.responseCode,
                     cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                     stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone)*/
+                    telephone = iswPos.config.merchantTelephone
+                )
+
+                dismissAlert()
+
+                val direction = CardPaymentFragmentDirections.iswActionGotoFragmentReceipt(
+                    TransactionSuccessModel(amount = paymentInfo.amount)
+                )
+                navigate(direction)
 
 
                 // show transaction result screen
                 //showTransactionResult(Transaction.default())
             }
         }
+    }
+
+    private fun showCardDetectedView() {
+        //Hide Scanning Card View
+        isw_scanning_card.hide()
+
+        //Show Card Detected View
+        isw_card_found.show()
     }
 
 
@@ -286,8 +377,12 @@ class CardPaymentFragment : BaseFragment(TAG) {
         isCancelled = true
 
         // set reason and show cancel dialog
-       /* cancelDialog.setTitle(reason)
-        if (!cancelDialog.isShowing) cancelDialog.show()*/
+        cancelDialog.setTitle(reason)
+        if (!cancelDialog.isShowing) cancelDialog.show()
+    }
+
+    private fun resetTransaction() {
+        fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
     }
 
     private fun showLoader(title: String = "Processing", message: String) {
@@ -299,4 +394,5 @@ class CardPaymentFragment : BaseFragment(TAG) {
     companion object {
         const val TAG = "Card Payment"
     }
+
 }

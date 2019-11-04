@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ussdAnimator"
+    android:animateFirstView="true"
+    tools:context=".modules.main.fragments.UssdFragment">
+
+    <include layout="@layout/isw_select_bank_view"/>
+
+    <include layout="@layout/isw_generating_code_layout"/>
+
+    <include layout="@layout/isw_ussd_content_layout"/>
+
+</ViewAnimator>

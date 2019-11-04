@@ -31,12 +31,12 @@ android {
             minifyEnabled minified
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.paxConfig
-            applicationIdSuffix '.release'
+            applicationIdSuffix '.v2.release'
             buildConfigField("boolean", "MOCK", "false") // mock device
         }
         debug {
             buildConfigField("boolean", "MOCK", "false") // mock device
-            applicationIdSuffix '.debug'
+            applicationIdSuffix '.v2.debug'
         }
     }
     compileOptions {

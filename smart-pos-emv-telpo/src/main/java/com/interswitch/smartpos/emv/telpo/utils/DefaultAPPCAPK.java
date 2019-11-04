@@ -2,6 +2,7 @@ package com.interswitch.smartpos.emv.telpo.utils;
 
 import android.util.Log;
 
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
 import com.telpo.emv.EmvApp;
 import com.telpo.emv.EmvCAPK;
 import com.telpo.emv.EmvService;
@@ -2416,9 +2417,9 @@ public class DefaultAPPCAPK {
 
     }
 
-    public static void Add_All_APP(){
+    public static void Add_All_APP(TerminalInfo terminalInfo){
 
-        Add_Default_APP();
+        Add_Default_APP(terminalInfo);
         String name = "";
         int result = 0;
         boolean dbResult = false;
@@ -3693,7 +3694,7 @@ public class DefaultAPPCAPK {
         result = EmvService.Emv_AddApp(APP_1);
     }
 
-    public static void Add_Default_APP() {
+    public static void Add_Default_APP(TerminalInfo terminalInfo) {
         String name = "";
         int result = 0;
         boolean dbResult = false;

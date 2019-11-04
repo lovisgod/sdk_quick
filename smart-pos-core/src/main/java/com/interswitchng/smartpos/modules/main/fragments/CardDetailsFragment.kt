@@ -25,7 +25,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
         }
         paymentModel.newPayment {
             card = cardModel
-            amount = isw_amount.text.toString()
+            amount = isw_amount.text.toString().toInt()
         }
         isw_proceed.setOnClickListener {
             val direction = CardDetailsFragmentDirections.iswActionGotoFragmentProcessingTransaction(paymentModel)
