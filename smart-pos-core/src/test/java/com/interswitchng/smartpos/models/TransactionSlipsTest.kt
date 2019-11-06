@@ -9,7 +9,6 @@ import com.interswitchng.smartpos.shared.models.printer.slips.CardSlip
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
-import kotlinx.coroutines.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

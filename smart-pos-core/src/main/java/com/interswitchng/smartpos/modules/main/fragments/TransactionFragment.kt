@@ -25,19 +25,19 @@ class TransactionFragment: BaseFragment(TAG) {
                 when (it) {
                     0 -> {
                         val payment = payment {
-                            type = PaymentModel.MakePayment.PURCHASE
+                            type = PaymentModel.TransactionType.CARD_PURCHASE
                         }
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
                     1 -> {
                         val payment = payment {
-                            type = PaymentModel.MakePayment.PRE_AUTHORIZATION
+                            type = PaymentModel.TransactionType.PRE_AUTHORIZATION
                         }
-                        navigate(TransactionFragmentDirections.iswActionGotoFragmentCardPayment(payment))
+                        navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
                     2 -> {
                         val payment = payment {
-                            type = PaymentModel.MakePayment.CARD_NOT_PRESENT
+                            type = PaymentModel.TransactionType.CARD_NOT_PRESENT
                         }
                         val dialog = AdminAccessDialog {
                             val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
@@ -47,7 +47,7 @@ class TransactionFragment: BaseFragment(TAG) {
                     }
                     3 -> {
                         val payment = payment {
-                            type = PaymentModel.MakePayment.COMPLETION
+                            type = PaymentModel.TransactionType.COMPLETION
                         }
                         val direction = TransactionFragmentDirections.iswActionGotoFragmentCardPayment(payment)
                         navigate(direction)

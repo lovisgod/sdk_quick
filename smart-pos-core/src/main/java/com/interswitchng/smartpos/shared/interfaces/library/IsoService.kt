@@ -52,4 +52,24 @@ internal interface IsoService {
      */
     fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, paymentInfo: PaymentInfo): TransactionResponse?
 
+    /**
+     * Initiates a pre-authorization transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the purchase information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+    fun initiatePreAuthorization(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+
+    /**
+     * Initiates a completion transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the purchase information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+    fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+
 }

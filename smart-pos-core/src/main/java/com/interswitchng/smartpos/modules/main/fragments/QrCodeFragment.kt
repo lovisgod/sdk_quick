@@ -58,6 +58,11 @@ class QrCodeFragment : BaseFragment(TAG) {
        setupUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        dialog?.dismiss()
+    }
+
     private fun setupUI() {
         // func returns lifecycle
         val owner = { lifecycle }
