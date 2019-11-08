@@ -43,6 +43,12 @@ class ReceiptFragment : BaseFragment(TAG) {
         }
     }
 
+    private fun displayTransactionDetails() {
+        isw_date_text.text = transactionResponseModel.transactionResult?.dateTime
+        isw_payment_type.text = transactionResponseModel.transactionResult?.cardType?.name
+        isw_amount_paid.text = transactionResponseModel.transactionResult?.amount
+    }
+
     private fun handleClicks() {
 
         isw_done.setOnClickListener {
@@ -67,6 +73,7 @@ class ReceiptFragment : BaseFragment(TAG) {
 
     private fun setUpUI() {
         displayTransactionResultIconAndMessage()
+        displayTransactionDetails()
         handleClicks()
     }
 

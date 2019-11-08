@@ -96,7 +96,7 @@ class AmountFragment : BaseFragment(TAG) {
                                 paymentType = it
                             }
 
-                            val direction = AmountFragmentDirections.iswActionGotoFragmentCardPayment(payment)
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
                             navigate(direction)
                         }
                     }
@@ -106,13 +106,13 @@ class AmountFragment : BaseFragment(TAG) {
             }
 
             PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
-                val direction = AmountFragmentDirections.iswActionGotoPreAuthFragment(payment)
+                val direction = AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
                 navigate(direction)
             }
 
             PaymentModel.TransactionType.COMPLETION -> {
-                val direction =
-                    AmountFragmentDirections.iswActionGotoFragmentProcessingTransaction(payment)
+               val direction =
+                    AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
                 navigate(direction)
             }
 

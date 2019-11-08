@@ -67,6 +67,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:maxLines="1"
                 android:id="@+id/isw_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -49,7 +49,8 @@ class TransactionFragment: BaseFragment(TAG) {
                         val payment = payment {
                             type = PaymentModel.TransactionType.COMPLETION
                         }
-                        val direction = TransactionFragmentDirections.iswActionGotoFragmentCardPayment(payment)
+                        
+                        val direction = TransactionFragmentDirections.iswActionGotoFragmentAuthentication(payment)
                         navigate(direction)
                     }
                 }

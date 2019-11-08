@@ -1,11 +1,13 @@
 package com.interswitchng.interswitchpossdkdemo;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
+import androidx.multidex.MultiDex;
 
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
@@ -39,6 +41,12 @@ public class POSApplication extends Application   {
         super.onCreate();
 
         configureTerminal();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     private void configureTerminal() {
