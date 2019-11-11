@@ -25,7 +25,7 @@ class AmountFragment : BaseFragment(TAG) {
         get() = R.layout.isw_fragment_amount
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (payment.type == PaymentModel.MakePayment.PRE_AUTHORIZATION) {
+        if (payment.type == PaymentModel.TransactionType.PRE_AUTHORIZATION) {
             isw_proceed.text = getString(R.string.isw_pre_authorize)
         }
         initializeAmount()
@@ -61,7 +61,7 @@ class AmountFragment : BaseFragment(TAG) {
         }
 
         when (payment.type) {
-            PaymentModel.MakePayment.PURCHASE -> {
+            PaymentModel.TransactionType.CARD_PURCHASE -> {
                 val bottomDialog = PaymentTypeDialog {
 
 
@@ -105,18 +105,18 @@ class AmountFragment : BaseFragment(TAG) {
 
             }
 
-            PaymentModel.MakePayment.PRE_AUTHORIZATION -> {
-                val direction = AmountFragmentDirections.iswActionGotoFragmentPin(payment)
+            PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
+                val direction = AmountFragmentDirections.iswActionGotoPreAuthFragment(payment)
                 navigate(direction)
             }
 
-            PaymentModel.MakePayment.COMPLETION -> {
+            PaymentModel.TransactionType.COMPLETION -> {
                 val direction =
                     AmountFragmentDirections.iswActionGotoFragmentProcessingTransaction(payment)
                 navigate(direction)
             }
 
-            PaymentModel.MakePayment.CARD_NOT_PRESENT -> {
+            PaymentModel.TransactionType.CARD_NOT_PRESENT -> {
 
             }
         }

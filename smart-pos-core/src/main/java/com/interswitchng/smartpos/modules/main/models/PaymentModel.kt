@@ -3,13 +3,12 @@ package com.interswitchng.smartpos.modules.main.models
 import android.os.Parcelable
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import kotlinx.android.parcel.Parcelize
-import java.text.NumberFormat
 
 @Parcelize
 data class PaymentModel (
     var amount: Int = 0,
     var formattedAmount: String = EMPTY_STRING,
-    var type: MakePayment? = null,
+    var type: TransactionType? = null,
     var paymentType: PaymentType? = null,
     var card: CardModel? = null
 ): Parcelable {
@@ -18,8 +17,8 @@ data class PaymentModel (
         MAKE_PAYMENT, TRANSFER_MONEY, BILL_PAYMENT, CASH_OUT
     }
 
-    enum class MakePayment {
-        PURCHASE, PRE_AUTHORIZATION, CARD_NOT_PRESENT, COMPLETION
+    enum class TransactionType {
+        CARD_PURCHASE, PRE_AUTHORIZATION, CARD_NOT_PRESENT, COMPLETION
     }
 
     enum class PaymentType {

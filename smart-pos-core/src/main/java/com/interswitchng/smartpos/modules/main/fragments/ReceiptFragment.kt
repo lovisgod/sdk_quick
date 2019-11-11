@@ -7,28 +7,43 @@ import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 
 class ReceiptFragment : BaseFragment(TAG) {
 
     private val receiptFragmentArgs by navArgs<ReceiptFragmentArgs>()
-    private val transactionSuccessResponse by lazy { receiptFragmentArgs.TransactionSuccessModel }
-    //private val transactionResult by lazy { receiptFragmentArgs.TransactionResult }
+    private val transactionResponseModel by lazy { receiptFragmentArgs.TransactionResponseModel }
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_receipt
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-       /* when (transactionSuccessResponse.type) {
-            PaymentModel.MakePayment.PURCHASE -> isw_receipt_text.text = getString(R.string.isw_thank_you)
-            PaymentModel.MakePayment.PRE_AUTHORIZATION -> isw_receipt_text.text = getString(R.string.isw_pre_authorization_completed)
-            PaymentModel.MakePayment.CARD_NOT_PRESENT -> isw_receipt_text.text = getString(R.string.isw_card_not_present_completed)
+        setUpUI()
+    }
 
-        }*/
+    private fun displayTransactionResultIconAndMessage() {
+        when (transactionResponseModel.transactionResult?.responseCode) {
+            IsoUtils.TIMEOUT_CODE -> {
+                transactionResponseIcon.setImageResource(R.drawable.isw_failure)
+                isw_receipt_text.text = "Failed!"
+                isw_transaction_msg.text = "Your transaction was unsuccessful"
+            }
 
-        displayTransactionResult()
+            IsoUtils.OK -> {
+                transactionResponseIcon.setImageResource(R.drawable.isw_round_done_padded)
+                isw_transaction_msg.text = "Your transaction was successful"
+                when (transactionResponseModel.transactionType) {
+                    PaymentModel.TransactionType.CARD_PURCHASE -> isw_receipt_text.text = getString(R.string.isw_thank_you)
+                    PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_receipt_text.text = getString(R.string.isw_pre_authorization_completed)
+                    PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_receipt_text.text = getString(R.string.isw_card_not_present_completed)
+                }
+            }
+        }
+    }
 
-           // else -> isw_receipt_text.text = getString(R.string.isw_completion_completed)
+    private fun handleClicks() {
 
         isw_done.setOnClickListener {
             navigateUp()
@@ -42,10 +57,17 @@ class ReceiptFragment : BaseFragment(TAG) {
             }
             startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
+
+        isw_done.setOnClickListener {
+            val direction = ReceiptFragmentDirections.iswActionGotoFragmentTransaction()
+            navigate(direction)
+        }
+
     }
 
-    private fun displayTransactionResult() {
-        isw_amount_paid.text = transactionSuccessResponse.amount.toString()
+    private fun setUpUI() {
+        displayTransactionResultIconAndMessage()
+        handleClicks()
     }
 
     companion object {

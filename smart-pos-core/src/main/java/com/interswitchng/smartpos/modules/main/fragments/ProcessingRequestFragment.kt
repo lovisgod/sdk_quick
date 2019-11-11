@@ -19,9 +19,9 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         when (payment.type) {
-            PaymentModel.MakePayment.PURCHASE -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Transaction")
-            PaymentModel.MakePayment.PRE_AUTHORIZATION -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Pre-Authorization")
-            PaymentModel.MakePayment.CARD_NOT_PRESENT -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Card-Not-Present")
+            PaymentModel.TransactionType.CARD_PURCHASE -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Transaction")
+            PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Pre-Authorization")
+            PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Card-Not-Present")
             else -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Completion")
         }
         isw_connecting.setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_gray_stroke, 0, 0, 0)

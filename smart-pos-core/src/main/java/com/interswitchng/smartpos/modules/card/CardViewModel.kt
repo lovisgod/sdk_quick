@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
+import com.interswitchng.smartpos.modules.main.models.PaymentModel.TransactionType
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -42,6 +43,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     val transactionResponse: LiveData<Optional<Pair<TransactionResponse, EmvData>>> get() = _transactionResponse
 
     private val emv by lazy { posDevice.getEmvCardReader() }
+
+    private var transactionType: TransactionType = TransactionType.CARD_PURCHASE
 
     fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {
 
@@ -108,7 +111,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         if (emvData != null) {
             // create transaction info and issue online purchase request
             val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-            val response = isoService.initiateCardPurchase(terminalInfo, txnInfo)
+            val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
 
 
             when (response) {
@@ -139,6 +142,14 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+    private fun initiateTransaction(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
+        return when (transactionType) {
+            TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)
+            TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
+            else -> null
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
 
@@ -153,4 +164,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         ONLINE_APPROVED
     }
 
+    fun setTransactionType(selectedTransactionType: TransactionType) {
+        transactionType = selectedTransactionType
+    }
 }

@@ -197,7 +197,8 @@ class CardActivity : BaseActivity() {
                         stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
                         telephone = iswPos.config.merchantTelephone)
 
-
+                println("Called Response code -----> ${response.responseCode}")
+                println("Called Response message -----> ${responseMsg}")
                 // show transaction result screen
                 showTransactionResult(Transaction.default())
             }
