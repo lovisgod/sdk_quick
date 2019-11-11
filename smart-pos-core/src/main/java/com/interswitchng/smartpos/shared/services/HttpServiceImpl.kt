@@ -12,7 +12,7 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.Trans
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
-import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
+
 import com.interswitchng.smartpos.shared.utilities.Logger
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -26,7 +26,7 @@ internal class HttpServiceImpl(private val httpService: IHttpService) : HttpServ
         val banksResponse = banks.first
         return when (banksResponse) {
             null -> None
-            else -> Some(banksResponse)
+            else ->  Some(banksResponse)
         }
     }
 
@@ -68,6 +68,20 @@ internal class HttpServiceImpl(private val httpService: IHttpService) : HttpServ
             }
         }
     }
+
+
+     suspend fun callHome(request: CodeRequest): Optional<CodeResponse> {
+       //send XML and Receive XML
+
+        val response = httpService.getUssdCode(request).await()
+        val codeResponse = response.first
+        return when (codeResponse) {
+            null -> None
+            else -> Some(codeResponse)
+        }
+    }
+
+
 
     private suspend fun <T> Simple<T>.await(): Pair<T?, String?> {
         return suspendCoroutine { continuation ->
