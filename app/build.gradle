@@ -76,6 +76,7 @@ dependencies {
 
     debugImplementation project(':smart-pos-core')
     debugImplementation project(':smart-pos-emv-pax')
+    debugImplementation project(':smart-pos-emv-telpo')
     debugImplementation project(':smart-pos-usb')
 
 

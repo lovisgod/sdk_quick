@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
 
+import com.interswitch.smartpos.emv.telpo.TelpoPOSDeviceImpl;
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
@@ -95,8 +96,8 @@ public class POSApplication extends Application   {
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
-            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
-            service.setCompanyLogo(bm);
+            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
+//            service.setCompanyLogo(bm);
             device = service;
         }
 
