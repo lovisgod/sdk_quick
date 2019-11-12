@@ -33,6 +33,7 @@ internal class IsoServiceImpl(
         private val socket: IsoSocket) : IsoService {
 
     private val logger by lazy { Logger.with("IsoServiceImpl") }
+
     private val messageFactory by lazy {
         try {
 

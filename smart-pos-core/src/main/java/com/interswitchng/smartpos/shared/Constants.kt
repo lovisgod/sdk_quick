@@ -22,4 +22,8 @@ object Constants {
     // UTIL CONSTANTS
 
     const val EMPTY_STRING = ""
+
+
+
+    internal  const val  KIMONO_CALL_HOME="kimonoservice"
 }

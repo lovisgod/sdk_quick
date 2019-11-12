@@ -12,6 +12,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 import com.interswitchng.smartpos.shared.services.HttpServiceImpl
+import com.interswitchng.smartpos.shared.services.kimono.KimonoHttpServiceImpl
 import com.interswitchng.smartpos.shared.services.UserStoreImpl
 import com.interswitchng.smartpos.shared.services.iso8583.IsoServiceImpl
 import com.interswitchng.smartpos.shared.services.iso8583.tcp.IsoSocketImpl
@@ -19,7 +20,6 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.storage.KeyValueStoreImpl
 import com.interswitchng.smartpos.shared.services.storage.SharePreferenceManager
 import com.interswitchng.smartpos.shared.services.storage.TransactionLogServiceImpl
-import com.interswitchng.smartpos.shared.utilities.DeviceUtils
 import com.zhuinden.monarchy.Monarchy
 import io.realm.RealmConfiguration
 import org.koin.android.ext.koin.androidContext
@@ -28,6 +28,9 @@ import org.koin.dsl.module.module
 internal val serviceModule = module {
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
+
+    single<KimonoHttpService> { KimonoHttpServiceImpl(get()) }
+
     single<UserStore> { UserStoreImpl(get()) }
     single { SharePreferenceManager(androidContext()) }
     single<KeyValueStore> { KeyValueStoreImpl(get()) }

@@ -9,6 +9,7 @@ import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.modules.main.models.PaymentModel.TransactionType
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
+import com.interswitchng.smartpos.shared.interfaces.library.KimonoHttpService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
@@ -25,7 +26,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class CardViewModel(private val posDevice: POSDevice, private val isoService: IsoService) : RootViewModel() {
+internal class CardViewModel(private val posDevice: POSDevice, private val isoService: IsoService, private val kimonoService: KimonoHttpService) : RootViewModel() {
 
     // communication channel with cardreader
     private val channel = Channel<EmvMessage>()
@@ -111,6 +112,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         if (emvData != null) {
             // create transaction info and issue online purchase request
             val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+            terminalInfo.isKimono
             val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
 
 
@@ -147,6 +149,14 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
             TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)
             TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
             TransactionType.COMPLETION -> isoService.initiateCompletion(terminalInfo, txnInfo)
+            else -> null
+        }
+    }
+    private fun initiateKimonoTransaction(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
+        return when (transactionType) {
+            TransactionType.CARD_PURCHASE -> kimonoService.initiateCardPurchase(terminalInfo, txnInfo)
+            TransactionType.PRE_AUTHORIZATION -> kimonoService.initiatePreAuthorization(terminalInfo, txnInfo)
+            TransactionType.COMPLETION -> kimonoService.initiateCompletion(terminalInfo, txnInfo)
             else -> null
         }
     }
