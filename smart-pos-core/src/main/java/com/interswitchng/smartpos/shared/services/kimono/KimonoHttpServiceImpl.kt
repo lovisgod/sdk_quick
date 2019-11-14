@@ -1,31 +1,39 @@
 package com.interswitchng.smartpos.shared.services.kimono
 
-import android.content.Context
-import com.gojuno.koptional.None
-import com.gojuno.koptional.Optional
-import com.gojuno.koptional.Some
+import android.app.Application
+import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
+import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
-import com.interswitchng.smartpos.shared.interfaces.library.KimonoHttpService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.kimono.request.*
-import com.interswitchng.smartpos.shared.services.kimono.utils.KimonoResponseMessage
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeModel
+import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
+import com.interswitchng.smartpos.shared.services.kimono.models.ReversalRequest
+import com.interswitchng.smartpos.shared.services.kimono.models.TermInfoModel
+import com.interswitchng.smartpos.shared.services.kimono.utils.KimonoResponseMessage
 import com.interswitchng.smartpos.shared.services.kimono.utils.KimonoXmlMessage
 import com.interswitchng.smartpos.shared.utilities.Logger
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-internal class KimonoHttpServiceImpl(private val context: Context,
+internal class KimonoHttpServiceImpl(private val device: POSDevice,
+                                     private val app: Application,
                                      private val store: KeyValueStore,
-                                     private val httpService: IKimonoHttpService) : KimonoHttpService {
+                                     private val httpService: IKimonoHttpService) : IsoService{
+
+        //KimonoHttpService {
 
 
 
@@ -36,139 +44,232 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     val logger by lazy { Logger.with(this.javaClass.name) }
 
 
+
+    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+
+        // load test keys
+        val tik = Constants.ISW_DUKPT_IPEK
+        val ksn = Constants.ISW_DUKPT_KSN
+
+        // load keys
+        device.loadInitialKey(tik, ksn)
+        return true
+    }
+
+
+
+
+
+
 //    protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
 
-    override suspend fun callHome(request: CallHomeModel): Optional<String> {
+    override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
 
-       // terminalInfo.callHomeTimeInMin
-//        val request = CallHomeModel(_termInfo = TermInfoModel(_mid = terminalInfo.merchantId,
-//                _tid = terminalInfo.terminalId,`
-//                _currencycode = terminalInfo.currencyCode,
-//                _poscondcode =terminalInfo.countryCode,
-//                _mloc = terminalInfo.merchantNameAndLocation,
-//                _tim = "",
-//                _uid = "",
-//                _posgeocode = "",
-//                _batt = "",
-//                _csid = "",
-//                _lang = "",
-//                _pstat = "",
-//                _ttype = ""
-//        ));
+        val now = Date()
+        val date = DateUtils.dateFormatter.format(now)
+        val iccData = getIcc(terminalInfo, "0", date)
+
+        val request = CallHomeModel(_termInfo = TermInfoModel(_mid = terminalInfo.merchantId,
+                _tid = terminalInfo.terminalId,
+                _currencycode = terminalInfo.currencyCode,
+                _poscondcode = terminalInfo.countryCode,
+                _mloc = terminalInfo.merchantNameAndLocation,
+                _tim = "",
+                _uid = "",
+                _csid = "",
+                _lang = "",
+                _pstat = "",
+                _ttype = iccData.TERMINAL_TYPE,
+                _batt = "",
+                _posgeocode = ""
+
+        ))
 
 
-        val response = httpService.callHome(request).await()
+        val response = httpService.callHome(request).run()
+        val data = response.body()
+        return true
+    }
 
-        return when (val codeResponse = response.first) {
-            null -> None
-            else ->
+    override fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        // generate purchase request
+        val request = PurchaseRequest.create(device.name, terminalInfo, transaction)
+        request.pinData?.apply {
+            // remove first 2 bytes to make 8 bytes
+            ksn = ksn.substring(4)
+        }
 
-                Some(codeResponse)
+        try {
+            val response = httpService.makePurchase(request).run()
+            val data = response.body()
+
+            return if (!response.isSuccessful || data == null) {
+                TransactionResponse(
+                        responseCode = response.code().toString(),
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = response.message()
+                )
+            } else {
+                TransactionResponse(
+                        responseCode = data.responseCode,
+                        stan = data.stan,
+                        authCode = data.authCode,
+                        scripts = "",
+                        responseDescription = data.description
+                )
+            }
+
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            reversePurchase(request, request.stan) // TODO change stan to authId
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
     }
 
 
 
-    override  fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
 
+    override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, paymentInfo: PaymentInfo): TransactionResponse? {
+
+        val now = Date()
+        val pan = IsoUtils.generatePan(code)
+        val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
+        val stan = paymentInfo.getStan()
+        val date = DateUtils.dateFormatter.format(now)
+        val src = "501"
+
+        // generate expiry date using current date
+        val expiryDate = Calendar.getInstance().let {
+            it.time = now
+            val currentYear = it.get(Calendar.YEAR)
+            it.set(Calendar.YEAR, currentYear + 1)
+            it.time
+        }
+
+        // format track 2
+        val expiry = DateUtils.yearAndMonthFormatter.format(expiryDate)
+        val track2 = "${pan}D$expiry"
+
+        // get icc data
+        val iccData = getIcc(terminalInfo, amount, date)
+
+        // create transaction info
+        val transaction = TransactionInfo(
+                cardExpiry = expiry,
+                cardPIN = "",
+                cardPAN = pan,
+                cardTrack2 = track2,
+                iccData = iccData,
+                iccString = iccData.iccAsString,
+                stan = stan,
+                accountType = AccountType.Default,
+                amount = paymentInfo.amount,
+                csn = "",
+                src = src,
+                purchaseType = PurchaseType.PayCode,
+                pinKsn = ""
+        )
+
+
+        // generate purchase request
+        val request = PurchaseRequest.create(device.name, terminalInfo, transaction)
 
         try {
+            val response = httpService.makePurchase(request).run()
+            val data = response.body()
 
-            val now = Date()
-            val processCode = "00" + transaction.accountType.value + "00"
-            val hasPin = transaction.cardPIN.isNotEmpty()
-            val stan = transaction.stan
-            val randomReference = "000000$stan"
-
-         terminalInfo.copy()
-
-            val emvData=EmvData(TransactionDate = DateUtils.timeAndDateFormatter.format(now),
-                    TerminalCountryCode = terminalInfo.countryCode,
-                    TransactionType = "",
-                    TerminalType ="PAX" ,
-                    TransactionCurrencyCode ="" ,
-                    TerminalCapabilities = "",
-                    TerminalVerificationResult = "",
-                    CvmResults ="" ,
-                    AmountAuthorized ="" ,
-                    AmountOther ="" ,
-                    ApplicationInterchangeProfile ="" ,
-                    atc ="" ,
-                    Cryptogram ="" ,
-                    CryptogramInformationData = "",
-                    DedicatedFileName ="" ,
-                    iad = "",
-                    UnpredictableNumber =""
-                    );
-
-            val terminal =TerminalInformation(
-                    merhcantLocation = terminalInfo.merchantNameAndLocation,
-                    batteryInformation ="" ,
-                    currencyCode = terminalInfo.currencyCode ,
-                    merchantId = terminalInfo.merchantId,
-                    terminalId = terminalInfo.terminalId,
-                    uniqueId = "",
-                    languageInfo = "",
-                    printerStatus = "",
-                    terminalType = "PAX",
-                    posConditionCode = "",
-                    posGeoCode = "",
-                    transmissionDate =  DateUtils.timeAndDateFormatter.format(now),
-                    posEntryMode = "",
-                    posDataCode = ""
-            )
-
-
-            val track2  =
-                    Track2(track2 = transaction.cardTrack2,
-                    expiryMonth = transaction.cardExpiry,
-                    expiryYear = transaction.cardExpiry,
-                    pan =transaction.cardPAN )
-
-            val cardData =CardData(track2=track2,emvData=emvData,cardSequenceNumber =  "")
-
-            val pinData= PinData(
-                    pinType ="Dukpt" ,
-                    ksnd ="605" )
-
-           val purchaseRequest =PurchaseRequest(cardData =cardData,
-                    fromAccount =when(transaction.accountType ) {
-                        AccountType.Default -> "Default"
-                        AccountType.Savings -> "Saving"
-                        AccountType.Current -> "Current"
-                        AccountType.Credit -> "Credit"
-                    },
-                    stan = stan,
-                    keyLabel = "000002",
-                    minorAmount = "125000",
-                    pinData =pinData,
-                   terminalInformation = terminal)
-
-
-            val response = httpService.purchaseRequest(purchaseRequest)//;//.await()
-
-//
-//            return when (val codeResponse = response.first) {
-//                null -> TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
-//                else ->
-//
-//                    Some(codeResponse)
-//            }
-
-
-            val responseMsg = KimonoResponseMessage(KimonoXmlMessage.readXml(response.toString()))
-            return responseMsg.xmlMessage.let {
-                val authCode = it.getObjectValue<String?>("/purchaseResponse/authId") ?: ""
-                val code = it.getObjectValue<String?>("/purchaseResponse/field39")?:""
-                val scripts = it.getObjectValue<String?>("/purchaseResponse/referenceNumber")?:""
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
+            return if (!response.isSuccessful || data == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = ""
+                )
+            } else {
+                TransactionResponse(
+                        responseCode = data.responseCode,
+                        stan = data.stan,
+                        authCode = data.authCode,
+                        scripts = ""
+                )
             }
 
+        } catch (e: Exception) {
+            logger.logErr(e.localizedMessage)
+            e.printStackTrace()
+            reversePurchase(request, request.stan) // TODO change stan to authId
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+    }
 
 
+
+    private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String): IccData {
+        val authorizedAmountTLV = String.format("9F02%02d%s", amount.length / 2, amount)
+        val transactionDateTLV = String.format("9A%02d%s", date.length / 2, date)
+        val iccData = "9F260831BDCBC7CFF6253B9F2701809F10120110A50003020000000000000000000000FF9F3704F435D8A29F3602052795050880000000" +
+                "${transactionDateTLV}9C0100${authorizedAmountTLV}5F2A020566820238009F1A0205669F34034103029F3303E0F8C89F3501229F0306000000000000"
+
+        // remove leadin zero if exits
+        val currencyCode = if (terminalInfo.currencyCode.length > 3) terminalInfo.currencyCode.substring(1) else terminalInfo.currencyCode
+        val countryCode = if (terminalInfo.countryCode.length > 3) terminalInfo.countryCode.substring(1) else terminalInfo.countryCode
+
+
+
+        return IccData().apply {
+            TRANSACTION_AMOUNT = amount
+            ANOTHER_AMOUNT = "000000000000"
+            APPLICATION_INTERCHANGE_PROFILE = "3800"
+            APPLICATION_TRANSACTION_COUNTER = "0527"
+            CRYPTOGRAM_INFO_DATA = "80"
+            CARD_HOLDER_VERIFICATION_RESULT = "410302"
+            ISSUER_APP_DATA = "0110A50003020000000000000000000000FF"
+            TRANSACTION_CURRENCY_CODE = currencyCode
+            TERMINAL_VERIFICATION_RESULT = "0880000000"
+            TERMINAL_COUNTRY_CODE = countryCode
+            TERMINAL_TYPE = "22"
+            TERMINAL_CAPABILITIES = terminalInfo.capabilities ?: "E0F8C8"
+            TRANSACTION_DATE = date
+            TRANSACTION_TYPE = "00"
+            UNPREDICTABLE_NUMBER = "F435D8A2"
+            DEDICATED_FILE_NAME = ""
+            AUTHORIZATION_REQUEST = "31BDCBC7CFF6253B"
+
+            iccAsString = iccData
+        }
+
+    }
+
+
+
+    fun reversePurchase(txn: PurchaseRequest, authId: String?): TransactionResponse {
+        // create reversal request
+        val request = ReversalRequest.create(txn, authId)
+
+        try {
+            // initiate reversal request
+            val response = httpService.reversePurchase(request).run()
+            val data = response.body()
+
+            return if (!response.isSuccessful || data == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "")
+            } else {
+                TransactionResponse(
+                        responseCode = data.responseCode,
+                        stan = data.stan,
+                        authCode = data.authCode,
+                        scripts = "")
+            }
 
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
+            logger.logErr(e.localizedMessage)
             e.printStackTrace()
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
@@ -177,42 +278,16 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
 
 
-    override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, paymentInfo: PaymentInfo): TransactionResponse? {
-
-        try {
 
 
-            val pan = generatePan(code)
-            val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
-            val now = Date()
-            val processCode = "001000"
-            val stan = paymentInfo.getStan()
-            val randomReference = "000000$stan"
-            val date = DateUtils.dateFormatter.format(now)
-            val src = "501"
 
-            var responseString =""
-            val responseMsg = KimonoResponseMessage(KimonoXmlMessage.readXml(responseString))
-            return responseMsg.xmlMessage.let {
-                val authCode = it.getObjectValue<String?>("/purchaseResponse/authId") ?: ""
-                val code = it.getObjectValue<String?>("/purchaseResponse/field39")?:""
-                val scripts = it.getObjectValue<String?>("/purchaseResponse/referenceNumber")?:""
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
-            }
-
-
-        } catch (e: Exception) {
-        logger.log(e.localizedMessage)
-        e.printStackTrace()
-        return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
-    }
-
-
+    private fun ByteArray.base64encode(): String {
+        return String(Base64.encode(this, Base64.NO_WRAP))
     }
 
 
 
-
+//All these are still pending
     override fun initiatePreAuthorization(
             terminalInfo: TerminalInfo,
             transaction: TransactionInfo

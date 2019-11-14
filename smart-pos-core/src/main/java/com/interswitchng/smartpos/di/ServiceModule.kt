@@ -22,6 +22,7 @@ import com.interswitchng.smartpos.shared.services.storage.SharePreferenceManager
 import com.interswitchng.smartpos.shared.services.storage.TransactionLogServiceImpl
 import com.zhuinden.monarchy.Monarchy
 import io.realm.RealmConfiguration
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 
@@ -29,13 +30,26 @@ internal val serviceModule = module {
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
 
-    single<KimonoHttpService> { KimonoHttpServiceImpl(get()) }
+//    single<KimonoHttpService> { KimonoHttpServiceImpl(get()) }
+
+//    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
+
+
+    factory<IsoService> { (isKimono: Boolean) ->
+        // return service based on kimono flag
+        return@factory if (isKimono) KimonoHttpServiceImpl(get(), androidApplication(), get(), get())
+        else IsoServiceImpl(androidContext(), get(), get(), get())
+    }
+
 
     single<UserStore> { UserStoreImpl(get()) }
     single { SharePreferenceManager(androidContext()) }
     single<KeyValueStore> { KeyValueStoreImpl(get()) }
     single<EmailService> { EmailServiceImpl(get()) }
-    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
+
+
+
+
 
     single<TransactionLogService> {
 

@@ -462,6 +462,10 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         }
 
         return EmvUtils.buildIccString(tagValues)
+
+
+
+
     }
 
 }

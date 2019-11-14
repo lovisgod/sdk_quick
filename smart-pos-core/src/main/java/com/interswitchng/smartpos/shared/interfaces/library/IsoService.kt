@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
@@ -17,9 +18,9 @@ internal interface IsoService {
      * @param terminalId  a string representing the configured terminal id
      * @return     boolean expression indicating the success or failure status of the key exchange
      */
-    fun downloadKey(terminalId: String): Boolean
-
-
+    fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+        return false
+    }
     /**
      * Uses the provided terminalId to download the terminal information, like name and location.
      *
@@ -27,8 +28,9 @@ internal interface IsoService {
      * @return  boolean expression indicating the success or failure of the terminal info download
      * @see TerminalInfo
      */
-    fun downloadTerminalParameters(terminalId: String): Boolean
-
+    fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
+        return false
+    }
 
     /**
      * Initiates a card transaction using the provided terminal and transaction info, and returns the
@@ -40,6 +42,17 @@ internal interface IsoService {
      */
     fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
+
+
+    /**
+     * Polls the server at intervals to show that the terminal is active, and returns the
+     * response body
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param pos  the Pos Information
+     * @return   response status indicating transaction success or failure
+     */
+    suspend fun callHome(terminalInfo: TerminalInfo): Boolean
 
     /**
      * Initiates a paycode transaction using the provided code, terminal and payment info, and returns

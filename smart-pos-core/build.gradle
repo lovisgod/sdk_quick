@@ -34,6 +34,10 @@ android {
         testInstrumentationRunnerArguments(shouldMock: 'true')
         buildConfigField("String", "ISW_EMAIL_API_KEY", emailApiKey)
         buildConfigField("String", "REALM_KEY", realmKey)
+        buildConfigField("int", "ISW_TERMINAL_PORT", "5043")
+        buildConfigField("String", "ISW_KIMONO_KEY_URL", "\"http://172.35.15.76:7075/kmw/kimonoservice\"")
+
+
     }
 
     kotlinOptions {

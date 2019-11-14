@@ -6,6 +6,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_PIN_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_SESSION_KEY
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
@@ -30,7 +31,16 @@ import java.util.*
 internal class IsoServiceImpl(
         private val context: Context,
         private val store: KeyValueStore,
+        private val posDevice: POSDevice,
         private val socket: IsoSocket) : IsoService {
+
+
+
+    override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
+        //TODO implememnt call home functionality
+
+        return  false;
+    }
 
     private val logger by lazy { Logger.with("IsoServiceImpl") }
 
@@ -102,7 +112,7 @@ internal class IsoServiceImpl(
         return null
     }
 
-    override fun downloadKey(terminalId: String): Boolean {
+    override fun downloadKey(terminalId: String,ip: String, port: Int): Boolean {
         // getResult clear key
         val cms = context.getString(R.string.isw_cms)
 
@@ -128,7 +138,7 @@ internal class IsoServiceImpl(
         return isDownloaded == true
     }
 
-    override fun downloadTerminalParameters(terminalId: String): Boolean {
+    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
         try {
             val code = "9C0000"
             val field62 = "01009280824266"
@@ -181,7 +191,7 @@ internal class IsoServiceImpl(
             logger.log("Terminal Data String => $terminalDataString")
 
             // parse and save terminal info
-            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString)?.also { it.persist(store) }
+            val terminalData = TerminalInfoParser.parse(terminalId, ip, port, terminalDataString, store)?.also { it.persist(store) }
             logger.log("Terminal Data => $terminalData")
 
             return true
@@ -224,7 +234,7 @@ internal class IsoServiceImpl(
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
-                    .setValue(55, transaction.icc)
+                    .setValue(55, transaction.iccString)
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -417,7 +427,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -507,7 +517,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
                 .setValue(123, "510101511344101")
 
             // set message hash

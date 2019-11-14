@@ -11,6 +11,11 @@ import java.io.InputStream;
 
 object FileUtils {
 
+    internal fun <T> readXml(clazz: Class<T>, xmlFile: InputStream): T {
+        val deserializer = Persister()
+        return deserializer.read(clazz, xmlFile)
+    }
+
     internal fun getFilesArrayFromAssets(context: Context, path: String): Array<String>? {
         val assetManager = context.resources.assets
         var files: Array<String>? = null
