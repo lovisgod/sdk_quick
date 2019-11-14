@@ -85,4 +85,5 @@ internal interface IsoService {
      */
     fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
+
 }

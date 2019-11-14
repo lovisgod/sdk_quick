@@ -148,6 +148,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
             TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)
             TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
             TransactionType.COMPLETION -> isoService.initiateCompletion(terminalInfo, txnInfo)
+
+
             else -> null
         }
     }

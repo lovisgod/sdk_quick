@@ -16,7 +16,18 @@ import retrofit2.http.Url
 internal interface IKimonoHttpService {
 
     @POST(Constants.KIMONO_END_POINT)
-    fun callHome(@Body data: CallHomeModel): Simple<ResponseBody>
+    fun callHome(@Body data: CallHomeRequest): Simple<ResponseBody>
+
+
+
+    @POST(Constants.KIMONO_END_POINT)
+    fun completion(@Body data: CompletionRequest): Simple<CompletionResponse>
+
+
+
+    @POST(Constants.KIMONO_END_POINT)
+    fun reservation(@Body data: ReservationRequest): Simple<ReservationResponse>
+
 
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")

@@ -486,6 +486,12 @@ internal class IsoServiceImpl(
         }
     }
 
+//
+//    override  fun reservation(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?{
+//        //TODO, refactor for other implementations
+//        return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+//    }
+
     override fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {
             val now = Date()

@@ -19,12 +19,15 @@ internal class PurchaseRequest {
     var terminalInformation: TerminalInformation? = null
     @field:Element(name = "cardData", required = false)
     var cardData: CardData? = null
+
     @field:Element(name = "fromAccount", required = false)
     var fromAccount: String = ""
     @field:Element(name = "stan", required = false)
     var stan: String = ""
+
     @field:Element(name = "minorAmount", required = false)
     var minorAmount: String = ""
+
     @field:Element(name = "pinData", required = false)
     var pinData: PinData? = null
     @field:Element(name = "keyLabel", required = false)

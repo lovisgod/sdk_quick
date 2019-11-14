@@ -17,10 +17,11 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeModel
+import com.interswitchng.smartpos.shared.services.iso8583.utils.NibssIsoMessage
+import com.interswitchng.smartpos.shared.services.kimono.models.*
+import com.interswitchng.smartpos.shared.services.kimono.models.CompletionRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.ReversalRequest
-import com.interswitchng.smartpos.shared.services.kimono.models.TermInfoModel
 import com.interswitchng.smartpos.shared.services.kimono.utils.KimonoResponseMessage
 import com.interswitchng.smartpos.shared.services.kimono.utils.KimonoXmlMessage
 import com.interswitchng.smartpos.shared.utilities.Logger
@@ -33,16 +34,8 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
                                      private val store: KeyValueStore,
                                      private val httpService: IKimonoHttpService) : IsoService{
 
-        //KimonoHttpService {
-
-
-
-
-
-
 
     val logger by lazy { Logger.with(this.javaClass.name) }
-
 
 
     override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
@@ -57,33 +50,14 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
     }
 
 
-
-
-
-
-//    protected val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(get())!! }
-
     override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
 
-        val now = Date()
-        val date = DateUtils.dateFormatter.format(now)
-        val iccData = getIcc(terminalInfo, "0", date)
+//terminalInfo.merchantId
 
-        val request = CallHomeModel(_termInfo = TermInfoModel(_mid = terminalInfo.merchantId,
-                _tid = terminalInfo.terminalId,
-                _currencycode = terminalInfo.currencyCode,
-                _poscondcode = terminalInfo.countryCode,
-                _mloc = terminalInfo.merchantNameAndLocation,
-                _tim = "",
-                _uid = "",
-                _csid = "",
-                _lang = "",
-                _pstat = "",
-                _ttype = iccData.TERMINAL_TYPE,
-                _batt = "",
-                _posgeocode = ""
+// terminalInfo.terminalId
 
-        ))
+        val uid = ""
+        val request = CallHomeRequest.create(device.name, terminalInfo, uid)
 
 
         val response = httpService.callHome(request).run()
@@ -208,6 +182,151 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
 
 
 
+    override fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        try {
+
+
+
+
+            val request = CompletionRequest.create(device.name, terminalInfo, transaction)
+            request.pinData?.apply {
+                // remove first 2 bytes to make 8 bytes
+                ksn = ksn.substring(4)
+            }
+
+
+                val response = httpService.completion(request).run()
+                val data = response.body()
+
+                return if (!response.isSuccessful || data == null) {
+                    TransactionResponse(
+                            responseCode = response.code().toString(),
+                            authCode = "",
+                            stan = "",
+                            scripts = "",
+                            responseDescription = response.message()
+                    )
+                } else {
+                    TransactionResponse(
+                            responseCode = data.responseCode,
+                            stan = data.stan,
+                            authCode = data.authCode,
+                            scripts = "",
+                            responseDescription = data.referenceNumber
+                    )
+                }
+
+
+
+
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+
+    }
+
+
+
+
+
+
+    override fun initiatePreAuthorization(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        try {
+
+            val stan = transaction.stan
+
+
+
+
+            val request = ReservationRequest.create(device.name, terminalInfo, transaction)
+            request.pinData?.apply {
+                // remove first 2 bytes to make 8 bytes
+                ksn = ksn.substring(4)
+            }
+
+
+            val response = httpService.reservation(request).run()
+            val data = response.body()
+
+            return if (!response.isSuccessful || data == null) {
+                TransactionResponse(
+                        responseCode = response.code().toString(),
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = response.message()
+                )
+            } else {
+                TransactionResponse(
+                        responseCode = data.responseCode,
+                        stan = data.stan,
+                        authCode = data.authCode,
+                        scripts = "",
+                        responseDescription = data.referenceNumber
+                )
+            }
+
+
+
+
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+
+    }
+
+
+
+
+
+    fun reversePurchase(txn: PurchaseRequest, authId: String?): TransactionResponse {
+        // create reversal request
+        val request = ReversalRequest.create(txn, authId)
+
+        try {
+            // initiate reversal request
+            val response = httpService.reversePurchase(request).run()
+            val data = response.body()
+
+            return if (!response.isSuccessful || data == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "")
+            } else {
+                TransactionResponse(
+                        responseCode = data.responseCode,
+                        stan = data.stan,
+                        authCode = data.authCode,
+                        scripts = "")
+            }
+
+        } catch (e: Exception) {
+            logger.logErr(e.localizedMessage)
+            e.printStackTrace()
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String): IccData {
@@ -248,104 +367,46 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
 
 
 
-    fun reversePurchase(txn: PurchaseRequest, authId: String?): TransactionResponse {
-        // create reversal request
-        val request = ReversalRequest.create(txn, authId)
-
-        try {
-            // initiate reversal request
-            val response = httpService.reversePurchase(request).run()
-            val data = response.body()
-
-            return if (!response.isSuccessful || data == null) {
-                TransactionResponse(
-                        responseCode = IsoUtils.TIMEOUT_CODE,
-                        authCode = "",
-                        stan = "",
-                        scripts = "")
-            } else {
-                TransactionResponse(
-                        responseCode = data.responseCode,
-                        stan = data.stan,
-                        authCode = data.authCode,
-                        scripts = "")
-            }
-
-        } catch (e: Exception) {
-            logger.logErr(e.localizedMessage)
-            e.printStackTrace()
-            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
-        }
-
-    }
-
-
-
-
-
 
     private fun ByteArray.base64encode(): String {
         return String(Base64.encode(this, Base64.NO_WRAP))
     }
 
-
-
-//All these are still pending
-    override fun initiatePreAuthorization(
-            terminalInfo: TerminalInfo,
-            transaction: TransactionInfo
-    ): TransactionResponse? {
-        try {
-
-            val now = Date()
-            val processCode = "60" + transaction.accountType.value + "00"
-            val hasPin = transaction.cardPIN.isNotEmpty()
-            val stan = transaction.stan
-            val randomReference = "000000$stan"
-
-            var responseString =""
-            val responseMsg = KimonoResponseMessage(KimonoXmlMessage.readXml(responseString))
-            return responseMsg.xmlMessage.let {
-                val authCode = it.getObjectValue<String?>("/purchaseResponse/authId") ?: ""
-                val code = it.getObjectValue<String?>("/purchaseResponse/field39")?:""
-                val scripts = it.getObjectValue<String?>("/purchaseResponse/referenceNumber")?:""
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
-            }
-
-
-        } catch (e: Exception) {
-            logger.log(e.localizedMessage)
-            e.printStackTrace()
-            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
-        }
-    }
-
-    override fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-        try {
-            val now = Date()
-            val processCode = "61" + transaction.accountType.value + "00"
-            val hasPin = transaction.cardPIN.isNotEmpty()
-            val stan = transaction.stan
-            val randomReference = "000000$stan"
-
-
-            var responseString =""
-            val responseMsg = KimonoResponseMessage(KimonoXmlMessage.readXml(responseString))
-            return responseMsg.xmlMessage.let {
-                val authCode = it.getObjectValue<String?>("/purchaseResponse/authId") ?: ""
-                val code = it.getObjectValue<String?>("/purchaseResponse/field39")?:""
-                val scripts = it.getObjectValue<String?>("/purchaseResponse/referenceNumber")?:""
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
-            }
-
-        } catch (e: Exception) {
-            logger.log(e.localizedMessage)
-            e.printStackTrace()
-            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
-        }
-
-    }
-
+//
+//
+////All these are still pending
+//    override fun initiatePreAuthorization(
+//            terminalInfo: TerminalInfo,
+//            transaction: TransactionInfo
+//    ): TransactionResponse? {
+//        try {
+//
+//
+//
+//            val now = Date()
+//            val processCode = "60" + transaction.accountType.value + "00"
+//            val hasPin = transaction.cardPIN.isNotEmpty()
+//            val stan = transaction.stan
+//            val randomReference = "000000$stan"
+//
+//            var responseString =""
+//            val responseMsg = KimonoResponseMessage(KimonoXmlMessage.readXml(responseString))
+//            return responseMsg.xmlMessage.let {
+//                val authCode = it.getObjectValue<String?>("/purchaseResponse/authId") ?: ""
+//                val code = it.getObjectValue<String?>("/purchaseResponse/field39")?:""
+//                val scripts = it.getObjectValue<String?>("/purchaseResponse/referenceNumber")?:""
+//                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
+//            }
+//
+//
+//        } catch (e: Exception) {
+//            logger.log(e.localizedMessage)
+//            e.printStackTrace()
+//            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+//        }
+//    }
+//
+//
 
 
 
