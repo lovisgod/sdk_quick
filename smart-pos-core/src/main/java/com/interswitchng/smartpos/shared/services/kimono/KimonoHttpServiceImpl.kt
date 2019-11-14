@@ -207,6 +207,9 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
 
 
 
+
+
+
     private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String): IccData {
         val authorizedAmountTLV = String.format("9F02%02d%s", amount.length / 2, amount)
         val transactionDateTLV = String.format("9A%02d%s", date.length / 2, date)

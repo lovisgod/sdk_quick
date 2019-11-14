@@ -14,7 +14,10 @@ import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
+import com.interswitchng.smartpos.shared.models.core.Environment;
+import com.interswitchng.smartpos.shared.models.core.IswLocal;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
+import com.interswitchng.smartpos.shared.models.core.PurchaseConfig;
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
 import com.interswitchng.smartpos.shared.models.core.UserType;
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject;
@@ -54,6 +57,16 @@ public class POSApplication extends Application   {
 
         if (BuildConfig.MOCK) {
             device = new POSDevice() {
+
+                @Override
+                public String getName() { return ""; }
+                @Override
+                public void loadInitialKey(String key, String ksn) {}
+                @Override
+                public void loadPinKey(String key) {}
+                @Override
+                public void loadMasterKey(String key) {}
+
                 @Override
                 public DevicePrinter getPrinter() {
                     return new DevicePrinter() {
@@ -112,6 +125,7 @@ public class POSApplication extends Application   {
         String clientSecret = "t1ll73stS3cr3t";
         String alias = "000001";
         String merchantCode = "MX1065";
+        String merchantPhone = "080311402392";
 
 //        if (BuildConfig.DEBUG && BuildConfig.MOCK) {
 //            alias = "000007";
@@ -120,12 +134,13 @@ public class POSApplication extends Application   {
 //            merchantCode = "MX5882";
 //        }
 
-        String merchantPhone = "080311402392";
-        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode, merchantPhone);
+
+        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode, merchantPhone, Environment.Production);
+        config.withPurchaseConfig(new PurchaseConfig(1, "tech@isw.ng", IswLocal.NIGERIA));
 //        config.with(new UsbConfig());
 
         // setup terminal
-        IswPos.setupTerminal(this, device, config);
+        IswPos.setupTerminal(this, device, config,false);
     }
 
 
