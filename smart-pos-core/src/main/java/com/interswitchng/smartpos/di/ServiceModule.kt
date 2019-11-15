@@ -36,6 +36,7 @@ internal val serviceModule = module {
 
 
     factory<IsoService> { (isKimono: Boolean) ->
+
         // return service based on kimono flag
         return@factory if (isKimono) KimonoHttpServiceImpl(get(), androidApplication(), get(), get())
         else IsoServiceImpl(androidContext(), get(), get(), get())
