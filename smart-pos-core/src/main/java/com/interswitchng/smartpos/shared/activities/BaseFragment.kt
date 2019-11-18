@@ -9,12 +9,9 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.fragments.CardPaymentFragment
-import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
+import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.utilities.DeviceUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
@@ -87,7 +84,7 @@ abstract class BaseFragment (fragmentName: String) : Fragment() {
     }
 
     private fun getPollingText(): PollingText {
-        val isCodeActivity = this is  CardPaymentFragment|| this is CardPaymentFragment
+        val isCodeActivity = this is  CardTransactionsFragment|| this is CardTransactionsFragment
 
         val title =
             if (isCodeActivity) getString(R.string.isw_title_confirmation_in_progress)

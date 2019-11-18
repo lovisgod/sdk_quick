@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/iswColorPrimary">
+
+    <View
+        android:id="@+id/isw_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/isw_card_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline"
+        tools:layout_editor_absoluteX="30dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.10" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/isw_guideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/isw_guideline" />
+
+    <TextView
+        android:id="@+id/isw_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/isw_smartpos"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_sdk_version"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/isw_sdk_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#B3FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview"
+        tools:text="Version 2.1" />
+
+    <TextView
+        android:id="@+id/isw_textview17"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:gravity="center"
+        android:text="Setup"
+        android:textColor="@color/iswColorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/isw_materialtextview"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_setup_complete" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/isw_materialtextview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Server Type"
+        app:layout_constraintBottom_toTopOf="@+id/isw_textinputlayout3"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview17" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/isw_textinputlayout3"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginTop="8dp"
+        app:boxStrokeColor="@color/iswColorPrimary"
+        app:boxStrokeWidth="1dp"
+        app:endIconMode="dropdown_menu"
+        app:layout_constraintBottom_toTopOf="@+id/isw_materialtextview1"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_materialtextview">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/isw_server_type"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:editable="false"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/black"
+            tools:text="NIBBS - Kimono" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/isw_materialtextview1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Merchant FingerPrint"
+        app:layout_constraintBottom_toTopOf="@+id/isw_merchant_finger"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textinputlayout3" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/isw_merchant_finger"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_materialtextview2"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_materialtextview1"
+        app:srcCompat="@drawable/ic_fingerprint_not_detected" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_enroll_finger"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
+        android:text="Enroll Finger"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_merchant_finger"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toEndOf="@+id/isw_merchant_finger"
+        app:layout_constraintTop_toTopOf="@+id/isw_merchant_finger" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_remove_finger"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
+        android:text="Remove Finger"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_merchant_finger"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toEndOf="@+id/isw_merchant_finger"
+        app:layout_constraintTop_toTopOf="@+id/isw_merchant_finger" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/isw_materialtextview2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Merchant Card"
+        app:layout_constraintBottom_toTopOf="@+id/isw_appcompatimageview1"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_merchant_finger" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/isw_appcompatimageview1"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_materialtextview2"
+        app:srcCompat="@drawable/isw_ic_payment"
+        app:tint="@android:color/darker_gray" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_enroll_card"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
+        android:text="Enroll Card"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_appcompatimageview1"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toEndOf="@+id/isw_appcompatimageview1"
+        app:layout_constraintTop_toTopOf="@+id/isw_appcompatimageview1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_setup_complete"
+        app:rippleColor="@android:color/darker_gray"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="?android:attr/actionBarSize"
+        android:text="DONE"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/isw_guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

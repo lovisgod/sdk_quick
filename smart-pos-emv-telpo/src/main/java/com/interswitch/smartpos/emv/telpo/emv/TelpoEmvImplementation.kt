@@ -2,7 +2,7 @@ package com.interswitch.smartpos.emv.telpo.emv
 
 import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
-import com.interswitch.smartpos.emv.telpo.models.getAllCapks
+import com.interswitch.smartpos.emv.telpo.utils.DefaultAPPCAPK
 import com.interswitch.smartpos.emv.telpo.utils.TelpoEmvUtils
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
@@ -39,13 +39,6 @@ internal class TelpoEmvImplementation (
 
     private var amount: Int = 0
 
-    init {
-        var ret = EmvService.Open(context)
-        if (ret != EmvService.EMV_TRUE) logger.logErr("Could not open: RET = $ret")
-        ret = EmvService.Device_Open(context)
-        if (ret != EmvService.EMV_TRUE) logger.logErr("Could not open the device: RET = $ret")
-    }
-
     fun setAmount(amount: Int) {
         this.amount = amount
     }
@@ -61,9 +54,36 @@ internal class TelpoEmvImplementation (
         return EmvService.EMV_TRUE
     }
 
-    suspend fun setupContactEmvTransaction(terminalInfo: TerminalInfo): Int {
+    suspend fun setupContactEmvTransaction(): Int {
+        var ret = EmvService.Open(context)
+        if (ret != EmvService.EMV_TRUE) {
+            logger.logErr("Emv Service Open Fail: RET CODE ==== $ret")
+            return ret
+        }
+
+        ret = EmvService.deviceOpen()
+        if (ret != 0) {
+            logger.logErr("Emv Service Open Fail: RET CODE ==== $ret")
+            return ret
+        }
+
+        EmvService.Emv_RemoveAllApp()
+        DefaultAPPCAPK.Add_All_APP()
+
+        EmvService.Emv_RemoveAllCapk()
+        DefaultAPPCAPK.Add_All_CAPK()
+
+        pinCallback.showInsertCard()
+
+        return ret
+    }
+
+    fun startContactEmvTransaction(terminalInfo: TerminalInfo): Int {
         var ret = EmvService.IccCard_Poweron()
-        logger.logErr("Power On: RET CODE ==== $ret")
+        logger.logErr("EmvService Power On: RET = $ret")
+
+        ret = emvService.Emv_TransInit()
+        logger.logErr("Initialize transaction: RET CODE ==== $ret")
 
         val terminalConfig = config.first
 
@@ -82,38 +102,7 @@ internal class TelpoEmvImplementation (
 
         emvService.Emv_SetParam(emvParameter)
 
-        val appList = TelpoEmvUtils.createAppList(config.first, config.second)
-        EmvService.Emv_RemoveAllApp()
-        appList.forEach { emvApp ->
-            EmvService.Emv_AddApp(emvApp)
-        }
-
-        val capks = config.second.getAllCapks()
-        EmvService.Emv_RemoveAllCapk()
-        addCAPKIntoEmvLib(capks)
-
-        pinCallback.showInsertCard()
-
-        ret = EmvService.Open(context)
-        if (ret != EmvService.EMV_TRUE) {
-            logger.logErr("Emv Service Open Fail: RET CODE ==== $ret")
-            return ret
-        }
-
-        ret = EmvService.deviceOpen()
-        if (ret != 0) {
-            logger.logErr("Emv Service Open Fail: RET CODE ==== $ret")
-            return ret
-        }
-
-        return ret
-    }
-
-    fun startContactEmvTransaction(): Int {
-        var ret = emvService.Emv_TransInit()
-        logger.logErr("Initialize transaction: RET CODE ==== $ret")
-
-        ret = emvService.Emv_StartApp(0)
+        ret = emvService.Emv_StartApp(EmvService.EMV_FALSE)
         logger.logErr("Emv Service Start Application: RET CODE ==== $ret")
 
         return ret

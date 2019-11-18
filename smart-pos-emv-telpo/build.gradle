@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '.so'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
@@ -58,10 +58,10 @@ dependencies {
     // kotlin coroutine libs
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
-//    implementation files('libs/core-3.1.0.jar')
     implementation files('libs/telpo_api.jar')
     implementation files('libs/SmartCardLib.jar')
     implementation files('libs/emv3.2.jar')
+    implementation files('libs/finger.jar')
     implementation project(":smart-pos-core")
 }
 

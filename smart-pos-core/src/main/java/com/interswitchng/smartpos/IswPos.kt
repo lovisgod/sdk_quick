@@ -23,6 +23,7 @@ import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
+import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
@@ -108,7 +109,12 @@ class IswPos private constructor(private val app: Application, internal val devi
          * This method is responsible for setting up the terminal for the current application
          */
         @JvmStatic
-        fun setupTerminal(app: Application, device: POSDevice, config: POSConfig) {
+        fun setupTerminal(
+            app: Application,
+            device: POSDevice,
+            fingerPrint: POSFingerprint,
+            config: POSConfig
+        ) {
             if (!isSetup) {
 
                 // prevent multiple threads from creating iswPos
@@ -120,6 +126,7 @@ class IswPos private constructor(private val app: Application, internal val devi
                 val appContext = module(override = true) {
                     single { app.applicationContext }
                     single { device }
+                    single { fingerPrint }
                 }
 
                 // set up koin

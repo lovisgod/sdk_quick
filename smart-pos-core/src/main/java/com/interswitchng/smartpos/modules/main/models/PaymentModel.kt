@@ -10,7 +10,9 @@ data class PaymentModel (
     var formattedAmount: String = EMPTY_STRING,
     var type: TransactionType? = null,
     var paymentType: PaymentType? = null,
-    var card: CardModel? = null
+    var card: CardModel? = null,
+    var authorizationId: String? = null,
+    var stan: String? = null
 ): Parcelable {
 
     enum class Type {

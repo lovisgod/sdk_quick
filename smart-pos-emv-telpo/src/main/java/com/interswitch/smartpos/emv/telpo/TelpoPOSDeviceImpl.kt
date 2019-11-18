@@ -16,6 +16,25 @@ class TelpoPOSDeviceImpl constructor(
     private val factory: () -> EmvCardReader
 ): POSDevice {
 
+//    init {
+//        System.loadLibrary("card_reader")
+//        System.loadLibrary("collect")
+//        System.loadLibrary("decode")
+//        System.loadLibrary("emv_device3.2")
+//        System.loadLibrary("fingerprint")
+//        System.loadLibrary("ledpower")
+//        System.loadLibrary("pinlcd2")
+//        System.loadLibrary("pinpad3.2")
+//        System.loadLibrary("posutil")
+//        System.loadLibrary("serial_port")
+//        System.loadLibrary("system_util")
+//        System.loadLibrary("telpo_printer")
+//        System.loadLibrary("telpo_serial")
+//        System.loadLibrary("tp_emv2")
+//        System.loadLibrary("tp_emv3.2")
+//        System.loadLibrary("usb_util")
+//    }
+
     override fun getEmvCardReader(): EmvCardReader = factory()
 
     companion object {
@@ -63,7 +82,7 @@ class TelpoPOSDeviceImpl constructor(
 //                dal = neptunes.getDal(context)
 //                // set IDevice implementation
 //                DeviceManager.getInstance().setIDevice(DeviceImplNeptune.getInstance())
-//                isSetup = true
+                isSetup = true
 //            }
         }
     }

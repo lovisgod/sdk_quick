@@ -141,7 +141,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         }
 
         // setup terminal
-        IswPos.setupTerminal(getApplication(), device, config);
+//        IswPos.setupTerminal(getApplication(), device, config);
     }
 
     private void setupUI() {

@@ -16,12 +16,14 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlin.coroutines.coroutineContext
 
-class TelpoEmvCardReaderImpl (context: Context) : EmvCardReader, TelpoPinCallback {
+class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, TelpoPinCallback {
 
     private val telpoEmvImplementation by lazy { TelpoEmvImplementation(context, this) }
     private val logger = Logger.with("Telpo EMV Card Reader Implementation")
     private lateinit var channel: Channel<EmvMessage>
     private lateinit var channelScope: CoroutineScope
+
+    private lateinit var terminalInfo: TerminalInfo
 
     private var isCancelled = false
     private var pinResult: Int = EmvService.EMV_TRUE
@@ -64,12 +66,13 @@ class TelpoEmvCardReaderImpl (context: Context) : EmvCardReader, TelpoPinCallbac
         channel: Channel<EmvMessage>,
         scope: CoroutineScope
     ) {
+        this.terminalInfo = terminalInfo
         telpoEmvImplementation.setAmount(amount)
 
         this.channel = channel
         this.channelScope = scope
 
-        val result = telpoEmvImplementation.setupContactEmvTransaction(terminalInfo)
+        val result = telpoEmvImplementation.setupContactEmvTransaction()
 
         val resultMsg = when (result) {
             EmvService.ERR_ICCCMD, EmvService.ERR_NOAPP,
@@ -103,13 +106,15 @@ class TelpoEmvCardReaderImpl (context: Context) : EmvCardReader, TelpoPinCallbac
     }
 
     override fun startTransaction(): EmvResult {
-        val result = telpoEmvImplementation.startContactEmvTransaction()
+        val result = telpoEmvImplementation.startContactEmvTransaction(terminalInfo)
+
+        logger.logErr("Result code: $result")
 
         hasEnteredPin = true
 
         return if (!isCancelled) when (result) {
             EmvService.EMV_TRUE -> logger.log("Offline approved").let { EmvResult.OFFLINE_APPROVED }
-            else -> logger.log("offline declined").let { EmvResult.OFFLINE_DENIED }
+            else -> logger.log("Offline declined").let { EmvResult.OFFLINE_DENIED }
         } else logger.log("Transaction was cancelled").let { EmvResult.CANCELLED }
     }
 

@@ -1,18 +1,14 @@
 package com.interswitchng.smartpos.modules.main.fragments
 
-
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.IswPos
-
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
@@ -21,10 +17,8 @@ import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResultModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
-import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
@@ -35,29 +29,36 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.*
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import kotlinx.android.synthetic.main.isw_activity_card.cardPin
 import kotlinx.android.synthetic.main.isw_fragment_card_payment.*
-import kotlinx.android.synthetic.main.isw_fragment_card_payment.isw_card_found
-import kotlinx.android.synthetic.main.isw_fragment_card_payment.isw_scanning_card
 import kotlinx.android.synthetic.main.isw_fragment_pin.*
-import kotlinx.android.synthetic.main.isw_fragment_pre_authorization.*
 import kotlinx.android.synthetic.main.isw_layout_card_found.*
-import kotlinx.coroutines.NonCancellable.isCancelled
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-/**
- * A simple [Fragment] subclass.
- */
-class PreAuthorizationFragment : BaseFragment(TAG) {
+class CardTransactionsFragment : BaseFragment(TAG) {
 
-    private var isCancelled = false
-    private val alert by lazy { DialogUtils.getAlertDialog(context!!).create() }
+    private var accountType = AccountType.Default
     private var cardType = CardType.None
     private lateinit var transactionResult: TransactionResultModel
     private var pinOk = false
-    private var accountType = AccountType.Default
+    private var isCancelled = false
+
+    private lateinit var accountTypeDialog: AccountTypeDialog
+    private lateinit var paymentTypeDialog: PaymentTypeDialog
     private val dialog by lazy { DialogUtils.getLoadingDialog(context!!) }
+    private val alert by lazy { DialogUtils.getAlertDialog(context!!).create() }
+
+
+    private val cardViewModel: CardViewModel by viewModel()
+
+    private val cardPaymentFragmentArgs by navArgs<CardTransactionsFragmentArgs>()
+    private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
+
+    private val paymentInfo by lazy {
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+    }
+
     private val cancelDialog by lazy {
         DialogUtils.getAlertDialog(context!!)
             .setMessage("Would you like to change payment method, or try again?")
@@ -67,6 +68,7 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
             }
             .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
                 dialog.dismiss()
+                showPaymentOptions()
             }
             .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
                 dialog.dismiss()
@@ -74,46 +76,97 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
             }.create()
     }
 
-    private val cardViewModel: CardViewModel by viewModel()
-    private val preAuthorizationFragmentArgs by navArgs<PreAuthorizationFragmentArgs>()
-    private val paymentModel by lazy { preAuthorizationFragmentArgs.PaymentModel }
-
     override val layoutId: Int
-        get() = R.layout.isw_fragment_pre_authorization
-
-    private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
-    }
+        get() = R.layout.isw_fragment_card_payment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (isPOSConfigured()) {
+        if (IswPos.isConfigured()) {
             setTransactionType()
+            HandleClicks()
             observeViewModel()
             cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
-            handleClicks()
         } else {
             context?.toast("POS is not configured")
         }
     }
 
     private fun setTransactionType() {
-        cardViewModel.setTransactionType(PaymentModel.TransactionType.PRE_AUTHORIZATION)
-    }
+        when (paymentModel.type) {
+            PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.PRE_AUTHORIZATION)
+            }
 
-    private fun handleClicks() {
-        isw_card_found_continue.setOnClickListener {
-            runWithInternet {
-                cardViewModel.startTransaction(
-                    context!!,
-                    paymentInfo,
-                    accountType,
-                    terminalInfo
-                )
+            PaymentModel.TransactionType.CARD_PURCHASE -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.CARD_PURCHASE)
+            }
+
+            PaymentModel.TransactionType.COMPLETION -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.COMPLETION)
             }
         }
     }
 
-    private fun isPOSConfigured() = IswPos.isConfigured()
+    private fun HandleClicks() {
+
+        // show PaymentTypeDialog and listen for clicks
+        showPaymentOptions()
+
+        isw_card_found_continue.setOnClickListener {
+            when (paymentModel.type) {
+                PaymentModel.TransactionType.CARD_PURCHASE -> {
+                    accountTypeDialog = AccountTypeDialog {
+                        accountType = when (it) {
+                            0 -> AccountType.Default
+                            1 -> AccountType.Savings
+                            2 -> AccountType.Current
+                            else -> AccountType.Default
+                        }
+
+                        runWithInternet {
+                            cardViewModel.startTransaction(
+                                context!!,
+                                paymentInfo,
+                                accountType,
+                                terminalInfo
+                            )
+                        }
+                    }
+                    accountTypeDialog.show(childFragmentManager, TAG)
+                }
+
+                else -> {
+                    runWithInternet {
+                        cardViewModel.startTransaction(
+                            context!!,
+                            paymentInfo,
+                            accountType,
+                            terminalInfo
+                        )
+                    }
+                }
+            }
+        }
+
+        isw_toolbar.setNavigationOnClickListener {
+            navigateUp()
+        }
+    }
+
+    private fun showPaymentOptions() {
+        change_payment_method.setOnClickListener {
+            paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
+                when (it) {
+                    PaymentModel.PaymentType.CARD -> {}
+                    PaymentModel.PaymentType.PAY_CODE -> {
+                        Toast.makeText(context, "Paycode", Toast.LENGTH_LONG)}
+                    PaymentModel.PaymentType.QR_CODE -> {}
+                    PaymentModel.PaymentType.USSD -> {}
+                }
+
+            }
+            paymentTypeDialog.show(childFragmentManager, TAG)
+        }
+    }
 
     private fun observeViewModel() {
         with(cardViewModel) {
@@ -127,7 +180,7 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
 
             // observe transaction response
             transactionResponse.observe(owner) {
-               it?.let(::processResponse)
+                it?.let(::processResponse)
             }
 
             // observe online process results
@@ -175,6 +228,8 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
                 //Dismiss the dialog showing "Reading Card"
                 dialog.dismiss()
 
+                cardType = message.cardType
+
                 //Show Card detected view
                 showCardDetectedView()
             }
@@ -187,7 +242,8 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
 
             // when user should enter pin
             is EmvMessage.EnterPin -> {
-                iswPreAuthViewAnimator.displayedChild = 1
+                if (paymentModel.type == PaymentModel.TransactionType.CARD_PURCHASE) accountTypeDialog.dismiss()
+                iswCardPaymentViewAnimator.displayedChild = 1
                 isw_amount.text = paymentModel.formattedAmount
                 context?.toast("Enter your pin")
             }
@@ -235,6 +291,12 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
         }
     }
 
+    private fun showInsertCardView() {
+        isw_card_found.hide()
+        isw_scanning_card.show()
+    }
+
+
     private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
 
         when (transactionResponse) {
@@ -265,28 +327,30 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
                     telephone = iswPos.config.merchantTelephone
                 )
 
-                println("Called Response code -----> ${response.responseCode}")
-                println("Called Response message -----> ${responseMsg}")
-
                 dismissAlert()
 
-                val direction = PreAuthorizationFragmentDirections.iswActionGotoFragmentReceipt(
+                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(
                     TransactionResponseModel(transactionResult = transactionResult,
-                        transactionType = PaymentModel.TransactionType.PRE_AUTHORIZATION)
+                        transactionType = PaymentModel.TransactionType.CARD_PURCHASE)
                 )
                 navigate(direction)
-
-
-                // show transaction result screen
-                //showTransactionResult(Transaction.default())
             }
         }
     }
 
-    private fun showInsertCardView() {
-        isw_card_found.hide()
-        isw_scanning_card.show()
+    private fun showCardDetectedView() {
+        //Hide Scanning Card View
+        isw_scanning_card.hide()
+
+        //Show Card Detected View
+        isw_card_found.show()
+
+        when (paymentModel.type) {
+            PaymentModel.TransactionType.CARD_PURCHASE ->  isw_change_payment_method_group.visibility = View.VISIBLE
+            else -> isw_change_payment_method_group.visibility = View.GONE
+        }
     }
+
 
     private fun cancelTransaction(reason: String) {
         // return early if already cancelled
@@ -303,15 +367,8 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
         if (!cancelDialog.isShowing) cancelDialog.show()
     }
 
-
-    private fun showCardDetectedView() {
-        //Hide Scanning Card View
-        isw_scanning_card.hide()
-
-        //Show Card Detected View
-        isw_card_found.show()
-
-        isw_change_payment_method_group.visibility = View.GONE
+    private fun resetTransaction() {
+        fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
     }
 
     private fun showLoader(title: String = "Processing", message: String) {
@@ -320,13 +377,8 @@ class PreAuthorizationFragment : BaseFragment(TAG) {
         dialog.show()
     }
 
-    private fun resetTransaction() {
-        fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
-    }
-
     companion object {
-        const val TAG = "Pre-Auth Fragment"
+        const val TAG = "Card Transaction"
     }
-
 
 }
