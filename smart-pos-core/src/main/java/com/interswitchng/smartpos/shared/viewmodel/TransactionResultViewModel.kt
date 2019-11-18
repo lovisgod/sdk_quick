@@ -86,7 +86,9 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
             val printStatus = withContext(ioScope) { posDevice.printer.canPrint() }
 
             when (printStatus) {
-                is PrintStatus.Error -> _printerMessage.value = printStatus.message
+                is PrintStatus.Error -> {
+                    _printerMessage.value = printStatus.message
+                }
                 else -> {
                     // disable print button
                     _printButton.value = false

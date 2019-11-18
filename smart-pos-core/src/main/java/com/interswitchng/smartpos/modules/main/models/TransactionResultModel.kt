@@ -2,6 +2,10 @@ package com.interswitchng.smartpos.modules.main.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.printer.slips.CardSlip
+import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
+import com.interswitchng.smartpos.shared.models.printer.slips.UssdQrSlip
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 
@@ -85,5 +89,6 @@ data class TransactionResultModel(
             CardType.AMERICANEXPRESS.ordinal -> CardType.AMERICANEXPRESS
             else -> CardType.None
         }
+
     }
 }

@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.shared.models.transaction
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.interswitchng.smartpos.modules.main.models.TransactionResultModel
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
@@ -17,7 +18,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
  * of the triggered purchase transaction.
  * This is what captures the transaction's result
  */
-internal data class TransactionResult(
+data class TransactionResult(
         val paymentType: PaymentType,
         val stan: String,
         val dateTime: String,
@@ -140,3 +141,28 @@ internal data class TransactionResult(
     }
 
 }
+
+/*internal fun TransactionResult.getPublicTransactionResult(): TransactionResultModel {
+    return TransactionResultModel(
+        paymentType = this.paymentType,
+        stan = this.stan,
+        dateTime = this.dateTime,
+        amount = this.amount,
+        cardPan = this.cardPan,
+        cardType = this.cardType,
+        cardExpiry = this.cardExpiry,
+        authorizationCode = this.authorizationCode,
+        pinStatus = this.pinStatus,
+        responseMessage = this.responseMessage,
+        responseCode = this.responseCode,
+        AID = this.AID,
+        code = this.code,
+        telephone = this.telephone,
+
+
+
+    )
+
+
+}*/
+

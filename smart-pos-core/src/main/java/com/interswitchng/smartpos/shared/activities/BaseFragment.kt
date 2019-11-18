@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
@@ -48,8 +49,8 @@ abstract class BaseFragment (fragmentName: String) : Fragment() {
         return rootView
     }
 
-    protected fun navigate(direction: NavDirections) {
-        findNavController().navigate(direction)
+    protected fun navigate(direction: NavDirections, navOptions: NavOptions? = null) {
+        findNavController().navigate(direction, navOptions)
     }
 
     protected fun navigateUp() = findNavController().navigateUp()
@@ -57,6 +58,8 @@ abstract class BaseFragment (fragmentName: String) : Fragment() {
     protected fun navigate(directionId: Int) {
         findNavController().navigate(directionId)
     }
+
+
 
     protected fun getAmount(amount: Int): String {
         val parsed = java.lang.Double.parseDouble(amount.toString())

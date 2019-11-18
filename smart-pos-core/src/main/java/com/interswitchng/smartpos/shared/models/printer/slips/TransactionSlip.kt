@@ -15,7 +15,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
  * @param terminal  the terminal information used to configure the current terminal
  * @param status  the response status for the current transaction
  */
-internal abstract class TransactionSlip(private val terminal: TerminalInfo, private val status: TransactionStatus) {
+abstract class TransactionSlip(private val terminal: TerminalInfo, private val status: TransactionStatus) {
     protected val line = PrintObject.Line
 
 

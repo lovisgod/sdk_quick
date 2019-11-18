@@ -12,6 +12,7 @@ import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
 import java.text.NumberFormat
 
+const val AMOUNT_LIMIT = 10000000
 class AmountFragment : BaseFragment(TAG) {
 
     private val amountFragmentArgs by navArgs<AmountFragmentArgs>()
@@ -145,60 +146,66 @@ class AmountFragment : BaseFragment(TAG) {
         isw_amount.text = formatted
     }
 
+    private fun isAmountLimit(): Boolean {
+        val cleanString = amount.replace("[$,.]".toRegex(), "")
+        val parsed = java.lang.Double.parseDouble(cleanString)
+        val parsedAmount = parsed/100
+
+        return parsedAmount > AMOUNT_LIMIT
+    }
+
+    private fun handleClickWithAmountLimit(digit: String) {
+        if(!isAmountLimit()) {
+            amount+= digit
+            updateAmount()
+        } else {
+            Toast.makeText(context, "Limit is $AMOUNT_LIMIT", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun handleDigitsClicks() {
         isw_keypad_zero.setOnClickListener {
-            amount+= "0"
-            updateAmount()
+            handleClickWithAmountLimit("0")
         }
 
         isw_keypad_one.setOnClickListener {
-            amount+= "1"
-            updateAmount()
+            handleClickWithAmountLimit("1")
         }
 
         isw_keypad_two.setOnClickListener {
-            amount+= "2"
-            updateAmount()
+            handleClickWithAmountLimit("2")
         }
 
         isw_keypad_three.setOnClickListener {
-            amount+= "3"
-            updateAmount()
+            handleClickWithAmountLimit("3")
         }
 
         isw_keypad_four.setOnClickListener {
-            amount+= "4"
-            updateAmount()
+            handleClickWithAmountLimit("4")
         }
 
         isw_keypad_five.setOnClickListener {
-            amount+= "5"
-            updateAmount()
+            handleClickWithAmountLimit("5")
         }
 
         isw_keypad_six.setOnClickListener {
-            amount+= "6"
-            updateAmount()
+            handleClickWithAmountLimit("6")
         }
 
         isw_keypad_seven.setOnClickListener {
-            amount+= "7"
-            updateAmount()
+            handleClickWithAmountLimit("7")
         }
 
         isw_keypad_eight.setOnClickListener {
-            amount+= "8"
-            updateAmount()
+            handleClickWithAmountLimit("8")
         }
 
         isw_keypad_nine.setOnClickListener {
-            amount+= "9"
-            updateAmount()
+            handleClickWithAmountLimit("9")
         }
 
         isw_dot_button.setOnClickListener {
-            amount+= "."
-            updateAmount()
+            handleClickWithAmountLimit(".")
         }
 
         isw_back_delete_button.setOnClickListener {

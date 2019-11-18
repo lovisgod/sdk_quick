@@ -483,6 +483,7 @@ internal class IsoServiceImpl(
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
             val randomReference = "000000$stan"
+            val originalDataElement = "0100" + transaction.stan +
 
             message
                 .setValue(2, transaction.cardPAN)
@@ -507,6 +508,7 @@ internal class IsoServiceImpl(
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
                 .setValue(55, transaction.icc)
+                //.setValue(58, transaction.)
                 .setValue(123, "510101511344101")
 
             // set message hash
