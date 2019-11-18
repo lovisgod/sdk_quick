@@ -111,7 +111,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         if (emvData != null) {
             // create transaction info and issue online purchase request
             val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-            terminalInfo.isKimono
+           // terminalInfo.isKimono
+
             val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
 
 
