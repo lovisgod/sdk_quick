@@ -43,6 +43,8 @@ internal val viewModels = module {
         val terminalInfo = TerminalInfo.get(store)
         val isKimono = terminalInfo?.isKimono ?: false
         val isoService: IsoService = get { parametersOf(isKimono)}
+
+
         CardViewModel(get(), isoService)
     }
 

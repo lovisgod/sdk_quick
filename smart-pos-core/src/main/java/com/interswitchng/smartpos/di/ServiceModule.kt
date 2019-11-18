@@ -26,19 +26,21 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 
-internal val serviceModule = module {
+internal val serviceModule = module(override = true) {
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
 
 //    single<KimonoHttpService> { KimonoHttpServiceImpl(get()) }
 
 //    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
+    // return service based on kimono flag
+    //return@factory
 
 
-    factory<IsoService> { (isKimono: Boolean) ->
+    single<IsoService> { (isKimono: Boolean) ->
 
-        // return service based on kimono flag
-        return@factory if (isKimono) KimonoHttpServiceImpl(get(), androidApplication(), get(), get())
+
+        if (isKimono) KimonoHttpServiceImpl(get(), androidApplication(), get(), get())
         else IsoServiceImpl(androidContext(), get(), get(), get())
     }
 
