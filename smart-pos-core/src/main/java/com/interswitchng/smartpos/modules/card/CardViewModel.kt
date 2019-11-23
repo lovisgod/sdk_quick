@@ -46,6 +46,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
     private var transactionType: TransactionType = TransactionType.CARD_PURCHASE
 
+    fun getCardPAN() = emv.getPan()
+
     fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {
 
         with(uiScope) {
@@ -64,6 +66,14 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                 emv.setupTransaction(amount, terminalInfo, channel, uiScope)
             }
         }
+    }
+
+    fun readCard() {
+        val result = emv.startTransaction()
+    }
+
+    fun startCardLessTransaction() {
+
     }
 
 
@@ -102,7 +112,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     }
 
 
-    private fun processOnline(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo): Optional<Pair<TransactionResponse, EmvData>> {
+    fun processOnline(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo): Optional<Pair<TransactionResponse, EmvData>> {
 
         // get emv data captured by card
         val emvData = emv.getTransactionInfo()

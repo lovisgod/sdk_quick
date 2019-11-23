@@ -2,6 +2,7 @@ package com.interswitch.smartpos.emv.telpo.emv
 
 import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
+import com.interswitch.smartpos.emv.telpo.models.getAllCapks
 import com.interswitch.smartpos.emv.telpo.utils.DefaultAPPCAPK
 import com.interswitch.smartpos.emv.telpo.utils.TelpoEmvUtils
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -33,7 +34,7 @@ internal class TelpoEmvImplementation (
 
     private val emvService by lazy { EmvService.getInstance().apply { setListener(TelpoEmvServiceListener()) }}
 
-    private lateinit var pan: String
+    lateinit var cardPan: String
 
     private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
 
@@ -45,8 +46,10 @@ internal class TelpoEmvImplementation (
 
     private fun addCAPKIntoEmvLib(capks: List<EmvCAPK>) {
         capks.forEach { capk ->
-            EmvService.Emv_AddCapk(capk)
+            val ret = EmvService.Emv_AddCapk(capk)
             selectedRID = StringUtil.toHexString(capk.RID)
+            logger.log("Add CAPK result == $ret")
+            logger.log("Selected RID == $selectedRID")
         }
     }
 
@@ -68,10 +71,16 @@ internal class TelpoEmvImplementation (
         }
 
         EmvService.Emv_RemoveAllApp()
-        DefaultAPPCAPK.Add_All_APP()
+        val appList = TelpoEmvUtils.createAppList(config.first, config.second)
+        appList.forEach { app ->
+            val result = EmvService.Emv_AddApp(app)
+            if (result == EmvService.EMV_TRUE) logger.logErr("Add app success : AID = ${StringUtil.toHexString(app.AID)}")
+            else return result.also { logger.logErr("Add app failed : RET = $result, AID = ${StringUtil.toHexString(app.AID)}") }
+        }
 
         EmvService.Emv_RemoveAllCapk()
-        DefaultAPPCAPK.Add_All_CAPK()
+        val capks = config.second.getAllCapks()
+        addCAPKIntoEmvLib(capks)
 
         pinCallback.showInsertCard()
 
@@ -117,11 +126,6 @@ internal class TelpoEmvImplementation (
         emvService.Emv_SetTLV(responseTLV)
 
         return EmvService.EMV_TRUE
-    }
-
-    suspend fun enterPin(isOnline: Boolean, triesCount: Int,  offlineTriesLeft: Int, pan: String) {
-        logger.log("offline tries left: $offlineTriesLeft")
-        pinCallback.enterPin(isOnline, triesCount, offlineTriesLeft, pan)
     }
 
     fun getCardType(): CardType {
@@ -185,7 +189,11 @@ internal class TelpoEmvImplementation (
                 it.Amount = amount.toLong()
                 it.TransCurrCode = 566.toShort() /*566 is Nigeria's currency number*/
                 it.ReferCurrCode = 566.toShort()
-                it.CashbackAmount = 0
+                it.CashbackAmount = 0L
+                it.TransactionType = 0.toByte()
+                it.ReferCurrCon = 0
+                it.ReferCurrExp = 0.toByte()
+                it.TransCurrExp = 0.toByte()
             }
             return EmvService.EMV_TRUE
         }
@@ -253,7 +261,10 @@ internal class TelpoEmvImplementation (
 
         override fun onFinishReadAppData(): Int = EmvService.EMV_TRUE
 
-        override fun OnCheckException(PAN: String?): Int = EmvService.EMV_FALSE
+        override fun OnCheckException(PAN: String?): Int {
+            cardPan = PAN ?: ""
+            return EmvService.EMV_FALSE
+        }
 
         override fun onReferProc(): Int = EmvService.EMV_TRUE
 

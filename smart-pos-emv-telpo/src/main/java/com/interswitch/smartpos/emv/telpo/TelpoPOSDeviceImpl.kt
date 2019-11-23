@@ -70,10 +70,6 @@ class TelpoPOSDeviceImpl constructor(
             return create(context, printer, factory)
         }
 
-//        @JvmStatic
-//        lateinit var dal: IDAL
-//            private set
-
         private var isSetup = false
 
         private fun setupDevice(context: Context) {

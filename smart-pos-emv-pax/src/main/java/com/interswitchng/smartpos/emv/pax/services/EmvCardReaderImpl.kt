@@ -101,6 +101,10 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         }
     }
 
+    override fun getPan(): String? {
+        return emvImpl.getPan()
+    }
+
     override fun getTransactionInfo(): EmvData? {
         // get track2 data
         return emvImpl.getTrack2()?.let {

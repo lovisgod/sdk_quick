@@ -37,7 +37,9 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         EmvService.IccOpenReader()
 
         while (coroutineContext.isActive && !isCancelled) {
-            if (EmvService.IccCheckCard(300) == 0) break
+            if (EmvService.IccCheckCard(300) == 0){
+                break
+            }
         }
 
         channel.send(EmvMessage.CardDetected)
@@ -60,6 +62,8 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
     override suspend fun showPinOk() = channel.send(EmvMessage.PinOk)
 
+    override fun getPan(): String? = telpoEmvImplementation.cardPan
+
     override suspend fun setupTransaction(
         amount: Int,
         terminalInfo: TerminalInfo,
@@ -73,6 +77,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         this.channelScope = scope
 
         val result = telpoEmvImplementation.setupContactEmvTransaction()
+        logger.logErr("Result: $result")
 
         val resultMsg = when (result) {
             EmvService.ERR_ICCCMD, EmvService.ERR_NOAPP,
@@ -81,7 +86,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         }
 
         if (resultMsg != null) callTransactionCancelled(resultMsg, "Unable to read Card")
-        else channel.send(EmvMessage.CardRead(CardType.None)) /*Still working on how to get card type*/
+        else channel.send(EmvMessage.CardRead(telpoEmvImplementation.getCardType()))
     }
 
     private suspend fun callTransactionCancelled(code: Int, reason: String) {
@@ -113,13 +118,14 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         hasEnteredPin = true
 
         return if (!isCancelled) when (result) {
-            EmvService.EMV_TRUE -> logger.log("Offline approved").let { EmvResult.OFFLINE_APPROVED }
+            EmvService.EMV_TRUE -> logger.log("Offline approved").let { EmvResult.ONLINE_REQUIRED }
             else -> logger.log("Offline declined").let { EmvResult.OFFLINE_DENIED }
         } else logger.log("Transaction was cancelled").let { EmvResult.CANCELLED }
     }
 
     override fun completeTransaction(response: TransactionResponse): EmvResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        telpoEmvImplementation.completeTransaction(response)
+        return EmvResult.OFFLINE_APPROVED
     }
 
     override fun cancelTransaction() {

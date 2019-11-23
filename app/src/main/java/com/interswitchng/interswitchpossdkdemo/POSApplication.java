@@ -29,6 +29,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.usb.UsbConfig;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -98,6 +99,12 @@ public class POSApplication extends Application   {
 
                         @Override
                         public EmvData getTransactionInfo() {
+                            return null;
+                        }
+
+                        @Nullable
+                        @Override
+                        public String getPan() {
                             return null;
                         }
                     };

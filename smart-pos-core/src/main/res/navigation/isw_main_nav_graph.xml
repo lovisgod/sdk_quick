@@ -44,10 +44,6 @@
 
     </fragment>
 
-    <fragment android:id="@+id/isw_fragment_setup"
-        tools:layout="@layout/isw_fragment_setup"
-        android:name="com.interswitchng.smartpos.modules.setup.SetupFragment"/>
-
     <fragment android:id="@+id/isw_fragment_amount"
         tools:layout="@layout/isw_fragment_amount"
         android:name="com.interswitchng.smartpos.modules.main.fragments.AmountFragment">
@@ -232,7 +228,22 @@
     <fragment
         android:id="@+id/isw_settings_account_fingerprint"
         tools:layout="@layout/isw_settings_account"
-        android:name="com.interswitchng.smartpos.modules.main.settings.FingerprintFragment"/>
+        android:name="com.interswitchng.smartpos.modules.main.settings.FingerprintFragment">
+
+        <action
+            android:id="@+id/isw_goto_settings_registered_fingerprint"
+            app:destination="@id/isw_settings_registered_fingerprint"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/isw_settings_registered_fingerprint"
+        tools:layout="@layout/isw_fragment_registered_fingerprint"
+        android:name="com.interswitchng.smartpos.modules.main.settings.RegisteredFingerprintFragment"/>
 
     <fragment
         android:id="@+id/isw_activity"

@@ -12,6 +12,8 @@ abstract class BaseBottomSheetDialog : BottomSheetDialogFragment() {
 
     protected lateinit var rootView: View
 
+    protected val sheetContext by lazy { requireParentFragment().requireContext() }
+
     abstract val layoutId: Int
 
     override fun getTheme(): Int = R.style.IswBottomSheet
