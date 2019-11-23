@@ -1,15 +1,18 @@
 package com.interswitchng.smartpos.shared.models.transaction
 
+import android.os.Parcelable
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 /**
  * This class is responsible for capturing
  * transaction results, to be logged to DB
  */
+@Parcelize
 open class TransactionLog(
         @PrimaryKey var id: Int = 0,
         var paymentType: Int = 0,
@@ -27,7 +30,7 @@ open class TransactionLog(
         var AID: String = "",
         var code: String = "",
         var telephone: String = "",
-        var time: Long = Date().time) : RealmObject() {
+        var time: Long = Date().time) : RealmObject(), Parcelable {
 
 
 

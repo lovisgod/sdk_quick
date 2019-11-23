@@ -80,6 +80,12 @@ class ReceiptFragment : BaseFragment(TAG) {
         isw_payment_type.text = cardTypeName
     }
 
+    private fun logTransaction() {
+        result?.let {
+            resultViewModel.logTransaction(it)
+        }
+    }
+
     private fun handleClicks() {
         isw_share_receipt.setOnClickListener {
             val shareIntent: Intent = Intent().apply {
@@ -104,6 +110,7 @@ class ReceiptFragment : BaseFragment(TAG) {
     private fun setUpUI() {
         displayTransactionResultIconAndMessage()
         displayTransactionDetails()
+        logTransaction()
         handleClicks()
         handlePrint()
     }

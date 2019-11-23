@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.*
@@ -200,12 +201,13 @@ internal class IsoServiceImpl(
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
             val randomReference = "000000$stan"
+            val timeDateNow = timeAndDateFormatter.format(now)
 
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
                     .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
-                    .setValue(7, timeAndDateFormatter.format(now))
+                    .setValue(7, timeDateNow)
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
                     .setValue(13, monthFormatter.format(now))
@@ -264,9 +266,205 @@ internal class IsoServiceImpl(
             // close connection
             socket.close()
 
+
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
+            // Initiate Reversal if timeout
+            if (responseMsg.message.getObjectValue<String>(39) == TIMEOUT_CODE) {
+
+                transaction.originalTransactionInfoData = OriginalTransactionInfoData
+                    .addOriginalTransactionInfo(originalStan = transaction.stan, originalTransmissionDateAndTime = timeDateNow)
+
+                initiateReversal(terminalInfo, transaction)
+
+            }
+            // return response
+            return responseMsg.message.let {
+                val authCode = it.getObjectValue<String?>(38) ?: ""
+                val code = it.getObjectValue<String>(39)
+                val scripts = it.getObjectValue<String>(55)
+                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
+            }
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+    }
+
+    override fun initiateRefund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        try {
+            val now = Date()
+            val message = NibssIsoMessage(messageFactory.newMessage(0x200))
+            val processCode = "20" + transaction.accountType.value + "00"
+            val hasPin = transaction.cardPIN.isNotEmpty()
+            val stan = transaction.stan
+            val randomReference = "000000$stan"
+            val timeDateNow = timeAndDateFormatter.format(now)
+
+            message
+                .setValue(2, transaction.cardPAN)
+                .setValue(3, processCode)
+                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
+                .setValue(7, timeDateNow)
+                .setValue(11, stan)
+                .setValue(12, timeFormatter.format(now))
+                .setValue(13, monthFormatter.format(now))
+                .setValue(14, transaction.cardExpiry)
+                .setValue(18, terminalInfo.merchantCategoryCode)
+                .setValue(22, "051")
+                .setValue(23, transaction.csn)
+                .setValue(25, "00")
+                .setValue(26, "06")
+                .setValue(28, "C00000000")
+                .setValue(35, transaction.cardTrack2)
+                .setValue(37, randomReference)
+                .setValue(40, transaction.src)
+                .setValue(41, terminalInfo.terminalId)
+                .setValue(42, terminalInfo.merchantId)
+                .setValue(43, terminalInfo.merchantNameAndLocation)
+                .setValue(49, terminalInfo.currencyCode)
+                .setValue(55, transaction.icc)
+
+            if (hasPin) {
+                val pinKey = store.getString(KEY_PIN_KEY, "")
+                if (pinKey.isEmpty()) return null
+
+                val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
+                message.setValue(52, pinData)
+                    .setValue(123, "510101511344101")
+
+                // remove unset fields
+                message.message.removeFields(32, 59)
+            } else {
+                message.setValue(123, "511101511344101")
+                // remove unset fields
+                message.message.removeFields(32, 52, 59)
+            }
+
+            // set message hash
+            val bytes = message.message.writeData()
+            val length = bytes.size
+            val temp = ByteArray(length - 64)
+            if (length >= 64) {
+                System.arraycopy(bytes, 0, temp, 0, length - 64)
+            }
+
+            val sessionKey = store.getString(KEY_SESSION_KEY, "")
+            val hashValue = IsoUtils.getMac(sessionKey, temp) //SHA256
+            message.setValue(128, hashValue)
+            message.dump(System.out, "request -- ")
+
+            // open connection
+            val isConnected = socket.open()
+            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+
+
+            val request = message.message.writeData()
+            val response = socket.sendReceive(request)
+            // close connection
+            socket.close()
+
+
+            val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
+            responseMsg.dump(System.out, "")
+
+            // Initiate Reversal if timeout
+            if (responseMsg.message.getObjectValue<String>(39) == TIMEOUT_CODE) {
+
+                transaction.originalTransactionInfoData = OriginalTransactionInfoData
+                    .addOriginalTransactionInfo(originalStan = transaction.stan, originalTransmissionDateAndTime = timeDateNow)
+
+                initiateReversal(terminalInfo, transaction)
+
+            }
+            // return response
+            return responseMsg.message.let {
+                val authCode = it.getObjectValue<String?>(38) ?: ""
+                val code = it.getObjectValue<String>(39)
+                val scripts = it.getObjectValue<String>(55)
+                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
+            }
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+    }
+
+    override fun initiateReversal(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        try {
+            val now = Date()
+            val message = NibssIsoMessage(messageFactory.newMessage(0x420))
+            val processCode = "00" + transaction.accountType.value + "00"
+            val hasPin = transaction.cardPIN.isNotEmpty()
+            val stan = transaction.originalTransactionInfoData?.originalStan
+            val randomReference = "000000$stan"
+            val originalTransactionInfoData = transaction.originalTransactionInfoData
+            val messageReasonCode = "4000"
+            val acquiringInstitutionId = "00000111129"
+            val forwardingInstitutionId = "00000111129"
+            val actualSettlementAmount = "000000000000"
+            val actualSettlementFee= "C00000000"
+            val actualTransactionFee= "C00000000"
+            val originalDataElement = "0200" + stan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
+            val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
+
+
+            message
+                .setValue(2, transaction.cardPAN)
+                .setValue(3, processCode)
+                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
+                .setValue(7, originalTransactionInfoData?.originalTransmissionDateAndTime!!)
+                .setValue(11, stan!!)
+                .setValue(12, timeFormatter.format(now))
+                .setValue(13, monthFormatter.format(now))
+                .setValue(14, transaction.cardExpiry)
+                .setValue(18, terminalInfo.merchantCategoryCode)
+                .setValue(22, "051")
+                .setValue(23, transaction.csn)
+                .setValue(25, "00")
+                .setValue(26, "06")
+                .setValue(28, "C00000000")
+                .setValue(35, transaction.cardTrack2)
+                .setValue(37, randomReference)
+                .setValue(40, transaction.src)
+                .setValue(41, terminalInfo.terminalId)
+                .setValue(42, terminalInfo.merchantId)
+                .setValue(43, terminalInfo.merchantNameAndLocation)
+                .setValue(49, terminalInfo.currencyCode)
+                .setValue(56, messageReasonCode)
+                .setValue(90, originalDataElement)
+                .setValue(95, replacementAmount)
+                .setValue(123, "510101511344101" )
+
+            // set message hash
+            val bytes = message.message.writeData()
+            val length = bytes.size
+            val temp = ByteArray(length - 64)
+            if (length >= 64) {
+                System.arraycopy(bytes, 0, temp, 0, length - 64)
+            }
+
+            val sessionKey = store.getString(KEY_SESSION_KEY, "")
+            val hashValue = IsoUtils.getMac(sessionKey, temp) //SHA256
+            message.setValue(128, hashValue)
+            message.dump(System.out, "request -- ")
+
+            // open connection
+            val isConnected = socket.open()
+            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+
+
+            val request = message.message.writeData()
+            val response = socket.sendReceive(request)
+            // close connection
+            socket.close()
+
+
+            val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
+            responseMsg.dump(System.out, "")
 
             // return response
             return responseMsg.message.let {
@@ -482,8 +680,15 @@ internal class IsoServiceImpl(
             val processCode = "61" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
+            val acquiringInstitutionId = "00000111129"
+            val forwardingInstitutionId = "00000111129"
+            val originalTransactionInfoData = transaction.originalTransactionInfoData
             val randomReference = "000000$stan"
-            val originalDataElement = "0100" + transaction.stan +
+            val actualSettlementAmount = "000000000000"
+            val actualSettlementFee= "C00000000"
+            val actualTransactionFee= "C00000000"
+            val originalDataElement = "0100" + stan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
+            val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
                 .setValue(2, transaction.cardPAN)
@@ -508,7 +713,8 @@ internal class IsoServiceImpl(
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
                 .setValue(55, transaction.icc)
-                //.setValue(58, transaction.)
+                .setValue(90, originalDataElement)
+                .setValue(95, replacementAmount)
                 .setValue(123, "510101511344101")
 
             // set message hash
