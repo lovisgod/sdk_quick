@@ -160,6 +160,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         emv.cancelTransaction()
     }
 
+
+
     enum class OnlineProcessResult {
         NO_EMV,
         NO_RESPONSE,
