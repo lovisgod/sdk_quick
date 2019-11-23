@@ -9,5 +9,6 @@ data class TransactionResponse(
         val responseCode: String, // response code
         val authCode: String, // authorization code
         val stan: String,
-        val scripts: String
+        val scripts: String,
+        val transmissionDateTime: String = ""
 )

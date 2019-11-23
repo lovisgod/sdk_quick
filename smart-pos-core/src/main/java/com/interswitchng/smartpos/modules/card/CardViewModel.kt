@@ -66,7 +66,6 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-
     fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo) {
         uiScope.launch {
             //  start card transaction in IO thread
@@ -147,6 +146,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
             TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)
             TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
             TransactionType.COMPLETION -> isoService.initiateCompletion(terminalInfo, txnInfo)
+            TransactionType.REFUND -> isoService.initiateRefund(terminalInfo, txnInfo)
             else -> null
         }
     }

@@ -108,6 +108,11 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.COMPLETION)
                 transactionType = TransactionType.Completion
             }
+
+            PaymentModel.TransactionType.REFUND -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.REFUND)
+                transactionType = TransactionType.Refund
+            }
         }
     }
 

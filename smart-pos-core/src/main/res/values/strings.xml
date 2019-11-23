@@ -147,6 +147,7 @@
     <string name="isw_processing_transaction">Processing %s</string>
     <string name="isw_share_receipt">Share Receipt</string>
     <string name="isw_pre_authorize">PRE-AUTHORIZE</string>
+    <string name="isw_refund">REFUND</string>
     <string name="isw_pre_authorization_completed">Pre-Authorization Completed!</string>
     <string name="isw_thank_you">Thank You!</string>
     <string name="isw_admin_access_required">Admin access required</string>

@@ -259,8 +259,17 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
 
-        <argument android:name="PaymentModel"
-            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+        <action
+            android:id="@+id/isw_action_goto_fragment_amount"
+            app:destination="@id/isw_fragment_amount"
+            app:popUpTo="@id/isw_transaction"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <argument android:name="TransactionLog"
+            app:argType="com.interswitchng.smartpos.shared.models.transaction.TransactionLog"/>
     </fragment>
 
     <fragment

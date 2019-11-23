@@ -18,7 +18,8 @@ internal data class TransactionInfo(
         val amount: Int,
         val stan: String,
         val purchaseType: PurchaseType,
-        val accountType: AccountType) {
+        val accountType: AccountType,
+        var originalTransactionInfoData: OriginalTransactionInfoData? = null) {
 
 
     companion object {
@@ -30,9 +31,27 @@ internal data class TransactionInfo(
                 icc = emv.icc,
                 src = emv.src,
                 csn = emv.csn,
-                amount = paymentInfo.amount,
+                amount = paymentInfo.amount * 100,
                 stan = paymentInfo.getStan(),
                 purchaseType = purchaseType,
                 accountType = accountType)
+
     }
+}
+
+internal data class OriginalTransactionInfoData(
+        var originalStan: String?,
+        var originalTransmissionDateAndTime: String?,
+        var originalAuthorizationId: String?,
+        var originalAmount: String?
+) {
+        companion object {
+                fun addOriginalTransactionInfo(originalStan: String? = null,
+                                               originalTransmissionDateAndTime: String? = null,
+                                               originalAuthorizationId: String? = null,
+                                               originalAmount: String? = null) = OriginalTransactionInfoData(originalStan,
+                        originalTransmissionDateAndTime,
+                        originalAuthorizationId,
+                                originalAmount)
+        }
 }

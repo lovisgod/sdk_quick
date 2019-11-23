@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/isw_activity_nav"
-            android:text="Adeleye Samuel" />
+            tools:text="Adeleye Samuel" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,7 @@
                 android:layout_marginTop="32dp"
                 android:textSize="16sp"
                 android:textColor="#0D0E11"
-                android:text="Verve Debit Card (6810)"
+                tools:text="Verve Debit Card (6810)"
                 app:layout_constraintStart_toEndOf="@+id/isw_transaction_icon"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,7 +86,8 @@
                 android:layout_marginStart="17dp"
                 android:layout_marginLeft="17dp"
                 android:textSize="12sp"
-                android:text="Payment Method"
+                android:visibility="gone"
+                tools:text="Payment Method"
                 app:layout_constraintStart_toEndOf="@+id/isw_transaction_icon"
                 app:layout_constraintTop_toBottomOf="@+id/isw_transaction_name" />
 
@@ -108,7 +109,7 @@
                 android:layout_marginTop="4dp"
                 android:textSize="20sp"
                 android:textColor="#0D0E11"
-                android:text="90,499.99"
+                tools:text="90,499.99"
                 app:layout_constraintStart_toStartOf="@+id/isw_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_text" />
 
@@ -119,9 +120,10 @@
                 android:layout_marginTop="10dp"
                 android:textColor="#0D0E11"
                 android:textSize="14sp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/isw_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_value_text"
-                android:text="REF ID: #00ISJOJSNJDNU8DW904" />
+                tools:text="REF ID: #00ISJOJSNJDNU8DW904" />
 
             <TextView
                 android:id="@+id/isw_textview6"
@@ -166,7 +168,7 @@
                 android:layout_marginRight="24dp"
                 android:textColor="#8097B1"
                 android:textSize="14sp"
-                android:text="7 Mar 2019"
+                tools:text="7 Mar 2019"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/isw_divider" />
 
@@ -177,7 +179,8 @@
                 android:layout_marginTop="20dp"
                 android:textColor="#8097B1"
                 android:textSize="14sp"
-                android:text="Time"
+                tools:text="Time"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/isw_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/isw_date_label_text" />
 
@@ -190,13 +193,14 @@
                 android:layout_marginRight="24dp"
                 android:textColor="#8097B1"
                 android:textSize="14sp"
-                android:text="10:26:30 AM WAT"
+                android:visibility="gone"
+                tools:text="10:26:30 AM WAT"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/isw_date_value_text" />
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button"
-                android:id="@+id/isw_print_receipt_label"
+                android:id="@+id/isw_refund_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -219,7 +223,7 @@
                 app:rippleColor="@android:color/white"
                 app:icon="@drawable/isw_ic_print"
                 app:iconGravity="textStart"
-                android:text="PRINT RECEIPT" />
+                android:text="START REFUND" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

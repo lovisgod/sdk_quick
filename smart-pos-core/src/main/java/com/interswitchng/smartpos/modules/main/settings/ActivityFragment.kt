@@ -5,16 +5,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.adapters.ActivityAdapter
+import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.adapters.TransactionLogAdapter
+import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import kotlinx.android.synthetic.main.isw_activity_home_new.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class ActivityFragment : BaseFragment(TAG) {
+class ActivityFragment : BaseFragment(TAG), ActivityAdapter.ActivityItemClickListener {
 
     override val layoutId: Int
         get() = R.layout.isw_activity_home_new
+
+    private val historyViewModel: HistoryViewModel by viewModel()
+    private lateinit var adapter: ActivityAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,17 +35,42 @@ class ActivityFragment : BaseFragment(TAG) {
         super.onViewCreated(view, savedInstanceState)
         configureRecyclerView()
         handleToolbarClicks()
+        observeHistoryViewModel()
     }
 
     private fun configureRecyclerView() {
-        activity_rv.adapter = ActivityAdapter()
+        adapter = ActivityAdapter().apply {
+            setOnActivityItemClickListener(this@ActivityFragment)
+        }
+        activity_rv.adapter = adapter
         activity_rv.layoutManager = LinearLayoutManager(context)
+    }
+
+    private fun observeHistoryViewModel() {
+        with(historyViewModel) {
+            val owner = { lifecycle }
+            pagedList.observe(owner, ::submitList)
+        }
+    }
+
+    private fun submitList(list: PagedList<TransactionLog>?){
+
+        if (list != null && list.isEmpty() && adapter.itemCount == 0) {
+
+        } else {
+            adapter.submitList(list)
+        }
     }
 
     private fun handleToolbarClicks() {
         isw_activity_smart_pos_toolbar.setOnClickListener {
             navigateUp()
         }
+    }
+
+    override fun navigateToActivityDetailFragment(item: TransactionLog) {
+        val direction = ActivityFragmentDirections.iswGotoActivityDetailFragmentAction(item)
+        navigate(direction)
     }
 
     companion object {

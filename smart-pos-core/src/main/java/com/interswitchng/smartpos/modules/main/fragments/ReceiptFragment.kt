@@ -44,6 +44,7 @@ class ReceiptFragment : BaseFragment(TAG) {
     }
 
     private fun displayTransactionResultIconAndMessage() {
+        println("Called responseCode ----> ${result?.responseCode}")
         when (result?.responseCode) {
             IsoUtils.TIMEOUT_CODE -> {
                 transactionResponseIcon.setImageResource(R.drawable.isw_failure)
@@ -59,6 +60,12 @@ class ReceiptFragment : BaseFragment(TAG) {
                     PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_receipt_text.text = getString(R.string.isw_pre_authorization_completed)
                     PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_receipt_text.text = getString(R.string.isw_card_not_present_completed)
                 }
+            }
+
+            else -> {
+                transactionResponseIcon.setImageResource(R.drawable.isw_failure)
+                isw_receipt_text.text = "Failed!"
+                isw_transaction_msg.text = "Your transaction was unsuccessful"
             }
         }
     }
@@ -78,6 +85,12 @@ class ReceiptFragment : BaseFragment(TAG) {
         }
 
         isw_payment_type.text = cardTypeName
+    }
+
+    private fun logTransaction() {
+        result?.let {
+            resultViewModel.logTransaction(it)
+        }
     }
 
     private fun handleClicks() {
@@ -104,6 +117,7 @@ class ReceiptFragment : BaseFragment(TAG) {
     private fun setUpUI() {
         displayTransactionResultIconAndMessage()
         displayTransactionDetails()
+        logTransaction()
         handleClicks()
         handlePrint()
     }

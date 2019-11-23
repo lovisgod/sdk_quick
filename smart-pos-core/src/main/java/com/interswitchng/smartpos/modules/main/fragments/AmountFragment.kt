@@ -26,12 +26,22 @@ class AmountFragment : BaseFragment(TAG) {
         get() = R.layout.isw_fragment_amount
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (payment.type == PaymentModel.TransactionType.PRE_AUTHORIZATION) {
-            isw_proceed.text = getString(R.string.isw_pre_authorize)
-        }
+        setUpUI()
         initializeAmount()
         handleProceedToolbarClicks()
         handleDigitsClicks()
+    }
+
+    private fun setUpUI() {
+        when (payment.type) {
+            PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
+                isw_proceed.text = getString(R.string.isw_pre_authorize)
+            }
+
+            PaymentModel.TransactionType.REFUND -> {
+                isw_proceed.text = getString(R.string.isw_refund)
+            }
+        }
     }
 
     private fun handleProceedToolbarClicks() {
@@ -113,6 +123,12 @@ class AmountFragment : BaseFragment(TAG) {
 
             PaymentModel.TransactionType.COMPLETION -> {
                val direction =
+                    AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
+                navigate(direction)
+            }
+
+            PaymentModel.TransactionType.REFUND -> {
+                val direction =
                     AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
                 navigate(direction)
             }
