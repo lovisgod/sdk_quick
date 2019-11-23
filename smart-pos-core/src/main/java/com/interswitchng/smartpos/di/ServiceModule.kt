@@ -26,7 +26,8 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 
-internal val serviceModule = module(override = true) {
+internal val serviceModule = module() //override = true
+{
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
 

@@ -42,6 +42,11 @@ internal class IsoServiceImpl(
         return  false;
     }
 
+    override fun refund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
     private val logger by lazy { Logger.with("IsoServiceImpl") }
 
     private val messageFactory by lazy {

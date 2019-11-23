@@ -35,6 +35,14 @@ internal interface IKimonoHttpService {
     fun makePurchase(@Body purchaseRequest: PurchaseRequest): Simple<PurchaseResponse>
 
 
+
+
+
+    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
+    @POST(Constants.KIMONO_END_POINT)
+    fun refund(@Body refundRequest: RefundRequest): Simple<PurchaseResponse>
+
+
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
     fun reversePurchase(@Body reverseRequest: ReversalRequest): Simple<PurchaseResponse>

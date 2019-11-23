@@ -86,4 +86,15 @@ internal interface IsoService {
     fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
 
+    /**
+     * Initiates a refund using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the purchase information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+    fun refund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+
+
 }

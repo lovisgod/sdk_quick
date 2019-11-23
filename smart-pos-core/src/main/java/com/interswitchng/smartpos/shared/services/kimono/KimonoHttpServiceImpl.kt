@@ -106,6 +106,50 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
 
 
 
+    override fun refund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        // generate purchase request
+
+        val request = RefundRequest.create(device.name, terminalInfo, transaction,"")
+        request.pinData?.apply {
+            // remove first 2 bytes to make 8 bytes
+            ksn = ksn.substring(4)
+        }
+
+        try {
+            val response = httpService.refund(request).run()
+
+            val data = response.body()
+
+            return if (!response.isSuccessful || data == null) {
+                TransactionResponse(
+                        responseCode = response.code().toString(),
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = response.message()
+                )
+            } else {
+                TransactionResponse(
+                        responseCode = data.responseCode,
+                        stan = data.stan,
+                        authCode = data.authCode,
+                        scripts = "",
+                        responseDescription = data.description
+                )
+            }
+
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            //  reversePurchase(request, request.stan) // TODO change stan to authId
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+    }
+
+
+
+
+
     override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, paymentInfo: PaymentInfo): TransactionResponse? {
 
         val now = Date()
