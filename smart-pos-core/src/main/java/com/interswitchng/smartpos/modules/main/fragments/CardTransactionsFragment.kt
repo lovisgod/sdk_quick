@@ -15,10 +15,11 @@ import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
-import com.interswitchng.smartpos.modules.main.models.TransactionResultModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
@@ -40,9 +41,10 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
     private var accountType = AccountType.Default
     private var cardType = CardType.None
-    private lateinit var transactionResult: TransactionResultModel
+    private lateinit var transactionResult: TransactionResult
     private var pinOk = false
     private var isCancelled = false
+    private lateinit var transactionType: TransactionType
 
     private lateinit var accountTypeDialog: AccountTypeDialog
     private lateinit var paymentTypeDialog: PaymentTypeDialog
@@ -82,7 +84,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (IswPos.isConfigured()) {
             setTransactionType()
-            HandleClicks()
+            handleClicks()
             observeViewModel()
             cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         } else {
@@ -94,19 +96,27 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         when (paymentModel.type) {
             PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.PRE_AUTHORIZATION)
+                transactionType = TransactionType.Pre_Authorization
             }
 
             PaymentModel.TransactionType.CARD_PURCHASE -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.CARD_PURCHASE)
+                transactionType = TransactionType.Purchase
             }
 
             PaymentModel.TransactionType.COMPLETION -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.COMPLETION)
+                transactionType = TransactionType.Completion
+            }
+
+            PaymentModel.TransactionType.REFUND -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.REFUND)
+                transactionType = TransactionType.Refund
             }
         }
     }
 
-    private fun HandleClicks() {
+    private fun handleClicks() {
 
         // show PaymentTypeDialog and listen for clicks
         showPaymentOptions()
@@ -315,10 +325,11 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 }
 
                 val now = Date()
-                transactionResult = TransactionResultModel(
+                transactionResult = TransactionResult(
                     paymentType = PaymentType.Card,
                     dateTime = DisplayUtils.getIsoString(now),
-                    amount = DisplayUtils.getAmountString(paymentInfo),
+                    amount = paymentModel.formattedAmount,
+                    type = transactionType,
                     authorizationCode = response.authCode,
                     responseMessage = responseMsg,
                     responseCode = response.responseCode,

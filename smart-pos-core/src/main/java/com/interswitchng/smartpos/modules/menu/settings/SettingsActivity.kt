@@ -114,7 +114,7 @@ class SettingsActivity : MenuActivity() {
                 tvTerminalInfoDate.visibility = View.GONE
                // val isKimono = terminalInfo?.isKimono ?: false
                 // trigger download terminal config
-                settingsViewModel.downloadTerminalConfig(terminalID,"",0,true)
+                settingsViewModel.downloadTerminalConfig(terminalID)
             }
         }
     }

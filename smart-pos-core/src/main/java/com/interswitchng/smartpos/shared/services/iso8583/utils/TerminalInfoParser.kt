@@ -11,8 +11,8 @@ internal object TerminalInfoParser {
             internal val len: Int,
             internal val value: String)
 
-
-    fun parse(terminalId: String, ip: String, port: Int, rawData: String, store: KeyValueStore): TerminalInfo? {
+//ip: String, port: Int,
+    fun parse(terminalId: String,  rawData: String, store: KeyValueStore): TerminalInfo? {
 
         val paramatersLists = mutableListOf<MutableList<TerminalData>>()
         var terminalParameters: MutableList<TerminalData> = ArrayList()
@@ -67,8 +67,6 @@ internal object TerminalInfoParser {
                         callHomeTimeInMin = map["07"] as Int,
                         merchantCategoryCode = map["08"] as String,
                         merchantNameAndLocation = map["52"] as String,
-                        serverIp = ip,
-                        serverPort = port,
                         capabilities = TerminalInfo.get(store)?.capabilities
                 )
 

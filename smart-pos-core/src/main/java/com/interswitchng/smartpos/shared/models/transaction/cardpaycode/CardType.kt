@@ -12,5 +12,17 @@ enum class CardType( val code: String) {
     VERVE("Verve"),
     AMERICANEXPRESS("AMEX"),
     CHINAUNIONPAY("CUP"),
-    None("None"),
+    None("None");
+
+
+    override fun toString(): String {
+        return  when {
+            this == MASTER -> "MasterCard"
+            this == VISA -> "Visa Card"
+            this == VERVE -> "Verve Card"
+            this == AMERICANEXPRESS -> "American Express Card"
+            this == CHINAUNIONPAY -> "China Union Pay Card"
+            else -> super.toString()
+        }
+    }
 }

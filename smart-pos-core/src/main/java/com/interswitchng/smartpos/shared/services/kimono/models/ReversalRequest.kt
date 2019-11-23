@@ -33,6 +33,7 @@ internal data class ReversalRequest(
         var keyLabel: String) {
 
 
+
     companion object {
         fun create(purchaseRequest: PurchaseRequest, authId: String?): ReversalRequest {
 

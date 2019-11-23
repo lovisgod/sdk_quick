@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.shared.services.kimono
 
 import android.app.Application
+import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants
@@ -14,31 +15,31 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
+//import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.services.iso8583.utils.NibssIsoMessage
 import com.interswitchng.smartpos.shared.services.kimono.models.*
 import com.interswitchng.smartpos.shared.services.kimono.models.CompletionRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.ReversalRequest
-import com.interswitchng.smartpos.shared.services.kimono.utils.KimonoResponseMessage
-import com.interswitchng.smartpos.shared.services.kimono.utils.KimonoXmlMessage
 import com.interswitchng.smartpos.shared.utilities.Logger
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-internal class KimonoHttpServiceImpl(private val device: POSDevice,
-                                     private val app: Application,
-                                     private val store: KeyValueStore,
+internal class KimonoHttpServiceImpl(private val context: Context, private val device: POSDevice,
+
                                      private val httpService: IKimonoHttpService) : IsoService{
+    override fun downloadTerminalParameters(terminalId: String): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
     val logger by lazy { Logger.with(this.javaClass.name) }
 
 
-    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+    override fun downloadKey(terminalId: String): Boolean {
 
         // load test keys
         val tik = Constants.ISW_DUKPT_IPEK
@@ -98,15 +99,13 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
-            reversePurchase(request, request.stan) // TODO change stan to authId
+          //  initiateReversal(request, request.stan) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
     }
 
 
-
-
-    override fun refund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+    override fun initiateRefund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         // generate purchase request
 
         val request = RefundRequest.create(device.name, terminalInfo, transaction,"")
@@ -180,16 +179,20 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
                 cardPIN = "",
                 cardPAN = pan,
                 cardTrack2 = track2,
-                iccData = iccData,
-                iccString = iccData.iccAsString,
+                //TODO: confirm and uncomment the two lines below
+//                iccData = iccData,
+//                iccString = iccData.iccAsString,
                 stan = stan,
                 accountType = AccountType.Default,
                 amount = paymentInfo.amount,
                 csn = "",
                 src = src,
                 purchaseType = PurchaseType.PayCode,
-                pinKsn = ""
+                icc = ""
         )
+
+
+        //val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
 
         // generate purchase request
@@ -218,7 +221,7 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
         } catch (e: Exception) {
             logger.logErr(e.localizedMessage)
             e.printStackTrace()
-            reversePurchase(request, request.stan) // TODO change stan to authId
+//            initiateReversal(request, request.stan) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
     }
@@ -324,13 +327,12 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
     }
 
 
+    override fun initiateReversal(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+//        val request = ReversalRequest.create(transaction, terminalInfo)
+//
 
 
-
-    fun reversePurchase(txn: PurchaseRequest, authId: String?): TransactionResponse {
-        // create reversal request
-        val request = ReversalRequest.create(txn, authId)
-
+        val request = ReversalRequest.create( PurchaseRequest.create(device.name, terminalInfo, transaction), transaction.stan)
         try {
             // initiate reversal request
             val response = httpService.reversePurchase(request).run()
@@ -355,8 +357,39 @@ internal class KimonoHttpServiceImpl(private val device: POSDevice,
             e.printStackTrace()
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
-
     }
+
+
+//    override  fun initiateReversal(txn: PurchaseRequest, authId: String?): TransactionResponse {
+//        // create reversal request
+//        val request = ReversalRequest.create(txn, authId)
+//
+//        try {
+//            // initiate reversal request
+//            val response = httpService.reversePurchase(request).run()
+//            val data = response.body()
+//
+//            return if (!response.isSuccessful || data == null) {
+//                TransactionResponse(
+//                        responseCode = IsoUtils.TIMEOUT_CODE,
+//                        authCode = "",
+//                        stan = "",
+//                        scripts = "")
+//            } else {
+//                TransactionResponse(
+//                        responseCode = data.responseCode,
+//                        stan = data.stan,
+//                        authCode = data.authCode,
+//                        scripts = "")
+//            }
+//
+//        } catch (e: Exception) {
+//            logger.logErr(e.localizedMessage)
+//            e.printStackTrace()
+//            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+//        }
+
+//    }
 
 
 

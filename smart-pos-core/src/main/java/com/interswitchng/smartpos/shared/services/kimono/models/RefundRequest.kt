@@ -149,6 +149,7 @@ internal class RefundTerminalInformation {
 internal class RefundCardData {
     @field:Element(name = "cardSequenceNumber", required = false)
     var cardSequenceNumber: String = ""
+
     @field:Element(name = "emvData", required = false)
     var emvData: IccData? = null
     @field:Element(name = "mifareData", required = false)
@@ -161,7 +162,14 @@ internal class RefundCardData {
     companion object {
         fun create(transactionInfo: TransactionInfo) = RefundCardData().apply {
             cardSequenceNumber = transactionInfo.csn
-            emvData = transactionInfo.iccData
+
+
+
+            //TODO: reenable to iccdata
+//            emvData = transactionInfo.iccData
+
+
+
             track2 = Track2().apply {
                 pan = transactionInfo.cardPAN
                 expiryMonth = transactionInfo.cardExpiry.takeLast(2)
@@ -198,7 +206,8 @@ internal class RefundPinData {
 
     companion object {
         fun create(txnInfo: TransactionInfo) = RefundPinData().apply {
-            ksn = txnInfo.pinKsn
+            //ToDo: re enable the pinKsn
+//            ksn = txnInfo.pinKsn
             pinBlock = txnInfo.cardPIN
 
         }

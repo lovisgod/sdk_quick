@@ -1,13 +1,12 @@
 package com.interswitchng.smartpos.shared.services.kimono.models
 
-import com.interswitchng.smartpos.BuildConfig
+//import com.interswitchng.smartpos.shared.services.DateUtils
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.shared.models.core.Environment
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
-//import com.interswitchng.smartpos.shared.services.DateUtils
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 import java.util.*
@@ -142,7 +141,8 @@ internal class CardData {
     companion object {
         fun create(transactionInfo: TransactionInfo) = CardData().apply {
             cardSequenceNumber = transactionInfo.csn
-            emvData = transactionInfo.iccData
+            //ToDO: reenable
+//            emvData = transactionInfo.iccData
             track2 = Track2().apply {
                 pan = transactionInfo.cardPAN
                 expiryMonth = transactionInfo.cardExpiry.takeLast(2)
@@ -195,7 +195,8 @@ internal class PinData {
 
     companion object {
         fun create(txnInfo: TransactionInfo) = PinData().apply {
-            ksn = txnInfo.pinKsn
+            //TODO, Get pinKs
+//            ksn = txnInfo.pinKsn
             pinBlock = txnInfo.cardPIN
         }
 

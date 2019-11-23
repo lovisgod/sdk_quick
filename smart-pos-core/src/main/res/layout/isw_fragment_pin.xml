@@ -54,7 +54,7 @@
         android:id="@+id/isw_merchant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/isw_enter_pin"
         android:textColor="@android:color/white"
         android:textSize="15sp"

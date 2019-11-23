@@ -55,7 +55,6 @@ internal class ReservationRequest {
                 stan = transactionInfo.stan
                 pinData = if (hasPin) PinData.create(transactionInfo) else null
                 keyLabel = if (iswConfig.environment == Environment.Test) "000006" else "000002"
-
                 tmsConfiguredTerminalLocation=""
             }
         }

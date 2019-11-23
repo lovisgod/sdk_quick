@@ -18,9 +18,9 @@ internal interface IsoService {
      * @param terminalId  a string representing the configured terminal id
      * @return     boolean expression indicating the success or failure status of the key exchange
      */
-    fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
-        return false
-    }
+    fun downloadKey(terminalId: String): Boolean
+
+
     /**
      * Uses the provided terminalId to download the terminal information, like name and location.
      *
@@ -28,9 +28,8 @@ internal interface IsoService {
      * @return  boolean expression indicating the success or failure of the terminal info download
      * @see TerminalInfo
      */
-    fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
-        return false
-    }
+    fun downloadTerminalParameters(terminalId: String): Boolean
+
 
     /**
      * Initiates a card transaction using the provided terminal and transaction info, and returns the
@@ -80,21 +79,29 @@ internal interface IsoService {
      * transaction response provided by EPMS
      *
      * @param terminalInfo  the necessary information that identifies the current POS terminal
-     * @param transaction  the purchase information required to perform the transaction
+     * @param transaction  the information required to perform the transaction
      * @return   response status indicating transaction success or failure
      */
     fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
-
     /**
-     * Initiates a refund using the provided terminal and transaction info, and returns the
+     * Initiates a reversal transaction using the provided terminal and transaction info, and returns the
      * transaction response provided by EPMS
      *
      * @param terminalInfo  the necessary information that identifies the current POS terminal
-     * @param transaction  the purchase information required to perform the transaction
+     * @param transaction  the information required to perform the transaction
      * @return   response status indicating transaction success or failure
      */
-    fun refund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+    fun initiateReversal(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
 
+    /**
+     * Initiates a refund transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+    fun initiateRefund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 }

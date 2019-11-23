@@ -21,14 +21,14 @@ internal class SettingsViewModel(private val isoService: IsoService): RootViewMo
 
     fun downloadKeys(terminalId: String, ip: String, port: Int, isKimono: Boolean) {
         uiScope.launch {
-            val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId, ip, port) }
+            val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId) }
             _keysDownloadSuccess.value = isSuccessful
         }
     }
 
-    fun downloadTerminalConfig(terminalId: String, ip: String, port: Int, isKimono: Boolean) {
+    fun downloadTerminalConfig(terminalId: String) {
         uiScope.launch {
-            val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId, ip, port) }
+            val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId) }
             _configDownloadSuccess.value = isSuccessful
         }
     }
