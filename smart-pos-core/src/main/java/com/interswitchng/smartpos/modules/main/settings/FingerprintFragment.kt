@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import kotlinx.android.synthetic.main.isw_settings_account_fingerprint.*
 import kotlinx.android.synthetic.main.isw_settings_home.*
+import kotlinx.android.synthetic.main.isw_settings_home.isw_account_label
 
 class FingerprintFragment : BaseFragment(TAG) {
 
@@ -28,9 +30,12 @@ class FingerprintFragment : BaseFragment(TAG) {
     }
 
     private fun handleClicks() {
-
         isw_account_label.setOnClickListener {
             navigateUp()
+        }
+        isw_registered_fingerprint_container.setOnClickListener {
+            val direction = FingerprintFragmentDirections.iswGotoSettingsRegisteredFingerprint()
+            navigate(direction)
         }
     }
 

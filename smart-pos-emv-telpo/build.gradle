@@ -40,16 +40,29 @@ android {
         targetCompatibility javaVersion
         sourceCompatibility javaVersion
     }
+
+    configurations {
+        all*.exclude group: "com.google.zxing"
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '.so'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation "org.koin:koin-core:$koin_version"
+    // kotlin coroutine libs
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+    implementation files('libs/telpo_api.jar')
+    implementation files('libs/SmartCardLib.jar')
+    implementation files('libs/emv3.2.jar')
+    implementation files('libs/finger.jar')
+    implementation project(":smart-pos-core")
 }
 
 // maven-installer

@@ -2,10 +2,12 @@ package com.interswitchng.smartpos.di
 
 import com.interswitchng.smartpos.modules.authentication.AuthenticationViewModel
 import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.main.viewmodels.FingerprintViewModel
 import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeViewModel
 import com.interswitchng.smartpos.modules.menu.report.ReportViewModel
 import com.interswitchng.smartpos.modules.menu.settings.SettingsViewModel
+import com.interswitchng.smartpos.modules.setup.SetupFragmentViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.UssdViewModel
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
@@ -38,6 +40,9 @@ internal val viewModels = module {
 
 
 
+    viewModel { SetupFragmentViewModel(get(), get()) }
+
+//    viewModel { CardViewModel(get(), get()) }
     viewModel {
         val store: KeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
@@ -47,6 +52,8 @@ internal val viewModels = module {
         CardViewModel(get(), isoService)
     }
 
+
+    viewModel { FingerprintViewModel(get(), get()) }
 
     viewModel { TransactionResultViewModel(get(), get(), get()) }
 

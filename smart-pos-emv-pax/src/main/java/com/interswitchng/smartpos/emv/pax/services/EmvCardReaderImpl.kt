@@ -21,7 +21,6 @@ import com.pax.jemv.clcommon.RetCode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.sendBlocking
-import kotlin.concurrent.thread
 import kotlin.coroutines.coroutineContext
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
@@ -106,6 +105,10 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             isCancelled = true
             ped.setInputPinListener(null) // remove the pin pad
         }
+    }
+
+    override fun getPan(): String? {
+        return emvImpl.getPan()
     }
 
     override fun getTransactionInfo(): EmvData? {

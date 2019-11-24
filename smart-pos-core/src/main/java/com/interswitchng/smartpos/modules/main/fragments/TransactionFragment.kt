@@ -39,9 +39,13 @@ class TransactionFragment: BaseFragment(TAG) {
                         val payment = payment {
                             type = PaymentModel.TransactionType.CARD_NOT_PRESENT
                         }
-                        val dialog = AdminAccessDialog {
-                            val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
-                            navigate(direction)
+                        val dialog = AdminAccessDialog { validated ->
+                            if (validated) {
+                                val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
+                                navigate(direction)
+                            } else {
+                                navigateUp()
+                            }
                         }
                         dialog.show(childFragmentManager, AdminAccessDialog.TAG)
                     }

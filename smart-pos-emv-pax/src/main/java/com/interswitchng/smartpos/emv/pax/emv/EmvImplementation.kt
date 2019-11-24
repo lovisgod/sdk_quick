@@ -62,7 +62,6 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         this.amount = amount
     }
 
-
     private fun addCAPKIntoEmvLib(capks: List<EMV_CAPK>): Int {
 
         var ret: Int

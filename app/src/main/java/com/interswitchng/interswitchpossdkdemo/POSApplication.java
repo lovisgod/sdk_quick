@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
 import androidx.multidex.MultiDex;
 
+import com.interswitch.smartpos.emv.telpo.TelpoPOSDeviceImpl;
+import com.interswitch.smartpos.emv.telpo.fingerprint.TelpoPOSFingerprintImpl;
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
@@ -16,6 +18,7 @@ import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
 import com.interswitchng.smartpos.shared.models.core.Environment;
 import com.interswitchng.smartpos.shared.models.core.IswLocal;
+import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.shared.models.core.PurchaseConfig;
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
@@ -29,6 +32,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.usb.UsbConfig;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -54,6 +58,7 @@ public class POSApplication extends Application   {
 
     private void configureTerminal() {
         POSDevice device;
+//        POSFingerprint fingerprint;
 
         if (BuildConfig.MOCK) {
             device = new POSDevice() {
@@ -109,6 +114,12 @@ public class POSApplication extends Application   {
                         public EmvData getTransactionInfo() {
                             return null;
                         }
+
+                        @Nullable
+                        @Override
+                        public String getPan() {
+                            return null;
+                        }
                     };
                 }
             };
@@ -116,9 +127,14 @@ public class POSApplication extends Application   {
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
+//            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
+////
+//            device = service;
+
             POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
             device = service;
+//            fingerprint = new TelpoPOSFingerprintImpl();
         }
 
         String clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D";
@@ -140,6 +156,8 @@ public class POSApplication extends Application   {
 //        config.with(new UsbConfig());
 
         // setup terminal
+//        IswPos.setupTerminal(this, device, fingerprint, config);
+
         IswPos.setupTerminal(this, device, config,false);
     }
 
