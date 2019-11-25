@@ -13,7 +13,7 @@ object Constants {
     internal const val BANKS_END_POINT = "till/short-codes/1"
     internal const val AUTH_END_POINT = "oauth/token"
 
-    const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
+    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
     // EMAIL
     internal const val EMAIL_END_POINT = "mail/send"
     internal const val EMAIL_TEMPLATE_ID = "d-c33c9a651cea40dd9b0ee4615593dcb4"

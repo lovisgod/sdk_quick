@@ -24,6 +24,8 @@ import com.interswitchng.smartpos.shared.services.kimono.models.CompletionReques
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.ReversalRequest
 import com.interswitchng.smartpos.shared.utilities.Logger
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -32,7 +34,7 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
 
                                      private val httpService: IKimonoHttpService) : IsoService{
     override fun downloadTerminalParameters(terminalId: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       return true;
     }
 
 
@@ -66,7 +68,7 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
         return true
     }
 
-    override fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+    override  fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         // generate purchase request
         val request = PurchaseRequest.create(device.name, terminalInfo, transaction)
         request.pinData?.apply {
@@ -74,25 +76,41 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
             ksn = ksn.substring(4)
         }
 
-        try {
-            val response = httpService.makePurchase(request).run()
-            val data = response.body()
 
-            return if (!response.isSuccessful || data == null) {
+        val body = RequestBody.create(MediaType.parse("text/xml"), "<help></help>")
+
+
+        try {
+            val responseBody = httpService.makePurchase(body).run()
+
+//           val bodyString = responseBody.body()?.toString()
+//            val data = responseBody.body()?.contentType()
+//            val datalen = responseBody.body()?.contentLength()
+//            var x=responseBody.toString()
+//            var x2=data.toString()+ responseBody.raw().toString()
+//            var x3=responseBody.message()+ responseBody.raw().message()
+//            var x4=responseBody.code().toString() + responseBody.raw().code()
+//
+//            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+
+
+
+            return if (!responseBody.isSuccessful || data == null) {
                 TransactionResponse(
-                        responseCode = response.code().toString(),
+                        responseCode = responseBody.code().toString(),
                         authCode = "",
                         stan = "",
                         scripts = "",
-                        responseDescription = response.message()
+                        responseDescription = responseBody.message()
                 )
             } else {
                 TransactionResponse(
-                        responseCode = data.responseCode,
-                        stan = data.stan,
-                        authCode = data.authCode,
+                        responseCode =responseBody.code().toString(),//data.responseCode,
+                        stan = "",//data.stan,
+                        authCode ="",// data.authCode,
                         scripts = "",
-                        responseDescription = data.description
+
+                        responseDescription = responseBody.message() //data.description
                 )
             }
 
@@ -199,7 +217,9 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
         val request = PurchaseRequest.create(device.name, terminalInfo, transaction)
 
         try {
-            val response = httpService.makePurchase(request).run()
+            val body = RequestBody.create(MediaType.parse("text/xml"), "<help><\\help>")
+
+            val response = httpService.makePurchase(body).run()
             val data = response.body()
 
             return if (!response.isSuccessful || data == null) {
@@ -211,9 +231,9 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
                 )
             } else {
                 TransactionResponse(
-                        responseCode = data.responseCode,
-                        stan = data.stan,
-                        authCode = data.authCode,
+                        responseCode = "",//data.responseCode,
+                        stan = "",//data.stan,
+                        authCode = "",//data.authCode,
                         scripts = ""
                 )
             }

@@ -96,6 +96,8 @@ dependencies {
 
     // retrofit http library
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+
     // retrofit gson converter
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 //    // xml converter

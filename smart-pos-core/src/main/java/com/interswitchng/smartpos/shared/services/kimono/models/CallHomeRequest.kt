@@ -11,7 +11,7 @@ import org.simpleframework.xml.Root
 import java.util.*
 
 @Root(name = "kmsg" , strict = false)
-internal class CallHomeRequest() {
+internal  class CallHomeRequest() {
     @Element(name = "terminfo", required = false)
      var termInfo:TermInfoModel ? =null
 
@@ -32,7 +32,7 @@ internal class CallHomeRequest() {
 }
 
 
-internal class TermInfoModel {
+internal  class TermInfoModel {
 
     @Element(name = "mid", required = false)
     var mid = ""
