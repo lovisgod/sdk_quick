@@ -2,26 +2,18 @@ package com.interswitchng.smartpos.modules.main.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
-import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.viewmodels.FingerprintViewModel
 import com.interswitchng.smartpos.shared.activities.BaseBottomSheetDialog
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
 import com.interswitchng.smartpos.shared.utilities.toast
-import kotlinx.android.synthetic.main.isw_activity_card.*
-import kotlinx.android.synthetic.main.isw_fragment_card_payment.*
-import kotlinx.android.synthetic.main.isw_fragment_pin.*
-import kotlinx.android.synthetic.main.isw_fragment_pin.cardPin
-import kotlinx.android.synthetic.main.isw_sheet_layout_admin_access.*
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -81,7 +73,7 @@ class AdminAccessDialog constructor(
 
             // when card is detected
             is EmvMessage.CardDetected -> {
-                cardViewModel.readCard()
+                cardViewModel.readCardPan()
             }
 
             // when card should be inserted

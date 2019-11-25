@@ -5,6 +5,7 @@ import android.view.View
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.dialogs.AdminAccessDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MakePaymentDialog
+import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.payment
 import com.interswitchng.smartpos.shared.activities.BaseFragment
@@ -39,7 +40,7 @@ class TransactionFragment: BaseFragment(TAG) {
                         val payment = payment {
                             type = PaymentModel.TransactionType.CARD_NOT_PRESENT
                         }
-                        val dialog = AdminAccessDialog { validated ->
+                        val dialog = MerchantCardDialog { validated ->
                             if (validated) {
                                 val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
                                 navigate(direction)

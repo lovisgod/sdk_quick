@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/isw_layout_admin_access"
+    <include layout="@layout/isw_sheet_layout_admin_fingerprint"
         android:id="@+id/isw_admin_access"
         android:visibility="visible"/>
 

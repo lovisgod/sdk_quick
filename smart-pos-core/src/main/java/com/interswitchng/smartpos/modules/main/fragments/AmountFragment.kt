@@ -2,7 +2,6 @@ package com.interswitchng.smartpos.modules.main.fragments
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
@@ -125,8 +124,6 @@ class AmountFragment : BaseFragment(TAG) {
     private fun displayInvalidAmountToast() {
         toast("Enter a valid amount")
     }
-
-    private fun toast(msg: String) = Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
 
     private fun initializeAmount() {
         amount = DEFAULT_AMOUNT

@@ -2,6 +2,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,7 +22,7 @@
 
     <TextView
         android:id="@+id/isw_textview11"
-        android:layout_width="0dp"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
@@ -40,66 +41,53 @@
         android:id="@+id/isw_textview2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/isw_place_fingerprint_on_the_scanner_or_use_card_to_proceed"
         android:textColor="@android:color/black"
-        android:text="Insert supervisors card to\nproceed or..."
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/isw_textinputlayout2"
+        app:layout_constraintBottom_toTopOf="@+id/isw_link_fingerprint"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_textview11" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/isw_textinputlayout2"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-        android:layout_width="0dp"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_link_fingerprint"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="150dp"
         android:layout_height="?android:attr/actionBarSize"
-        android:hint="Enter Pin"
-        app:boxBackgroundColor="#F4F4F4"
-        app:boxStrokeColor="@color/iswColorPrimary"
-        android:layout_marginTop="70dp"
-        app:endIconMode="clear_text"
-        app:hintTextColor="@color/iswColorPrimary"
-        app:boxStrokeWidthFocused="2dp"
+        android:layout_marginTop="16dp"
+        android:text="Use Card"
         app:layout_constraintBottom_toTopOf="@+id/isw_admin_fingerprint"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_textview2">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="start"
-            android:inputType="numberPassword"
-            android:textColor="@android:color/black"
-            android:textSize="15sp" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview2"
+        app:strokeColor="@color/iswColorPrimary" />
 
     <ImageView
         android:id="@+id/isw_admin_fingerprint"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="64dp"
         android:background="@drawable/ic_fingerprint_not_detected"
         app:layout_constraintBottom_toTopOf="@+id/isw_textview12"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_textinputlayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/isw_link_fingerprint" />
 
     <TextView
         android:id="@+id/isw_textview12"
-        android:layout_width="0dp"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="Fingerprint for SmartPOS"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toTopOf="@+id/isw_textview13"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
@@ -108,13 +96,12 @@
 
     <TextView
         android:id="@+id/isw_textview13"
-        android:layout_width="0dp"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:textColor="#8097B1"
         android:text="Confirm your fingerprint now"
+        android:textColor="#8097B1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"

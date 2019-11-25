@@ -80,7 +80,7 @@
         android:id="@+id/transactionResponseIcon"
         android:layout_width="100dp"
         android:layout_height="0dp"
-        android:src="@drawable/isw_failure"
+        android:src="@drawable/isw_round_done_padded"
         app:layout_constraintBottom_toTopOf="@+id/isw_guideline4"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"

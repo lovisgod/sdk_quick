@@ -174,41 +174,15 @@
                 android:layout_marginBottom="@dimen/isw_content_padding"
                 android:background="@color/iswColorSecondaryIcon" />
 
-
-
-
             <!-- SDK configuration -->
 
-            <TextView
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/isw_content_margin"
-                android:layout_marginEnd="@dimen/isw_content_margin"
-                android:layout_marginTop="@dimen/isw_content_margin"
-                android:layout_marginBottom="@dimen/isw_content_small_margin"
-                android:text="@string/isw_sdk_config"
-                android:textSize="12sp"
-                android:textColor="@color/iswColorPrimary"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/btnDownloadKeys"
-                app:layout_constraintStart_toStartOf="parent"
-
-                android:visibility="gone"
-
-                />
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/isw_content_padding"
-                android:layout_marginEnd="@dimen/isw_content_padding"
-
-                android:visibility="gone"
-                >
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_gravity="center_horizontal"
+                style="@style/Widget.MaterialComponents.Button"
+                android:id="@+id/isw_keys_next"
+                android:text="@string/next"/>
 
         </LinearLayout>
 

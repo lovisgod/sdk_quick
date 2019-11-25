@@ -52,6 +52,8 @@ abstract class BaseFragment (fragmentName: String) : Fragment() {
         findNavController().navigate(direction)
     }
 
+    protected fun toast (message: String) = requireContext().toast(message)
+
     protected fun navigateUp() = findNavController().navigateUp()
 
     protected fun navigate(directionId: Int) {

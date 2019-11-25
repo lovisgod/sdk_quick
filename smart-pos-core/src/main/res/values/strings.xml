@@ -97,6 +97,8 @@
     <string name="isw_sdk_config">SDK Config</string>
     <string name="isw_smartpos">Smart<b>POS</b></string>
     <string name="isw_get_started">GET STARTED</string>
+    <string name="isw_skip">SKIP</string>
+    <string name="isw_skip_fingerprint">SKIP FINGERPRINT</string>
     <string name="isw_link_fingerprint">LINK FINGERPRINT</string>
     <string name="isw_transaction">Transaction</string>
     <string name="isw_report">Report</string>
@@ -136,7 +138,6 @@
     <string name="isw_pay_code">Pay Code</string>
     <string name="isw_qr_code">QR Code</string>
     <string name="isw_card_payment">Card Payment</string>
-    <string name="isw_continue">CONTINUE</string>
     <string name="isw_make_payment">Make Payment</string>
     <string name="isw_default_account">Default Account</string>
     <string name="isw_savings_account">Savings Account</string>
@@ -172,4 +173,13 @@
     <string name="isw_card_detected">Card Detected!</string>
     <string name="isw_loading_card_details">Loading Card Details…</string>
     <string name="isw_phone_number">Phone Number</string>
+    <string name="isw_card_pan">Card PAN</string>
+    <string name="isw_place_fingerprint_on_the_scanner_or_use_card_to_proceed">Place fingerprint on the scanner\nor use card to proceed…</string>
+    <string name="next">NEXT</string>
+    <string name="isw_continue">CONTINUE</string>
+    <string name="isw_merchant_authorization_setup_successful">Merchant Authorization\nSetup Successful</string>
+    <string name="isw_capture">Capture</string>
+    <string name="isw_fingerprint_recognised">Fingerprint recognised</string>
+    <string name="isw_place_your_fingerprint_on_the_sensor_and_press_capture">Place your fingerprint on the sensor\nand press capture</string>
+    <string name="isw_fingerprint_for_smartpos">Fingerprint for SmartPOS</string>
 </resources>

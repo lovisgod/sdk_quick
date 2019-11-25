@@ -3,16 +3,20 @@ package com.interswitch.smartpos.emv.telpo.fingerprint
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import com.interswitchng.smartpos.shared.models.fingerprint.FingerprintResult
 import com.interswitch.smartpos.emv.telpo.utils.RawToBitMap
 import com.interswitch.smartpos.emv.telpo.utils.TelpoFingerPrintConstants
 import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint
 import com.interswitchng.smartpos.shared.utilities.FileUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.telpo.usb.finger.Finger
+import kotlinx.coroutines.channels.Channel
 
 class TelpoPOSFingerprintImpl : POSFingerprint {
 
     private val logger by lazy { Logger.with("TelpoPOSFingerprintImpl") }
+
+    private lateinit var channel: Channel<FingerprintResult>
 
     private var fingerPrintImageData = ByteArray(250 * 360)
     private val fingerPrintISO1 = ByteArray(890)
@@ -29,7 +33,26 @@ class TelpoPOSFingerprintImpl : POSFingerprint {
         Finger.initialize(byte)
     }
 
-    override fun createFinger(context: Context, phoneNumber: String): Boolean {
+    override suspend fun createFinger(
+        context: Context,
+        phoneNumber: String,
+        channel: Channel<FingerprintResult>
+    ) {
+        val startTIme = System.currentTimeMillis()
+
+        while (true) {
+            val result = getFingerprint(context, phoneNumber)
+            if (result) break
+            if (System.currentTimeMillis() - startTIme >= 10_000) {
+                channel.send(FingerprintResult.Timeout)
+                return
+            }
+        }
+
+        channel.send(FingerprintResult.Success)
+    }
+
+    private fun getFingerprint(context: Context, phoneNumber: String): Boolean {
         errorMessage = ""
         val data = ByteArray(250 * 360)
         val fingerprintISO = ByteArray(890)
@@ -108,5 +131,9 @@ class TelpoPOSFingerprintImpl : POSFingerprint {
 
     override fun hasFingerprint(context: Context, phoneNumber: String): Boolean {
         return FileUtils(context).getFingerPrintFile(phoneNumber).isNotEmpty()
+    }
+
+    override fun close() {
+        Finger.terminate()
     }
 }
