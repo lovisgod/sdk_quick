@@ -206,6 +206,7 @@ internal class IsoServiceImpl(
 
             println("Called  --->Purchase code " )
 
+
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
@@ -270,6 +271,7 @@ internal class IsoServiceImpl(
             socket.close()
 
 
+
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
@@ -330,7 +332,6 @@ internal class IsoServiceImpl(
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
                 .setValue(55, transaction.icc)
-                .setValue(100, "8888050")
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -462,7 +463,6 @@ internal class IsoServiceImpl(
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
-            println("Called reversal ---> ${responseMsg.message.getObjectValue<String>(39)}")
 
             // return response
             return responseMsg.message.let {
