@@ -66,6 +66,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+
     fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo) {
         uiScope.launch {
             //  start card transaction in IO thread
@@ -151,12 +152,15 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+
     override fun onCleared() {
         super.onCleared()
 
         // cancel any ongoing transaction
         emv.cancelTransaction()
     }
+
+
 
     enum class OnlineProcessResult {
         NO_EMV,

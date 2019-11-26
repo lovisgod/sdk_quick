@@ -50,7 +50,7 @@ class IsoServiceTest {
         val terminalId = "2076AK21" //"20390007"
         val result = isoService.downloadKey(terminalId)
 
-        val paramResult = isoService.downloadTerminalParameters(terminalId)
+        val paramResult = isoService.downloadTerminalParameters(terminalId, ip, port)
 
         assertTrue(result)
         assertTrue(paramResult)

@@ -108,7 +108,7 @@ class IswPos private constructor(private val app: Application, internal val devi
          * This method is responsible for setting up the terminal for the current application
          */
         @JvmStatic
-        fun setupTerminal(app: Application, device: POSDevice, config: POSConfig) {
+        fun setupTerminal(app: Application, device: POSDevice, config: POSConfig, withRealm: Boolean) {
             if (!isSetup) {
 
                 // prevent multiple threads from creating iswPos
@@ -131,6 +131,9 @@ class IswPos private constructor(private val app: Application, internal val devi
 
                 // setup usb connector if exists
                 config.usbConnector?.configure(app)
+
+                // setup monarchy and realmdb
+                if (withRealm) Monarchy.init(app)
 
                 // set setup flag
                 isSetup = true

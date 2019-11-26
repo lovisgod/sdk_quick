@@ -6,11 +6,11 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_PIN_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_SESSION_KEY
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
-import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -34,7 +34,18 @@ internal class IsoServiceImpl(
         private val store: KeyValueStore,
         private val socket: IsoSocket) : IsoService {
 
+
+
+    override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
+        //TODO implememnt call home functionality
+
+        return  false;
+    }
+
+
     private val logger by lazy { Logger.with("IsoServiceImpl") }
+
+
     private val messageFactory by lazy {
         try {
 
@@ -181,8 +192,13 @@ internal class IsoServiceImpl(
             val terminalDataString = responseMessage.message.getField<String>(62).value
             logger.log("Terminal Data String => $terminalDataString")
 
+            //TODO
+
+
+
+
             // parse and save terminal info
-            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString)?.also { it.persist(store) }
+            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also { it.persist(store) }
             logger.log("Terminal Data => $terminalData")
 
             return true

@@ -10,7 +10,11 @@ import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.emv.pax.emv.DeviceImplNeptune
+import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.pax.dal.IDAL
+import com.pax.dal.entity.ECheckMode
+import com.pax.dal.entity.EPedKeyType
+import com.pax.dal.entity.EPedType
 import com.pax.jemv.device.DeviceManager
 import com.pax.neptunelite.api.NeptuneLiteUser
 
@@ -18,7 +22,8 @@ import com.pax.neptunelite.api.NeptuneLiteUser
 /**
  * This class provides Implemenation for the [POSDevice]
  */
-class POSDeviceImpl private constructor(override val printer: DevicePrinter, private val factory: () -> EmvCardReader) : POSDevice {
+class POSDeviceImpl private constructor(override val printer: DevicePrinter,
+                                        private val factory: () -> EmvCardReader) : POSDevice {
 
 
     init {
@@ -30,8 +35,33 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter, pri
         System.loadLibrary("F_PUBLIC_LIB_PayDroid")
     }
 
+    private val ped by lazy { dal.getPed(EPedType.INTERNAL) }
+
+    override val name get() = DEVICE_NAME
 
     override fun getEmvCardReader(): EmvCardReader = factory()
+
+    override fun loadInitialKey(initialKey: String, ksn: String) {
+        val keyValue = EmvUtils.str2Bcd(initialKey)
+        val ksnValue = EmvUtils.str2Bcd(ksn)
+        ped.writeTIK(INDEX_TIK, 0.toByte(), keyValue, ksnValue, ECheckMode.KCV_NONE, null)
+    }
+
+    override fun loadMasterKey(masterKey: String) {
+        val masterKeyValue = EmvUtils.str2Bcd(masterKey)
+        ped.writeKey(EPedKeyType.TLK, 0.toByte(), EPedKeyType.TMK, INDEX_TMK, masterKeyValue, ECheckMode.KCV_NONE, null)
+    }
+
+    override fun loadPinKey(pinKey: String) {
+        val checkMode = ECheckMode.KCV_NONE
+        val key = EmvUtils.str2Bcd(pinKey)
+        ped.writeKey(EPedKeyType.TMK, INDEX_TMK, EPedKeyType.TPK, INDEX_TPK, key, checkMode, null)
+
+    }
+
+
+
+
 
     fun setCompanyLogo(bitmap: Bitmap) {
         companyLogo = bitmap
@@ -41,6 +71,12 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter, pri
 
 
     companion object {
+
+        internal const val INDEX_TIK: Byte = 0x01
+        internal const val INDEX_TMK: Byte = 0x01
+        internal const val INDEX_TPK: Byte = 0x03
+        internal const val DEVICE_NAME: String = "PAX"
+        private var isSetup = false
 
         internal lateinit var companyLogo: Bitmap private set
 
@@ -77,7 +113,7 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter, pri
         lateinit var dal: IDAL
             private set
 
-        private var isSetup = false
+//        private var isSetup = false
 
         private fun setupDevice(context: Context) {
             if (!isSetup) {

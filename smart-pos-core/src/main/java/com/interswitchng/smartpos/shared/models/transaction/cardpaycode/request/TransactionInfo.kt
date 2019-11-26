@@ -12,9 +12,9 @@ internal data class TransactionInfo(
         val cardPIN: String,
         val cardPAN: String,
         val cardTrack2: String,
-        val icc: String,
-        val src: String, // service restriction code
-        val csn: String, // card sequence number
+        var icc: String,
+        var src: String, // service restriction code
+        var csn: String, // card sequence number
         val amount: Int,
         val stan: String,
         val purchaseType: PurchaseType,

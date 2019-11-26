@@ -87,8 +87,10 @@ class SettingsActivity : MenuActivity() {
                 // save terminal id
                 store.saveString(KEY_TERMINAL_ID, terminalID)
 
+
+                //TODO get the IP and Port for ISW
                 // trigger download keys
-                settingsViewModel.downloadKeys(terminalID)
+                settingsViewModel.downloadKeys(terminalID,"",0,true)
             }
         }
 
@@ -110,7 +112,7 @@ class SettingsActivity : MenuActivity() {
                 progressTerminalDownload.visibility = View.VISIBLE
                 // hide download date
                 tvTerminalInfoDate.visibility = View.GONE
-
+               // val isKimono = terminalInfo?.isKimono ?: false
                 // trigger download terminal config
                 settingsViewModel.downloadTerminalConfig(terminalID)
             }
