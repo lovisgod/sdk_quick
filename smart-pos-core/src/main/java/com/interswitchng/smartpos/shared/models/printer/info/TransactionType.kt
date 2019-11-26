@@ -1,5 +1,5 @@
 package com.interswitchng.smartpos.shared.models.printer.info
 
-internal enum class TransactionType {
-    Purchase,
+enum class TransactionType {
+    Purchase, Pre_Authorization, Completion, Refund
 }

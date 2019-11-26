@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.services.iso8583.utils
 
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import java.util.ArrayList
 
@@ -10,8 +11,8 @@ internal object TerminalInfoParser {
             internal val len: Int,
             internal val value: String)
 
-
-    fun parse(terminalId: String, rawData: String): TerminalInfo? {
+//ip: String, port: Int,
+    fun parse(terminalId: String,  rawData: String, store: KeyValueStore): TerminalInfo? {
 
         val paramatersLists = mutableListOf<MutableList<TerminalData>>()
         var terminalParameters: MutableList<TerminalData> = ArrayList()
@@ -65,7 +66,8 @@ internal object TerminalInfoParser {
                         serverTimeoutInSec = map["04"] as Int,
                         callHomeTimeInMin = map["07"] as Int,
                         merchantCategoryCode = map["08"] as String,
-                        merchantNameAndLocation = map["52"] as String
+                        merchantNameAndLocation = map["52"] as String,
+                        capabilities = TerminalInfo.get(store)?.capabilities
                 )
 
                 if (terminalInfo.countryCode.length >= 4) {

@@ -27,14 +27,14 @@ class FingerprintBottomDialog constructor(
             it?.let(::handleFingerprintResult)
         })
         //1AC10B
-        fingerprintViewModel.setup(sheetContext)
-        fingerprintViewModel.createFingerprint()
+        fingerprintViewModel.createFingerprint(sheetContext)
     }
 
     private fun handleFingerprintResult(result: Fingerprint) {
         when (result) {
             is Fingerprint.Success -> {
                 dismiss()
+                responseListener.invoke(true)
             }
             is Fingerprint.Detected -> {
                 isw_textview13.apply {

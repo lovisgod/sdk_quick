@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
@@ -38,8 +39,19 @@ internal interface IsoService {
      * @param transaction  the purchase information required to perform the transaction
      * @return   response status indicating transaction success or failure
      */
-    fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+      fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
+
+
+    /**
+     * Polls the server at intervals to show that the terminal is active, and returns the
+     * response body
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param pos  the Pos Information
+     * @return   response status indicating transaction success or failure
+     */
+    suspend fun callHome(terminalInfo: TerminalInfo): Boolean
 
     /**
      * Initiates a paycode transaction using the provided code, terminal and payment info, and returns
@@ -67,9 +79,29 @@ internal interface IsoService {
      * transaction response provided by EPMS
      *
      * @param terminalInfo  the necessary information that identifies the current POS terminal
-     * @param transaction  the purchase information required to perform the transaction
+     * @param transaction  the information required to perform the transaction
      * @return   response status indicating transaction success or failure
      */
     fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
+    /**
+     * Initiates a reversal transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+    fun initiateReversal(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+
+
+    /**
+     * Initiates a refund transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+    fun initiateRefund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 }

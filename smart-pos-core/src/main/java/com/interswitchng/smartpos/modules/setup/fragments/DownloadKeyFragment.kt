@@ -87,7 +87,7 @@ class DownloadKeyFragment : BaseFragment(TAG) {
                 store.saveString(SettingsActivity.KEY_TERMINAL_ID, terminalID)
 
                 // trigger download keys
-                settingsViewModel.downloadKeys(terminalID)
+                settingsViewModel.downloadKeys(terminalID,"",0,true)
             }
         }
 

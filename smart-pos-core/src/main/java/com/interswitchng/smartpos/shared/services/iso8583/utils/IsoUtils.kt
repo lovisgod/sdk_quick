@@ -67,6 +67,40 @@ object IsoUtils {
         return getIsoResult(code)?.second
     }
 
+
+
+    internal fun generatePan(code: String): String {
+        val bin = "506179"
+        var binAndCode = "$bin$code"
+        val remainder = 12 - code.length
+        // pad if less than 12
+        if (remainder > 0)
+            binAndCode = "$binAndCode${"0".repeat(remainder)}"
+
+        var nSum = 0
+        var alternate = true
+        for (i in binAndCode.length - 1 downTo 0) {
+
+            var d = binAndCode[i] - '0'
+
+            if (alternate)
+                d *= 2
+
+            // We add two digits to handle
+            // cases that make two digits after
+            // doubling
+            nSum += d / 10
+            nSum += d % 10
+
+            alternate = !alternate
+        }
+
+        val unitDigit = nSum % 10
+        val checkDigit = 10 - unitDigit
+
+        return "$binAndCode$checkDigit"
+    }
+
     internal const val OK: String = "00"
 
     internal const val TIMEOUT_CODE = "0x0x0"

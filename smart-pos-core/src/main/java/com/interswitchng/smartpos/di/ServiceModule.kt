@@ -7,6 +7,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 import com.interswitchng.smartpos.shared.services.HttpServiceImpl
+import com.interswitchng.smartpos.shared.services.kimono.KimonoHttpServiceImpl
 import com.interswitchng.smartpos.shared.services.UserStoreImpl
 import com.interswitchng.smartpos.shared.services.iso8583.IsoServiceImpl
 import com.interswitchng.smartpos.shared.services.iso8583.tcp.IsoSocketImpl
@@ -16,17 +17,38 @@ import com.interswitchng.smartpos.shared.services.storage.SharePreferenceManager
 import com.interswitchng.smartpos.shared.services.storage.TransactionLogServiceImpl
 import com.zhuinden.monarchy.Monarchy
 import io.realm.RealmConfiguration
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 
-internal val serviceModule = module {
+internal val serviceModule = module() //override = true
+{
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
+
+//    single<KimonoHttpService> { KimonoHttpServiceImpl(get()) }
+
+//    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
+    // return service based on kimono flag
+    //return@factory
+
+
+    single<IsoService> { (isKimono: Boolean) ->
+
+
+        if (isKimono) KimonoHttpServiceImpl(androidContext(), get(), get())
+        else IsoServiceImpl(androidContext(), get(), get())
+    }
+
+
     single<UserStore> { UserStoreImpl(get()) }
     single { SharePreferenceManager(androidContext()) }
     single<KeyValueStore> { KeyValueStoreImpl(get()) }
     single<EmailService> { EmailServiceImpl(get()) }
-    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
+
+
+
+
 
     single<TransactionLogService> {
 

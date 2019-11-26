@@ -9,35 +9,41 @@ import com.interswitch.smartpos.emv.telpo.emv.TelpoEmvCardReaderImpl
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
+import com.telpo.pinpad.PinpadService
 import com.telpo.tps550.api.reader.SmartCardReader
+import com.telpo.tps550.api.util.StringUtil
 
 class TelpoPOSDeviceImpl constructor(
     override val printer: DevicePrinter,
     private val factory: () -> EmvCardReader
 ): POSDevice {
 
-//    init {
-//        System.loadLibrary("card_reader")
-//        System.loadLibrary("collect")
-//        System.loadLibrary("decode")
-//        System.loadLibrary("emv_device3.2")
-//        System.loadLibrary("fingerprint")
-//        System.loadLibrary("ledpower")
-//        System.loadLibrary("pinlcd2")
-//        System.loadLibrary("pinpad3.2")
-//        System.loadLibrary("posutil")
-//        System.loadLibrary("serial_port")
-//        System.loadLibrary("system_util")
-//        System.loadLibrary("telpo_printer")
-//        System.loadLibrary("telpo_serial")
-//        System.loadLibrary("tp_emv2")
-//        System.loadLibrary("tp_emv3.2")
-//        System.loadLibrary("usb_util")
-//    }
-
     override fun getEmvCardReader(): EmvCardReader = factory()
 
+    override val name: String
+        get() = DEVICE_NAME
+
+    override fun loadInitialKey(initialKey: String, ksn: String) {
+        val keyValue = StringUtil.toBytes(initialKey)
+        val ksnValue = StringUtil.toBytes(ksn)
+    }
+
+    override fun loadMasterKey(masterKey: String) {
+        val key = StringUtil.toBytes(masterKey)
+        PinpadService.TP_WriteMasterKey(0, key, PinpadService.KEY_WRITE_DIRECT)
+    }
+
+    override fun loadPinKey(pinKey: String) {
+        val key = StringUtil.toBytes(pinKey)
+        PinpadService.TP_WritePinKey(1, key, PinpadService.KEY_WRITE_DECRYPT, 0)
+    }
+
     companion object {
+
+        internal const val INDEX_TIK: Byte = 0x01
+        internal const val INDEX_TMK: Byte = 0x01
+        internal const val INDEX_TPK: Byte = 0x03
+        internal const val DEVICE_NAME: String = "PAX"
 
         internal lateinit var companyLogo: Bitmap private set
 

@@ -40,10 +40,13 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     private lateinit var channelScope: CoroutineScope
 
 
+
+
     private var pinResult: Int = RetCode.EMV_OK
     private var pinData: String? = null
+    private var ksnData: String? = null
     private var hasEnteredPin: Boolean = false
-
+    private var isKimono: Boolean = false
 
     //----------------------------------------------------------
     //     Implementation for ISW EmvCardReader interface
@@ -52,8 +55,11 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     override suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
         // set amount and channel scope
         emvImpl.setAmount(amount)
+
+
         this.channel = channel
         this.channelScope = scope
+        this.isKimono = terminalInfo.isKimono
 
         // setup emv transaction
         val setupResult = emvImpl.setupContactEmvTransaction(terminalInfo)
@@ -111,6 +117,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             // get pinData (only for online PIN)
             val carPin = pinData ?: ""
 
+            // get the ksn for dukpt pin
+            val pinKsn = ksnData ?: ""
             // get track 2 string
             val track2data = EmvUtils.bcd2Str(it)
 
@@ -126,7 +134,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             // get the card sequence number
             val csnStr = EmvUtils.bcd2Str(emvImpl.getTlv(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
             val csn = "0$csnStr"
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn)
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = pinKsn)
         }
     }
 

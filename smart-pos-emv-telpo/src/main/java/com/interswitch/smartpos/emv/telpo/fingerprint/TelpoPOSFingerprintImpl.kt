@@ -51,25 +51,18 @@ class TelpoPOSFingerprintImpl : POSFingerprint {
         fingerPrintData = ByteArray(250 * 360)
         fingerPrintISO = ByteArray(890)
         this.phoneNumber = phoneNumber
+
+        channel.send(Fingerprint.SetupComplete)
     }
 
     override suspend fun createFinger() {
         while (coroutineContext.isActive && !isCancelled) {
             val result = checkFingerprint()
-            logger.logErr("Here")
             if (result) break
         }
-        logger.logErr("Here 1")
         channel.send(Fingerprint.Detected(bitmap))
-        logger.logErr("Here 2")
 
-        val result = FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerPrintISO, channel)
-        logger.logErr("Write file result == $result")
-//        if (!result.first) {
-//            channel.send(Fingerprint.Failed(result.second))
-//            isCancelled = true
-//            return
-//        }
+        FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerPrintISO, channel)
 
         //This delay is for the UI to change before the dialog dismisses
         delay(1000)

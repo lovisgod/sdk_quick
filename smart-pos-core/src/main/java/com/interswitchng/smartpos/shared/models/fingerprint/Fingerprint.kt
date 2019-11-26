@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 
 sealed class Fingerprint {
     data class Detected(val bitmap: Bitmap): Fingerprint()
+    object SetupComplete: Fingerprint()
     object Success : Fingerprint()
     object Timeout: Fingerprint()
     object WriteSuccessful: Fingerprint()

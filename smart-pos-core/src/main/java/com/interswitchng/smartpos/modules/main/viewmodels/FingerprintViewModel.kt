@@ -37,7 +37,7 @@ internal class FingerprintViewModel (
         get() = _registeredFingerprints
 
     fun setup(context: Context) {
-        fingerprint.setup(context, phoneNumber, channel)
+
     }
 
     fun getFingerprints() {
@@ -55,14 +55,22 @@ internal class FingerprintViewModel (
 
     fun confirmFinger(context: Context) = fingerprint.confirmFinger(context, phoneNumber)
 
-    fun createFingerprint() {
+    fun createFingerprint(context: Context) {
         with (uiScope) {
             launch (ioScope) {
-                fingerprint.createFinger()
                 for (result in channel) {
+                    if (result is Fingerprint.SetupComplete) {
+                        launch (ioScope) {
+                            fingerprint.createFinger()
+                        }
+                    }
                     logger.logErr("This is the result === $result")
                     _fingerPrintResult.postValue(result)
                 }
+            }
+
+            launch (ioScope) {
+                fingerprint.setup(context, phoneNumber, channel)
             }
         }
     }

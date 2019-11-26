@@ -13,4 +13,5 @@ data class EmvData(
     val src: String, // service restriction code
     val csn: String, // card sequence number
     val AID: String,
-    val icc: String)
+    val icc: String,
+    val pinKsn: String)

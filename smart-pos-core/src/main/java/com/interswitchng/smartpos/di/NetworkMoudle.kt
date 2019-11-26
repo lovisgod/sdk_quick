@@ -9,6 +9,8 @@ import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
+import com.interswitchng.smartpos.shared.utilities.ToStringConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -16,11 +18,13 @@ import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import retrofit2.SimpleXmlConverterFactory
+
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
 const val RETROFIT_PAYMENT = "payment_retrofit"
-
+const val RETROFIT_KIMONO = "kimono_retrofit"
 
 internal val networkModule = module {
 
@@ -72,6 +76,42 @@ internal val networkModule = module {
         return@single builder.build()
     }
 
+
+
+
+    single(RETROFIT_KIMONO) {
+
+
+
+        val kimonoServiceUrl = "https://qa.interswitchng.com/"
+        val builder = Retrofit.Builder()
+
+              .addConverterFactory(ToStringConverterFactory())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(kimonoServiceUrl)
+                .addCallAdapterFactory(SimpleCallAdapterFactory.create())
+
+        val clientBuilder: OkHttpClient.Builder = get()
+        //  add auth interceptor for sendGrid
+        clientBuilder.addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                    .addHeader("Content-type", "application/xml")
+
+                    .build()
+
+            chain.proceed(request)
+        }
+
+        // build and add client to retrofit
+        val client = clientBuilder.build()
+        builder.client(client)
+
+        return@single builder.build()
+    }
+
+
+
+
     // retrofit isw payment
     single(RETROFIT_PAYMENT) {
         val iswBaseUrl = androidContext().getString(R.string.ISW_USSD_QR_BASE_URL)
@@ -106,6 +146,17 @@ internal val networkModule = module {
         val retrofit: Retrofit = get(RETROFIT_PAYMENT)
         return@single retrofit.create(IHttpService::class.java)
     }
+
+
+
+    //create retrofit Kimono Http service with retrofit
+    single {
+        val retrofit: Retrofit = get(RETROFIT_KIMONO)
+        return@single retrofit.create(IKimonoHttpService::class.java)
+    }
+
+
+
 
     // create Auth service with retrofit
     single {

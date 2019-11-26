@@ -109,12 +109,9 @@ class IswPos private constructor(private val app: Application, internal val devi
          * This method is responsible for setting up the terminal for the current application
          */
         @JvmStatic
-        fun setupTerminal(
-            app: Application,
-            device: POSDevice,
-            fingerPrint: POSFingerprint,
-            config: POSConfig
-        ) {
+        fun setupTerminal(app: Application, device: POSDevice,
+                          fingerPrint: POSFingerprint?,
+                          config: POSConfig, withRealm: Boolean) {
             if (!isSetup) {
 
                 // prevent multiple threads from creating iswPos
@@ -126,7 +123,10 @@ class IswPos private constructor(private val app: Application, internal val devi
                 val appContext = module(override = true) {
                     single { app.applicationContext }
                     single { device }
-                    single { fingerPrint }
+                    if (fingerPrint != null) {
+                        single<POSFingerprint> { fingerPrint }
+                    }
+                   // single { fingerPrint }
                 }
 
                 // set up koin
@@ -138,6 +138,9 @@ class IswPos private constructor(private val app: Application, internal val devi
 
                 // setup usb connector if exists
                 config.usbConnector?.configure(app)
+
+                // setup monarchy and realmdb
+                if (withRealm) Monarchy.init(app)
 
                 // set setup flag
                 isSetup = true

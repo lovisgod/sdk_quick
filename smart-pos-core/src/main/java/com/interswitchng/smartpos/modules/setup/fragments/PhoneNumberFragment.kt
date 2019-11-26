@@ -24,7 +24,8 @@ class PhoneNumberFragment : BaseFragment(TAG) {
             val dialog = FingerprintBottomDialog {
                 if (it) {
                     toast("Fingerprint Captured Successfully")
-                    requireActivity().finish()
+                    val direction = PhoneNumberFragmentDirections.iswActionGotoFragmentSetupComplete()
+                    navigate(direction)
                 }
                 else toast("Failed to capture fingerprint")
             }

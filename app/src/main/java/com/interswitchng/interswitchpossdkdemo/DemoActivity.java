@@ -25,6 +25,7 @@ import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
+import com.interswitchng.smartpos.shared.models.core.Environment;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
@@ -132,7 +133,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         }
 
         boolean enableUsb = getIntent().getBooleanExtra(KEY_ENABLE_USB, false);
-        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode, "");
+        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode,"", Environment.Test );
 
         if (enableUsb) {
             UsbConfig usbConfig = new UsbConfig();
@@ -141,7 +142,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
         }
 
         // setup terminal
-//        IswPos.setupTerminal(getApplication(), device, config);
+        IswPos.setupTerminal(getApplication(), device, null, config,false);
     }
 
     private void setupUI() {

@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.shared.models.core
 
 import com.google.gson.Gson
+import com.interswitchng.smartpos.BuildConfig
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 
 
@@ -23,12 +25,34 @@ data class TerminalInfo(
         val countryCode: String,
         val currencyCode: String,
         val callHomeTimeInMin: Int,
-        val serverTimeoutInSec: Int) {
+        val serverTimeoutInSec: Int,
+        var isKimono: Boolean = false,
+        val capabilities: String? = null,
+        var serverUrl: String = Constants.ISW_KIMONO_URL,
+        var serverIp: String = Constants.ISW_TERMINAL_IP,
+        var serverPort: Int = BuildConfig.ISW_TERMINAL_PORT) {
 
 
-    internal fun persist(store: KeyValueStore) {
-        val jsonString = Gson().toJson(this)
-        store.saveString(PERSIST_KEY, jsonString)
+    internal fun persist(store: KeyValueStore): Boolean {
+//        val jsonString = Gson().toJson(this)
+//        store.saveString(PERSIST_KEY, jsonString)
+
+
+        if (serverUrl.isNullOrEmpty()) serverUrl = Constants.ISW_KIMONO_URL
+        if (serverIp.isNullOrEmpty()) serverIp = Constants.ISW_TERMINAL_IP
+        if (serverPort == 0) serverPort = BuildConfig.ISW_TERMINAL_PORT
+
+        // get previous terminal info
+        val prevInfo = get(store)
+
+        // save only when config changed
+        if (prevInfo != this) {
+            val jsonString = Gson().toJson(this)
+            store.saveString(PERSIST_KEY, jsonString)
+            return true
+        }
+
+        return false
     }
 
     override fun toString(): String {

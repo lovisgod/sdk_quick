@@ -12,13 +12,14 @@ internal data class TransactionInfo(
         val cardPIN: String,
         val cardPAN: String,
         val cardTrack2: String,
-        val icc: String,
-        val src: String, // service restriction code
-        val csn: String, // card sequence number
+        var icc: String,
+        var src: String, // service restriction code
+        var csn: String, // card sequence number
         val amount: Int,
         val stan: String,
         val purchaseType: PurchaseType,
-        val accountType: AccountType) {
+        val accountType: AccountType,
+        var originalTransactionInfoData: OriginalTransactionInfoData? = null) {
 
 
     companion object {
@@ -34,5 +35,23 @@ internal data class TransactionInfo(
                 stan = paymentInfo.getStan(),
                 purchaseType = purchaseType,
                 accountType = accountType)
+
     }
+}
+
+internal data class OriginalTransactionInfoData(
+        var originalStan: String?,
+        var originalTransmissionDateAndTime: String?,
+        var originalAuthorizationId: String?,
+        var originalAmount: String?
+) {
+        companion object {
+                fun addOriginalTransactionInfo(originalStan: String? = null,
+                                               originalTransmissionDateAndTime: String? = null,
+                                               originalAuthorizationId: String? = null,
+                                               originalAmount: String? = null) = OriginalTransactionInfoData(originalStan,
+                        originalTransmissionDateAndTime,
+                        originalAuthorizationId,
+                                originalAmount)
+        }
 }
