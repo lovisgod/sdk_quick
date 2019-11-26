@@ -13,6 +13,9 @@ class XmlPullParserHandler {
 
     private var text: String? = null
 
+    fun contains(tagname:String):Boolean{
+        return  tagname.equals("reversalResponseWithoutOriginalDate", ignoreCase = true) ||  tagname.equals("reversalResponse", ignoreCase = true) ||  tagname.equals("completionResponse", ignoreCase = true) || tagname.equals("reservationResponse", ignoreCase = true) ||  tagname.equals("purchaseResponse", ignoreCase = true) || tagname.equals("channelResponse", ignoreCase = true)
+    }
     fun parse(inputStream: InputStream): PurchaseResponse {
         try {
             val factory = XmlPullParserFactory.newInstance()
@@ -23,12 +26,13 @@ class XmlPullParserHandler {
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 val tagname = parser.name
                 when (eventType) {
-                    XmlPullParser.START_TAG -> if (tagname.equals("purchaseResponse", ignoreCase = true)) {
+
+                    XmlPullParser.START_TAG -> if (contains(tagname)) {
                         // create a new instance of employee
                         purchaseResponse = PurchaseResponse()
                     }
                     XmlPullParser.TEXT -> text = parser.text
-                    XmlPullParser.END_TAG -> if (tagname.equals("purchaseResponse", ignoreCase = true)) {
+                    XmlPullParser.END_TAG -> if (contains(tagname)) {
                         // add employee object to list
                        return  purchaseResponse
                     } else if (tagname.equals("authCode", ignoreCase = true)) {
