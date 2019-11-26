@@ -48,14 +48,14 @@ internal class ReservationRequest {
             val iswConfig = IswPos.getInstance().config
 
             return ReservationRequest().apply {
-                terminalInformation = TerminalInformation.create(deviceName, terminalInfo, transactionInfo)
-                cardData = CardData.create(transactionInfo)
-                fromAccount = transactionInfo.accountType.name
-                minorAmount = transactionInfo.amount.toString()
-                stan = transactionInfo.stan
-                pinData = if (hasPin) PinData.create(transactionInfo) else null
-                keyLabel = if (iswConfig.environment == Environment.Test) "000006" else "000002"
-                tmsConfiguredTerminalLocation=""
+//                terminalInformation = TerminalInformation.create(deviceName, terminalInfo, transactionInfo)
+//                cardData = CardData.create(transactionInfo)
+//                fromAccount = transactionInfo.accountType.name
+//                minorAmount = transactionInfo.amount.toString()
+//                stan = transactionInfo.stan
+//                pinData = if (hasPin) PinData.create(transactionInfo) else null
+//                keyLabel = if (iswConfig.environment == Environment.Test) "000006" else "000002"
+//                tmsConfiguredTerminalLocation=""
             }
         }
     }

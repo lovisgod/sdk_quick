@@ -11,7 +11,7 @@ import org.simpleframework.xml.Root
     Namespace( prefix = "ns2", reference = "http://interswitchng.com"),
     Namespace( prefix = "ns3", reference = "http://tempuri.org/ns.xsd")
 )
-internal data class PurchaseResponse(
+data class PurchaseResponse(
 
     @field:Element(name = "description", required = false)
     var description: String = "",

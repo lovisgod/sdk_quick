@@ -42,6 +42,7 @@ data class TerminalInfo(
         if (serverIp.isNullOrEmpty()) serverIp = Constants.ISW_TERMINAL_IP
         if (serverPort == 0) serverPort = BuildConfig.ISW_TERMINAL_PORT
 
+
         // get previous terminal info
         val prevInfo = get(store)
 
@@ -73,12 +74,28 @@ data class TerminalInfo(
         private const val PERSIST_KEY = "terminal_data"
 
         internal fun get(store: KeyValueStore): TerminalInfo? {
+
+            var selectedSettlement =store.getString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
+
+var isKimono=false
+            if (selectedSettlement=="kimono"){
+                isKimono=true
+            }
+
             val jsonString = store.getString(PERSIST_KEY, "")
             return when(jsonString) {
                 "" -> null
-                else -> Gson().fromJson(jsonString, TerminalInfo::class.java)
+                else -> {
+                   val data= Gson().fromJson(jsonString, TerminalInfo::class.java)
+                    data.isKimono=isKimono
+                    data
+                }
+                }
             }
-        }
+
+
+
+
     }
 }
 

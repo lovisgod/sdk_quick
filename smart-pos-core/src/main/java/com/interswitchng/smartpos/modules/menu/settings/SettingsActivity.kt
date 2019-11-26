@@ -1,13 +1,17 @@
 package com.interswitchng.smartpos.modules.menu.settings
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
@@ -64,6 +68,27 @@ class SettingsActivity : MenuActivity() {
     }
 
     private fun setupButtons() {
+
+
+        val adapter = ArrayAdapter(baseContext, android.R.layout.simple_spinner_item, listOf("Nibss", "Kimono"))
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        settlementTypeSpinner.adapter = adapter
+        settlementTypeSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                // either one will work as well
+                // val item = parent.getItemAtPosition(position) as String
+                val item = adapter.getItem(position)
+
+
+
+            }
+        }
+
+
         // set up buttons
         btnDownloadKeys.setOnClickListener {
             // validate that a terminal id is present
@@ -90,7 +115,7 @@ class SettingsActivity : MenuActivity() {
 
                 //TODO get the IP and Port for ISW
                 // trigger download keys
-                settingsViewModel.downloadKeys(terminalID,"",0,true)
+                settingsViewModel.downloadKeys(terminalID)
             }
         }
 
@@ -115,6 +140,12 @@ class SettingsActivity : MenuActivity() {
                // val isKimono = terminalInfo?.isKimono ?: false
                 // trigger download terminal config
                 settingsViewModel.downloadTerminalConfig(terminalID)
+
+                var position =  settlementTypeSpinner.selectedItemPosition
+                if (position==0)
+                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"nibss")
+                else if(position==1)
+                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
             }
         }
     }
@@ -126,6 +157,17 @@ class SettingsActivity : MenuActivity() {
 
         // set the value of terminal
         etTerminalId.setText(terminalId)
+
+        var selectedSettlement =store.getString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
+
+
+        if (selectedSettlement=="kimono"){
+
+        }
+        else {
+
+        }
+
 
         if (terminalDate != -1L) {
             val date = Date(terminalDate)

@@ -1,31 +1,27 @@
 package com.interswitchng.smartpos.shared.services.kimono
 
-import android.app.Application
 import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
-//import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
 import com.interswitchng.smartpos.shared.services.kimono.models.*
-import com.interswitchng.smartpos.shared.services.kimono.models.CompletionRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
-import com.interswitchng.smartpos.shared.services.kimono.models.ReversalRequest
 import com.interswitchng.smartpos.shared.utilities.Logger
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import java.io.ByteArrayInputStream
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -68,36 +64,24 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
         return true
     }
 
+
     override  fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-        // generate purchase request
-        val request = PurchaseRequest.create(device.name, terminalInfo, transaction)
-        request.pinData?.apply {
-            // remove first 2 bytes to make 8 bytes
-            ksn = ksn.substring(4)
-        }
 
-
-        val body = RequestBody.create(MediaType.parse("text/xml"), "<help></help>")
+      val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)
+        val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
 
         try {
-            val responseBody = httpService.makePurchase(body).run()
-
-//           val bodyString = responseBody.body()?.toString()
-//            val data = responseBody.body()?.contentType()
-//            val datalen = responseBody.body()?.contentLength()
-//            var x=responseBody.toString()
-//            var x2=data.toString()+ responseBody.raw().toString()
-//            var x3=responseBody.message()+ responseBody.raw().message()
-//            var x4=responseBody.code().toString() + responseBody.raw().code()
-//
-//            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+           val responseBody = httpService.makePurchase(body).run()
+           var responseXml= responseBody.body()?.bytes()?.let { String(it) }
 
 
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+       var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
 
-            return if (!responseBody.isSuccessful || data == null) {
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
-                        responseCode = responseBody.code().toString(),
+                        responseCode = IsoUtils.TIMEOUT_CODE,
                         authCode = "",
                         stan = "",
                         scripts = "",
@@ -105,12 +89,11 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
                 )
             } else {
                 TransactionResponse(
-                        responseCode =responseBody.code().toString(),//data.responseCode,
-                        stan = "",//data.stan,
-                        authCode ="",// data.authCode,
-                        scripts = "",
-
-                        responseDescription = responseBody.message() //data.description
+                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        scripts =  purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description//data.description
                 )
             }
 
@@ -126,40 +109,51 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
     override fun initiateRefund(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         // generate purchase request
 
-        val request = RefundRequest.create(device.name, terminalInfo, transaction,"")
-        request.pinData?.apply {
-            // remove first 2 bytes to make 8 bytes
-            ksn = ksn.substring(4)
-        }
 
+        val requestBody: String = PurchaseRequest.toRefund(device,terminalInfo,transaction)
+        val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
+
+//        val request = RefundRequest.create(device.name, terminalInfo, transaction,"")
+//        request.pinData?.apply {
+//            // remove first 2 bytes to make 8 bytes
+//            ksn = ksn.substring(4)
+//        }
+var authCode=""
         try {
-            val response = httpService.refund(request).run()
 
-            val data = response.body()
 
-            return if (!response.isSuccessful || data == null) {
+            val responseBody = httpService.refund(body).run()
+            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+
+
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
-                        responseCode = response.code().toString(),
+                        responseCode = IsoUtils.TIMEOUT_CODE,
                         authCode = "",
                         stan = "",
                         scripts = "",
-                        responseDescription = response.message()
+                        responseDescription = responseBody.message()
                 )
             } else {
                 TransactionResponse(
-                        responseCode = data.responseCode,
-                        stan = data.stan,
-                        authCode = data.authCode,
-                        scripts = "",
-                        responseDescription = data.description
+                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        scripts =  purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description//data.description
                 )
             }
+
+
 
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
-            //  reversePurchase(request, request.stan) // TODO change stan to authId
-            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+             initiateReversal(terminalInfo, transaction) // TODO change stan to authId
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = authCode, stan = "", scripts = "")
         }
     }
 
@@ -171,9 +165,10 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
 
         val now = Date()
         val pan = IsoUtils.generatePan(code)
-        val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
+       /// val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
         val stan = paymentInfo.getStan()
-        val date = DateUtils.dateFormatter.format(now)
+//        val now = Date()
+       // val date = DateUtils.dateFormatter.format(now)
         val src = "501"
 
         // generate expiry date using current date
@@ -188,18 +183,12 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
         val expiry = DateUtils.yearAndMonthFormatter.format(expiryDate)
         val track2 = "${pan}D$expiry"
 
-        // get icc data
-        val iccData = getIcc(terminalInfo, amount, date)
-
         // create transaction info
         val transaction = TransactionInfo(
                 cardExpiry = expiry,
                 cardPIN = "",
                 cardPAN = pan,
                 cardTrack2 = track2,
-                //TODO: confirm and uncomment the two lines below
-//                iccData = iccData,
-//                iccString = iccData.iccAsString,
                 stan = stan,
                 accountType = AccountType.Default,
                 amount = paymentInfo.amount,
@@ -209,39 +198,42 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
                 icc = ""
         )
 
+        val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)
+        val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
-        //val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
-
-        // generate purchase request
-        val request = PurchaseRequest.create(device.name, terminalInfo, transaction)
 
         try {
-            val body = RequestBody.create(MediaType.parse("text/xml"), "<help><\\help>")
+            val responseBody = httpService.makePurchase(body).run()
+            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
 
-            val response = httpService.makePurchase(body).run()
-            val data = response.body()
 
-            return if (!response.isSuccessful || data == null) {
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
                         responseCode = IsoUtils.TIMEOUT_CODE,
                         authCode = "",
                         stan = "",
-                        scripts = ""
+                        scripts = "",
+                        responseDescription = responseBody.message()
                 )
             } else {
                 TransactionResponse(
-                        responseCode = "",//data.responseCode,
-                        stan = "",//data.stan,
-                        authCode = "",//data.authCode,
-                        scripts = ""
+                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        scripts =  purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description//data.description
                 )
             }
+
 
         } catch (e: Exception) {
             logger.logErr(e.localizedMessage)
             e.printStackTrace()
-//            initiateReversal(request, request.stan) // TODO change stan to authId
+            initiateReversal(terminalInfo, transaction)
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
     }
@@ -252,37 +244,39 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
     override fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {
 
+//            request.pinData?.apply {
+//                // remove first 2 bytes to make 8 bytes
+//                ksn = ksn.substring(4)
+//            }
+
+            val requestBody: String = PurchaseRequest.toCompletion(device,terminalInfo,transaction)
+            val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
 
+            val responseBody = httpService.completion(body).run()
+            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
 
-            val request = CompletionRequest.create(device.name, terminalInfo, transaction)
-            request.pinData?.apply {
-                // remove first 2 bytes to make 8 bytes
-                ksn = ksn.substring(4)
+
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = responseBody.message()
+                )
+            } else {
+                TransactionResponse(
+                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        scripts =  purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description//data.description
+                )
             }
-
-
-                val response = httpService.completion(request).run()
-                val data = response.body()
-
-                return if (!response.isSuccessful || data == null) {
-                    TransactionResponse(
-                            responseCode = response.code().toString(),
-                            authCode = "",
-                            stan = "",
-                            scripts = "",
-                            responseDescription = response.message()
-                    )
-                } else {
-                    TransactionResponse(
-                            responseCode = data.responseCode,
-                            stan = data.stan,
-                            authCode = data.authCode,
-                            scripts = "",
-                            responseDescription = data.referenceNumber
-                    )
-                }
-
 
 
 
@@ -302,38 +296,37 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
     override fun initiatePreAuthorization(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {
 
-            val stan = transaction.stan
 
 
 
-
-            val request = ReservationRequest.create(device.name, terminalInfo, transaction)
-            request.pinData?.apply {
-                // remove first 2 bytes to make 8 bytes
-                ksn = ksn.substring(4)
-            }
+            val requestBody: String = PurchaseRequest.toReservation(device,terminalInfo,transaction)
+            val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
 
-            val response = httpService.reservation(request).run()
-            val data = response.body()
+                val responseBody = httpService.reservation(body).run()
+                var responseXml= responseBody.body()?.bytes()?.let { String(it) }
 
-            return if (!response.isSuccessful || data == null) {
-                TransactionResponse(
-                        responseCode = response.code().toString(),
-                        authCode = "",
-                        stan = "",
-                        scripts = "",
-                        responseDescription = response.message()
-                )
-            } else {
-                TransactionResponse(
-                        responseCode = data.responseCode,
-                        stan = data.stan,
-                        authCode = data.authCode,
-                        scripts = "",
-                        responseDescription = data.referenceNumber
-                )
-            }
+
+                val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+                var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+
+                return if (!responseBody.isSuccessful || purchaseResponse == null) {
+                    TransactionResponse(
+                            responseCode = IsoUtils.TIMEOUT_CODE,
+                            authCode = "",
+                            stan = "",
+                            scripts = "",
+                            responseDescription = responseBody.message()
+                    )
+                } else {
+                    TransactionResponse(
+                            responseCode =purchaseResponse.responseCode,//data.responseCode,
+                            stan = purchaseResponse.stan,
+                            authCode =  purchaseResponse.authCode,// data.authCode,
+                            scripts =  purchaseResponse.stan,
+                            responseDescription = purchaseResponse.description//data.description
+                    )
+                }
 
 
 
@@ -348,29 +341,39 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
 
 
     override fun initiateReversal(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-//        val request = ReversalRequest.create(transaction, terminalInfo)
-//
+
+        val requestBody: String = PurchaseRequest.toReversal(device,terminalInfo,transaction)
 
 
-        val request = ReversalRequest.create( PurchaseRequest.create(device.name, terminalInfo, transaction), transaction.stan)
-        try {
-            // initiate reversal request
-            val response = httpService.reversePurchase(request).run()
-            val data = response.body()
+        val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
-            return if (!response.isSuccessful || data == null) {
+ try {
+            val responseBody = httpService.reversePurchase(body).run()
+            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+
+
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
                         responseCode = IsoUtils.TIMEOUT_CODE,
                         authCode = "",
                         stan = "",
-                        scripts = "")
+                        scripts = "",
+                        responseDescription = responseBody.message()
+                )
             } else {
                 TransactionResponse(
-                        responseCode = data.responseCode,
-                        stan = data.stan,
-                        authCode = data.authCode,
-                        scripts = "")
+                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        scripts =  purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description//data.description
+                )
             }
+
+
 
         } catch (e: Exception) {
             logger.logErr(e.localizedMessage)
@@ -380,133 +383,9 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
     }
 
 
-//    override  fun initiateReversal(txn: PurchaseRequest, authId: String?): TransactionResponse {
-//        // create reversal request
-//        val request = ReversalRequest.create(txn, authId)
-//
-//        try {
-//            // initiate reversal request
-//            val response = httpService.reversePurchase(request).run()
-//            val data = response.body()
-//
-//            return if (!response.isSuccessful || data == null) {
-//                TransactionResponse(
-//                        responseCode = IsoUtils.TIMEOUT_CODE,
-//                        authCode = "",
-//                        stan = "",
-//                        scripts = "")
-//            } else {
-//                TransactionResponse(
-//                        responseCode = data.responseCode,
-//                        stan = data.stan,
-//                        authCode = data.authCode,
-//                        scripts = "")
-//            }
-//
-//        } catch (e: Exception) {
-//            logger.logErr(e.localizedMessage)
-//            e.printStackTrace()
-//            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
-//        }
-
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String): IccData {
-        val authorizedAmountTLV = String.format("9F02%02d%s", amount.length / 2, amount)
-        val transactionDateTLV = String.format("9A%02d%s", date.length / 2, date)
-        val iccData = "9F260831BDCBC7CFF6253B9F2701809F10120110A50003020000000000000000000000FF9F3704F435D8A29F3602052795050880000000" +
-                "${transactionDateTLV}9C0100${authorizedAmountTLV}5F2A020566820238009F1A0205669F34034103029F3303E0F8C89F3501229F0306000000000000"
-
-        // remove leadin zero if exits
-        val currencyCode = if (terminalInfo.currencyCode.length > 3) terminalInfo.currencyCode.substring(1) else terminalInfo.currencyCode
-        val countryCode = if (terminalInfo.countryCode.length > 3) terminalInfo.countryCode.substring(1) else terminalInfo.countryCode
-
-
-
-        return IccData().apply {
-            TRANSACTION_AMOUNT = amount
-            ANOTHER_AMOUNT = "000000000000"
-            APPLICATION_INTERCHANGE_PROFILE = "3800"
-            APPLICATION_TRANSACTION_COUNTER = "0527"
-            CRYPTOGRAM_INFO_DATA = "80"
-            CARD_HOLDER_VERIFICATION_RESULT = "410302"
-            ISSUER_APP_DATA = "0110A50003020000000000000000000000FF"
-            TRANSACTION_CURRENCY_CODE = currencyCode
-            TERMINAL_VERIFICATION_RESULT = "0880000000"
-            TERMINAL_COUNTRY_CODE = countryCode
-            TERMINAL_TYPE = "22"
-            TERMINAL_CAPABILITIES = terminalInfo.capabilities ?: "E0F8C8"
-            TRANSACTION_DATE = date
-            TRANSACTION_TYPE = "00"
-            UNPREDICTABLE_NUMBER = "F435D8A2"
-            DEDICATED_FILE_NAME = ""
-            AUTHORIZATION_REQUEST = "31BDCBC7CFF6253B"
-
-            iccAsString = iccData
-        }
-
-    }
-
-
-
-
     private fun ByteArray.base64encode(): String {
         return String(Base64.encode(this, Base64.NO_WRAP))
     }
-
-//
-//
-////All these are still pending
-//    override fun initiatePreAuthorization(
-//            terminalInfo: TerminalInfo,
-//            transaction: TransactionInfo
-//    ): TransactionResponse? {
-//        try {
-//
-//
-//
-//            val now = Date()
-//            val processCode = "60" + transaction.accountType.value + "00"
-//            val hasPin = transaction.cardPIN.isNotEmpty()
-//            val stan = transaction.stan
-//            val randomReference = "000000$stan"
-//
-//            var responseString =""
-//            val responseMsg = KimonoResponseMessage(KimonoXmlMessage.readXml(responseString))
-//            return responseMsg.xmlMessage.let {
-//                val authCode = it.getObjectValue<String?>("/purchaseResponse/authId") ?: ""
-//                val code = it.getObjectValue<String?>("/purchaseResponse/field39")?:""
-//                val scripts = it.getObjectValue<String?>("/purchaseResponse/referenceNumber")?:""
-//                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
-//            }
-//
-//
-//        } catch (e: Exception) {
-//            logger.log(e.localizedMessage)
-//            e.printStackTrace()
-//            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
-//        }
-//    }
-//
-//
-
-
-
 
     private fun generatePan(code: String): String {
         val bin = "506179"
@@ -553,6 +432,35 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
                 continuation.resume(result)
             }
         }
+
+
+//
+//
+//        private fun parseXmlToJsonObject(xml: String) : String {
+//            var jsonObj: JSONObject? = null
+//            try {
+//                jsonObj = Xml.toJSONObject(xml)
+//            } catch (e: JSONException) {
+//                Log.e("JSON exception", e.message)
+//                e.printStackTrace()
+//            }
+//
+//            return jsonObj.toString()
+//        }
+//
+//        fun<T> parseResponse(xml: String, clazz: Class<T>) : T {
+//            try {
+//                return initializeMoshi().adapter(clazz).fromJson(parseXmlToJsonObject(xml))!!
+//            }catch (e: IOException){
+//                throw IllegalArgumentException("Could not deserialize: $xml into class: $clazz")
+//            }
+//        }
+//
+//        private fun initializeMoshi(): Moshi {
+//            return Moshi.Builder()
+//                    .add(KotlinJsonAdapterFactory())
+//                    .build()
+//        }
     }
 
 

@@ -13,6 +13,7 @@ import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
 import com.interswitchng.smartpos.shared.utilities.ToStringConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
@@ -82,18 +83,23 @@ internal val networkModule = module {
     single(RETROFIT_KIMONO) {
 
 
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val kimonoServiceUrl = "https://qa.interswitchng.com/"
         val builder = Retrofit.Builder()
-
+                .addConverterFactory(SimpleXmlConverterFactory.create())
               .addConverterFactory(ToStringConverterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create())...
                 .baseUrl(kimonoServiceUrl)
                 .addCallAdapterFactory(SimpleCallAdapterFactory.create())
 
+
         val clientBuilder: OkHttpClient.Builder = get()
         //  add auth interceptor for sendGrid
-        clientBuilder.addInterceptor { chain ->
+        clientBuilder
+                .addInterceptor(interceptor)
+                .addInterceptor { chain ->
             val request = chain.request().newBuilder()
                     .addHeader("Content-type", "application/xml")
 

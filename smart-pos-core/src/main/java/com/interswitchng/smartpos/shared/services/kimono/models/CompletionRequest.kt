@@ -65,13 +65,13 @@ internal class CompletionRequest {
             val iswConfig = IswPos.getInstance().config
 
             return CompletionRequest().apply {
-                terminalInformation = TerminalInformation.create(deviceName, terminalInfo, transactionInfo)
-                cardData = CardData.create(transactionInfo)
-
-                minorAmount = transactionInfo.amount.toString()
-                stan = transactionInfo.stan
-                pinData = if (hasPin) PinData.create(transactionInfo) else null
-                keyLabel = if (iswConfig.environment == Environment.Test) "000006" else "000002"
+//                terminalInformation = TerminalInformation.create(deviceName, terminalInfo, transactionInfo)
+//                cardData = CardData.create(transactionInfo)
+//
+//                minorAmount = transactionInfo.amount.toString()
+//                stan = transactionInfo.stan
+//                pinData = if (hasPin) PinData.create(transactionInfo) else null
+//                keyLabel = if (iswConfig.environment == Environment.Test) "000006" else "000002"
             }
         }
     }
