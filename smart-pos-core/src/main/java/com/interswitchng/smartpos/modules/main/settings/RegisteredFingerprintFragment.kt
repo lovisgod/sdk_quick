@@ -26,7 +26,7 @@ class RegisteredFingerprintFragment : BaseFragment(TAG) {
         viewModel.registeredFingerprint.observe(this, Observer {
             registeredFingerprintAdapter.registeredFingerprints = it
         })
-        viewModel.getFingerprints(requireContext(), "")
+//        viewModel.getFingerprints(requireContext(), "")
     }
 
     private fun setupViews() {
@@ -42,7 +42,7 @@ class RegisteredFingerprintFragment : BaseFragment(TAG) {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getFingerprints(requireContext(), "")
+//        viewModel.getFingerprints(requireContext(), "")
     }
 
     companion object {

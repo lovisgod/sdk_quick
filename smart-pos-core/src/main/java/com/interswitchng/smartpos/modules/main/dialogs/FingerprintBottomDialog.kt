@@ -1,14 +1,13 @@
 package com.interswitchng.smartpos.modules.main.dialogs
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.viewmodels.FingerprintViewModel
 import com.interswitchng.smartpos.shared.activities.BaseBottomSheetDialog
-import com.interswitchng.smartpos.shared.models.fingerprint.FingerprintResult
+import com.interswitchng.smartpos.shared.models.fingerprint.Fingerprint
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
 import kotlinx.android.synthetic.main.isw_sheet_layout_admin_fingerprint.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -28,22 +27,24 @@ class FingerprintBottomDialog constructor(
             it?.let(::handleFingerprintResult)
         })
         //1AC10B
-        isw_capture_fingerprint.setOnClickListener {
-            fingerprintViewModel.createFingerprint(sheetContext)
-        }
+        fingerprintViewModel.setup(sheetContext)
+        fingerprintViewModel.createFingerprint()
     }
 
-    private fun handleFingerprintResult(result: FingerprintResult) {
+    private fun handleFingerprintResult(result: Fingerprint) {
         when (result) {
-            FingerprintResult.Success -> {
+            is Fingerprint.Success -> {
+                dismiss()
+            }
+            is Fingerprint.Detected -> {
                 isw_textview13.apply {
                     text = resources.getString(R.string.isw_fingerprint_recognised)
                     setTextColor(ContextCompat.getColor(sheetContext, R.color.iswTextColorSuccessDark))
                 }
-                Handler().postDelayed({
-                    responseListener.invoke(true)
-                    dismiss()
-                }, 1000)
+                isw_admin_fingerprint.setImageResource(R.drawable.ic_fingerprint_detected)
+            }
+            is Fingerprint.Failed -> {
+                responseListener.invoke(false)
             }
         }
     }

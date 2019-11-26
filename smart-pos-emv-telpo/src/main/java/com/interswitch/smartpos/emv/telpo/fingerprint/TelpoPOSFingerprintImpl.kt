@@ -3,53 +3,93 @@ package com.interswitch.smartpos.emv.telpo.fingerprint
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import com.interswitchng.smartpos.shared.models.fingerprint.FingerprintResult
 import com.interswitch.smartpos.emv.telpo.utils.RawToBitMap
 import com.interswitch.smartpos.emv.telpo.utils.TelpoFingerPrintConstants
 import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint
+import com.interswitchng.smartpos.shared.models.fingerprint.Fingerprint
 import com.interswitchng.smartpos.shared.utilities.FileUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.telpo.usb.finger.Finger
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlin.coroutines.coroutineContext
 
 class TelpoPOSFingerprintImpl : POSFingerprint {
 
     private val logger by lazy { Logger.with("TelpoPOSFingerprintImpl") }
 
-    private lateinit var channel: Channel<FingerprintResult>
+    private lateinit var channel: Channel<Fingerprint>
+    private lateinit var context: Context
 
-    private var fingerPrintImageData = ByteArray(250 * 360)
-    private val fingerPrintISO1 = ByteArray(890)
-    private val fingerPrintISO2 = ByteArray(890)
+    private lateinit var fingerPrintData: ByteArray
+    private lateinit var fingerPrintISO: ByteArray
+
+    private lateinit var phoneNumber: String
+
+    private lateinit var bitmap: Bitmap
 
     private lateinit var fingerPrintISO11: ByteArray
     private lateinit var fingerPrintISO22: ByteArray
     var ret = 0
 
     var errorMessage = ""
+    private var isCancelled = false
 
     init {
         val byte = ByteArray (250 * 360)
         Finger.initialize(byte)
     }
 
-    override suspend fun createFinger(
+    override suspend fun setup(
         context: Context,
         phoneNumber: String,
-        channel: Channel<FingerprintResult>
+        channel: Channel<Fingerprint>
     ) {
-        val startTIme = System.currentTimeMillis()
+        this.context = context
+        this.channel = channel
+        fingerPrintData = ByteArray(250 * 360)
+        fingerPrintISO = ByteArray(890)
+        this.phoneNumber = phoneNumber
+    }
 
-        while (true) {
-            val result = getFingerprint(context, phoneNumber)
+    override suspend fun createFinger() {
+        while (coroutineContext.isActive && !isCancelled) {
+            val result = checkFingerprint()
+            logger.logErr("Here")
             if (result) break
-            if (System.currentTimeMillis() - startTIme >= 10_000) {
-                channel.send(FingerprintResult.Timeout)
-                return
-            }
         }
+        logger.logErr("Here 1")
+        channel.send(Fingerprint.Detected(bitmap))
+        logger.logErr("Here 2")
 
-        channel.send(FingerprintResult.Success)
+        val result = FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerPrintISO, channel)
+        logger.logErr("Write file result == $result")
+//        if (!result.first) {
+//            channel.send(Fingerprint.Failed(result.second))
+//            isCancelled = true
+//            return
+//        }
+
+        //This delay is for the UI to change before the dialog dismisses
+        delay(1000)
+
+        channel.send(Fingerprint.Success)
+    }
+
+    private fun checkFingerprint(): Boolean {
+        fingerPrintData = ByteArray(250 * 360)
+        fingerPrintISO = ByteArray(890)
+
+        val length = IntArray(1)
+        val quality = ByteArray(1)
+
+        ret =  Finger.get_image(fingerPrintData)
+        if (ret != 0) return false
+        bitmap = RawToBitMap.convert8bit(fingerPrintData, 208, 288) ?: return false
+        ret = Finger.get_ISO2005(fingerPrintISO, length, quality)
+
+        return ret == 0
     }
 
     private fun getFingerprint(context: Context, phoneNumber: String): Boolean {
@@ -73,11 +113,11 @@ class TelpoPOSFingerprintImpl : POSFingerprint {
             errorMessage = "Could not get fingerprint ISO"
             return false
         }
-        val result = FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerprintISO)
-        if (!result.first) {
-            errorMessage = "Could not save fingerprint"
-            return false
-        }
+//        val result = FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerprintISO)
+//        if (!result.first) {
+//            errorMessage = "Could not save fingerprint"
+//            return false
+//        }
 
         return true
     }
@@ -87,25 +127,25 @@ class TelpoPOSFingerprintImpl : POSFingerprint {
         phoneNumber: String,
         onComplete: (Pair<String?, Bitmap?>) -> Unit
     ) {
-        ret = Finger.get_image(fingerPrintImageData)
+        ret = Finger.get_image(fingerPrintData)
         if (ret == TelpoFingerPrintConstants.SUCCESS) {
-            val bitmap = RawToBitMap.convert8bit(fingerPrintImageData, 208, 288)
+            val bitmap = RawToBitMap.convert8bit(fingerPrintData, 208, 288)
             val length = IntArray(1)
             val quality = ByteArray(1)
-            ret = Finger.get_ISO2005(fingerPrintISO1, length, quality)
+            ret = Finger.get_ISO2005(fingerPrintISO, length, quality)
 
             fingerPrintISO11 = ByteArray(length[0])
-            System.arraycopy(fingerPrintISO1, 0, fingerPrintISO11, 0, length[0])
+            System.arraycopy(fingerPrintISO, 0, fingerPrintISO11, 0, length[0])
 
-            if (bitmap != null) {
-                val result = FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerPrintISO1)
-                if (result.first) {
-                    onComplete.invoke(Pair(null, bitmap))
-                } else {
-                    onComplete.invoke(Pair(result.second, null))
-                }
+//            if (bitmap != null) {
+//                val result = FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerPrintISO)
+//                if (result.first) {
+//                    onComplete.invoke(Pair(null, bitmap))
+//                } else {
+//                    onComplete.invoke(Pair(result.second, null))
+//                }
             }
-        } else onComplete.invoke(Pair("Could not capture fingerprint", null))
+//        } else onComplete.invoke(Pair("Could not capture fingerprint", null))
     }
 
     override fun removeFinger() {}
@@ -134,6 +174,7 @@ class TelpoPOSFingerprintImpl : POSFingerprint {
     }
 
     override fun close() {
+        isCancelled = true
         Finger.terminate()
     }
 }

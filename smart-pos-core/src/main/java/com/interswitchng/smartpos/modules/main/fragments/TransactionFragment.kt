@@ -45,6 +45,7 @@ class TransactionFragment: BaseFragment(TAG) {
                                 val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
                                 navigate(direction)
                             } else {
+                                toast("Verification Failed!!")
                                 navigateUp()
                             }
                         }

@@ -1,0 +1,11 @@
+package com.interswitchng.smartpos.shared.models.fingerprint
+
+import android.graphics.Bitmap
+
+sealed class Fingerprint {
+    data class Detected(val bitmap: Bitmap): Fingerprint()
+    object Success : Fingerprint()
+    object Timeout: Fingerprint()
+    object WriteSuccessful: Fingerprint()
+    data class Failed(val message: String): Fingerprint()
+}

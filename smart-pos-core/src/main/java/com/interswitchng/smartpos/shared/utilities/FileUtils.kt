@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.shared.utilities
 
 import android.content.Context
+import com.interswitchng.smartpos.shared.models.fingerprint.Fingerprint
+import kotlinx.coroutines.channels.Channel
 import java.io.*
 
 class FileUtils constructor(
@@ -14,22 +16,23 @@ class FileUtils constructor(
         }
     }
 
-    fun saveMerchantFingerPrint(
+    suspend fun saveMerchantFingerPrint(
         phoneNumber: String,
-        byteArray: ByteArray
-    ): Pair<Boolean, String> {
+        byteArray: ByteArray,
+        channel: Channel<Fingerprint>
+    ) {
         val newFile = File(rootFolder, "FingerPrint_$phoneNumber")
         if (newFile.exists()) {
-            return Pair(false, "This Merchant has already been enrolled!")
+            channel.send(Fingerprint.Failed("Fingerprint Exists"))
         }
         val outPutStream = FileOutputStream(newFile)
         return try {
             outPutStream.write(byteArray)
-            Pair(true, "Merchant successfully enrolled")
+            channel.send(Fingerprint.WriteSuccessful)
         } catch (exception: FileNotFoundException) {
-            Pair(false, "Could not enroll. Please try again.")
+            channel.send(Fingerprint.Failed("Could not enroll. Please try again."))
         } catch (exception: IOException) {
-            Pair(false, "An exception occurred while enrolling merchant. Please try again.")
+            channel.send(Fingerprint.Failed("An exception occurred while enrolling merchant. Please try again."))
         } finally {
             outPutStream.close()
         }

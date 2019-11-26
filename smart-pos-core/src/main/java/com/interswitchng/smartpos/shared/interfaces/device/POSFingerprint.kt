@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.shared.interfaces.device
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.interswitchng.smartpos.shared.models.fingerprint.FingerprintResult
+import com.interswitchng.smartpos.shared.models.fingerprint.Fingerprint
 import kotlinx.coroutines.channels.Channel
 
 interface POSFingerprint {
@@ -13,11 +13,13 @@ interface POSFingerprint {
         onComplete: ((Pair<String?, Bitmap?>)) -> Unit
     )
 
-    suspend fun createFinger(
+    suspend fun setup(
         context: Context,
         phoneNumber: String,
-        channel: Channel<FingerprintResult>
+        channel: Channel<Fingerprint>
     )
+
+    suspend fun createFinger()
 
     fun removeFinger()
 

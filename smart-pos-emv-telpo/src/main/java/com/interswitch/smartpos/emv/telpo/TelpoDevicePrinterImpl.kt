@@ -12,6 +12,17 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
     private val SCREEN_LARGE_LENGTH = 24
     private val SCREEN_NORMAL_LENGTH = 32
 
+    init {
+        val usbThermalPrinter = UsbThermalPrinter(context)
+        usbThermalPrinter.apply {
+//            start(1)
+//            reset()
+//            setMonoSpace(true)
+//            setGray(7)
+//            setAlgin(UsbThermalPrinter.ALGIN_MIDDLE)
+        }
+    }
+
     // font sizes
 //    private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_16_24, EFontTypeExtCode.FONT_16_16)
 //    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_16_32)

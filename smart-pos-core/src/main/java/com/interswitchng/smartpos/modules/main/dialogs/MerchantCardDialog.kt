@@ -68,8 +68,14 @@ class MerchantCardDialog constructor(
 
             // when pin has been validated
             is EmvMessage.PinOk -> {
-                clickListener.invoke(true)
-                dismiss()
+                val savedPan = store.getString("M3RCHANT_PAN", "")
+                if (savedPan == cardViewModel.getCardPAN()) {
+                    clickListener.invoke(true)
+                    dismiss()
+                } else {
+                    clickListener.invoke(false)
+                    dismiss()
+                }
             }
 
             // when the user enters an incomplete pin
