@@ -20,6 +20,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.monthF
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.yearAndMonthFormatter
+import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.OK
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.TIMEOUT_CODE
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
@@ -219,6 +220,9 @@ internal class IsoServiceImpl(
             val randomReference = "000000$stan"
             val timeDateNow = timeAndDateFormatter.format(now)
 
+            println("Called  --->Purchase code " )
+
+
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
@@ -283,12 +287,14 @@ internal class IsoServiceImpl(
             socket.close()
 
 
+
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
+            println("Called Purchase code ===> ${responseMsg.message.getObjectValue<String>(39)}" )
             // Initiate Reversal if timeout
             if (responseMsg.message.getObjectValue<String>(39) == TIMEOUT_CODE) {
-
+                println("Called -----> Try reversal ----> ")
                 transaction.originalTransactionInfoData = OriginalTransactionInfoData
                     .addOriginalTransactionInfo(originalStan = transaction.stan, originalTransmissionDateAndTime = timeDateNow)
 
@@ -386,15 +392,6 @@ internal class IsoServiceImpl(
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
-            // Initiate Reversal if timeout
-            if (responseMsg.message.getObjectValue<String>(39) == TIMEOUT_CODE) {
-
-                transaction.originalTransactionInfoData = OriginalTransactionInfoData
-                    .addOriginalTransactionInfo(originalStan = transaction.stan, originalTransmissionDateAndTime = timeDateNow)
-
-                initiateReversal(terminalInfo, transaction)
-
-            }
             // return response
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
@@ -481,6 +478,7 @@ internal class IsoServiceImpl(
 
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
+
 
             // return response
             return responseMsg.message.let {
@@ -607,12 +605,13 @@ internal class IsoServiceImpl(
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
             val randomReference = "000000$stan"
+            val transmissionDateTime = timeAndDateFormatter.format(now)
 
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
                 .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
-                .setValue(7, timeAndDateFormatter.format(now))
+                .setValue(7, transmissionDateTime)
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))
                 .setValue(13, monthFormatter.format(now))
@@ -680,7 +679,7 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
+                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts, transmissionDateTime = transmissionDateTime)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
