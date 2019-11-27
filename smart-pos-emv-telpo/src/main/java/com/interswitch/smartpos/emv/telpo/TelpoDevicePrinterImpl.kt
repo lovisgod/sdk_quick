@@ -15,11 +15,7 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
     init {
         val usbThermalPrinter = UsbThermalPrinter(context)
         usbThermalPrinter.apply {
-//            start(1)
-//            reset()
-//            setMonoSpace(true)
-//            setGray(7)
-//            setAlgin(UsbThermalPrinter.ALGIN_MIDDLE)
+
         }
     }
 

@@ -182,6 +182,10 @@ internal class TelpoEmvImplementation (
         return TelpoEmvUtils.buildIccString(tagValues)
     }
 
+    fun ICCData.getTlv() {
+
+    }
+
     inner class TelpoEmvServiceListener : EmvServiceListener() {
 
         override fun onInputAmount(amountData: EmvAmountData?): Int {

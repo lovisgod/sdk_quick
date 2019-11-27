@@ -156,7 +156,7 @@ public class POSApplication extends Application   {
 //        config.with(new UsbConfig());
 
         // setup terminal
-        IswPos.setupTerminal(this, device, fingerprint, config, false);
+        IswPos.setupTerminal(this, device, fingerprint, config, false, true);
 
 //        IswPos.setupTerminal(this, device, config,false);
     }

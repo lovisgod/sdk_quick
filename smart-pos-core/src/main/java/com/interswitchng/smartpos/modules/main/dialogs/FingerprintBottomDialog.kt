@@ -9,10 +9,12 @@ import com.interswitchng.smartpos.modules.main.viewmodels.FingerprintViewModel
 import com.interswitchng.smartpos.shared.activities.BaseBottomSheetDialog
 import com.interswitchng.smartpos.shared.models.fingerprint.Fingerprint
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
+import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_sheet_layout_admin_fingerprint.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class FingerprintBottomDialog constructor(
+    private val isAuthorization: Boolean = false,
     private val responseListener: SingleArgsClickListener<Boolean>
 ) : BaseBottomSheetDialog() {
 
@@ -27,12 +29,21 @@ class FingerprintBottomDialog constructor(
             it?.let(::handleFingerprintResult)
         })
         //1AC10B
-        fingerprintViewModel.createFingerprint(sheetContext)
+        if (isAuthorization) {
+            fingerprintViewModel.validateFingerprint(sheetContext)
+        } else {
+            fingerprintViewModel.createFingerprint(sheetContext)
+        }
     }
 
     private fun handleFingerprintResult(result: Fingerprint) {
         when (result) {
             is Fingerprint.Success -> {
+                dismiss()
+                responseListener.invoke(true)
+            }
+            is Fingerprint.Authorized -> {
+                sheetContext.toast("Authorized!")
                 dismiss()
                 responseListener.invoke(true)
             }
@@ -44,6 +55,7 @@ class FingerprintBottomDialog constructor(
                 isw_admin_fingerprint.setImageResource(R.drawable.ic_fingerprint_detected)
             }
             is Fingerprint.Failed -> {
+                sheetContext.toast(result.message)
                 responseListener.invoke(false)
             }
         }

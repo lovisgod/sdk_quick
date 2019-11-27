@@ -23,7 +23,7 @@ internal data class TransactionInfo(
 
 
     companion object {
-        fun fromEmv(emv: EmvData, paymentInfo: PaymentInfo, purchaseType: PurchaseType, accountType: AccountType) = TransactionInfo (
+            fun fromEmv(emv: EmvData, paymentInfo: PaymentInfo, purchaseType: PurchaseType, accountType: AccountType) = TransactionInfo (
                 cardExpiry =  emv.cardExpiry,
                 cardPAN = emv.cardPAN,
                 cardPIN =  emv.cardPIN,
@@ -34,8 +34,30 @@ internal data class TransactionInfo(
                 amount = paymentInfo.amount,
                 stan = paymentInfo.getStan(),
                 purchaseType = purchaseType,
-                accountType = accountType)
-
+                accountType = accountType
+            )
+            fun forCardNotPresent(
+                    emv: EmvData,
+                    cardExpiry: String,
+                    cardPan: String,
+                    cardPin: String,
+                    paymentInfo: PaymentInfo,
+                    accountType: AccountType
+            ): TransactionInfo {
+                    return TransactionInfo(
+                            cardExpiry =  cardExpiry,
+                            cardPAN = cardPan,
+                            cardPIN =  cardPin,
+                            cardTrack2 =  emv.cardTrack2,
+                            icc = emv.icc,
+                            src = emv.src,
+                            csn = emv.csn,
+                            amount = paymentInfo.amount,
+                            stan = paymentInfo.getStan(),
+                            purchaseType = PurchaseType.Card,
+                            accountType = accountType
+                    )
+            }
     }
 }
 

@@ -95,6 +95,7 @@ class IswPos private constructor(private val app: Application, internal val devi
 
         private object Container: KoinComponent
         private const val KEY_STAN = "stan"
+        private const val HAS_FINGERPRINT = "fingerprint_support"
         private lateinit var INSTANCE: IswPos
         private var isSetup = false
         private val store: KeyValueStore by Container.inject()
@@ -106,12 +107,22 @@ class IswPos private constructor(private val app: Application, internal val devi
         internal fun isConfigured () = TerminalInfo.get(store) != null
 
         /**
+         * This function determines if the terminal has fingerprint functionality
+         */
+        fun hasFingerprint() = store.getBoolean(HAS_FINGERPRINT)
+
+        /**
          * This method is responsible for setting up the terminal for the current application
          */
         @JvmStatic
-        fun setupTerminal(app: Application, device: POSDevice,
-                          fingerPrint: POSFingerprint?,
-                          config: POSConfig, withRealm: Boolean) {
+        fun setupTerminal(
+            app: Application,
+            device: POSDevice,
+            fingerPrint: POSFingerprint?,
+            config: POSConfig,
+            withRealm: Boolean,
+            supportsFingerprintAuthorization: Boolean = false
+        ) {
             if (!isSetup) {
 
                 // prevent multiple threads from creating iswPos
@@ -126,7 +137,6 @@ class IswPos private constructor(private val app: Application, internal val devi
                     if (fingerPrint != null) {
                         single<POSFingerprint> { fingerPrint }
                     }
-                   // single { fingerPrint }
                 }
 
                 // set up koin
@@ -141,6 +151,9 @@ class IswPos private constructor(private val app: Application, internal val devi
 
                 // setup monarchy and realmdb
                 if (withRealm) Monarchy.init(app)
+
+                //Set if device has fingerprint
+                store.saveBoolean(HAS_FINGERPRINT, supportsFingerprintAuthorization)
 
                 // set setup flag
                 isSetup = true

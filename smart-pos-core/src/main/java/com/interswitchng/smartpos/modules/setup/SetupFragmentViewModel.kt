@@ -1,6 +1,5 @@
 package com.interswitchng.smartpos.modules.setup
 
-import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -32,19 +31,9 @@ internal class SetupFragmentViewModel constructor(
 
     }
 
-    fun enrollMerchantFingerPrint(context: Context, phoneNumber: String) {
-        posFingerprint.enrollFinger(context, phoneNumber) {
-            _fingerPrintBitmap.postValue(it.second)
-        }
-    }
-
     fun removeMerchantFingerPrint() {
         _fingerPrintBitmap.postValue(null)
         posFingerprint.removeFinger()
-    }
-
-    fun verify(context: Context, phoneNumber: String): Boolean {
-        return posFingerprint.confirmFinger(context, phoneNumber)
     }
 
     fun setupServer() {

@@ -268,6 +268,8 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 println("Called PIN OKAY")
                 pinOk = true
                 context?.toast("Pin OK")
+                iswCardPaymentViewAnimator.displayedChild = 1
+                isw_amount.text = paymentModel.formattedAmount
             }
 
             // when the user enters an incomplete pin

@@ -3,13 +3,13 @@ package com.interswitchng.smartpos.modules.setup.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.setup.SetupFragmentViewModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
-import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_fragment_merchant_card_setup.*
 import kotlinx.android.synthetic.main.isw_layout_supervisors_card_pin.*
 import org.koin.android.ext.android.inject
@@ -31,12 +31,22 @@ class MerchantCardFragment : BaseFragment(TAG) {
             it?.let(::processMessage)
         })
         cardViewModel.setupTransaction(0, terminalInfo)
+
+        if (!IswPos.hasFingerprint()) {
+            isw_skip_fingerprint.text = resources.getString(R.string.isw_finish)
+            isw_link_fingerprint.visibility = View.GONE
+        }
+
         isw_skip_fingerprint.setOnClickListener {
-            setupViewModel.saveMerchantPAN(cardViewModel.getCardPAN()!!)
+            val cardPAN = cardViewModel.getCardPAN()!!
+            setupViewModel.saveMerchantPAN(cardPAN)
             store.saveBoolean("SETUP", true)
             requireActivity().finish()
         }
         isw_link_fingerprint.setOnClickListener {
+            val cardPAN = cardViewModel.getCardPAN()!!
+            logger.logErr(cardPAN)
+            setupViewModel.saveMerchantPAN(cardPAN)
             val direction = MerchantCardFragmentDirections.iswActionGotoFragmentPhoneNumber()
             navigate(direction)
         }

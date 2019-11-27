@@ -7,12 +7,6 @@ import kotlinx.coroutines.channels.Channel
 
 interface POSFingerprint {
 
-    fun enrollFinger(
-        context: Context,
-        phoneNumber: String,
-        onComplete: ((Pair<String?, Bitmap?>)) -> Unit
-    )
-
     suspend fun setup(
         context: Context,
         phoneNumber: String,
@@ -23,7 +17,7 @@ interface POSFingerprint {
 
     fun removeFinger()
 
-    fun confirmFinger(context: Context, phoneNumber: String): Boolean
+    suspend fun authorizeFingerprint()
 
     fun hasFingerprint(context: Context, phoneNumber: String): Boolean
 

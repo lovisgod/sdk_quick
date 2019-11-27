@@ -39,7 +39,7 @@ class AdminAccessDialog constructor(
 //        val startTime = System.currentTimeMillis()
 //        Toast.makeText(sheetContext, "Place your fingerprint on the sensor", Toast.LENGTH_LONG).show()
 //        while (System.currentTimeMillis() - startTime <= 10_000) {
-//            val result = fingerprintViewModel.confirmFinger(sheetContext)
+//            val result = fingerprintViewModel.authorizeFingerprint(sheetContext)
 //            hasValidatedFinger = result
 //
 //            if (result) break

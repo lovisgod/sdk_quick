@@ -40,20 +40,24 @@ internal class FingerprintViewModel (
 
     }
 
-    fun getFingerprints() {
-//        if (fingerprint.hasFingerprint(context, phoneNumber)) {
-//            _registeredFingerprints.postValue(listOf(
-//                RegisteredFingerprint(
-//                    userName = "User 1",
-//                    userId = phoneNumber
-//                )
-//            ))
-//        } else _registeredFingerprints.postValue(emptyList())
+    fun validateFingerprint(context: Context) {
+        with (uiScope) {
+            launch (ioScope) {
+                for (result in channel) {
+                    if (result is Fingerprint.SetupComplete) {
+                        launch (ioScope) {
+                            fingerprint.authorizeFingerprint()
+                        }
+                    }
+                    _fingerPrintResult.postValue(result)
+                }
+            }
+
+            launch (ioScope) {
+                fingerprint.setup(context, phoneNumber, channel)
+            }
+        }
     }
-
-    fun hasFingerprint(context: Context) = fingerprint.hasFingerprint(context, phoneNumber)
-
-    fun confirmFinger(context: Context) = fingerprint.confirmFinger(context, phoneNumber)
 
     fun createFingerprint(context: Context) {
         with (uiScope) {
@@ -64,7 +68,6 @@ internal class FingerprintViewModel (
                             fingerprint.createFinger()
                         }
                     }
-                    logger.logErr("This is the result === $result")
                     _fingerPrintResult.postValue(result)
                 }
             }

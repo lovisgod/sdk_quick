@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.dialogs.AdminAccessDialog
+import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MakePaymentDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
@@ -40,13 +41,28 @@ class TransactionFragment: BaseFragment(TAG) {
                         val payment = payment {
                             type = PaymentModel.TransactionType.CARD_NOT_PRESENT
                         }
-                        val dialog = MerchantCardDialog { validated ->
-                            if (validated) {
+                        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+                            if (isValidated) {
                                 val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
                                 navigate(direction)
                             } else {
-                                toast("Verification Failed!!")
+                                toast("Fingerprint Verification Failed!!")
                                 navigateUp()
+                            }
+                        }
+                        val dialog = MerchantCardDialog { type ->
+                            when (type) {
+                                MerchantCardDialog.AUTHORIZED -> {
+                                    val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
+                                    navigate(direction)
+                                }
+                                MerchantCardDialog.FAILED -> {
+                                    toast("Merchant Card Verification Failed!!")
+                                    navigateUp()
+                                }
+                                MerchantCardDialog.USE_FINGERPRINT -> {
+                                    fingerprintDialog.show(childFragmentManager, FingerprintBottomDialog.TAG)
+                                }
                             }
                         }
                         dialog.show(childFragmentManager, AdminAccessDialog.TAG)

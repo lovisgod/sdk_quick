@@ -183,4 +183,6 @@
     <string name="isw_fingerprint_recognised">Fingerprint recognised</string>
     <string name="isw_place_your_fingerprint_on_the_sensor_and_press_capture">Place your fingerprint on the sensor\nand press capture</string>
     <string name="isw_fingerprint_for_smartpos">Fingerprint for SmartPOS</string>
+    <string name="isw_finish">FINISH</string>
+    <string name="isw_use_fingerprint">USE FINGERPRINT</string>
 </resources>

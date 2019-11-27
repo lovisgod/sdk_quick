@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.main.dialogs
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.shared.activities.BaseBottomSheetDialog
@@ -10,11 +11,12 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
+import kotlinx.android.synthetic.main.isw_sheet_layout_admin_merchant_card.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MerchantCardDialog constructor(
-    private val clickListener: SingleArgsClickListener<Boolean>
+    private val clickListener: SingleArgsClickListener<Int>
 ) : BaseBottomSheetDialog() {
 
     private val cardViewModel by viewModel<CardViewModel>()
@@ -30,6 +32,13 @@ class MerchantCardDialog constructor(
             it?.let(::processMessage)
         })
         cardViewModel.setupTransaction(0, terminalInfo)
+        if (!IswPos.hasFingerprint()) {
+            isw_use_fingerprint.visibility = View.GONE
+        }
+        isw_use_fingerprint.setOnClickListener {
+            clickListener.invoke(USE_FINGERPRINT)
+            dismiss()
+        }
     }
 
     private fun processMessage(message: EmvMessage) {
@@ -70,10 +79,10 @@ class MerchantCardDialog constructor(
             is EmvMessage.PinOk -> {
                 val savedPan = store.getString("M3RCHANT_PAN", "")
                 if (savedPan == cardViewModel.getCardPAN()) {
-                    clickListener.invoke(true)
+                    clickListener.invoke(AUTHORIZED)
                     dismiss()
                 } else {
-                    clickListener.invoke(false)
+                    clickListener.invoke(FAILED)
                     dismiss()
                 }
             }
@@ -98,5 +107,11 @@ class MerchantCardDialog constructor(
 
             }
         }
+    }
+
+    companion object {
+        const val AUTHORIZED = 0
+        const val FAILED = 1
+        const val USE_FINGERPRINT = 2
     }
 }
