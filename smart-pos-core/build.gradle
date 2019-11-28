@@ -98,6 +98,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
 
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
     // retrofit gson converter
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 //    // xml converter
@@ -109,6 +111,7 @@ dependencies {
     implementation('com.squareup.picasso:picasso:2.71828') {
         exclude group: "com.android.support"
     }
+
 
     // kotlin coroutine libs
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"

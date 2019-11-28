@@ -72,48 +72,48 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         val result = emv.startTransaction()
     }
 
-    fun startCardLessTransaction(
-        cardExpiry: String,
-        cardPan: String,
-        cardPin: String,
-        terminalInfo: TerminalInfo,
-        paymentInfo: PaymentInfo,
-        accountType: AccountType
-    ) {
-        uiScope.launch {
-            val emvData = emv.getTransactionInfo()
-            if (emvData != null) {
-                val txnInfo = TransactionInfo.forCardNotPresent(
-                    emvData, cardExpiry, cardPan, cardPin, paymentInfo, accountType
-                )
-                withContext(ioScope) {
-                    val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
-                    val result = when (response) {
-                        null -> {
-                            _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
-                            None
-                        }
-                        else -> {
-                            // complete transaction by applying scripts
-                            // only when responseCode is 'OK'
-                            if (response.responseCode == IsoUtils.OK) {
-                                // get result code of applying server response
-                                val completionResult = emv.completeTransaction(response)
-
-                                // react to result code
-                                when (completionResult) {
-                                    EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
-                                    else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
-                                }
-                            }
-                            Some(Pair(response, emvData))
-                        }
-                    }
-                    _transactionResponse.value = result
-                }
-            }
-        }
-    }
+//    fun startCardLessTransaction(
+//        cardExpiry: String,
+//        cardPan: String,
+//        cardPin: String,
+//        terminalInfo: TerminalInfo,
+//        paymentInfo: PaymentInfo,
+//        accountType: AccountType
+//    ) {
+//        uiScope.launch {
+//            val emvData = emv.getTransactionInfo()
+//            if (emvData != null) {
+//                val txnInfo = TransactionInfo.forCardNotPresent(
+//                    emvData, cardExpiry, cardPan, cardPin, paymentInfo, accountType
+//                )
+//                withContext(ioScope) {
+//                    val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
+//                    val result = when (response) {
+//                        null -> {
+//                            _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
+//                            None
+//                        }
+//                        else -> {
+//                            // complete transaction by applying scripts
+//                            // only when responseCode is 'OK'
+//                            if (response.responseCode == IsoUtils.OK) {
+//                                // get result code of applying server response
+//                                val completionResult = emv.completeTransaction(response)
+//
+//                                // react to result code
+//                                when (completionResult) {
+//                                    EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
+//                                    else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
+//                                }
+//                            }
+//                            Some(Pair(response, emvData))
+//                        }
+//                    }
+//                    _transactionResponse.value = result
+//                }
+//            }
+//        }
+//    }
 
 
     fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo) {

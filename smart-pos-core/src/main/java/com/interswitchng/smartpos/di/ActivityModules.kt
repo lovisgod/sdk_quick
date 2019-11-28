@@ -20,7 +20,7 @@ import org.koin.dsl.module.module
 
 
 internal val viewModels = module {
-    //var isKimono=true
+
     viewModel { UssdViewModel(get()) }
 
     viewModel { QrViewModel(get()) }
@@ -33,7 +33,7 @@ internal val viewModels = module {
     viewModel {
         val store: KeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
-        val isKimono = false//terminalInfo?.isKimono ?: false
+        val isKimono = terminalInfo?.isKimono ?: false
         val isoService: IsoService =  get { parametersOf(isKimono) }
         PayCodeViewModel(isoService, get())
     }
@@ -46,7 +46,7 @@ internal val viewModels = module {
     viewModel {
         val store: KeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
-        val isKimono = false// terminalInfo?.isKimono ?: false
+        val isKimono = terminalInfo?.isKimono ?: false
 
         val isoService: IsoService = get { parametersOf(isKimono)}
 
