@@ -457,6 +457,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
 
         for (tag in REQUEST_TAGS) {
+            if (tag == ICCData.APP_PAN_SEQUENCE_NUMBER) continue
             val tlv = getTlv(tag.tag)
             tagValues.add(Pair(tag, tlv))
         }
