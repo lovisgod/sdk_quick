@@ -137,8 +137,8 @@ class SettingsActivity : MenuActivity() {
                 progressTerminalDownload.visibility = View.VISIBLE
                 // hide download date
                 tvTerminalInfoDate.visibility = View.GONE
-               // val isKimono = terminalInfo?.isKimono ?: false
-                // trigger download terminal config
+
+
                 settingsViewModel.downloadTerminalConfig(terminalID)
 
                 var position =  settlementTypeSpinner.selectedItemPosition

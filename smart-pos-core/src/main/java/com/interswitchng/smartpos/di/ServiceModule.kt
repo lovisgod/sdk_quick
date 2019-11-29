@@ -26,12 +26,6 @@ internal val serviceModule = module() //override = true
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
 
-//    single<KimonoHttpService> { KimonoHttpServiceImpl(get()) }
-
-//    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
-    // return service based on kimono flag
-    //return@factory
-
 
     single<IsoService> { (isKimono: Boolean) ->
 

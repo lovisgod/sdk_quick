@@ -21,7 +21,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import retrofit2.SimpleXmlConverterFactory
 
-
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
 const val RETROFIT_PAYMENT = "payment_retrofit"

@@ -65,7 +65,7 @@ class ReceiptFragment : BaseFragment(TAG) {
             else -> {
                 transactionResponseIcon.setImageResource(R.drawable.isw_failure)
                 isw_receipt_text.text = "Failed!"
-                isw_transaction_msg.text = "Your transaction was unsuccessful"
+                isw_transaction_msg.text = result?.responseMessage//"Your transaction was unsuccessful"
             }
         }
     }

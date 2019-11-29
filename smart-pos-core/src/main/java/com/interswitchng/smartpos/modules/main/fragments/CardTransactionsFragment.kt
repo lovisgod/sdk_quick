@@ -58,7 +58,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
     private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.stan,paymentModel.authorizationId)
     }
 
     private val cancelDialog by lazy {

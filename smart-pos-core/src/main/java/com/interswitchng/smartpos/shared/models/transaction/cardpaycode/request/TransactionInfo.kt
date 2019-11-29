@@ -34,6 +34,7 @@ internal data class TransactionInfo(
                 amount = paymentInfo.amount * 100,
                 stan = paymentInfo.getStan(),
                 purchaseType = purchaseType,
+                originalTransactionInfoData=OriginalTransactionInfoData(paymentInfo.originalStanId,"",paymentInfo.originalAuthId,""),
                 accountType = accountType)
 
     }
