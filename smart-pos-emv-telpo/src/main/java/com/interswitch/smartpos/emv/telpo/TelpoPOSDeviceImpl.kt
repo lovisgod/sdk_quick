@@ -10,7 +10,6 @@ import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.telpo.pinpad.PinpadService
-import com.telpo.tps550.api.reader.SmartCardReader
 import com.telpo.tps550.api.util.StringUtil
 
 class TelpoPOSDeviceImpl constructor(
@@ -50,20 +49,20 @@ class TelpoPOSDeviceImpl constructor(
         @JvmStatic
         internal fun create(context: Context, printer: DevicePrinter, factory: () -> EmvCardReader): TelpoPOSDeviceImpl {
             // setupDevice pos device
-            setupDevice(context)
+            setupDevice()
 
             // setup logo
-//            val drawable = ContextCompat.getDrawable(context, R.drawable.isw_pax_app_logo)!!
-//            companyLogo = run {
-//                return@run when(drawable) {
-//                    is BitmapDrawable -> drawable.bitmap
-//                    else -> Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888).also { bitmap ->
-//                        val canvas = Canvas(bitmap)
-//                        drawable.setBounds(0, 0, canvas.width, canvas.height)
-//                        drawable.draw(canvas)
-//                    }
-//                }
-//            }
+            val drawable = ContextCompat.getDrawable(context, R.drawable.isw_telpo_app_logo)!!
+            companyLogo = run {
+                return@run when(drawable) {
+                    is BitmapDrawable -> drawable.bitmap
+                    else -> Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888).also { bitmap ->
+                        val canvas = Canvas(bitmap)
+                        drawable.setBounds(0, 0, canvas.width, canvas.height)
+                        drawable.draw(canvas)
+                    }
+                }
+            }
 
             return TelpoPOSDeviceImpl(printer, factory)
         }
@@ -78,14 +77,8 @@ class TelpoPOSDeviceImpl constructor(
 
         private var isSetup = false
 
-        private fun setupDevice(context: Context) {
-//            if (!isSetup) {
-//                val neptunes = NeptuneLiteUser.getInstance()
-//                dal = neptunes.getDal(context)
-//                // set IDevice implementation
-//                DeviceManager.getInstance().setIDevice(DeviceImplNeptune.getInstance())
-                isSetup = true
-//            }
+        private fun setupDevice() {
+            isSetup = true
         }
     }
 }

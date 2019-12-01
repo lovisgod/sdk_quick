@@ -17,6 +17,23 @@ fun String.beforeDot(): String {
     return this.substringBefore('.')
 }
 
+fun String.center(size: Int, pad: Char = ' ', newLine: Boolean = false): String? {
+    if (size <= this.length)
+        return this
+
+    val sb = StringBuilder(size)
+    for (i in 0 until (size - this.length) / 2) {
+        sb.append(pad)
+    }
+    sb.append(this)
+    while (sb.length < size) {
+        sb.append(pad)
+    }
+
+    if (newLine) sb.append("\n")
+    return sb.toString()
+}
+
 fun String.addComma(): String {
     var digitsBeforeDot = ""
     var digitsAfterDot = ""
