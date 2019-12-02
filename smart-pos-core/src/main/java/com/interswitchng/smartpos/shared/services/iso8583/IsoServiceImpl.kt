@@ -11,7 +11,6 @@ import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.*
@@ -20,7 +19,6 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.monthF
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeAndDateFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.yearAndMonthFormatter
-import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.OK
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.TIMEOUT_CODE
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
@@ -220,9 +218,6 @@ internal class IsoServiceImpl(
             val randomReference = "000000$stan"
             val timeDateNow = timeAndDateFormatter.format(now)
 
-            println("Called  --->Purchase code " )
-
-
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
@@ -289,24 +284,13 @@ internal class IsoServiceImpl(
 
 
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
-            responseMsg.dump(System.out, "")
+             responseMsg.dump(System.out, "")
 
-            println("Called Purchase code ===> ${responseMsg.message.getObjectValue<String>(39)}" )
-            // Initiate Reversal if timeout
-            if (responseMsg.message.getObjectValue<String>(39) == TIMEOUT_CODE) {
-                println("Called -----> Try reversal ----> ")
-                transaction.originalTransactionInfoData = OriginalTransactionInfoData
-                    .addOriginalTransactionInfo(originalStan = transaction.stan, originalTransmissionDateAndTime = timeDateNow)
-
-                initiateReversal(terminalInfo, transaction)
-
-            }
-            // return response
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
+                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts, transmissionDateTime = timeDateNow)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
@@ -631,21 +615,9 @@ internal class IsoServiceImpl(
                 .setValue(49, terminalInfo.currencyCode)
                 .setValue(55, transaction.icc)
 
-            if (hasPin) {
-                val pinKey = store.getString(KEY_PIN_KEY, "")
-                if (pinKey.isEmpty()) return null
-
-                val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
-                message.setValue(52, pinData)
-                    .setValue(123, "510101511344101")
-
-                // remove unset fields
-                message.message.removeFields(32, 59)
-            } else {
-                message.setValue(123, "511101511344101")
-                // remove unset fields
-                message.message.removeFields(32, 52, 59)
-            }
+            message.setValue(123, "510101511344101")
+            // remove unset fields
+            message.message.removeFields(32, 52, 53, 54, 56, 59, 60, 62, 64, 124)
 
             // set message hash
             val bytes = message.message.writeData()
@@ -664,7 +636,6 @@ internal class IsoServiceImpl(
             val isConnected = socket.open()
             if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
 
-
             val request = message.message.writeData()
             val response = socket.sendReceive(request)
             // close connection
@@ -672,7 +643,6 @@ internal class IsoServiceImpl(
 
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
-
 
             // return response
             return responseMsg.message.let {
@@ -771,7 +741,6 @@ internal class IsoServiceImpl(
             e.printStackTrace()
             return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
-
     }
 
     private fun generatePan(code: String): String {
