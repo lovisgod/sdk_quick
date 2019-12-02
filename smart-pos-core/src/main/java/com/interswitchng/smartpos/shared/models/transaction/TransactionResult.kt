@@ -141,28 +141,3 @@ data class TransactionResult(
     }
 
 }
-
-/*internal fun TransactionResult.getPublicTransactionResult(): TransactionResultModel {
-    return TransactionResultModel(
-        paymentType = this.paymentType,
-        stan = this.stan,
-        dateTime = this.dateTime,
-        amount = this.amount,
-        cardPan = this.cardPan,
-        cardType = this.cardType,
-        cardExpiry = this.cardExpiry,
-        authorizationCode = this.authorizationCode,
-        pinStatus = this.pinStatus,
-        responseMessage = this.responseMessage,
-        responseCode = this.responseCode,
-        AID = this.AID,
-        code = this.code,
-        telephone = this.telephone,
-
-
-
-    )
-
-
-}*/
-

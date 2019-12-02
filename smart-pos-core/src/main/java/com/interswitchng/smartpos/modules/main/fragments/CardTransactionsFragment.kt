@@ -306,7 +306,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         isw_scanning_card.show()
     }
 
-
     private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
 
         when (transactionResponse) {
@@ -362,7 +361,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         }
     }
 
-
     private fun cancelTransaction(reason: String) {
         // return early if already cancelled
         if (isCancelled) return
@@ -391,5 +389,4 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     companion object {
         const val TAG = "Card Transaction"
     }
-
 }
