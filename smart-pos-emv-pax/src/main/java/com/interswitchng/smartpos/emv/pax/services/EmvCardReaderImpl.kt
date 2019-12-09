@@ -120,6 +120,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             // get the ksn for dukpt pin
             val pinKsn = ksnData ?: ""
             // get track 2 string
+
+
             val track2data = EmvUtils.bcd2Str(it)
 
             // extract pan and expiry

@@ -41,6 +41,8 @@ class AmountFragment : BaseFragment(TAG) {
             PaymentModel.TransactionType.REFUND -> {
                 isw_proceed.text = getString(R.string.isw_refund)
             }
+
+
         }
     }
 
@@ -74,8 +76,6 @@ class AmountFragment : BaseFragment(TAG) {
         when (payment.type) {
             PaymentModel.TransactionType.CARD_PURCHASE -> {
                 val bottomDialog = PaymentTypeDialog {
-
-
                     when (it) {
                         PaymentModel.PaymentType.QR_CODE -> {
                             payment.newPayment {
@@ -133,8 +133,14 @@ class AmountFragment : BaseFragment(TAG) {
                 navigate(direction)
             }
 
-            PaymentModel.TransactionType.CARD_NOT_PRESENT -> {
+            PaymentModel.TransactionType.ECHANGE -> {
+                val direction = AmountFragmentDirections.iswActionIswFragmentAmountToIswPinfragment(payment)
+                navigate(direction)
+            }
 
+            PaymentModel.TransactionType.ECASH -> {
+                val direction = AmountFragmentDirections.iswActionIswFragmentAmountToIswPinfragment(payment)
+                navigate(direction)
             }
         }
     }

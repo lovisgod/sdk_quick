@@ -6,6 +6,7 @@ import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 
@@ -53,8 +54,14 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
         }, 6000)
 
         Handler().postDelayed({
-            //val direction = ProcessingRequestFragmentDirections.iswActionGotoFragmentReceipt(payment)
-            //navigate(direction)
+            val transaction = TransactionResponseModel()
+            transaction.transactionType = PaymentModel.TransactionType.CARD_PURCHASE
+            val direction =
+                ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptfragment(
+                    payment,
+                    transaction
+                )
+            navigate(direction)
         }, 7000)
     }
 

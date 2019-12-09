@@ -58,12 +58,16 @@ protected val iswPos: IswPos by inject()
         iswKimonoSettings.setOnClickListener {
 
             TerminalInfo.setSettingsSettlementChoice(true,store)
+
+         store.saveString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
+
             iswPos.gotoSettings()
         }
 
 
         iswNibssSettings.setOnClickListener {
             TerminalInfo.setSettingsSettlementChoice(false,store)
+            store.saveString(Constants.TERMINAL_CONFIG_TYPE,"nibss")
             iswPos.gotoSettings()
         }
 

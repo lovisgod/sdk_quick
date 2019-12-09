@@ -339,7 +339,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
                 dismissAlert()
 
-                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(
+                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(paymentModel,
                     TransactionResponseModel(transactionResult = transactionResult,
                         transactionType = PaymentModel.TransactionType.CARD_PURCHASE)
                 )
