@@ -21,7 +21,8 @@
     <string name="isw_content_transaction_not_confirmed">Unable to confirm transaction, please try again later</string>
     <string name="isw_title_transaction_error">Transaction Error</string>
     <string name="isw_title_transaction_timeout">Confirmation in Progress</string>
-    <string name="isw_content_transaction_in_progress_time_out">Your transaction is still processing, please wait.</string>
+    <string name="isw_content_transaction_in_progress_time_out">Your transaction is still processing, please wait.
+    </string>
     <string name="isw_label_insert_card">Insert your card</string>
     <string name="isw_enter_pin">Enter Pin</string>
     <string name="isw_action_cancel">Cancel</string>
@@ -77,25 +78,30 @@
     <string name="isw_hint_print_qr_code">PRINT QR CODE</string>
     <string name="isw_title_email_receipt">Email Receipt</string>
     <string name="isw_hint_scan_code">Scan Code</string>
-    <string name="isw_message_camera_permission">You need to grant access to camera to allow the app scan the Code.</string>
+    <string name="isw_message_camera_permission">You need to grant access to camera to allow the app scan the Code.
+    </string>
     <string name="isw_hint_print_ussd">PRINT USSD</string>
     <string name="isw_title_confirm_payment">CONFIRM PAYMENT</string>
     <string name="isw_yes">Yes</string>
     <string name="isw_no">No</string>
-    <string name="isw_hint_select_customer_s_preferred_payment_option">Select Customer\'s Preferred Payment Option</string>
+    <string name="isw_hint_select_customer_s_preferred_payment_option">Select Customer\'s Preferred Payment Option
+    </string>
     <string name="isw_hint_select_bank_hint">Select Customer\'s Preferred Bank</string>
-    <string name="isw_hint_enter_ussd_code">Enter this code: %1$s to pay using your mobile banking app or Quickteller</string>
-    <string name="isw_ussd_code_hint_text">%s \n %s \n Customers should dial the USSD </string>
+    <string name="isw_hint_enter_ussd_code">Enter this code: %1$s to pay using your mobile banking app or Quickteller
+    </string>
+    <string name="isw_ussd_code_hint_text">%s \n %s \n Customers should dial the USSD</string>
     <string name="isw_title_confirmation_in_progress">Confirmation in Progress</string>
     <string name="isw_action_change">Change</string>
     <string name="isw_hint_default_account">Default</string>
     <string name="isw_title_re_print_receipt">Re-Print Receipt</string>
     <string name="isw_email_end_point">https://api.sendgrid.com/v3/</string>
     <string name="isw_hint_select_a_date">Select a date</string>
-    <string name="isw_no_report">No Results for:  %1$s</string>
+    <string name="isw_no_report">No Results for: %1$s</string>
     <string name="isw_terminal_config">Terminal Config</string>
     <string name="isw_sdk_config">SDK Config</string>
-    <string name="isw_smartpos">Smart<b>POS</b></string>
+    <string name="isw_smartpos">Smart
+        <b>POS</b>
+    </string>
     <string name="isw_get_started">GET STARTED</string>
     <string name="isw_link_fingerprint">LINK FINGERPRINT</string>
     <string name="isw_transaction">Transaction</string>
@@ -115,10 +121,11 @@
     <string name="isw_enable_card_not_present">Enable card not present</string>
     <string name="isw_sample_text">Lorem ipsum dolor</string>
     <string name="isw_make_a_cash_withdrawal_from_this_terminal">Make a cash withdrawal from this terminal</string>
-    <string name="isw_transfer_funds_from_one_account_to_another">Transfer funds from one account to another</string>
+    <string name="isw_transfer_funds_from_one_account_to_another">Transfer funds, Ecash, Arbiter and Echange</string>
     <string name="isw_transfer_money">Transfer Money</string>
     <string name="isw_bill_payment">Bill Payment</string>
-    <string name="isw_pay_for_electricity_toll_tax_and_other_bills">Pay for electricity, toll, tax and other bills</string>
+    <string name="isw_pay_for_electricity_toll_tax_and_other_bills">Pay for electricity, toll, tax and other bills
+    </string>
     <string name="isw_purchase">Purchase</string>
     <string name="isw_pre_authorization">Pre-Authorization</string>
     <string name="isw_card_not_present">Card Not Present</string>
@@ -167,10 +174,32 @@
     <string name="isw_registered_fingerprint">Registered Fingerprint</string>
     <string name="isw_setup_profiles_for_fingerprint">Setup profiles for Fingerprint</string>
     <string name="isw_there_are_no_registered_fingerprint">There are no registered fingerprint</string>
-    <string name="isw_place_your_finger_on_the_fingerprint_scanner">Place your finger on the\nfingerprint scanner</string>
+    <string name="isw_place_your_finger_on_the_fingerprint_scanner">Place your finger on the\nfingerprint scanner
+    </string>
     <string name="isw_fingerprint_form_smartpos">Fingerprint form SmartPOS</string>
     <string name="isw_insert_supervisor_s_card">Insert\nSupervisor\'s card</string>
     <string name="isw_card_detected">Card Detected!</string>
     <string name="isw_loading_card_details">Loading Card Details…</string>
     <string name="isw_phone_number">Phone Number</string>
+    <string name="isw_bills">Bills Payment</string>
+    <string name="search">Search</string>
+    <string name="reference_number">Reference Number</string>
+    <string name="fund_your_ecash">Send money to any eCash wallet</string>
+    <string name="isw_more">More</string>
+    <string name="isw_ecash">E-Cash</string>
+    <string name="isw_echange">E-Change</string>
+    <string name="isw_arbiter">Arbiter</string>
+    <string name="isw_arbiter_info">Resolve disputed or incomplete transactions</string>
+    <string name="isw_transfer_to_account">Transfer to Account</string>
+    <string name="isw_transfer_to_account_info">Send money to bank accounts</string>
+    <string name="isw_amount_hint">Amount</string>
+    <string name="done">Done</string>
+    <string name="sent">Sent</string>
+    <string name="isw_account_number">Account Number</string>
+    <string name="isw_remarks">Remarks</string>
+    <string name="isw_arbiter_status_request">Arbiter Status</string>
+    <string name="isw_arbiter_hint">Transaction ID or Customer name</string>
+    <string name="filter_by_date">Filter by Date</string>
+    <string name="isw_arbiter_status">Arbiter Status</string>
+    <string name="isw_arbiter_status_info">Check the status of arbiter transactions</string>
 </resources>

@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.models.TransactionResultModel
 import com.interswitchng.smartpos.modules.main.models.cardModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
@@ -59,7 +60,8 @@ class CardDetailsFragment : BaseFragment(TAG) {
                 }
             }
             accountTypeDialog.show(childFragmentManager, CardTransactionsFragment.TAG)
-            val direction = CardDetailsFragmentDirections.iswActionGotoFragmentProcessingTransaction(paymentModel)
+            val direction =
+                CardDetailsFragmentDirections.iswActionIswFragmentCardDetailsToIswPaycodefragment(paymentModel)
             navigate(direction)
         }
     }

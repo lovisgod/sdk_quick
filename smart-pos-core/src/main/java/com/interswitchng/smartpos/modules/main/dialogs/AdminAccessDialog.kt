@@ -17,11 +17,6 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
 import com.interswitchng.smartpos.shared.utilities.toast
-import kotlinx.android.synthetic.main.isw_activity_card.*
-import kotlinx.android.synthetic.main.isw_fragment_card_payment.*
-import kotlinx.android.synthetic.main.isw_fragment_pin.*
-import kotlinx.android.synthetic.main.isw_fragment_pin.cardPin
-import kotlinx.android.synthetic.main.isw_sheet_layout_admin_access.*
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 
