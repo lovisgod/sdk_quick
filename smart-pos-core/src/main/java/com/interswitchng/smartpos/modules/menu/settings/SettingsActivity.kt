@@ -141,11 +141,11 @@ class SettingsActivity : MenuActivity() {
 
                 settingsViewModel.downloadTerminalConfig(terminalID)
 
-                var position =  settlementTypeSpinner.selectedItemPosition
-                if (position==0)
-                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"nibss")
-                else if(position==1)
-                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
+//                var position =  settlementTypeSpinner.selectedItemPosition
+//                if (position==0)
+//                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"nibss")
+//                else if(position==1)
+//                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
             }
         }
     }

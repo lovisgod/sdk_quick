@@ -194,9 +194,12 @@ internal class IsoServiceImpl(
 
 
 
+           // var merchantId="2ISW00000000001"
 
             // parse and save terminal info
-            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also { it.persist(store) }
+            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also {
+               // it.merchantId="2ISW00000000001"
+                it.persist(store) }
             logger.log("Terminal Data => $terminalData")
 
             return true

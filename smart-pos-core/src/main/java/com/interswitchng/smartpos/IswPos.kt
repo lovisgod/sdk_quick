@@ -18,6 +18,7 @@ import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.menu.report.ReportActivity
 import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
+import com.interswitchng.smartpos.modules.menu.settings.SettlementSelectionActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
@@ -80,6 +81,8 @@ class IswPos private constructor(private val app: Application, internal val devi
     }
 
     fun gotoSettings() = showSettingsScreen()
+
+    fun gotoSettlementSelection() = showSettlementSelectionScreen()
 
     fun gotoDashboard() = showDashboardScreen()
 
@@ -164,6 +167,15 @@ class IswPos private constructor(private val app: Application, internal val devi
          */
         @JvmStatic
         fun showSettingsScreen() = showScreen(SettingsActivity::class.java)
+
+
+
+        /**
+         * This method loads the settings screen
+         */
+        @JvmStatic
+        fun showSettlementSelectionScreen() = showScreen(SettlementSelectionActivity::class.java)
+
 
         /**
          * This method loads the dashboard screen

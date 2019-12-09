@@ -12,6 +12,36 @@ internal object TerminalInfoParser {
             internal val value: String)
 
 //ip: String, port: Int,
+
+    fun parseKimono(terminalId: String,merchantId:String,currencyCode:String,
+                    countryCode:String , serverTimeoutInSec:Int,
+                    callHomeTimeInMin:Int,
+                    merchantCategoryCode:String,
+                    merchantNameAndLocation:String, capabilities:String ): TerminalInfo? {
+
+        var terminalInfo = TerminalInfo(
+                terminalId = terminalId,
+                merchantId = merchantId,
+                currencyCode = currencyCode,
+                countryCode = countryCode,
+                serverTimeoutInSec = serverTimeoutInSec,
+                callHomeTimeInMin = callHomeTimeInMin,
+                merchantCategoryCode = merchantCategoryCode,
+                merchantNameAndLocation = merchantNameAndLocation,
+                capabilities = "E0F8C8",
+                isKimono = true
+        )
+
+        if (terminalInfo.countryCode.length >= 4) {
+            terminalInfo = terminalInfo.copy(countryCode = terminalInfo.countryCode.substring(1, terminalInfo.countryCode.length))
+        }
+        if (terminalInfo.currencyCode.length >= 4) {
+            terminalInfo = terminalInfo.copy(currencyCode = terminalInfo.currencyCode.substring(1, terminalInfo.currencyCode.length))
+        }
+        return terminalInfo
+    }
+
+
     fun parse(terminalId: String,  rawData: String, store: KeyValueStore): TerminalInfo? {
 
         val paramatersLists = mutableListOf<MutableList<TerminalData>>()
@@ -67,7 +97,8 @@ internal object TerminalInfoParser {
                         callHomeTimeInMin = map["07"] as Int,
                         merchantCategoryCode = map["08"] as String,
                         merchantNameAndLocation = map["52"] as String,
-                        capabilities = TerminalInfo.get(store)?.capabilities
+                        capabilities = TerminalInfo.get(store)?.capabilities,
+                        isKimono = false
                 )
 
                 if (terminalInfo.countryCode.length >= 4) {
@@ -76,7 +107,6 @@ internal object TerminalInfoParser {
                 if (terminalInfo.currencyCode.length >= 4) {
                     terminalInfo = terminalInfo.copy(currencyCode = terminalInfo.currencyCode.substring(1, terminalInfo.currencyCode.length))
                 }
-
                 return terminalInfo
             }
 

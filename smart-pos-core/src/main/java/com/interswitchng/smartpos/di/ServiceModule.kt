@@ -30,7 +30,7 @@ internal val serviceModule = module() //override = true
     single<IsoService> { (isKimono: Boolean) ->
 
 
-        if (isKimono) KimonoHttpServiceImpl(androidContext(), get(), get())
+        if (isKimono) KimonoHttpServiceImpl(androidContext(), get(), get(),get())
         else IsoServiceImpl(androidContext(), get(), get())
     }
 
