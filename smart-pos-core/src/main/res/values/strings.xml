@@ -202,4 +202,13 @@
     <string name="filter_by_date">Filter by Date</string>
     <string name="isw_arbiter_status">Arbiter Status</string>
     <string name="isw_arbiter_status_info">Check the status of arbiter transactions</string>
+    <string name="transaction_sent_info">Your transaction has been sent and is being processed, you will receive a
+        confirmation sms shortly.
+    </string>
+    <string name="isw_sent">Sent</string>
+    <string name="customer_info">Customer Info</string>
+    <string name="isw_raise_dispute">Raise a Dispute</string>
+    <string name="isw_dispute_status">Dispute Status</string>
+    <string name="isw_get_reward">Get a Reward</string>
+    <string name="isw_get_reward_info">Loyalty rewards and redemption</string>
 </resources>

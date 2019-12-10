@@ -16,10 +16,7 @@ class TransactionFailureFragment : BaseFragment(TAG) {
     }
 
     private fun intializeViews() {
-        isw_done.setOnClickListener {
-            val direction = TransactionFragmentDirections.iswActionIswTransactionToIswSendmoneyfragment()
-            navigate(direction)
-        }
+
     }
 
     companion object {

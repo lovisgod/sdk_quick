@@ -42,65 +42,12 @@ class AccountTransferFragment : BaseFragment(TAG) {
             navigateUp()
         }
 
-        isw_account_number.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-                isw_remarks.visibility = View.GONE
-                isw_account_name.visibility = View.GONE
-                isw_proceed.isEnabled = false
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-
-        isw_account_name.keyListener = null
 
         isw_proceed.setOnClickListener {
-            if (TextUtils.isEmpty(isw_account_name.text))
-                Toast.makeText(context, "Account number not valid", Toast.LENGTH_LONG).show()
-            else {
                 proceedToPayment()
-            }
         }
 
-        val plans = resources.getStringArray(R.array.isw_dummy_banks)
-        val adapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_spinner_item,
-            plans
-        )
-        bank_spinner.adapter = adapter
-        bank_spinner.onItemSelectedListener =
-            object : AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
 
-                override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                }
-
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    DisplayUtils.hideKeyboard(activity as Activity)
-
-                    if (isw_account_number.text.length == 10) {
-                        isw_remarks.visibility = View.VISIBLE
-                        isw_account_name.visibility = View.VISIBLE
-                        isw_proceed.isEnabled = true
-                    } else {
-                        Toast.makeText(context, "Invalid account number", Toast.LENGTH_LONG).show()
-                    }
-                }
-
-            }
     }
 
     private fun proceedToPayment() {

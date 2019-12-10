@@ -444,6 +444,9 @@
         <action android:id="@+id/isw_action_isw_pinfragment_to_isw_transfercompletefragment"
                 app:destination="@id/isw_transfercompletefragment" app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"/>
+        <action android:id="@+id/action_isw_pinfragment_to_transactionSentFragment"
+                app:destination="@id/transactionSentFragment" app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"/>
     </fragment>
     <fragment android:id="@+id/isw_transfercompletefragment"
               android:name="com.interswitchng.smartpos.modules.sendmoney.TransferCompleteFragment"
@@ -456,5 +459,15 @@
     <fragment android:id="@+id/isw_arbitrationstatusfragment"
               android:name="com.interswitchng.smartpos.modules.sendmoney.ArbitrationStatusFragment"
               android:label="ArbitrationStatusFragment"/>
+    <fragment android:id="@+id/transactionSentFragment"
+              android:name="com.interswitchng.smartpos.modules.main.fragments.TransactionSentFragment"
+              android:label="TransactionSentFragment">
+        <action android:id="@+id/action_transactionSentFragment_to_isw_sendmoneyfragment"
+                app:destination="@id/isw_sendmoneyfragment" app:enterAnim="@anim/slide_in_left"
+                app:exitAnim="@anim/slide_out_right" app:popUpTo="@id/isw_sendmoneyfragment" app:popUpToInclusive="true"
+                app:launchSingleTop="true"/>
+        <argument android:name="PaymentModel"
+                  app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+    </fragment>
 
 </navigation>

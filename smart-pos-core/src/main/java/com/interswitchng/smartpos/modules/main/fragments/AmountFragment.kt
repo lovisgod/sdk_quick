@@ -5,10 +5,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
+import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
 import java.text.NumberFormat
 
@@ -33,6 +36,7 @@ class AmountFragment : BaseFragment(TAG) {
     }
 
     private fun setUpUI() {
+        DisplayUtils.hideKeyboard(activity as MainActivity)
         when (payment.type) {
             PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
                 isw_proceed.text = getString(R.string.isw_pre_authorize)
