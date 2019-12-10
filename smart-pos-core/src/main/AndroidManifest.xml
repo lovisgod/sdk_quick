@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.interswitchng.smartpos">
+    package="com.interswitchng.smartpos">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application>
         <activity android:name=".modules.bills.BillsActivity"
@@ -14,72 +14,82 @@
         </activity>
 
         <meta-data
-                android:name="preloaded_fonts"
-                android:resource="@array/isw_preloaded_fonts"/>
+            android:name="preloaded_fonts"
+            android:resource="@array/isw_preloaded_fonts" />
 
         <activity
-                android:name=".modules.home.HomeActivity"
-                android:label="@string/isw_label_app_title"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name=".modules.home.HomeActivity"
+            android:label="@string/isw_label_app_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
-                android:name=".modules.ussdqr.activities.UssdActivity"
-                android:label="USSD"
-                android:launchMode="singleTop"
-                android:noHistory="true"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name=".modules.ussdqr.activities.UssdActivity"
+            android:label="USSD"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
-                android:name=".modules.ussdqr.activities.QrCodeActivity"
-                android:label="QR Code"
-                android:launchMode="singleTop"
-                android:noHistory="true"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name=".modules.ussdqr.activities.QrCodeActivity"
+            android:label="QR Code"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
-                android:name=".modules.card.CardActivity"
-                android:label="Card"
-                android:launchMode="singleTop"
-                android:noHistory="true"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name=".modules.card.CardActivity"
+            android:label="Card"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
-                android:name=".modules.paycode.PayCodeActivity"
-                android:label="Pay Code"
-                android:launchMode="singleTop"
-                android:noHistory="true"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name=".modules.paycode.PayCodeActivity"
+            android:label="Pay Code"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
-                android:name=".shared.activities.TransactionResultActivity"
-                android:label="Transaction Result"
-                android:launchMode="singleTop"
-                android:noHistory="true"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name=".shared.activities.TransactionResultActivity"
+            android:label="Transaction Result"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+
         <activity
-                android:name=".modules.menu.settings.SettingsActivity"
-                android:label="Settings"
-                android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name="com.interswitchng.smartpos.modules.menu.settings.SettingsActivity"
+            android:label="Settings"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+
+
         <activity
-                android:name=".modules.home.PurchaseActivity"
-                android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name="com.interswitchng.smartpos.modules.menu.settings.SettlementSelectionActivity"
+            android:label="Settings"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
-                android:name=".modules.menu.history.HistoryActivity"
-                android:label="History"
-                android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name=".modules.home.PurchaseActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
         <activity
-                android:name=".modules.menu.report.ReportActivity"
-                android:label="Report"
-                android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:theme="@style/ISW.NoActionBar"/>
+            android:name="com.interswitchng.smartpos.modules.menu.history.HistoryActivity"
+            android:label="History"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar" />
+
+        <activity android:name="com.interswitchng.smartpos.modules.menu.report.ReportActivity"
+            android:label="Report"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/ISW.NoActionBar"  />
+
     </application>
 
 </manifest>

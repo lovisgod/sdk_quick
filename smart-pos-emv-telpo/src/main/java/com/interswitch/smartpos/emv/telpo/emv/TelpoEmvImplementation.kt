@@ -1,5 +1,7 @@
 package com.interswitch.smartpos.emv.telpo.emv
 
+import com.interswitch.smartpos.emv.telpo.utils.EmvUtils.bcd2Str
+
 import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
 import com.interswitch.smartpos.emv.telpo.models.getAllCapks
@@ -9,6 +11,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
 import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
@@ -43,6 +46,8 @@ internal class TelpoEmvImplementation (
     fun setAmount(amount: Int) {
         this.amount = amount
     }
+
+
 
     private fun addCAPKIntoEmvLib(capks: List<EmvCAPK>) {
         capks.forEach { capk ->
@@ -182,6 +187,54 @@ internal class TelpoEmvImplementation (
         return TelpoEmvUtils.buildIccString(tagValues)
     }
 
+
+
+
+    internal fun getIccFullData(): IccData {
+        // set icc data using specified icc tags
+
+
+        return IccData(
+                TRANSACTION_AMOUNT = ICCData.TRANSACTION_AMOUNT.getTlv() ?: "",
+                ANOTHER_AMOUNT = ICCData.ANOTHER_AMOUNT.getTlv() ?: "",
+                APPLICATION_INTERCHANGE_PROFILE = ICCData.APPLICATION_INTERCHANGE_PROFILE.getTlv() ?: "",
+                APPLICATION_TRANSACTION_COUNTER = ICCData.APPLICATION_TRANSACTION_COUNTER.getTlv() ?: "",
+                CRYPTOGRAM_INFO_DATA = ICCData.CRYPTOGRAM_INFO_DATA.getTlv() ?: "",
+                AUTHORIZATION_REQUEST = ICCData.AUTHORIZATION_REQUEST.getTlv() ?: "",
+                CARD_HOLDER_VERIFICATION_RESULT = ICCData.CARD_HOLDER_VERIFICATION_RESULT.getTlv() ?: "",
+                ISSUER_APP_DATA = ICCData.ISSUER_APP_DATA.getTlv() ?: "",
+                TERMINAL_VERIFICATION_RESULT = ICCData.TERMINAL_VERIFICATION_RESULT.getTlv() ?: "",
+                // remove leading zero in currency and country codes
+                TRANSACTION_CURRENCY_CODE = ICCData.TRANSACTION_CURRENCY_CODE.getTlv()?.substring(1) ?: "",
+                TERMINAL_COUNTRY_CODE = ICCData.TERMINAL_COUNTRY_CODE.getTlv()?.substring(1) ?: "",
+
+                TERMINAL_TYPE = ICCData.TERMINAL_TYPE.getTlv() ?: "",
+                TERMINAL_CAPABILITIES = ICCData.TERMINAL_CAPABILITIES.getTlv() ?: "",
+                TRANSACTION_DATE = ICCData.TRANSACTION_DATE.getTlv() ?: "",
+                TRANSACTION_TYPE = ICCData.TRANSACTION_TYPE.getTlv() ?: "",
+                UNPREDICTABLE_NUMBER = ICCData.UNPREDICTABLE_NUMBER.getTlv() ?: ""
+                //,Segun check this
+//                DEDICATED_FILE_NAME = ICCData.DEDICATED_FILE_NAME.getTlv() ?: ""
+
+        ).apply {
+
+
+            val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
+
+            for (tag in REQUEST_TAGS) {
+                val tlv = getTLV(tag.tag)
+                tagValues.add(Pair(tag, tlv))
+            }
+
+            iccAsString = TelpoEmvUtils.buildIccString(tagValues)
+            INTERFACE_DEVICE_SERIAL_NUMBER = ICCData.INTERFACE_DEVICE_SERIAL_NUMBER.getTlv() ?: ""
+            APP_VERSION_NUMBER = ICCData.APP_VERSION_NUMBER.getTlv() ?: ""
+        }
+
+
+    }
+
+
     inner class TelpoEmvServiceListener : EmvServiceListener() {
 
         override fun onInputAmount(amountData: EmvAmountData?): Int {
@@ -233,6 +286,7 @@ internal class TelpoEmvImplementation (
             return EmvService.EMV_TRUE
         }
 
+
         override fun onOnlineProcess(p0: EmvOnlineData?): Int = runBlocking {
             pinCallback.showPinOk()
             EmvService.EMV_TRUE
@@ -279,5 +333,10 @@ internal class TelpoEmvImplementation (
         override fun onMir_FinishReadAppData(): Int = 0
 
         override fun onSelectAppFail(p0: Int): Int = EmvService.EMV_TRUE
+
+
     }
+
+
+    private fun ICCData.getTlv(): String? = getTLV(tag)?.let(::bcd2Str)
 }

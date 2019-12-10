@@ -65,8 +65,8 @@
                     android:textStyle="bold"
                     android:text="Settlement Option"
                   tools:text="Settlement" />
-                <Spinner
-
+                <TextView
+                    android:text="NIBSS"
                     android:id="@+id/settlementTypeSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

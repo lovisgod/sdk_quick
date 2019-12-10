@@ -75,25 +75,42 @@ data class TerminalInfo(
 
         internal fun get(store: KeyValueStore): TerminalInfo? {
 
-            var selectedSettlement =store.getString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
-
-var isKimono=false
-            if (selectedSettlement=="kimono"){
-                isKimono=true
-            }
-
             val jsonString = store.getString(PERSIST_KEY, "")
             return when(jsonString) {
                 "" -> null
                 else -> {
                    val data= Gson().fromJson(jsonString, TerminalInfo::class.java)
-                    data.isKimono=isKimono
+//
                     data
                 }
                 }
             }
 
 
+
+
+        internal fun getSettingsSettlementChoice(store: KeyValueStore): Boolean {
+
+            var selectedSettlement =store.getString(Constants.SETTINGS_TERMINAL_CONFIG_TYPE,"kimono")
+            if (selectedSettlement=="kimono"){
+               return  true
+            }
+
+            return  false
+
+
+        }
+
+
+        internal fun setSettingsSettlementChoice(isKimono: Boolean,store: KeyValueStore) {
+
+            if(isKimono)
+            store.saveString(Constants.SETTINGS_TERMINAL_CONFIG_TYPE,"kimono")
+            else
+                store.saveString(Constants.SETTINGS_TERMINAL_CONFIG_TYPE,"nibss")
+
+
+        }
 
 
     }

@@ -163,7 +163,8 @@
     <fragment android:id="@+id/isw_fragment_receipt"
         tools:layout="@layout/isw_fragment_receipt"
         android:name="com.interswitchng.smartpos.modules.main.fragments.ReceiptFragment">
-
+        <argument android:name="PaymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
         <argument android:name="TransactionResponseModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.TransactionResponseModel"/>
 

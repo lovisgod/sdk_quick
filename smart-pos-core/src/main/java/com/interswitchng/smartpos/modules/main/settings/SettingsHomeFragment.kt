@@ -38,7 +38,11 @@ class SettingsHomeFragment : BaseFragment(TAG) {
         }
 
         isw_download_settings_btn.setOnClickListener {
-            iswPos.gotoSettings()
+
+
+//            iswPos.gotoSettings()
+
+            iswPos.gotoSettlementSelection()
         }
     }
 
