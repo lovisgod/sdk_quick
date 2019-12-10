@@ -62,25 +62,25 @@
     <TextView
             android:id="@+id/isw_amount_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="32dp"
             android:textSize="16sp"
             android:text="Amount"
             android:textColor="@android:color/black"
-            app:layout_constraintBottom_toTopOf="@+id/isw_amount"
             app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
             app:layout_constraintTop_toTopOf="@+id/isw_view"/>
 
     <TextView
             android:id="@+id/isw_amount"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:textColor="@android:color/black"
             android:textSize="30sp"
             android:textStyle="bold"
             android:text="123345"
             app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-            app:layout_constraintTop_toBottomOf="@+id/isw_amount_text"/>
+            app:layout_constraintTop_toBottomOf="@+id/isw_amount_text"
+    />
 
 
     <LinearLayout
@@ -88,8 +88,9 @@
             app:layout_constraintEnd_toStartOf="@id/isw_guideline3"
             app:layout_constraintStart_toEndOf="@id/isw_guideline2"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/isw_view">
+            android:layout_height="0dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_view" android:id="@+id/isw_linearlayout"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/isw_amount">
 
         <TextView
                 android:layout_weight="1"
@@ -247,7 +248,7 @@
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center"
-                    android:text="5"
+                    android:text="8"
                     android:textColor="@color/isw_keypad_color_statelist"
                     android:textSize="20sp"
                     tools:textColor="@android:color/black"/>
@@ -317,7 +318,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/isw_proceed"/>
 
     </LinearLayout>

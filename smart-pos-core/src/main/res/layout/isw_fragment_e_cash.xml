@@ -41,13 +41,13 @@
     <TextView
             android:id="@+id/isw_merchant_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_height="35dp"
             android:textColor="@android:color/white"
             android:textSize="26sp"
             app:layout_constraintBottom_toTopOf="@id/isw_guideline"
             app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-            android:text="@string/isw_ecash"/>
+            android:text="@string/isw_ecash"
+            android:layout_marginBottom="24dp"/>
 
     <View
             android:id="@+id/isw_view"

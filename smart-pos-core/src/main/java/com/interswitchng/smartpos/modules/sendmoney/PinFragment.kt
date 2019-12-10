@@ -43,8 +43,7 @@ class PinFragment : BaseFragment(TAG) {
 
         val transaction = TransactionResponseModel()
         isw_proceed.setOnClickListener {
-            val direction =
-                PinFragmentDirections.iswActionIswPinfragmentToIswTransactionfailurefragment(payment, transaction)
+            val direction = PinFragmentDirections.actionIswPinfragmentToTransactionSentFragment(payment)
             navigate(direction)
         }
 
