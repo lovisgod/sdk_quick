@@ -226,7 +226,9 @@ if(false)
         }
 
         private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String,transaction: TransactionInfo): IccData {
-return  transaction.iccFull
+            transaction.iccFull.TRANSACTION_AMOUNT=amount
+
+            return  transaction.iccFull
         }
 //
 //        private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String,transaction: TransactionInfo): IccData {

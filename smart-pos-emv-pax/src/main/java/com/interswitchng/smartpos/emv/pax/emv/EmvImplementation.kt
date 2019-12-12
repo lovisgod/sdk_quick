@@ -126,6 +126,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         // configure other parameters
         emvParameters.apply {
             capability = str2Bcd(terminalConfig.terminalcapability)
+
             countryCode = str2Bcd(terminalInfo.countryCode)
             transCurrCode = str2Bcd(terminalInfo.currencyCode)
             merchName = terminalInfo.merchantNameAndLocation.toByteArray()
