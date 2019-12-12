@@ -412,6 +412,9 @@
         <action android:id="@+id/isw_action_isw_sendmoneyfragment_to_isw_arbitrationstatusfragment"
                 app:destination="@id/isw_arbitrationstatusfragment" app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"/>
+        <action android:id="@+id/isw_action_isw_sendmoneyfragment_to_isw_arbiterfragment"
+                app:destination="@id/isw_arbiterfragment" app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"/>
     </fragment>
     <fragment android:id="@+id/isw_ecashfragment"
               android:name="com.interswitchng.smartpos.modules.sendmoney.eCashFragment" android:label="eCashFragment">
@@ -468,5 +471,11 @@
         <argument android:name="PaymentModel"
                   app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
     </fragment>
+    <fragment android:id="@+id/isw_arbiterfragment"
+              android:name="com.interswitchng.smartpos.modules.sendmoney.ArbiterFragment"
+              android:label="ArbiterFragment"/>
+    <action android:id="@+id/isw_action_global_isw_arbitrationstatusfragment"
+            app:destination="@id/isw_arbitrationstatusfragment" app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
 
 </navigation>

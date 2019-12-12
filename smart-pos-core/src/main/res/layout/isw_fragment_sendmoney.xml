@@ -250,6 +250,8 @@
         <com.google.android.material.card.MaterialCardView
                 android:id="@+id/isw_arbiter_status_card"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
+
                 app:cardCornerRadius="10dp"
                 app:cardElevation="3dp"
                 android:layout_marginHorizontal="5dp"
@@ -365,6 +367,7 @@
                     android:layout_marginVertical="20dp"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="3dp"
+                    android:layout_marginHorizontal="5dp"
                     app:rippleColor="@android:color/darker_gray"
                     app:strokeColor="@color/iswSelectedTypeColor"
                     app:strokeWidth="0.2dp"

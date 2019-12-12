@@ -208,7 +208,16 @@
     <string name="isw_sent">Sent</string>
     <string name="customer_info">Customer Info</string>
     <string name="isw_raise_dispute">Raise a Dispute</string>
-    <string name="isw_dispute_status">Dispute Status</string>
+    <string name="isw_dispute_status">Dispute Transaction Status</string>
     <string name="isw_get_reward">Get a Reward</string>
     <string name="isw_get_reward_info">Loyalty rewards and redemption</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="isw_transaction_id">Transaction ID</string>
+    <string name="issue_type">Issue Type</string>
+    <string name="resolution_status">Resolution Status</string>
+    <string name="not_found">Not Found</string>
+    <string name="isw_date_hint">Date</string>
+    <string name="isw_raise">Raise</string>
+    <string name="isw_check_dispute_status">Check Dispute Status</string>
+    <string name="isw_or">Or</string>
 </resources>

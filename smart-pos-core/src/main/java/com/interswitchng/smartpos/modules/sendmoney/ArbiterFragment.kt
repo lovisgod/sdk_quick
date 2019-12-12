@@ -1,25 +1,30 @@
 package com.interswitchng.smartpos.modules.sendmoney
 
-import android.content.Context
-import android.net.Uri
+
 import android.os.Bundle
-import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import kotlinx.android.synthetic.main.isw_fragment_arbiter.*
+import kotlinx.android.synthetic.main.isw_fragment_arbiter.arbiterSpinner
+import kotlinx.android.synthetic.main.isw_fragment_arbiter.backImg
 import kotlinx.android.synthetic.main.isw_fragment_arbitration_status.*
+import kotlinx.android.synthetic.main.isw_fragment_transaction.*
+import kotlinx.android.synthetic.main.isw_item_arbiter_status_list.*
 
 
-class ArbitrationStatusFragment : BaseFragment(TAG) {
+class ArbiterFragment : BaseFragment(TAG) {
 
     override val layoutId: Int
-        get() = R.layout.isw_fragment_arbitration_status
+        get() = R.layout.isw_fragment_arbiter
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,7 +32,6 @@ class ArbitrationStatusFragment : BaseFragment(TAG) {
     }
 
     private fun initializeViews() {
-
         backImg.setOnClickListener {
             navigateUp()
         }
@@ -53,23 +57,20 @@ class ArbitrationStatusFragment : BaseFragment(TAG) {
 
             }
 
-        isw_proceed.setOnClickListener {
+        isw_check_status.setOnClickListener(){
+            val direction = ArbiterFragmentDirections.iswActionGlobalIswArbitrationstatusfragment()
+            navigate(direction)
+        }
 
-            val searchString = isw_reference_phonenumber.text;
-            if(!TextUtils.isEmpty(searchString)) {
-                isw_not_found_text.visibility = View.GONE
-                resultView.visibility = View.VISIBLE
-            }
-            else {
-                resultView.visibility = View.INVISIBLE
-                isw_not_found_text.visibility = View.VISIBLE
-            }
+        isw_raise.setOnClickListener(){
+            Toast.makeText(context, "Dispute Raised", Toast.LENGTH_LONG).show()
+            isw_amount.text = null
+            isw_amount.text = null
+            isw_reference_date.text = null
         }
     }
 
     companion object {
-        const val TAG = "Arbitration Status FRAGMENT"
+        const val TAG = "Arbitration FRAGMENT"
     }
-
-
 }

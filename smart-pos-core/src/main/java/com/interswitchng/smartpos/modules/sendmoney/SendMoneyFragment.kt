@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.dialogs.AdminAccessDialog
+import com.interswitchng.smartpos.modules.main.fragments.TransactionFragmentDirections
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_fragment_sendmoney.*
 import kotlinx.android.synthetic.main.isw_fragment_sendmoney.backImg
@@ -47,6 +49,19 @@ class SendMoneyFragment : BaseFragment(TAG) {
         isw_arbiter_status_card.setOnClickListener {
             val direction = SendMoneyFragmentDirections.iswActionIswSendmoneyfragmentToIswArbitrationstatusfragment()
             navigate(direction)
+        }
+        isw_arbiter_status_card.visibility = View.GONE
+
+        isw_arbiter_card.setOnClickListener(){
+            val dialog = AdminAccessDialog { validated ->
+                if (validated) {
+                    val direction = SendMoneyFragmentDirections.iswActionIswSendmoneyfragmentToIswArbiterfragment()
+                    navigate(direction)
+                }
+            }
+            dialog.show(childFragmentManager, AdminAccessDialog.TAG)
+
+
         }
 
 
