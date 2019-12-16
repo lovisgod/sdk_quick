@@ -26,15 +26,15 @@ class AuthenticationFragment : BaseFragment(TAG) {
 
     private fun handleClick() {
         isw_proceed.setOnClickListener {
-            val authorizationId = isw_authorization_id.text.toString()
+            val originalDateTime = isw_original_date_time.text.toString()
             val stan = isw_stan_value.text.toString()
 
-            if (authorizationId.isEmpty() || stan.isEmpty()) {
+            if (originalDateTime.isEmpty() || stan.isEmpty()) {
                 Toast.makeText(context, "Fields cannot be empty", Toast.LENGTH_LONG).show()
             } else {
                 payment.newPayment {
-                    this.authorizationId = authorizationId
-                    this.stan = stan
+                    this.originalDateAndTime = originalDateTime
+                    this.originalStan = stan
                 }
 
                 Toast.makeText(context, payment.type.toString(), Toast.LENGTH_LONG ).show()
@@ -48,5 +48,4 @@ class AuthenticationFragment : BaseFragment(TAG) {
     companion object {
         const val TAG = "AUTHENTICATION FRAGMENT"
     }
-
 }

@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request
 
+import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 
 
@@ -40,18 +41,8 @@ internal data class TransactionInfo(
 }
 
 internal data class OriginalTransactionInfoData(
-        var originalStan: String?,
-        var originalTransmissionDateAndTime: String?,
-        var originalAuthorizationId: String?,
-        var originalAmount: String?
-) {
-        companion object {
-                fun addOriginalTransactionInfo(originalStan: String? = null,
-                                               originalTransmissionDateAndTime: String? = null,
-                                               originalAuthorizationId: String? = null,
-                                               originalAmount: String? = null) = OriginalTransactionInfoData(originalStan,
-                        originalTransmissionDateAndTime,
-                        originalAuthorizationId,
-                                originalAmount)
-        }
-}
+        var originalStan: String = EMPTY_STRING,
+        var originalTransmissionDateAndTime: String = EMPTY_STRING,
+        var originalAuthorizationId: String = EMPTY_STRING,
+        var originalAmount: String = EMPTY_STRING
+)

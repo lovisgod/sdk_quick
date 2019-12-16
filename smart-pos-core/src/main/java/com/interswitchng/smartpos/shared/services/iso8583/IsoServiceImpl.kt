@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.*
@@ -25,6 +26,7 @@ import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
 import java.io.UnsupportedEncodingException
 import java.text.ParseException
+import java.time.LocalDateTime
 import java.util.*
 
 internal class IsoServiceImpl(
@@ -286,6 +288,10 @@ internal class IsoServiceImpl(
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
              responseMsg.dump(System.out, "")
 
+            //transaction.originalTransactionInfoData = OriginalTransactionInfoData(originalStan = stan, originalTransmissionDateAndTime = timeDateNow)
+
+            //initiateReversal(terminalInfo, transaction)
+
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
@@ -381,7 +387,7 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts)
+                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts, transmissionDateTime = timeDateNow)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
@@ -644,6 +650,9 @@ internal class IsoServiceImpl(
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
+            logger.log("Message ---> Stan == $stan \n Timedate ==> $transmissionDateTime ")
+            logger.log("Response code ==> ${responseMsg.message.getObjectValue<String>(39)}")
+
             // return response
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
@@ -659,12 +668,14 @@ internal class IsoServiceImpl(
     }
 
     override fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        logger.log("Called ----> Initiate Completion")
         try {
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x220))
             val processCode = "61" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
+            val originalStan = transaction.originalTransactionInfoData?.originalStan
             val acquiringInstitutionId = "00000111129"
             val forwardingInstitutionId = "00000111129"
             val originalTransactionInfoData = transaction.originalTransactionInfoData
@@ -672,7 +683,7 @@ internal class IsoServiceImpl(
             val actualSettlementAmount = "000000000000"
             val actualSettlementFee= "C00000000"
             val actualTransactionFee= "C00000000"
-            val originalDataElement = "0100" + stan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
+            val originalDataElement = "0100" + originalStan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
             val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
@@ -712,15 +723,26 @@ internal class IsoServiceImpl(
 
             val sessionKey = store.getString(KEY_SESSION_KEY, "")
             val hashValue = IsoUtils.getMac(sessionKey, temp) //SHA256
+
+            logger.log("hash value for field 128 is : $hashValue")
             message.setValue(128, hashValue)
+            // remove unset fields
+            message.message.removeFields(9, 29, 30, 31, 32, 33, 50, 52, 53, 54, 56, 58, 59, 60, 62, 64, 67, 98, 100, 102, 103, 124)
             message.dump(System.out, "request -- ")
+
+            logger.log("Called ---->Completion message packed")
+
 
             // open connection
             val isConnected = socket.open()
             if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
 
 
+            logger.log("Called ----> Completion connected to server")
+
             val request = message.message.writeData()
+            logger.log(IsoUtils.bytesToHex(request))
+            logger.log(messageFactory.getMessageTemplate(0x220).toString())
             val response = socket.sendReceive(request)
             // close connection
             socket.close()
@@ -729,6 +751,7 @@ internal class IsoServiceImpl(
             responseMsg.dump(System.out, "")
 
 
+            logger.log("Called ----> Completion response code ---> ${responseMsg.message.getObjectValue<String>(39)}")
             // return response
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""

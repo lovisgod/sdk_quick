@@ -48,7 +48,7 @@ internal val viewModels = module {
     }
 
 
-    viewModel { TransactionResultViewModel(get(), get(), get()) }
+    viewModel { TransactionResultViewModel(get(), get(), get(), get()) }
 
     viewModel { HistoryViewModel(get()) }
 

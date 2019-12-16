@@ -47,6 +47,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
     private var transactionType: TransactionType = TransactionType.CARD_PURCHASE
 
+    private lateinit var originalTxnData: OriginalTransactionInfoData
+
     fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {
 
         with(uiScope) {
@@ -147,8 +149,11 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         return when (transactionType) {
             TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)
             TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
-            TransactionType.COMPLETION -> isoService.initiateCompletion(terminalInfo, txnInfo)
             TransactionType.REFUND -> isoService.initiateRefund(terminalInfo, txnInfo)
+            TransactionType.COMPLETION -> {
+                txnInfo.originalTransactionInfoData = originalTxnData
+                isoService.initiateCompletion(terminalInfo, txnInfo)
+            }
             else -> null
         }
     }
@@ -169,5 +174,9 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
     fun setTransactionType(selectedTransactionType: TransactionType) {
         transactionType = selectedTransactionType
+    }
+
+    fun setOriginalTxnInfo(originalTxnInfo: OriginalTransactionInfoData) {
+        this.originalTxnData = originalTxnInfo
     }
 }

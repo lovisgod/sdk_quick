@@ -22,8 +22,9 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.*
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -59,6 +60,16 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
     private val paymentInfo by lazy {
         PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+    }
+
+    private val originalTxnData by lazy {
+        paymentModel.originalDateAndTime?.let { timeDate ->
+            paymentModel.originalStan?.let {
+                stan ->
+                OriginalTransactionInfoData(originalStan = stan,
+                    originalTransmissionDateAndTime = timeDate)
+            }
+        }
     }
 
     private val cancelDialog by lazy {
@@ -106,6 +117,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
             PaymentModel.TransactionType.COMPLETION -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.COMPLETION)
+                cardViewModel.setOriginalTxnInfo(originalTxnData!!)
                 transactionType = TransactionType.Completion
             }
 
@@ -334,7 +346,8 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                     responseCode = response.responseCode,
                     cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                     stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone
+                    telephone = iswPos.config.merchantTelephone,
+                    originalTransmissionDateTime = response.transmissionDateTime
                 )
 
                 dismissAlert()
