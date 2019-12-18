@@ -150,7 +150,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             val src = strTrack2.split("D")[1].substring(4, 7)
 
 
-            val icc = telpoEmvImplementation.getIccData()
+//            val icc = telpoEmvImplementation.getIccData()
             val iccFull=telpoEmvImplementation.getIccFullData()
 
             val aid = StringUtil.toHexString(telpoEmvImplementation.getTLV(0x9F06)!!)
@@ -158,7 +158,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             val csnStr = StringUtil.toHexString(telpoEmvImplementation.getTLV(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
             val csn = "0$csnStr"
 
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = "",iccFullData = iccFull)
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data,  icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = "")
         }
     }
 }

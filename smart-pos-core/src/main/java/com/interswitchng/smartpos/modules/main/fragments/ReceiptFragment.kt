@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.lang.Exception
 
 class ReceiptFragment : BaseFragment(TAG) {
 
@@ -102,15 +103,19 @@ class ReceiptFragment : BaseFragment(TAG) {
             }
             startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
-
-        isw_done.setOnClickListener {
-            val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
-            val navOptions = NavOptions.Builder()
+try {
+    isw_done.setOnClickListener {
+        val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
+        val navOptions = NavOptions.Builder()
                 .setPopUpTo(R.id.isw_transaction, true)
                 .setLaunchSingleTop(true)
                 .build()
-            navigate(direction, navOptions)
-        }
+        navigate(direction,navOptions)
+    }
+}catch (Ex:Exception){
+
+}
+
 
     }
 

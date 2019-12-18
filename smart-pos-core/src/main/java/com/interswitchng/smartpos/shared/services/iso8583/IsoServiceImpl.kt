@@ -243,7 +243,7 @@ internal class IsoServiceImpl(
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
-                    .setValue(55, transaction.icc)
+                    .setValue(55, transaction.iccString)
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -334,7 +334,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -616,7 +616,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
 
             message.setValue(123, "510101511344101")
             // remove unset fields
@@ -700,7 +700,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
                 .setValue(90, originalDataElement)
                 .setValue(95, replacementAmount)
                 .setValue(123, "510101511344101")
