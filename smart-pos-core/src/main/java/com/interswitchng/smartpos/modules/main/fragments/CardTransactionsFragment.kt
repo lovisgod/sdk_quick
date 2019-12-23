@@ -58,7 +58,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
     private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.stan,paymentModel.authorizationId)
     }
 
     private val cancelDialog by lazy {
@@ -268,8 +268,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 println("Called PIN OKAY")
                 pinOk = true
                 context?.toast("Pin OK")
-                iswCardPaymentViewAnimator.displayedChild = 1
-                isw_amount.text = paymentModel.formattedAmount
             }
 
             // when the user enters an incomplete pin
@@ -307,7 +305,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         isw_card_found.hide()
         isw_scanning_card.show()
     }
-
 
     private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
 
@@ -364,7 +361,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         }
     }
 
-
     private fun cancelTransaction(reason: String) {
         // return early if already cancelled
         if (isCancelled) return
@@ -393,5 +389,4 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     companion object {
         const val TAG = "Card Transaction"
     }
-
 }

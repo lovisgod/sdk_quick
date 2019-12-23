@@ -3,7 +3,6 @@ package com.interswitchng.smartpos.modules.main.fragments
 import android.os.Bundle
 import android.view.View
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.dialogs.AdminAccessDialog
 import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MakePaymentDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
@@ -32,10 +31,35 @@ class TransactionFragment: BaseFragment(TAG) {
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
                     1 -> {
-                        val payment = payment {
-                            type = PaymentModel.TransactionType.PRE_AUTHORIZATION
+                        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+                            if (isValidated) {
+                                val payment = payment {
+                                    type = PaymentModel.TransactionType.PRE_AUTHORIZATION
+                                }
+                                navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
+                            } else {
+                                toast("Fingerprint Verification Failed!!")
+                                navigateUp()
+                            }
                         }
-                        navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
+                        val dialog = MerchantCardDialog { type ->
+                            when (type) {
+                                MerchantCardDialog.AUTHORIZED -> {
+                                    val payment = payment {
+                                        this.type = PaymentModel.TransactionType.PRE_AUTHORIZATION
+                                    }
+                                    navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
+                                }
+                                MerchantCardDialog.FAILED -> {
+                                    toast("Merchant Card Verification Failed!!")
+                                    navigateUp()
+                                }
+                                MerchantCardDialog.USE_FINGERPRINT -> {
+                                    fingerprintDialog.show(childFragmentManager, FingerprintBottomDialog.TAG)
+                                }
+                            }
+                        }
+                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
                     }
                     2 -> {
                         val payment = payment {
@@ -65,7 +89,7 @@ class TransactionFragment: BaseFragment(TAG) {
                                 }
                             }
                         }
-                        dialog.show(childFragmentManager, AdminAccessDialog.TAG)
+                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
                     }
                     3 -> {
                         val payment = payment {

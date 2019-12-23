@@ -65,7 +65,7 @@ class ReceiptFragment : BaseFragment(TAG) {
             else -> {
                 transactionResponseIcon.setImageResource(R.drawable.isw_failure)
                 isw_receipt_text.text = "Failed!"
-                isw_transaction_msg.text = "Your transaction was unsuccessful"
+                isw_transaction_msg.text = result?.responseMessage//"Your transaction was unsuccessful"
             }
         }
     }
@@ -104,14 +104,20 @@ class ReceiptFragment : BaseFragment(TAG) {
         }
 
         isw_done.setOnClickListener {
-            val direction = ReceiptFragmentDirections.iswActionGotoFragmentTransaction()
-            val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.isw_transaction, true)
-                .setLaunchSingleTop(true)
-                .build()
-            navigate(direction, navOptions)
+            navigateToMain()
         }
+        transactionResponseIcon.setOnClickListener {
+            navigateToMain()
+        }
+    }
 
+    private fun navigateToMain() {
+        val direction = ReceiptFragmentDirections.iswActionGotoFragmentTransaction()
+        val navOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.isw_transaction, true)
+            .setLaunchSingleTop(true)
+            .build()
+        navigate(direction, navOptions)
     }
 
     private fun setUpUI() {

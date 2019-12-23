@@ -57,7 +57,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         offlineTriesLeft: Int,
         panBlock: String
     ) {
-
+        channel.send(EmvMessage.EnterPin)
     }
 
     override suspend fun showPinOk() = channel.send(EmvMessage.PinOk)

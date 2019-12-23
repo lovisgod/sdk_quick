@@ -201,15 +201,12 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-
     override fun onCleared() {
         super.onCleared()
 
         // cancel any ongoing transaction
         emv.cancelTransaction()
     }
-
-
 
     enum class OnlineProcessResult {
         NO_EMV,

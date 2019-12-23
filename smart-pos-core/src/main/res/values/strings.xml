@@ -170,7 +170,7 @@
     <string name="isw_there_are_no_registered_fingerprint">There are no registered fingerprint</string>
     <string name="isw_place_your_finger_on_the_fingerprint_scanner">Place your finger on the\nfingerprint scanner</string>
     <string name="isw_fingerprint_form_smartpos">Fingerprint form SmartPOS</string>
-    <string name="isw_insert_supervisor_s_card">Insert\nSupervisor\'s card</string>
+    <string name="isw_insert_supervisor_s_card">Enrol\nSupervisor\'s card</string>
     <string name="isw_card_detected">Card Detected!</string>
     <string name="isw_loading_card_details">Loading Card Details…</string>
     <string name="isw_phone_number">Phone Number</string>

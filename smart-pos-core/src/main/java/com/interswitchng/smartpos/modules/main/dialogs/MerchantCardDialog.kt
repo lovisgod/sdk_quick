@@ -113,5 +113,6 @@ class MerchantCardDialog constructor(
         const val AUTHORIZED = 0
         const val FAILED = 1
         const val USE_FINGERPRINT = 2
+        const val TAG = "Merchant Card Dialog"
     }
 }

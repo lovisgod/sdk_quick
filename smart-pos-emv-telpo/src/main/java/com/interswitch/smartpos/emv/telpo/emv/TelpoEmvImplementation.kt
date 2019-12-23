@@ -203,6 +203,8 @@ internal class TelpoEmvImplementation (
         }
 
         override fun onInputPin(pinData: EmvPinData?): Int {
+            runBlocking { pinCallback.enterPin(false, 0, 0, "") }
+
             val pinParameter = PinParam(context)
             val pan = EmvTLV(0x5A)
             var ret = emvService.Emv_GetTLV(pan)

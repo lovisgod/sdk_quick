@@ -45,17 +45,18 @@ internal data class TransactionInfo(
                     accountType: AccountType
             ): TransactionInfo {
                     return TransactionInfo(
-                            cardExpiry =  cardExpiry,
-                            cardPAN = cardPan,
-                            cardPIN =  cardPin,
-                            cardTrack2 =  emv.cardTrack2,
-                            icc = emv.icc,
-                            src = emv.src,
-                            csn = emv.csn,
-                            amount = paymentInfo.amount,
-                            stan = paymentInfo.getStan(),
-                            purchaseType = PurchaseType.Card,
-                            accountType = accountType
+                        cardExpiry =  cardExpiry,
+                        cardPAN = cardPan,
+                        cardPIN =  cardPin,
+                        cardTrack2 =  emv.cardTrack2,
+                        icc = emv.icc,
+                        src = emv.src,
+                        csn = emv.csn,
+                        amount = paymentInfo.amount,
+                        stan = paymentInfo.getStan(),
+                        purchaseType = PurchaseType.Card,
+                        accountType = accountType,
+                        originalTransactionInfoData=OriginalTransactionInfoData(paymentInfo.originalStanId,"",paymentInfo.originalAuthId,"")
                     )
             }
     }
