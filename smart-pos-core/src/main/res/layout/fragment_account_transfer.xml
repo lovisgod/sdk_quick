@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:background="@color/iswColorPrimary">
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/isw_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/isw_guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/isw_guideline"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/isw_guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/isw_guideline"/>
+
+    <ImageView
+            android:layout_marginTop="@dimen/alerter_activity_vertical_margin"
+            android:id="@+id/backImg"
+            android:scaleType="fitStart"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/isw_ic_navback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/isw_merchant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:textColor="@android:color/white"
+            android:textSize="26sp"
+            app:layout_constraintBottom_toTopOf="@id/isw_guideline"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            android:text="@string/isw_transfer_to_account"/>
+
+    <View
+            android:id="@+id/isw_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/isw_card_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/isw_guideline"/>
+
+    <View
+            android:id="@+id/isw_view2"
+            android:visibility="invisible"
+            android:layout_width="80dp"
+            android:layout_height="5dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/isw_round_handle_blue"
+            app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
+            app:layout_constraintStart_toStartOf="@id/isw_guideline2"
+            app:layout_constraintTop_toTopOf="@id/isw_view"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="@id/isw_guideline2"
+            app:layout_constraintEnd_toStartOf="@id/isw_guideline3"
+            app:layout_constraintTop_toBottomOf="@id/isw_view2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+
+        <com.google.android.material.card.MaterialCardView
+                app:cardElevation="2dp"
+                app:cardCornerRadius="10dp"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout android:orientation="vertical"
+                          android:paddingHorizontal="16dp"
+                          android:paddingVertical="12dp"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/isw_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="Smartware Solutions"
+                        android:textColor="@color/iswTextColorBlack"/>
+
+                <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/isw_account_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="098458675"
+                        android:textColor="@android:color/darker_gray"/>
+
+                <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/isw_account_bankname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="Keystone Bank"
+                        android:textColor="@android:color/darker_gray"/>
+
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <EditText
+                android:visibility="gone"
+                android:id="@+id/isw_account_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@drawable/bgd_selector_editext"
+                android:text="John Doe"
+                android:inputType="text"
+                android:maxLength="10"
+                android:paddingBottom="15dp"
+                android:textColor="@color/iswTextColorBlack"
+                android:textColorHint="@android:color/darker_gray"/>
+
+
+        <EditText
+                android:id="@+id/isw_remarks"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@drawable/bgd_selector_editext"
+                android:hint="@string/isw_remarks"
+                android:inputType="text"
+                android:maxLength="10"
+                android:paddingBottom="15dp"
+                android:textColor="@color/iswTextColorBlack"
+                android:textColorHint="@android:color/darker_gray"/>
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/isw_proceed"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/isw_proceed"
+                app:rippleColor="@android:color/white"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

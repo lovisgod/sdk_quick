@@ -21,7 +21,6 @@ import com.pax.jemv.clcommon.RetCode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.sendBlocking
-import kotlin.concurrent.thread
 import kotlin.coroutines.coroutineContext
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
@@ -108,6 +107,10 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         }
     }
 
+    override fun getPan(): String? {
+        return emvImpl.getPan()
+    }
+
     override fun getTransactionInfo(): EmvData? {
         // get track2 data
         return emvImpl.getTrack2()?.let {
@@ -117,6 +120,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             // get the ksn for dukpt pin
             val pinKsn = ksnData ?: ""
             // get track 2 string
+
+
             val track2data = EmvUtils.bcd2Str(it)
 
             // extract pan and expiry
@@ -127,11 +132,13 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
 
             val icc = emvImpl.getIccData()
+            val iccFull=emvImpl.getIccFullData()
+
             val aid = EmvUtils.bcd2Str(emvImpl.getTlv(0x9F06)!!)
             // get the card sequence number
             val csnStr = EmvUtils.bcd2Str(emvImpl.getTlv(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
             val csn = "0$csnStr"
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = pinKsn)
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = pinKsn,iccFullData = iccFull)
         }
     }
 

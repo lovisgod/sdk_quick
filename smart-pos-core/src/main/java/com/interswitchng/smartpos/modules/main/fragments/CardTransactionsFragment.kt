@@ -59,7 +59,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
     private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.stan,paymentModel.authorizationId)
     }
 
     private val originalTxnData by lazy {
@@ -354,7 +354,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
                 dismissAlert()
 
-                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(
+                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(paymentModel,
                     TransactionResponseModel(transactionResult = transactionResult,
                         transactionType = PaymentModel.TransactionType.CARD_PURCHASE)
                 )

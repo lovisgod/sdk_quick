@@ -4,48 +4,48 @@ import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.services.kimono.models.*
 import com.interswitchng.smartpos.shared.services.kimono.models.KimonoKeyRequest
-import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseResponse
-import com.interswitchng.smartpos.shared.services.kimono.models.ReversalRequest
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.Url
 
+import retrofit2.http.*
 internal interface IKimonoHttpService {
 
+
+    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
     fun callHome(@Body data: CallHomeRequest): Simple<ResponseBody>
 
 
 
+    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
-    fun completion(@Body data: CompletionRequest): Simple<CompletionResponse>
+    fun completion(@Body data: RequestBody): Simple<ResponseBody>
+
+
+    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
+    @POST(Constants.KIMONO_END_POINT)
+    fun reversePurchase(@Body reverseRequest: RequestBody): Simple<ResponseBody>
+//    fun reversePurchase(@Body reverseRequest: ReversalRequest): Simple<PurchaseResponse>
 
 
 
     @POST(Constants.KIMONO_END_POINT)
-    fun reservation(@Body data: ReservationRequest): Simple<ReservationResponse>
+    fun reservation(@Body data: RequestBody): Simple<ResponseBody>
+//    fun reservation(@Body data: ReservationRequest): Simple<ReservationResponse>
 
 
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
-    fun makePurchase(@Body purchaseRequest: PurchaseRequest): Simple<PurchaseResponse>
-
-
+    fun makePurchase(@Body purchaseRequest: RequestBody): Simple<ResponseBody>
+//    fun makePurchase(@Body purchaseRequest: PurchaseRequest): Simple<ResponseBody>
 
 
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
-    fun refund(@Body refundRequest: RefundRequest): Simple<PurchaseResponse>
-
-
-    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
-    @POST(Constants.KIMONO_END_POINT)
-    fun reversePurchase(@Body reverseRequest: ReversalRequest): Simple<PurchaseResponse>
+    fun refund(@Body refundRequest: RequestBody): Simple<ResponseBody>
 
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")

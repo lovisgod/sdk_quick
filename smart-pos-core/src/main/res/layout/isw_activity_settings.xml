@@ -51,6 +51,39 @@
                 android:textSize="22sp"
                 tools:text="210239CB" />
 
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="@dimen/isw_content_padding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/settlementheader"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="Settlement Option"
+                  tools:text="Settlement" />
+                <TextView
+                    android:text="NIBSS"
+                    android:id="@+id/settlementTypeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginEnd="@dimen/isw_content_padding"
+                android:layout_marginBottom="@dimen/isw_content_padding"
+                android:background="@color/iswColorSecondaryIcon" />
+
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,6 +157,7 @@
                     android:layout_height="match_parent"
                     android:textSize="16sp"
                     android:textStyle="bold"
+
                     app:layout_constraintEnd_toStartOf="@+id/btnDownloadTerminalConfig"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="@string/isw_title_download_terminal_configuration" />

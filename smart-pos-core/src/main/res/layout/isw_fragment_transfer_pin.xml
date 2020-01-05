@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@color/iswColorPrimary">
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/isw_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.20"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/isw_guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/isw_guideline"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/isw_guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/isw_guideline"/>
+
+    <ImageView
+            android:layout_marginTop="@dimen/alerter_activity_vertical_margin"
+            android:id="@+id/backImg"
+            android:scaleType="fitStart"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/isw_ic_navback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <View
+            android:id="@+id/isw_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/isw_card_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/isw_guideline"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp"/>
+
+    <TextView
+            android:id="@+id/isw_merchant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/isw_enter_pin"
+            android:textColor="@android:color/white"
+            android:textSize="26sp"
+            app:layout_constraintBottom_toTopOf="@id/isw_guideline"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"/>
+
+    <TextView
+            android:id="@+id/isw_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"
+            android:text="Amount"
+            android:textColor="@android:color/black"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toTopOf="@+id/isw_view"/>
+
+    <TextView
+            android:id="@+id/isw_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:text="123345"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/isw_amount_text"
+    />
+
+
+    <LinearLayout
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@id/isw_guideline3"
+            app:layout_constraintStart_toEndOf="@id/isw_guideline2"
+            android:layout_width="0dp"
+            android:layout_height="0dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/isw_view" android:id="@+id/isw_linearlayout"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/isw_amount">
+
+        <TextView
+                android:layout_weight="1"
+                android:textSize="50sp"
+                android:text="1234"
+                android:id="@+id/isw_pin_text"
+                android:inputType="numberPassword"
+                android:gravity="center"
+                android:maxLength="4"
+                android:background="@color/iswColorLightGrey"
+                android:textColor="@color/iswTextColorBlack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="-16dp"
+                app:layout_constraintTop_toBottomOf="@+id/isw_amount"/>
+
+        <LinearLayout
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/isw_keypad_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/isw_keypad_two"
+                    app:layout_constraintStart_toEndOf="@id/isw_guideline2"
+                    app:layout_constraintTop_toBottomOf="@id/isw_amount_barrier"
+                    tools:textColor="@android:color/black"/>
+
+            <TextView
+                    android:id="@+id/isw_keypad_two"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    tools:textColor="@android:color/black"/>
+
+            <TextView
+                    android:id="@+id/isw_keypad_three"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    tools:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/isw_keypad_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/isw_keypad_two"
+                    app:layout_constraintStart_toEndOf="@id/isw_guideline2"
+                    app:layout_constraintTop_toBottomOf="@id/isw_amount_barrier"
+                    tools:textColor="@android:color/black"/>
+
+            <TextView
+                    android:id="@+id/isw_keypad_five"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="5"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    tools:textColor="@android:color/black"/>
+
+            <TextView
+                    android:id="@+id/isw_keypad_six"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="6"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    tools:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:id="@+id/isw_keypad_seven"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="7"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/isw_keypad_two"
+                    app:layout_constraintStart_toEndOf="@id/isw_guideline2"
+                    app:layout_constraintTop_toBottomOf="@id/isw_amount_barrier"
+                    tools:textColor="@android:color/black"/>
+
+            <TextView
+                    android:id="@+id/isw_keypad_eight"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="8"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    tools:textColor="@android:color/black"/>
+
+            <TextView
+                    android:id="@+id/isw_keypad_nine"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="9"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    tools:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageButton
+                    android:layout_weight="1"
+                    android:background="@color/iswColorMainBackground"
+                    android:id="@+id/isw_dot_button"
+                    android:layout_marginBottom="15dp"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/isw_ic_dot"/>
+
+            <TextView
+                    android:id="@+id/isw_keypad_zero"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginLeft="10dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/isw_keypad_color_statelist"
+                    android:textSize="20sp"
+                    tools:textColor="@android:color/black"/>
+
+            <ImageButton
+                    android:layout_weight="1"
+                    android:background="@color/iswColorMainBackground"
+                    android:id="@+id/isw_back_delete_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/isw_ic_amount_delete"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/isw_proceed"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/isw_proceed"/>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

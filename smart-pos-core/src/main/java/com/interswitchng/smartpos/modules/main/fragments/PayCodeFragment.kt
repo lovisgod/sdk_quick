@@ -23,13 +23,13 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class PayCodeFragment : BaseFragment(TAG) {
     private val payCodeViewModel: PayCodeViewModel by viewModel()
-    private lateinit var transactionResult: TransactionResult
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_paycode
 
     private val payCodeFragmentArgs by navArgs<PayCodeFragmentArgs>()
     private val paymentModel by lazy { payCodeFragmentArgs.PaymentModel }
+
 
     private val paymentInfo by lazy {
         PaymentInfo(paymentModel.amount, IswPos.getNextStan())
@@ -41,6 +41,8 @@ class PayCodeFragment : BaseFragment(TAG) {
 
     private fun setupUI() {
         isw_pay_code_amount.text = paymentModel.formattedAmount
+
+
         isw_pay_code_btn.setOnClickListener {
 
             // ensure that a paycode has been typed in
@@ -72,10 +74,9 @@ class PayCodeFragment : BaseFragment(TAG) {
 
             // start paycode process
             processOnline()
-
         }
 
-     /*   btnScanCode.setOnClickListener {
+        /*   btnScanCode.setOnClickListener {
             ScanBottomSheet
                 .newInstance()
                 .show(supportFragmentManager, ScanBottomSheet.toString())
@@ -86,7 +87,7 @@ class PayCodeFragment : BaseFragment(TAG) {
     private fun processOnline() {
 
         // change hint text
-        paymentHint.text = getString(R.string.isw_title_processing_transaction)
+        //paymentHint.text = getString(R.string.isw_title_processing_transaction)
         // show transaction progress alert
         showProgressAlert(false)
 
@@ -97,7 +98,7 @@ class PayCodeFragment : BaseFragment(TAG) {
                     is None -> context?.toast("Unable to process Transaction").also { }//finish() }
                     is Some -> {
                         // set result
-                        transactionResult = value
+                        //transactionResult = value
                         // use default transaction because the
                         // transaction is not need for result
                         val txn = Transaction.default()

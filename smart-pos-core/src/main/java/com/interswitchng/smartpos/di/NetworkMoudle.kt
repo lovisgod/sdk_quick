@@ -10,14 +10,16 @@ import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
+import com.interswitchng.smartpos.shared.utilities.ToStringConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
-import retrofit2.SimpleXmlConverterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import retrofit2.SimpleXmlConverterFactory
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
@@ -80,19 +82,28 @@ internal val networkModule = module {
     single(RETROFIT_KIMONO) {
 
 
-        val kimonoServiceUrl ="https://qa.interswitchng.com/kmw/v2/"
-        val builder = Retrofit.Builder()
-                .baseUrl(kimonoServiceUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addConverterFactory(SimpleXmlConverterFactory.create())
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
-        // okhttp client for retrofit
+//        val kimonoServiceUrl = "https://qa.interswitchng.com/"
+
+        val kimonoServiceUrl = "https://kimono.interswitchng.com/"
+        val builder = Retrofit.Builder()
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+              .addConverterFactory(ToStringConverterFactory())
+//                .addConverterFactory(GsonConverterFactory.create())...
+                .baseUrl(kimonoServiceUrl)
+                .addCallAdapterFactory(SimpleCallAdapterFactory.create())
+
+
         val clientBuilder: OkHttpClient.Builder = get()
         //  add auth interceptor for sendGrid
-        clientBuilder.addInterceptor { chain ->
+        clientBuilder
+                .addInterceptor(interceptor)
+                .addInterceptor { chain ->
             val request = chain.request().newBuilder()
                     .addHeader("Content-type", "application/xml")
-                    // .addHeader("Accept", "Bearer ${BuildConfig.ISW_EMAIL_API_KEY}")
+
                     .build()
 
             chain.proceed(request)

@@ -2,7 +2,9 @@ package com.interswitchng.smartpos.modules.menu.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
@@ -10,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.InputStream
 
-internal class SettingsViewModel(private val isoService: IsoService): RootViewModel() {
+internal class SettingsViewModel(private val isoService: IsoService ): RootViewModel() {
 
     private val _keysDownloadSuccess = MutableLiveData<Boolean>()
     val keysDownloadSuccess: LiveData<Boolean> = _keysDownloadSuccess
@@ -19,10 +21,12 @@ internal class SettingsViewModel(private val isoService: IsoService): RootViewMo
     val configDownloadSuccess: LiveData<Boolean> = _configDownloadSuccess
 
 
-    fun downloadKeys(terminalId: String, ip: String, port: Int, isKimono: Boolean) {
+    fun downloadKeys(terminalId: String) {
         uiScope.launch {
             val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId) }
             _keysDownloadSuccess.value = isSuccessful
+
+
         }
     }
 

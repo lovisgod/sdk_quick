@@ -39,7 +39,7 @@ internal interface IsoService {
      * @param transaction  the purchase information required to perform the transaction
      * @return   response status indicating transaction success or failure
      */
-    fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+      fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
 
 

@@ -69,4 +69,6 @@ interface EmvCardReader {
      */
     fun getTransactionInfo(): EmvData?
 
+    fun getPan(): String?
+
 }

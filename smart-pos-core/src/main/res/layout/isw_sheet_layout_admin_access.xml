@@ -5,9 +5,14 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/isw_layout_admin_access"
-        android:id="@+id/isw_admin_access"/>
+        android:id="@+id/isw_admin_access"
+        android:visibility="visible"/>
 
-    <include layout="@layout/isw_layout_admin_access_granted"
+    <include layout="@layout/isw_layout_admin_access_granted_card"
+        android:id="@+id/isw_admin_access_granted"
+        android:visibility="gone"/>
+
+    <include layout="@layout/isw_layout_admin_access_granted_fingerprint"
         android:id="@+id/isw_admin_access_granted"
         android:visibility="gone"/>
 

@@ -43,4 +43,7 @@ internal interface KeyValueStore {
      */
     fun getNumber(key: String, default: Long): Long
 
+    fun saveBoolean(key: String, value: Boolean)
+
+    fun getBoolean(key: String): Boolean
 }

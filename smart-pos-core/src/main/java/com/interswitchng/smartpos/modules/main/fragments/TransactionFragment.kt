@@ -20,6 +20,7 @@ class TransactionFragment: BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_date.text = DateFormat.getDateInstance(DateFormat.LONG).format(Date(System.currentTimeMillis()))
         isw_merchant_name.text = "SmartWare Solutions"
+        //isw_bill_payment_card.setOnClickListener{TransactionFragmentDirections.iswActionGotoFragmentBills()}
         isw_make_payment_card.setOnClickListener {
             val sheet = MakePaymentDialog {
                 when (it) {
@@ -39,9 +40,13 @@ class TransactionFragment: BaseFragment(TAG) {
                         val payment = payment {
                             type = PaymentModel.TransactionType.CARD_NOT_PRESENT
                         }
-                        val dialog = AdminAccessDialog {
-                            val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
-                            navigate(direction)
+                        val dialog = AdminAccessDialog { validated ->
+                            if (validated) {
+                                val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
+                                navigate(direction)
+                            } else {
+                                navigateUp()
+                            }
                         }
                         dialog.show(childFragmentManager, AdminAccessDialog.TAG)
                     }
@@ -56,6 +61,21 @@ class TransactionFragment: BaseFragment(TAG) {
                 }
             }
             sheet.show(childFragmentManager, MakePaymentDialog.TAG)
+        }
+        isw_bill_payment_card.setOnClickListener {
+            val direction = TransactionFragmentDirections.iswActionIswTransactionToIswBillscategoryfragment2()
+            navigate(direction)
+        }
+        isw_transfer_money_card.setOnClickListener {
+            val direction = TransactionFragmentDirections.iswActionIswTransactionToIswSendmoneyfragment()
+            navigate(direction)
+        }
+
+        isw_cash_out_card.setOnClickListener {
+            val payment = PaymentModel()
+            payment.type = PaymentModel.TransactionType.CARD_PURCHASE
+            val direction = TransactionFragmentDirections.iswActionGotoFragmentAmount(payment)
+            navigate(direction)
         }
     }
 

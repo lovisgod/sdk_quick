@@ -4,11 +4,6 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.interfaces.library.*
-import com.interswitchng.smartpos.shared.interfaces.library.HttpService
-import com.interswitchng.smartpos.shared.interfaces.library.IsoService
-import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
-import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 import com.interswitchng.smartpos.shared.services.HttpServiceImpl
@@ -31,17 +26,11 @@ internal val serviceModule = module() //override = true
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
 
-//    single<KimonoHttpService> { KimonoHttpServiceImpl(get()) }
-
-//    factory<IsoService> { IsoServiceImpl(androidContext(), get(), get()) }
-    // return service based on kimono flag
-    //return@factory
-
 
     single<IsoService> { (isKimono: Boolean) ->
 
 
-        if (isKimono) KimonoHttpServiceImpl(androidContext(), get(), get())
+        if (isKimono) KimonoHttpServiceImpl(androidContext(), get(), get(),get())
         else IsoServiceImpl(androidContext(), get(), get())
     }
 
