@@ -20,9 +20,11 @@ import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
+import com.interswitchng.smartpos.shared.utilities.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.Koin.Companion.logger
 
 internal class TransactionResultViewModel(private val posDevice: POSDevice,
                                           private val emailService: EmailService,
@@ -50,6 +52,8 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
     val emailDialog: LiveData<Boolean> = _emailDialog
 
     private val emv by lazy { posDevice.getEmvCardReader() }
+
+    private val logger by lazy { Logger.with("TxnResultViewModel") }
 
 
     fun sendMail(email: String, result: TransactionResult, terminalInfo: TerminalInfo) {
@@ -133,8 +137,11 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
     }
 
     fun initiateReversal(terminalInfo: TerminalInfo, transactionInfo: TransactionInfo) {
+        logger.log("Called reversal inside vm")
         CoroutineScope(ioScope).launch {
-            isoService.initiateReversal(terminalInfo, transactionInfo)
+            logger.log("Called reversal inside vm ioscope")
+           val result = isoService.initiateReversal(terminalInfo, transactionInfo)
+           logger.log(result?.responseCode!!)
         }
 
 

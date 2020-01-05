@@ -300,7 +300,7 @@ class UssdActivity : BaseActivity() {
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = CardType.None,
                 stan = paymentInfo.getStan(), pinStatus = "", AID = "", code = ussdCode!!,
-                telephone = iswPos.config.merchantTelephone
+                telephone = iswPos.config.merchantTelephone, src = "", icc ="", cardPin = "", cardTrack2 = "", csn = ""
         )
     }
 

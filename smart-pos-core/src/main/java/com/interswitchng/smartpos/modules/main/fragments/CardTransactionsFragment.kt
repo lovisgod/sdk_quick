@@ -339,14 +339,16 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 transactionResult = TransactionResult(
                     paymentType = PaymentType.Card,
                     dateTime = DisplayUtils.getIsoString(now),
-                    amount = paymentModel.formattedAmount,
+                    amount = paymentModel.amount.toString(),
                     type = transactionType,
                     authorizationCode = response.authCode,
                     responseMessage = responseMsg,
                     responseCode = response.responseCode,
                     cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                     stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone,
+                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.icc, src = txnInfo.src,
+                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
+                    month = response.month, time = response.time,
                     originalTransmissionDateTime = response.transmissionDateTime
                 )
 

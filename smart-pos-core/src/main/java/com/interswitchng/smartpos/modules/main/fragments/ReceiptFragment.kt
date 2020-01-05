@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
@@ -105,9 +106,10 @@ class ReceiptFragment : BaseFragment(TAG) {
             navigate(direction, navOptions)
         }
 
-      /*  isw_reversal.setOnClickListener {
-            resultViewModel.initiateReversal(terminalInfo)
-        }*/
+        isw_reversal.setOnClickListener {
+            val txnInfo = TransactionInfo.fromTxnResult(result!!)
+            resultViewModel.initiateReversal(terminalInfo, txnInfo)
+        }
 
     }
 
