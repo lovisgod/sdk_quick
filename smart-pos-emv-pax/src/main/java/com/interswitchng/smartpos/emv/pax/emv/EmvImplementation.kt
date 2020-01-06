@@ -463,10 +463,18 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         }
 
         return EmvUtils.buildIccString(tagValues)
+    }
 
+    internal fun getCompletionIccData(): String {
+        val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
 
+        for (tag in REQUEST_TAGS) {
+            if (tag == ICCData.APP_PAN_SEQUENCE_NUMBER) continue
+            val tlv = getTlv(tag.tag)
+            tagValues.add(Pair(tag, tlv))
+        }
 
-
+        return EmvUtils.buildIccString(tagValues)
     }
 
 

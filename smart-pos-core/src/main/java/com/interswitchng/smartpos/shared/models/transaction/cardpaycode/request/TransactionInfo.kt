@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request
 
+import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 
 
 /**
@@ -41,22 +43,32 @@ internal data class TransactionInfo(
                 originalTransactionInfoData=OriginalTransactionInfoData(paymentInfo.originalStanId,"",paymentInfo.originalAuthId,""),
                 accountType = accountType)
 
+        fun fromTxnResult(txnResult: TransactionResult) = TransactionInfo(
+                cardExpiry = txnResult.cardExpiry,
+                cardPAN = txnResult.cardPan,
+                cardPIN = txnResult.cardPin,
+                cardTrack2 =  txnResult.cardTrack2,
+                icc = txnResult.icc,
+                src = txnResult.src,
+                csn = txnResult.csn,
+                amount = txnResult.amount.toInt(),
+                stan = txnResult.stan,
+                purchaseType = PurchaseType.Card,
+                accountType = AccountType.Default,
+                originalTransactionInfoData = OriginalTransactionInfoData(
+                        originalTransmissionDateAndTime = txnResult.originalTransmissionDateTime,
+                        month = txnResult.month, time = txnResult.time)
+
+        )
+
     }
 }
 
 internal data class OriginalTransactionInfoData(
-        var originalStan: String?,
-        var originalTransmissionDateAndTime: String?,
-        var originalAuthorizationId: String?,
-        var originalAmount: String?
-) {
-        companion object {
-                fun addOriginalTransactionInfo(originalStan: String? = null,
-                                               originalTransmissionDateAndTime: String? = null,
-                                               originalAuthorizationId: String? = null,
-                                               originalAmount: String? = null) = OriginalTransactionInfoData(originalStan,
-                        originalTransmissionDateAndTime,
-                        originalAuthorizationId,
-                                originalAmount)
-        }
-}
+        var originalStan: String = EMPTY_STRING,
+        var originalTransmissionDateAndTime: String = EMPTY_STRING,
+        var originalAuthorizationId: String = EMPTY_STRING,
+        var originalAmount: String = EMPTY_STRING,
+        var month: String = EMPTY_STRING,
+        var time: String = EMPTY_STRING
+)

@@ -11,7 +11,9 @@ data class TransactionResponse(
         val responseCode: String, // response code
         val authCode: String, // authorization code
         val stan: String,
-        val scripts: String,
+        val scripts: String = EMPTY_STRING,
         val transmissionDateTime: String = EMPTY_STRING,
+        val month: String = EMPTY_STRING,
+        val time: String = EMPTY_STRING,
         val responseDescription: String? = null
 )

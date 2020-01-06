@@ -3,24 +3,18 @@ package com.interswitchng.smartpos.modules.main.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
-import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
-import kotlinx.android.synthetic.main.isw_activity_transaction_result.*
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class ReceiptFragment : BaseFragment(TAG) {
@@ -110,6 +104,11 @@ class ReceiptFragment : BaseFragment(TAG) {
                 .setLaunchSingleTop(true)
                 .build()
             navigate(direction, navOptions)
+        }
+
+        isw_reversal.setOnClickListener {
+            val txnInfo = TransactionInfo.fromTxnResult(result!!)
+            resultViewModel.initiateReversal(terminalInfo, txnInfo)
         }
 
     }
