@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"/>
 
     <TextView
-            android:id="@+id/isw_pin_label"
+            android:id="@+id/isw_merchant_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -47,7 +47,7 @@
             android:textSize="26sp"
             app:layout_constraintBottom_toTopOf="@id/isw_guideline"
             app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-            android:text="@string/isw_enter_pin"/>
+            android:text="@string/isw_transfer_to_account"/>
 
     <View
             android:id="@+id/isw_view"
@@ -76,39 +76,90 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/isw_amount_text"
-                android:layout_width="wrap_content"
+
+        <com.google.android.material.card.MaterialCardView
+                app:cardElevation="2dp"
+                app:cardCornerRadius="10dp"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout android:orientation="vertical"
+                          android:paddingHorizontal="16dp"
+                          android:paddingVertical="12dp"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content">
+                <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/isw_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="Smartware Solutions"
+                        android:textColor="@color/iswTextColorBlack"/>
+
+                <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/isw_account_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="098458675"
+                        android:textColor="@android:color/darker_gray"/>
+
+                <TextView
+                        android:layout_weight="1"
+                        android:id="@+id/isw_account_bankname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="Keystone Bank"
+                        android:textColor="@android:color/darker_gray"/>
+
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <EditText
+                android:visibility="gone"
+                android:id="@+id/isw_account_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:textSize="16sp"
-                android:text="Amount"
-                android:textColor="@android:color/black"/>
+                android:backgroundTint="@drawable/bgd_selector_editext"
+                android:text="John Doe"
+                android:inputType="text"
+                android:maxLength="10"
+                android:paddingBottom="15dp"
+                android:textColor="@color/iswTextColorBlack"
+                android:textColorHint="@android:color/darker_gray"/>
 
-        <TextView
-                android:id="@+id/isw_amount"
+
+        <EditText
+                android:id="@+id/isw_remarks"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="30sp"
-                android:textStyle="bold"/>
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@drawable/bgd_selector_editext"
+                android:hint="@string/isw_remarks"
+                android:inputType="text"
+                android:maxLength="10"
+                android:paddingBottom="15dp"
+                android:textColor="@color/iswTextColorBlack"
+                android:textColorHint="@android:color/darker_gray"/>
 
-        <com.interswitchng.smartpos.modules.card.PinEditText
-                android:layout_marginTop="32dp"
-                android:id="@+id/cardPin"
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/isw_proceed"
+                style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:cursorVisible="false"
-                android:digits="0123456789"
-                android:gravity="center"
-                android:inputType="numberPassword"
-                android:maxLength="4"
-                android:textIsSelectable="false"
-                android:clickable="false"
-                android:focusable="false"
-                android:textSize="20sp"
-                tools:text="44445"/>
+                android:layout_height="55dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/isw_proceed"
+                app:rippleColor="@android:color/white"/>
 
     </LinearLayout>
 

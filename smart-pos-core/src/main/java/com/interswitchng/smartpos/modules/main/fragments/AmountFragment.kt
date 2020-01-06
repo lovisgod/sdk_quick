@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
+import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
 import java.text.NumberFormat
 
@@ -32,6 +35,7 @@ class AmountFragment : BaseFragment(TAG) {
     }
 
     private fun setUpUI() {
+        DisplayUtils.hideKeyboard(activity as MainActivity)
         when (payment.type) {
             PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
                 isw_proceed.text = getString(R.string.isw_pre_authorize)
@@ -40,6 +44,8 @@ class AmountFragment : BaseFragment(TAG) {
             PaymentModel.TransactionType.REFUND -> {
                 isw_proceed.text = getString(R.string.isw_refund)
             }
+
+
         }
     }
 
@@ -73,8 +79,6 @@ class AmountFragment : BaseFragment(TAG) {
         when (payment.type) {
             PaymentModel.TransactionType.CARD_PURCHASE -> {
                 val bottomDialog = PaymentTypeDialog {
-
-
                     when (it) {
                         PaymentModel.PaymentType.QR_CODE -> {
                             payment.newPayment {
@@ -132,8 +136,14 @@ class AmountFragment : BaseFragment(TAG) {
                 navigate(direction)
             }
 
-            PaymentModel.TransactionType.CARD_NOT_PRESENT -> {
+            PaymentModel.TransactionType.ECHANGE -> {
+                val direction = AmountFragmentDirections.iswActionIswFragmentAmountToIswPinfragment(payment)
+                navigate(direction)
+            }
 
+            PaymentModel.TransactionType.ECASH -> {
+                val direction = AmountFragmentDirections.iswActionIswFragmentAmountToIswPinfragment(payment)
+                navigate(direction)
             }
         }
     }

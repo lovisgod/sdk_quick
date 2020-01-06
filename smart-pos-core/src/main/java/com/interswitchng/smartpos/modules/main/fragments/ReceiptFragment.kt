@@ -89,7 +89,7 @@ class ReceiptFragment : BaseFragment(TAG) {
 
     private fun logTransaction() {
         result?.let {
-            resultViewModel.logTransaction(it)
+            //resultViewModel.logTransaction(it)
         }
     }
 
@@ -105,6 +105,12 @@ class ReceiptFragment : BaseFragment(TAG) {
 
         isw_done.setOnClickListener {
             navigateToMain()
+            val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.isw_transaction, true)
+                .setLaunchSingleTop(true)
+                .build()
+            navigate(direction, navOptions)
         }
         transactionResponseIcon.setOnClickListener {
             navigateToMain()
@@ -112,7 +118,7 @@ class ReceiptFragment : BaseFragment(TAG) {
     }
 
     private fun navigateToMain() {
-        val direction = ReceiptFragmentDirections.iswActionGotoFragmentTransaction()
+        val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
         val navOptions = NavOptions.Builder()
             .setPopUpTo(R.id.isw_transaction, true)
             .setLaunchSingleTop(true)

@@ -78,13 +78,13 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="0dp"
-        android:src="@drawable/isw_failure"
-        app:layout_constraintBottom_toTopOf="@+id/isw_guideline4"
-        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toTopOf="@+id/isw_guideline5" />
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            app:srcCompat="@drawable/ic_check_green"
+            app:layout_constraintBottom_toTopOf="@+id/isw_guideline4"
+            app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+            app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+            app:layout_constraintTop_toTopOf="@+id/isw_guideline5"/>
 
     <TextView
         android:id="@+id/isw_receipt_text"
