@@ -4,12 +4,17 @@
     <string name="ISW_IMAGE_BASE_URL">https://mufasa.interswitchng.com/p/paymentgateway/</string>
 
     <!-- Debug parameters-->
-    <string name="isw_cms">DBEECACCB4210977ACE73A1D873CA59F</string>
-    <string name="isw_nibss_ip">196.6.103.72</string>
+    <!--<string name="isw_cms">DBEECACCB4210977ACE73A1D873CA59F</string>
+    <string name="isw_nibss_ip">196.6.103.72</string>-->
 
     <string name="isw_sdk_version">Version %s</string>
 
     <!-- Production parameters-->
-    <!--<string name="isw_cms">A050F63AFF366A4B0588D818D23C6C77</string>-->
-    <!--<string name="isw_nibss_ip">196.6.103.73</string>-->
+  <!--  <string name="isw_cms">A050F63AFF366A4B0588D818D23C6C77</string>
+    <string name="isw_nibss_ip">196.6.103.73</string>-->
+
+    <!-- CTMS Production parameters-->
+    <string name="isw_cms">3CDDE1CC6FDD225C9A8BC3EB065509A6</string>
+    <string name="isw_nibss_ip">196.6.103.18</string>
+
 </resources>

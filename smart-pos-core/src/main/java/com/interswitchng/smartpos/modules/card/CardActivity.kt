@@ -186,19 +186,22 @@ class CardActivity : BaseActivity() {
 
                 val now = Date()
                 transactionResult = TransactionResult(
-                        paymentType = PaymentType.Card,
-                        dateTime = DisplayUtils.getIsoString(now),
-                        amount = DisplayUtils.getAmountString(paymentInfo),
-                        type = TransactionType.Purchase,
-                        authorizationCode = response.authCode,
-                        responseMessage = responseMsg,
-                        responseCode = response.responseCode,
-                        cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
-                        stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                        telephone = iswPos.config.merchantTelephone)
+                    paymentType = PaymentType.Card,
+                    dateTime = DisplayUtils.getIsoString(now),
+                    amount = DisplayUtils.getAmountString(paymentInfo),
+                    type = TransactionType.Purchase,
+                    authorizationCode = response.authCode,
+                    responseMessage = responseMsg,
+                    responseCode = response.responseCode,
+                    cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
+                    stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
+                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.iccString,
 
-                println("Called Response code -----> ${response.responseCode}")
-                println("Called Response message -----> ${responseMsg}")
+                        src = txnInfo.src,
+                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
+                    originalTransmissionDateTime = response.transmissionDateTime
+                )
+
                 // show transaction result screen
                 showTransactionResult(Transaction.default())
             }

@@ -12,7 +12,9 @@ data class PaymentModel (
     var paymentType: PaymentType? = null,
     var card: CardModel? = null,
     var authorizationId: String? = null,
-    var stan: String? = null
+    var stan: String? = null,
+    var originalStan: String? = null,
+    var originalDateAndTime: String? = null
 ): Parcelable {
 
     enum class Type {

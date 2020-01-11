@@ -22,8 +22,9 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.*
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -59,6 +60,16 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
     private val paymentInfo by lazy {
         PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.stan,paymentModel.authorizationId)
+    }
+
+    private val originalTxnData by lazy {
+        paymentModel.originalDateAndTime?.let { timeDate ->
+            paymentModel.originalStan?.let {
+                stan ->
+                OriginalTransactionInfoData(originalStan = stan,
+                    originalTransmissionDateAndTime = timeDate)
+            }
+        }
     }
 
     private val cancelDialog by lazy {
@@ -106,6 +117,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
             PaymentModel.TransactionType.COMPLETION -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.COMPLETION)
+                cardViewModel.setOriginalTxnInfo(originalTxnData!!)
                 transactionType = TransactionType.Completion
             }
 
@@ -327,14 +339,17 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 transactionResult = TransactionResult(
                     paymentType = PaymentType.Card,
                     dateTime = DisplayUtils.getIsoString(now),
-                    amount = paymentModel.formattedAmount,
+                    amount = paymentModel.amount.toString(),
                     type = transactionType,
                     authorizationCode = response.authCode,
                     responseMessage = responseMsg,
                     responseCode = response.responseCode,
                     cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                     stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone
+                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.iccString, src = txnInfo.src,
+                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
+                    month = response.month, time = response.time,
+                    originalTransmissionDateTime = response.transmissionDateTime
                 )
 
                 dismissAlert()

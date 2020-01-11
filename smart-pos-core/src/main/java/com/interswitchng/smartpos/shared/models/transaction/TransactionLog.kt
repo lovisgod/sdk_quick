@@ -75,8 +75,12 @@ open class TransactionLog(
                 responseCode,
                 AID,
                 code,
-                telephone
-
+                telephone,
+                "",
+                "",
+                "",
+                "",
+                ""
         )
     }
 
