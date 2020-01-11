@@ -46,6 +46,7 @@ allprojects {
         javaVersion = JavaVersion.VERSION_1_8
         emailApiKey = properties.get 'EMAIL_API_KEY'
         realmKey = properties.get 'REALM_KEY'
+        defaultPin = properties.get 'DEFAULT_PIN'
         minified = false
 
         // config

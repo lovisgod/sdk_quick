@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.shared.services.kimono
 import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
@@ -33,41 +34,55 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                                      private val device: POSDevice,
 
                                      private val httpService: IKimonoHttpService) : IsoService{
-    override fun downloadTerminalParameters(terminalId: String): Boolean {
 
 
-
-        try {
-
-
-            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
-                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
-                    "")?.also {
-
-                it.persist(store) }
-            logger.log("Terminal Data => $terminalData")
-
-            return true
-        } catch (e: Exception) {
-            logger.log(e.localizedMessage)
-            e.printStackTrace()
-        }
-
-        return false
-    }
+//    override fun downloadTerminalParameters(terminalId: String): Boolean {
+//
+//
+//
+//        try {
+//
+//
+//            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
+//                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
+//                    "")?.also {
+//
+//                it.persist(store) }
+//            logger.log("Terminal Data => $terminalData")
+//
+//            return true
+//        } catch (e: Exception) {
+//            logger.log(e.localizedMessage)
+//            e.printStackTrace()
+//        }
+//
+//        return false
+//    }
 
 
     val logger by lazy { Logger.with(this.javaClass.name) }
 
+//
+//    override fun downloadKey(terminalId: String): Boolean {
+//
+//        // load test keys
+////        val tik = Constants.ISW_DUKPT_IPEK
+////        val ksn = Constants.ISW_DUKPT_KSN
+//
+//        // load keys
+////        device.loadInitialKey(tik, ksn)
+//        return true
+//    }
 
-    override fun downloadKey(terminalId: String): Boolean {
+
+    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
 
         // load test keys
-//        val tik = Constants.ISW_DUKPT_IPEK
-//        val ksn = Constants.ISW_DUKPT_KSN
+        val tik = Constants.ISW_DUKPT_IPEK
+        val ksn = Constants.ISW_DUKPT_KSN
 
         // load keys
-//        device.loadInitialKey(tik, ksn)
+        device.loadInitialKey(tik, ksn)
         return true
     }
 

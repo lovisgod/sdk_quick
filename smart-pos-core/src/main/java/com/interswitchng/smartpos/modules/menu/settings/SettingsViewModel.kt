@@ -10,9 +10,12 @@ import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformat
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.parameter.parametersOf
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 import java.io.InputStream
 
-internal class SettingsViewModel(private val isoService: IsoService ): RootViewModel() {
+internal  class SettingsViewModel : RootViewModel(), KoinComponent {
 
     private val _keysDownloadSuccess = MutableLiveData<Boolean>()
     val keysDownloadSuccess: LiveData<Boolean> = _keysDownloadSuccess
@@ -20,22 +23,40 @@ internal class SettingsViewModel(private val isoService: IsoService ): RootViewM
     private val _configDownloadSuccess = MutableLiveData<Boolean>()
     val configDownloadSuccess: LiveData<Boolean> = _configDownloadSuccess
 
+//
+//    fun downloadKeys(terminalId: String) {
+//        uiScope.launch {
+//            val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId) }
+//            _keysDownloadSuccess.value = isSuccessful
+//
+//
+//        }
+//    }
 
-    fun downloadKeys(terminalId: String) {
+
+    fun downloadKeys(terminalId: String, ip: String, port: Int, isKimono: Boolean) {
+        val isoService: IsoService = get { parametersOf(isKimono) }
         uiScope.launch {
-            val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId) }
+            val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId, ip, port) }
             _keysDownloadSuccess.value = isSuccessful
-
-
         }
     }
 
-    fun downloadTerminalConfig(terminalId: String) {
+    fun downloadTerminalConfig(terminalId: String, ip: String, port: Int, isKimono: Boolean) {
+        val isoService: IsoService = get { parametersOf(isKimono) }
         uiScope.launch {
-            val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId) }
+            val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId, ip, port) }
             _configDownloadSuccess.value = isSuccessful
         }
     }
+//
+//    fun downloadTerminalConfig(terminalId: String) {
+//        val isoService: IsoService = get { parametersOf(isKimono) }
+//        uiScope.launch {
+//            val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId) }
+//            _configDownloadSuccess.value = isSuccessful
+//        }
+//    }
 
     fun getTerminalInformation(xmlFile: InputStream): TerminalInformation = FileUtils.readXml(TerminalInformation::class.java, xmlFile)
 

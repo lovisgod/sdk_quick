@@ -63,13 +63,14 @@ internal val viewModels = module {
     viewModel { ReportViewModel(get()) }
 
     viewModel {
-        val store: KeyValueStore = get()
+        SettingsViewModel()
+        //        val store: KeyValueStore = get()
 //        val terminalInfo = TerminalInfo.get(store)
 //        val isKimono = terminalInfo?.isKimono ?: false
-        val isKimono = TerminalInfo.getSettingsSettlementChoice(store)
-        val isoService: IsoService =  get { parametersOf(isKimono) }
-
-        SettingsViewModel(isoService) }
+//        val isKimono = TerminalInfo.getSettingsSettlementChoice(store)
+//        val isoService: IsoService =  get { parametersOf(isKimono) }
+//        SettingsViewModel(isoService)
+    }
 
     viewModel { AuthenticationViewModel() }
 }

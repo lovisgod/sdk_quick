@@ -24,9 +24,13 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
     internal const val KEY_MASTER_KEY = "master_key"
     internal const val KEY_SESSION_KEY = "session_key"
     internal const val KEY_PIN_KEY = "pin_key"
+
+    const val KEY_ADMIN_PIN = "terminal_admin_access_pin_key"
     internal const val TERMINAL_CONFIG_TYPE = "kimono_or_nibss"
     internal const val SETTINGS_TERMINAL_CONFIG_TYPE = "settings_kimono_or_nibss"
     // UTIL CONSTANTS
+
+
 
     const val EMPTY_STRING = ""
 

@@ -163,6 +163,8 @@
         <item name="android:drawable">@drawable/isw_keypad_background</item>
     </style>
 
-
-
+    <style name="ISW.Switch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color -->
+        <item name="colorControlActivated">@color/iswColorPrimary</item>
+    </style>
 </resources>
