@@ -195,7 +195,9 @@ class CardActivity : BaseActivity() {
                     responseCode = response.responseCode,
                     cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                     stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.icc, src = txnInfo.src,
+                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.iccString,
+
+                        src = txnInfo.src,
                     csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
                     originalTransmissionDateTime = response.transmissionDateTime
                 )

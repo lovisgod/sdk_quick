@@ -39,7 +39,13 @@ internal class TelpoEmvImplementation (
 
     lateinit var cardPan: String
 
-    private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
+//    private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
+
+
+    // get terminal config and EMV apps
+    private lateinit var config: Pair<TerminalConfig, EmvAIDs>
+    private lateinit var terminalInfo: TerminalInfo
+
 
     private var amount: Int = 0
 
@@ -63,6 +69,15 @@ internal class TelpoEmvImplementation (
     }
 
     suspend fun setupContactEmvTransaction(): Int {
+
+        // initialize config if not initialized
+        if (!::config.isInitialized)
+            config =  FileUtils.getConfigurations(context, terminalInfo)
+
+        // set terminal info
+        this.terminalInfo = terminalInfo
+
+
         var ret = EmvService.Open(context)
         if (ret != EmvService.EMV_TRUE) {
             logger.logErr("Emv Service Open Fail: RET CODE ==== $ret")

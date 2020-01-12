@@ -17,6 +17,17 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_settings.*
+import kotlinx.android.synthetic.main.isw_activity_settings.btnDownloadKeys
+import kotlinx.android.synthetic.main.isw_activity_settings.btnDownloadTerminalConfig
+import kotlinx.android.synthetic.main.isw_activity_settings.etTerminalId
+import kotlinx.android.synthetic.main.isw_activity_settings.progressKeyDownload
+import kotlinx.android.synthetic.main.isw_activity_settings.progressTerminalDownload
+import kotlinx.android.synthetic.main.isw_activity_settings.toolbar
+import kotlinx.android.synthetic.main.isw_activity_settings.tvKeyDate
+import kotlinx.android.synthetic.main.isw_activity_settings.tvKeys
+import kotlinx.android.synthetic.main.isw_activity_settings.tvTerminalInfo
+import kotlinx.android.synthetic.main.isw_activity_settings.tvTerminalInfoDate
+import kotlinx.android.synthetic.main.isw_activity_terminal_settings.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
@@ -93,6 +104,8 @@ class SettingsActivity : MenuActivity() {
         btnDownloadKeys.setOnClickListener {
             // validate that a terminal id is present
             val terminalID: String = etTerminalId.text.toString()
+            val serverIp: String = etServerIP.text.toString()
+            val serverPort: String = etServerPort.text.toString()
 
             if (terminalID.isEmpty() || terminalID.length != 8) {
                 // validate terminal id
@@ -115,13 +128,18 @@ class SettingsActivity : MenuActivity() {
 
                 //TODO get the IP and Port for ISW
                 // trigger download keys
-                settingsViewModel.downloadKeys(terminalID)
+
+
+                // trigger download keys
+                settingsViewModel.downloadKeys(terminalID, serverIp, serverPort.toInt(), switchKimono.isChecked)
             }
         }
 
         btnDownloadTerminalConfig.setOnClickListener {
             // validate that a terminal id is present
             val terminalID: String = etTerminalId.text.toString()
+            val serverIp: String = etServerIP.text.toString()
+            val serverPort: String = etServerPort.text.toString()
 
             // validate terminal id
             if (terminalID.isEmpty() || terminalID.length != 8) {
@@ -139,7 +157,10 @@ class SettingsActivity : MenuActivity() {
                 tvTerminalInfoDate.visibility = View.GONE
 
 
-                settingsViewModel.downloadTerminalConfig(terminalID)
+//                settingsViewModel.downloadTerminalConfig(terminalID)
+
+
+                settingsViewModel.downloadKeys(terminalID, serverIp, serverPort.toInt(), switchKimono.isChecked)
 
 //                var position =  settlementTypeSpinner.selectedItemPosition
 //                if (position==0)

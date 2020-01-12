@@ -3,6 +3,8 @@ package com.interswitchng.smartpos.emv.pax.services
 import android.content.Context
 import android.os.SystemClock
 import com.interswitchng.smartpos.emv.pax.emv.*
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl.Companion.INDEX_TIK
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl.Companion.INDEX_TPK
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -11,6 +13,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.dal.IPed
+import com.pax.dal.entity.EDUKPTPinMode
 import com.pax.dal.entity.EKeyCode
 import com.pax.dal.entity.EPedType
 import com.pax.dal.entity.EPinBlockMode
@@ -21,6 +24,7 @@ import com.pax.jemv.clcommon.RetCode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.sendBlocking
+import kotlin.concurrent.thread
 import kotlin.coroutines.coroutineContext
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
@@ -40,13 +44,12 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     private lateinit var channelScope: CoroutineScope
 
 
-
-
     private var pinResult: Int = RetCode.EMV_OK
     private var pinData: String? = null
     private var ksnData: String? = null
     private var hasEnteredPin: Boolean = false
     private var isKimono: Boolean = false
+
 
     //----------------------------------------------------------
     //     Implementation for ISW EmvCardReader interface
@@ -55,8 +58,6 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     override suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
         // set amount and channel scope
         emvImpl.setAmount(amount)
-
-
         this.channel = channel
         this.channelScope = scope
         this.isKimono = terminalInfo.isKimono
@@ -100,6 +101,11 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         }
     }
 
+    override fun getPan(): String? {
+        return emvImpl.getPan()
+    }
+
+
     override fun cancelTransaction() {
         if (!isCancelled) {
             isCancelled = true
@@ -107,21 +113,16 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         }
     }
 
-    override fun getPan(): String? {
-        return emvImpl.getPan()
-    }
-
     override fun getTransactionInfo(): EmvData? {
         // get track2 data
         return emvImpl.getTrack2()?.let {
             // get pinData (only for online PIN)
             val carPin = pinData ?: ""
-
             // get the ksn for dukpt pin
             val pinKsn = ksnData ?: ""
+
+
             // get track 2 string
-
-
             val track2data = EmvUtils.bcd2Str(it)
 
             // extract pan and expiry
@@ -132,13 +133,11 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
 
             val icc = emvImpl.getIccData()
-            val iccFull=emvImpl.getIccFullData()
-
             val aid = EmvUtils.bcd2Str(emvImpl.getTlv(0x9F06)!!)
             // get the card sequence number
             val csnStr = EmvUtils.bcd2Str(emvImpl.getTlv(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
             val csn = "0$csnStr"
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = pinKsn,iccFullData = iccFull)
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = pinKsn)
         }
     }
 
@@ -232,12 +231,29 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     }
 
     private fun getOnlinePin(panBlock: String) {
-        val pinBlock = ped.getPinBlock(INDEX_TPK, "4,5", panBlock.toByteArray(), EPinBlockMode.ISO9564_0, emvImpl.timeout.toInt())
-        if (pinBlock == null)
-            pinResult = RetCode.EMV_NO_PASSWORD
-        else {
-            pinResult = RetCode.EMV_OK
-            pinData = EmvUtils.bcd2Str(pinBlock)
+        // get user encrypted pin based on kimono flag
+        if (isKimono) {
+            // get pin block from the terminal using DUKPT
+            val pinBlock = ped.getDUKPTPin(INDEX_TIK, "4,5", panBlock.toByteArray(), EDUKPTPinMode.ISO9564_0_INC, emvImpl.timeout.toInt())
+
+            // extract pin result
+            if (pinBlock == null) pinResult = RetCode.EMV_NO_PASSWORD
+            else {
+                pinResult = RetCode.EMV_OK
+                pinData = EmvUtils.bcd2Str(pinBlock.result)
+                ksnData = EmvUtils.bcd2Str(pinBlock.ksn)
+            }
+
+        } else {
+            // get pin block from the terminal using the terminal pin key
+            val pinBlock = ped.getPinBlock(INDEX_TPK, "4,5", panBlock.toByteArray(), EPinBlockMode.ISO9564_0, emvImpl.timeout.toInt())
+
+            // extract pin result
+            if (pinBlock == null) pinResult = RetCode.EMV_NO_PASSWORD
+            else {
+                pinResult = RetCode.EMV_OK
+                pinData = EmvUtils.bcd2Str(pinBlock)
+            }
         }
     }
 
@@ -289,9 +305,4 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             cancelTransaction()
         }
     }
-
-    companion object {
-        private const val INDEX_TPK: Byte = 0x03
-    }
-
 }

@@ -51,6 +51,7 @@ internal class PayCodeViewModel(private val isoService: IsoService, private val 
                                 responseCode = response.responseCode,
                                 stan = response.stan, pinStatus = "", AID = "", code = "",
                                 cardPan = "", cardExpiry = "", cardType = CardType.None,
+
                                 telephone = iswPos.config.merchantTelephone, cardTrack2 = "",
                                 cardPin = "", icc = "", csn = "", src = ""))
                     }

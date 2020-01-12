@@ -2,6 +2,7 @@
 <resources>
     <color name="iswColorPrimary">#2E5BFF</color>
     <color name="iswColorPrimaryDark">#2E5BFF</color>
+    <color name="iswTextColorPrimary">#FFF</color>
     <color name="iswColorMainBackground">#FFF</color>
     <color name="iswColorTextSecondary">#2E5BFF</color>
     <color name="iswColorSecondaryIcon">#dfdfdf</color>

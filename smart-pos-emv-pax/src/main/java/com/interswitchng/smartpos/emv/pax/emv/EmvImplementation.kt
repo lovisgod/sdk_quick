@@ -12,7 +12,7 @@ import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
-import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
+import com.interswitchng.smartpos.shared.utilities.FileUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pax.jemv.clcommon.*
 import com.pax.jemv.device.DeviceManager
@@ -22,21 +22,6 @@ import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
 import kotlinx.coroutines.runBlocking
 import java.util.*
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.ByteArray
-import kotlin.Int
-import kotlin.LongArray
-import kotlin.Pair
-import kotlin.Short
-import kotlin.String
-import kotlin.Unit
-import kotlin.also
-import kotlin.apply
-import kotlin.getValue
-import kotlin.isInitialized
-import kotlin.lazy
-import kotlin.let
 
 
 /**
@@ -53,7 +38,8 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     private lateinit var selectedRID: String
 
     // get terminal config and EMV apps
-    private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
+    private lateinit var config: Pair<TerminalConfig, EmvAIDs>
+    private lateinit var terminalInfo: TerminalInfo
 
 
     private var amount: Int = 0
@@ -61,6 +47,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     fun setAmount(amount: Int) {
         this.amount = amount
     }
+
 
     private fun addCAPKIntoEmvLib(capks: List<EMV_CAPK>): Int {
 
@@ -88,7 +75,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
 
                             selectedRID = bcd2Str(capk.rID)
                             // log certified authority public key
-                            logger.log("EMVGetTLVData rid=$selectedRID" )
+                            logger.log("EMVGetTLVData rid=$selectedRID")
                             logger.log("EMVGetTLVData keyID=" + capk.keyID)
                             logger.log("EMVGetTLVData exponentLen=" + capk.exponentLen)
                             logger.log("EMVGetTLVData hashInd=" + capk.hashInd)
@@ -109,6 +96,14 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     }
 
     suspend fun setupContactEmvTransaction(terminalInfo: TerminalInfo): Int {
+
+        // initialize config if not initialized
+        if (!::config.isInitialized)
+            config =  FileUtils(context).getConfigurations(context, terminalInfo)
+
+        // set terminal info
+        this.terminalInfo = terminalInfo
+
 
         // initialize emv library data elements
         val initResult = EMVCallback.EMVCoreInit()
@@ -179,7 +174,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
             val ret = EMVCallback.EMVGetApp(i, test)
             logger.log("EmvApiGetApp " + bcd2Str(test.aid))
             if (ret != RetCode.EMV_OK) {
-                logger.log( "EMVGetApp err= $ret")
+                logger.log("EMVGetApp err= $ret")
                 return ret
             }
         }
@@ -295,7 +290,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         }
     }
 
-    suspend fun enterPin(isOnline: Boolean, triesCount: Int,  offlineTriesLeft: Int, pan: String) {
+    suspend fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, pan: String) {
         logger.log("offline tries left: $offlineTriesLeft")
         pinCallback.enterPin(isOnline, triesCount, offlineTriesLeft, pan)
     }
@@ -303,7 +298,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     fun getCardType(): CardType {
         val aids = config.second
         val selected = aids.cards.firstOrNull { ::selectedRID.isInitialized && it.aid.startsWith(selectedRID) }
-        val isCard = { type: CardType -> selected?.name?.startsWith(type.code, true) ?: false}
+        val isCard = { type: CardType -> selected?.name?.startsWith(type.code, true) ?: false }
 
         var cardType = CardType.None
         // find matching card
@@ -321,7 +316,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
             amountInfo[0] = amount.toLong()
             emvCallback.setCallBackResult(RetCode.EMV_OK)
 
-            val bytes = str2Bcd(Integer.toHexString(amount.toInt()))
+            val bytes = str2Bcd(Integer.toHexString(amount))
             val resultAmt = EMVCallback.EMVSetTLVData(ICCData.TRANSACTION_AMOUNT.tag.toShort(), bytes, bytes.size)
             if (resultAmt != RetCode.EMV_OK) logger.log("Error setting amount TLV: code - $resultAmt")
         }
@@ -357,11 +352,24 @@ internal class EmvImplementation(private val context: Context, private val pinCa
                 logger.log("emvGetHolderPwd ret=$ret")
             } else {
 
-                val pan = getPan()!!
+                val isOnline = pin == null
+                val pan: String = getPan()!!.let {
+                    if (terminalInfo.isKimono && isOnline) {
+                        // pan manipulation required for kimono
+                        var modifiedPan = "0".repeat(16)
+                        val startIndex = it.length - 13
+                        val endIndex = startIndex + 12
+                        val subPan = it.substring(startIndex, endIndex)
+
+                        modifiedPan = modifiedPan.replaceRange(4 until modifiedPan.length, subPan)
+                        modifiedPan += "0"
+                        return@let modifiedPan
+                    } else return@let it
+                }
 
                 // trigger enterPin
                 runBlocking {
-                    enterPin(pin == null, tryFlag, remainCount, pan)
+                    enterPin(isOnline, tryFlag, remainCount, pan)
                 }
 
                 logger.log("emvGetHolderPwd enterPin finish")
@@ -380,7 +388,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
 
 
         override fun emvUnknowTLVData(tag: Short, data: com.pax.jemv.clcommon.ByteArray): Int {
-            // copy value into data reference, based on specified value
+            // copyFieldsFrom value into data reference, based on specified value
             when (tag.toInt()) {
                 0x9A -> {
                     val date = ByteArray(7)
@@ -453,36 +461,8 @@ internal class EmvImplementation(private val context: Context, private val pinCa
         logger.log("---------------------------------------------")
     }
 
-    internal fun getIccData(): String {
-        val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
-
-        for (tag in REQUEST_TAGS) {
-            if (tag == ICCData.APP_PAN_SEQUENCE_NUMBER) continue
-            val tlv = getTlv(tag.tag)
-            tagValues.add(Pair(tag, tlv))
-        }
-
-        return EmvUtils.buildIccString(tagValues)
-    }
-
-    internal fun getCompletionIccData(): String {
-        val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
-
-        for (tag in REQUEST_TAGS) {
-            if (tag == ICCData.APP_PAN_SEQUENCE_NUMBER) continue
-            val tlv = getTlv(tag.tag)
-            tagValues.add(Pair(tag, tlv))
-        }
-
-        return EmvUtils.buildIccString(tagValues)
-    }
-
-
-
-    internal fun getIccFullData(): IccData {
+    internal fun getIccData(): IccData {
         // set icc data using specified icc tags
-
-
         return IccData(
                 TRANSACTION_AMOUNT = ICCData.TRANSACTION_AMOUNT.getTlv() ?: "",
                 ANOTHER_AMOUNT = ICCData.ANOTHER_AMOUNT.getTlv() ?: "",
@@ -501,11 +481,8 @@ internal class EmvImplementation(private val context: Context, private val pinCa
                 TERMINAL_CAPABILITIES = ICCData.TERMINAL_CAPABILITIES.getTlv() ?: "",
                 TRANSACTION_DATE = ICCData.TRANSACTION_DATE.getTlv() ?: "",
                 TRANSACTION_TYPE = ICCData.TRANSACTION_TYPE.getTlv() ?: "",
-                UNPREDICTABLE_NUMBER = ICCData.UNPREDICTABLE_NUMBER.getTlv() ?: ""
-                //,Segun check this
-//                DEDICATED_FILE_NAME = ICCData.DEDICATED_FILE_NAME.getTlv() ?: ""
-
-        ).apply {
+                UNPREDICTABLE_NUMBER = ICCData.UNPREDICTABLE_NUMBER.getTlv() ?: "",
+                DEDICATED_FILE_NAME = ICCData.DEDICATED_FILE_NAME.getTlv() ?: "").apply {
 
 
             val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()

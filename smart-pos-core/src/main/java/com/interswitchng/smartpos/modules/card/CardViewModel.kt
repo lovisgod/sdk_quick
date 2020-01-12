@@ -85,6 +85,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo) {
         uiScope.launch {
             //  start card transaction in IO thread
+           // paymentInfo.amount=paymentInfo.amount*100;
             val result = withContext(ioScope) { emv.startTransaction() }
 
             when (result) {

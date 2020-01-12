@@ -10,6 +10,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.utilities.InputValidator
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 import java.util.*
@@ -27,10 +28,6 @@ internal class PurchaseRequest
 
             var pinData=""
 
-            var dedicatedFileTag=""
-
-
-
 
             val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
             val now = Date()
@@ -39,6 +36,8 @@ internal class PurchaseRequest
 
             val iswConfig = IswPos.getInstance().config
             var keyLabel=if (iswConfig.environment == Environment.Test) "000006" else "000002"
+
+            var dedicatedFileTag="<DedicatedFileName>${icc.DEDICATED_FILE_NAME}</DedicatedFileName>"
 
 
             var  track2 = let {
@@ -53,14 +52,14 @@ internal class PurchaseRequest
 
         if(hasPin)
 
-                pinData= """<pinData><ksnd>605</ksnd><pinType>Dukpt</pinType> </pinData>"""
+                pinData= """<pinData><ksnd>605</ksnd><pinType>Dukpt</pinType><ksn>${transaction.pinKsn}</ksn><pinBlock>${transaction.cardPIN}</pinBlock></pinData>"""
 
             if(false)
                 dedicatedFileTag=  """"<DedicatedFileName>${icc.DEDICATED_FILE_NAME}</DedicatedFileName>"""
 
 
             val requestBody = """<?xml version="1.0" encoding="UTF-8" ?><purchaseRequest>
-                <terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>01</cardSequenceNumber> <track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><emvData><AmountAuthorized>000000000000</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults><iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan> <minorAmount>${ transaction.amount.toString()}</minorAmount> ${pinData} <keyLabel>${keyLabel}</keyLabel></purchaseRequest>
+                <terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber> <track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><emvData><AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults><iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan> <minorAmount>${ transaction.amount.toString()}</minorAmount> ${pinData} <keyLabel>${keyLabel}</keyLabel></purchaseRequest>
         """
 
             return requestBody
@@ -102,21 +101,28 @@ internal class PurchaseRequest
                 if (isVisa && hasCharacter) transaction.cardTrack2.substring(0..neededLength)
                 else transaction.cardTrack2
             }
-            return  """<reversalRequestWithoutOriginalDate><terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>01</cardSequenceNumber><track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><wasFallback></wasFallback><emvData><AmountAuthorized>000000010000</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther><ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults> <iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${transactionCurrencyCode}</TransactionCurrencyCode><TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${terminalCOuntryCode}</TerminalCountryCode><TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><stan>${transaction.stan}</stan><fromAccount>${transaction.accountType.name}</fromAccount> <toAccount>Current</toAccount> <minorAmount>${transaction.amount.toString()}</minorAmount> <messageReasonCode>4000</messageReasonCode> <rate></rate><settlementFee></settlementFee> <settlementCurrencyCode>${settlementCurrencyCode}</settlementCurrencyCode> <amountSettlement></amountSettlement> <attemptCount>1</attemptCount> <creationDate>190509</creationDate> <originalTransmissionDateTime>2019-05-09T09:10:49</originalTransmissionDateTime> <reversalType>Purchase</reversalType> <tmsConfiguredTerminalLocation></tmsConfiguredTerminalLocation>${pinData}<keyLabel>${keyLabel}</keyLabel> <originalAuthId>${originalAuthId}</originalAuthId> <notDisposable>false</notDisposable> <originalStan>${originalStan}</originalStan></reversalRequestWithoutOriginalDate>"""
+            return  """<reversalRequestWithoutOriginalDate><terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber><track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><wasFallback></wasFallback><emvData><AmountAuthorized>000000010000</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther><ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults> <iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${transactionCurrencyCode}</TransactionCurrencyCode><TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${terminalCOuntryCode}</TerminalCountryCode><TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><stan>${transaction.stan}</stan><fromAccount>${transaction.accountType.name}</fromAccount> <toAccount>Current</toAccount> <minorAmount>${transaction.amount.toString()}</minorAmount> <messageReasonCode>4000</messageReasonCode> <rate></rate><settlementFee></settlementFee> <settlementCurrencyCode>${settlementCurrencyCode}</settlementCurrencyCode> <amountSettlement></amountSettlement> <attemptCount>1</attemptCount> <creationDate>190509</creationDate> <originalTransmissionDateTime>2019-05-09T09:10:49</originalTransmissionDateTime> <reversalType>Purchase</reversalType> <tmsConfiguredTerminalLocation></tmsConfiguredTerminalLocation>${pinData}<keyLabel>${keyLabel}</keyLabel> <originalAuthId>${originalAuthId}</originalAuthId> <notDisposable>false</notDisposable> <originalStan>${originalStan}</originalStan></reversalRequestWithoutOriginalDate>"""
         }
 
 
 fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: TransactionInfo):String{
 
 
+
+    val hasPin = transaction.cardPIN.isNotEmpty()
+
+    var pinData=""
+
+
+    val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
+    val now = Date()
+    val date = DateUtils.dateFormatter.format(now)
+    var icc= getIcc(terminalInfo,amount,date,transaction)
+
     val iswConfig = IswPos.getInstance().config
     var keyLabel=if (iswConfig.environment == Environment.Test) "000006" else "000002"
 
-
-    val hasPin = transaction.cardPIN.isNotEmpty()
-    var pinData=""
-    if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType> </pinData>"""
-    var dedicatedFileTag=""
+    var dedicatedFileTag="<DedicatedFileName>${icc.DEDICATED_FILE_NAME}</DedicatedFileName>"
 
 
     var  track2 = let {
@@ -128,15 +134,38 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
         if (isVisa && hasCharacter) transaction.cardTrack2.substring(0..neededLength)
         else transaction.cardTrack2
     }
-    val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
-    val now = Date()
-    val date = DateUtils.dateFormatter.format(now)
-    var icc= getIcc(terminalInfo,amount,date,transaction)
+
+    if(hasPin)
+
+        pinData= """<pinData><ksnd>605</ksnd><pinType>Dukpt</pinType><ksn>${transaction.pinKsn}</ksn><pinBlock>${transaction.cardPIN}</pinBlock></pinData>"""
+
     if(false)
         dedicatedFileTag=  """"<DedicatedFileName>${icc.DEDICATED_FILE_NAME}</DedicatedFileName>"""
+//
+//
+//    var  track2 = let {
+//        val neededLength = transaction.cardTrack2.length - 2
+//        val isVisa = transaction.cardTrack2.startsWith('4')
+//        val hasCharacter = transaction.cardTrack2.last().isLetter()
+//
+//        // remove character suffix for visa
+//        if (isVisa && hasCharacter) transaction.cardTrack2.substring(0..neededLength)
+//        else transaction.cardTrack2
+//    }
+//    val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
+//    val now = Date()
+//    val date = DateUtils.dateFormatter.format(now)
+//    var icc= getIcc(terminalInfo,amount,date,transaction)
+//    if(false)
+//        dedicatedFileTag=  """"<DedicatedFileName>${icc.DEDICATED_FILE_NAME}</DedicatedFileName>"""
+
+//
+//    val requestBody = """<?xml version="1.0" encoding="UTF-8" ?><purchaseRequest>
+//                <terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode><posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber> <track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><emvData><AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults><iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan> <minorAmount>${ transaction.amount.toString()}</minorAmount> ${pinData} <keyLabel>${keyLabel}</keyLabel></purchaseRequest>
+//        """
 
     return  """
-        <reservationRequest><terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>01</cardSequenceNumber><track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><wasFallback></wasFallback><emvData><AmountAuthorized>000000010000</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther><ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults> <iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode><TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode><TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan><minorAmount>${transaction.amount.toString()}</minorAmount><tmsConfiguredTerminalLocation></tmsConfiguredTerminalLocation>${pinData}<keyLabel>${keyLabel}</keyLabel></reservationRequest>
+        <reservationRequest><terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode><posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber><track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><wasFallback></wasFallback><emvData><AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther><ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults> <iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode><TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode><TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan><minorAmount>${transaction.amount.toString()}</minorAmount><tmsConfiguredTerminalLocation></tmsConfiguredTerminalLocation>${pinData}<keyLabel>${keyLabel}</keyLabel></reservationRequest>
     """.trimIndent()
 }
 
@@ -146,7 +175,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
 
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData=""
-            if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType> </pinData>"""
+            if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType></pinData>"""
 
             val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
             val now = Date()
@@ -176,7 +205,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
                 else transaction.cardTrack2
             }
             return  """
-                <completionRequest><terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>01</cardSequenceNumber><track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><wasFallback></wasFallback><emvData><AmountAuthorized>000000010000</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther><ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults> <iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode><TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode><TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber>${dedicatedFileTag}</emvData></cardData><stan>${transaction.stan}</stan><minorAmount>${transaction.amount.toString()}</minorAmount><surcharge>0</surcharge><rate>0</rate><amountSettlement>0</amountSettlement><settlementFee>0</settlementFee><settlementCurrencyCode>${settlementCurrencyCode}}</settlementCurrencyCode><tmsConfiguredTerminalLocation></tmsConfiguredTerminalLocation>${pinData}<keyLabel>${keyLabel}</keyLabel><originalAuthRef>${originalAuthId}</originalAuthRef><originalDateTime>${transaction.originalTransactionInfoData?.originalTransmissionDateAndTime}</originalDateTime><notDisposable>false</notDisposable><originalStan>${originalStan}</originalStan></completionRequest>
+                <completionRequest><terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber><track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><wasFallback></wasFallback><emvData><AmountAuthorized>000000010000</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther><ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults> <iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode><TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode><TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber>${dedicatedFileTag}</emvData></cardData><stan>${transaction.stan}</stan><minorAmount>${transaction.amount.toString()}</minorAmount><surcharge>0</surcharge><rate>0</rate><amountSettlement>0</amountSettlement><settlementFee>0</settlementFee><settlementCurrencyCode>${settlementCurrencyCode}</settlementCurrencyCode><tmsConfiguredTerminalLocation></tmsConfiguredTerminalLocation>${pinData}<keyLabel>${keyLabel}</keyLabel><originalAuthRef>${originalAuthId}</originalAuthRef><originalDateTime>${transaction.originalTransactionInfoData?.originalTransmissionDateAndTime}</originalDateTime><notDisposable>false</notDisposable><originalStan>${originalStan}</originalStan></completionRequest>
             """.trimIndent()
         }
 
@@ -187,7 +216,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
 
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData=""
-            if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType> </pinData>"""
+            if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType></pinData>"""
 
             val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
             val now = Date()
@@ -211,7 +240,7 @@ if(false)
 
             return  """<refundRequest>
         <terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation> 
-        <cardData><cardSequenceNumber>01</cardSequenceNumber> <track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2>
+        <cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber><track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2>
                 <emvData><AmountAuthorized>000000000000</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults><iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber>${dedicatedFileTag}</emvData></cardData>
         <fromAccount>${transaction.accountType.name}</fromAccount>
         <stan>${transaction.stan}</stan>
@@ -226,52 +255,11 @@ if(false)
         }
 
         private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String,transaction: TransactionInfo): IccData {
-return  transaction.iccFull
+
+            transaction.iccData.TRANSACTION_AMOUNT=amount
+//transaction.iccData.TERMINAL_CAPABILITIES="E0F0C8"
+            return  transaction.iccData
         }
-//
-//        private fun getIcc(terminalInfo: TerminalInfo, amount: String, date: String,transaction: TransactionInfo): IccData {
-//            val authorizedAmountTLV = String.format("9F02%02d%s", amount.length / 2, amount)
-//            val transactionDateTLV = String.format("9A%02d%s", date.length / 2, date)
-//            val iccData =transaction.icc;
-//
-////                    "9F260831BDCBC7CFF6253B9F2701809F10120110A50003020000000000000000000000FF9F3704F435D8A29F3602052795050880000000" +
-////                    "${transactionDateTLV}9C0100${authorizedAmountTLV}5F2A020566820238009F1A0205669F34034103029F3303E0F8C89F3501229F0306000000000000"
-//
-//            // remove leadin zero if exits
-//            val currencyCode = if (terminalInfo.currencyCode.length > 3) terminalInfo.currencyCode.substring(1) else terminalInfo.currencyCode
-//            val countryCode = if (terminalInfo.countryCode.length > 3) terminalInfo.countryCode.substring(1) else terminalInfo.countryCode
-//
-//
-//
-//
-//
-//            return IccData().apply {
-//                TRANSACTION_AMOUNT = amount
-//                ANOTHER_AMOUNT = "000000000000"
-//                APPLICATION_INTERCHANGE_PROFILE = "3800"
-//                APPLICATION_TRANSACTION_COUNTER = "0527" //check
-//                CRYPTOGRAM_INFO_DATA = "80"
-//                CARD_HOLDER_VERIFICATION_RESULT = "410302"
-//                ISSUER_APP_DATA = "0110A50003020000000000000000000000FF"
-//                TRANSACTION_CURRENCY_CODE = currencyCode
-//                TERMINAL_VERIFICATION_RESULT = "0880000000"
-//                TERMINAL_COUNTRY_CODE = countryCode
-//                TERMINAL_TYPE = "22"
-//                TERMINAL_CAPABILITIES = terminalInfo.capabilities ?: "E0F8C8"
-//                TRANSACTION_DATE = date
-//                TRANSACTION_TYPE = "00"
-//                UNPREDICTABLE_NUMBER = "F435D8A2"
-//                DEDICATED_FILE_NAME = ""
-//                AUTHORIZATION_REQUEST = "31BDCBC7CFF6253B"
-//
-//                iccAsString = iccData
-//            }
-//
-//        }
-
-
-
-
 
 
 
@@ -284,45 +272,160 @@ return  transaction.iccFull
 
 
 
+@Root(name = "terminalInformation", strict = false)
+internal class TerminalInformation {
+    @field:Element(name = "terminalId", required = false)
+    var terminalId: String = ""
+    @field:Element(name = "merchantId", required = false)
+    var merchantId: String = ""
+    @field:Element(name = "merchantNameAndLocation", required = false)
+    var merchantNameAndLocation: String = ""
+    @field:Element(name = "merchantCategoryCode", required = false)
+    var merchantCategoryCode: String = ""
+    @field:Element(name = "countryCode", required = false)
+    var countryCode: String = ""
+    @field:Element(name = "currencyCode", required = false)
+    var currencyCode: String = ""
+    @field:Element(name = "callHomeTimeInMin", required = false)
+    var callHomeTimeInMin: String = ""
+    @field:Element(name = "serverTimeoutInSec", required = false)
+    var serverTimeoutInSec: String = ""
+    @field:Element(name = "serverIp", required = false)
+    var serverIp: String = ""
+    @field:Element(name = "kimono", required = false)
+    var isKimono: Boolean = false
+    @field:Element(name = "capabilities", required = false)
+    var capabilities: String? = null
+    @field:Element(name = "serverPort", required = false)
+    var serverPort: String = ""
+    @field:Element(name = "serverUrl", required = false)
+    var serverUrl: String = ""
 
 
+    lateinit var error: TerminalInformation
 
 
-@Root(name = "TerminalInformation", strict = false)
-data class TerminalInformation  @JvmOverloads constructor(@field:Element(name = "batteryInformation", required = false)
-                          var batteryInformation: String = "",
-                          @field:Element(name = "currencyCode", required = false)
-var currencyCode: String = "",
-@field:Element(name = "languageInfo", required = false)
-var languageInfo: String = "",
-@field:Element(name = "merchantId", required = false)
-var merchantId: String = "",
-// TODO confirm if this is no a typo <merhcantLocation></merhcantLocation>
-@field:Element(name = "merhcantLocation", required = false)
-var merchantLocation: String = "",
-@field:Element(name = "posConditionCode", required = false)
-var posConditionCode: String = "",
-@field:Element(name = "posDataCode", required = false)
-var posDataCode: String = "",
-@field:Element(name = "posEntryMode", required = false)
-var posEntryMode: String = "",
-@field:Element(name = "posGeoCode", required = false)
-var posGeoCode: String = "",
-@field:Element(name = "printerStatus", required = false)
-var printerStatus: String = "",
-@field:Element(name = "terminalId", required = false)
-var terminalId: String = "",
-@field:Element(name = "terminalType", required = false)
-var terminalType: String = "",
-@field:Element(name = "transmissionDate", required = false)
-var transmissionDate: String = "",
-@field:Element(name = "uniqueId", required = false)
-var uniqueId: String = "",
-@field:Element(name = "cardAcceptorId", required = false)
-var cardAcceptorId: String = "",
-@field:Element(name = "cellStationId", required = false)
-var cellStationId: String = ""
-)
+    val isValid: Boolean
+        get() {
+            validateInfo()
+
+            val properties = listOf(error.terminalId, error.merchantId, error.serverIp, error.capabilities,
+                    error.merchantNameAndLocation, error.merchantCategoryCode, error.serverPort, error.serverUrl,
+                    error.countryCode, error.currencyCode, error.callHomeTimeInMin, error.serverTimeoutInSec)
+
+
+            // validate that all error properties are empty
+            return properties.all { it?.isEmpty() ?: true }
+        }
+
+    val toTerminalInfo: TerminalInfo
+        get() {
+            return TerminalInfo(
+                    terminalId = terminalId,
+                    merchantId = merchantId,
+                    merchantNameAndLocation = merchantNameAndLocation,
+                    merchantCategoryCode = merchantCategoryCode,
+                    countryCode = countryCode,
+                    currencyCode = currencyCode,
+                    callHomeTimeInMin = callHomeTimeInMin.toIntOrNull() ?: -1,
+                    serverTimeoutInSec = serverTimeoutInSec.toIntOrNull() ?: -1,
+                    isKimono = isKimono,
+                    capabilities = capabilities,
+                    serverIp = serverIp,
+                    serverUrl = serverUrl,
+                    serverPort = serverPort.toIntOrNull() ?: -1)
+        }
+
+    private fun validateInfo() {
+        error = TerminalInformation()
+
+        // validate terminalId
+        val terminalIdValidator = InputValidator(terminalId)
+                .isNotEmpty().isAlphaNumeric().isExactLength(8)
+        // assign error message for field
+        if (terminalIdValidator.hasError) error.terminalId = terminalIdValidator.message
+
+
+        // validate merchant id
+        val merchantId = InputValidator(merchantId)
+                .isNotEmpty().isAlphaNumeric().isExactLength(15)
+        // assign error message for field
+        if (merchantId.hasError) error.merchantId = merchantId.message
+
+
+        // validate merchant name and location
+        val merchantNameAndLocation = InputValidator(merchantNameAndLocation).isNotEmpty().isExactLength(40)
+        // assign error message for field
+        if (merchantNameAndLocation.hasError) error.merchantNameAndLocation = merchantNameAndLocation.message
+
+
+        // validate merchant code
+        val merchantCode = InputValidator(merchantCategoryCode)
+                .isNotEmpty().isNumber().isExactLength(4)
+        // assign error message for field
+        if (merchantCode.hasError) error.merchantCategoryCode = merchantCode.message
+
+
+        // validate country code
+        val countryCode = InputValidator(countryCode)
+                .isNotEmpty().isNumber().hasMinLength(3).hasMaxLength(4)
+
+        // assign error message for field
+        if (countryCode.hasError) error.countryCode = countryCode.message
+
+
+        // validate country code
+        val currencyCode = InputValidator(currencyCode)
+                .isNotEmpty().isNumber().isExactLength(3)
+        // assign error message for field
+        if (currencyCode.hasError) error.currencyCode = currencyCode.message
+
+
+        val callHomeTime = InputValidator(callHomeTimeInMin)
+                .isNotEmpty().isNumber().isNumberBetween(0, 120)
+        // assign error message for field
+        if (callHomeTime.hasError) error.callHomeTimeInMin = callHomeTime.message
+
+
+        // validate server timeout
+        val serverTimeout = InputValidator(serverTimeoutInSec)
+                .isNotEmpty().isNumber().isNumberBetween(0, 120)
+        // assign error message for field
+        if (serverTimeout.hasError) error.serverTimeoutInSec = serverTimeout.message
+
+
+        // validate server server url
+        val serverUrl = InputValidator(serverUrl)
+                .isNotEmpty()
+        // assign error message for field if is kimono
+        if (isKimono && serverUrl.hasError) error.serverUrl = serverUrl.message
+
+
+        // validate terminal capabilities value
+        capabilities?.apply {
+            val capabilitiesValidator = InputValidator(this)
+                    .isNotEmpty().isExactLength(6).isAlphaNumeric()
+
+            if (capabilitiesValidator.hasError) error.capabilities = capabilitiesValidator.message
+        }
+
+        // validate server IP
+        val serverIp = InputValidator(serverIp)
+                .isNotEmpty().isValidIp()
+        // assign error message for field if not kimono
+        if (serverIp.hasError && !isKimono) error.serverIp = serverIp.message
+
+
+        // validate server server url
+        val serverPort = InputValidator(serverPort)
+                .isNotEmpty().isNumber()
+                .hasMaxLength(5)
+                .isNumberBetween(0, 65535)
+
+        // assign error message for field if not kimono
+        if (serverPort.hasError && !isKimono) error.serverPort = serverPort.message
+    }
+}
 //{
 
 
