@@ -28,6 +28,12 @@ sealed class EmvMessage {
     class CardRead(val cardType: CardType): EmvMessage()
 
     /**
+     * Indicates that the card details have been captured.
+     * This is a class needed for Telpo
+     */
+    class CardDetails(val cardType: CardType): EmvMessage()
+
+    /**
      * Indicates when the card has been abruptly removed
      */
     object CardRemoved: EmvMessage()

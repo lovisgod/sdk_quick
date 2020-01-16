@@ -47,9 +47,9 @@ class MerchantCardDialog constructor(
         val ignore = when (message) {
 
             // when card is detected
-            is EmvMessage.CardDetected -> {
+            is EmvMessage.CardDetected -> {}
 
-            }
+            is EmvMessage.CardDetails -> {}
 
             // when card should be inserted
             is EmvMessage.InsertCard -> {}

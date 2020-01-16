@@ -54,9 +54,13 @@ internal val viewModels = module {
     }
 
 
+
+//    viewModel { TransactionResultViewModel(get(), get(), get(), get()) }
+
     viewModel { FingerprintViewModel(get(), get()) }
 
-    viewModel { TransactionResultViewModel(get(), get(), get()) }
+    viewModel { TransactionResultViewModel(get(), get(), get(), get()) }
+
 
     viewModel { HistoryViewModel(get()) }
 
@@ -64,8 +68,9 @@ internal val viewModels = module {
 
     viewModel {
         val store: KeyValueStore = get()
-        val terminalInfo = TerminalInfo.get(store)
-        val isKimono = false// terminalInfo?.isKimono ?: false
+//        val terminalInfo = TerminalInfo.get(store)
+//        val isKimono = terminalInfo?.isKimono ?: false
+        val isKimono = TerminalInfo.getSettingsSettlementChoice(store)
         val isoService: IsoService =  get { parametersOf(isKimono) }
 
         SettingsViewModel(isoService) }

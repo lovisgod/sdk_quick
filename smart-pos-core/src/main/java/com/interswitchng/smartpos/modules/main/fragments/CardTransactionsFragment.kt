@@ -22,8 +22,9 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.*
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -58,7 +59,17 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
     private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.stan,paymentModel.authorizationId)
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.originalStan,paymentModel.authorizationId)
+    }
+
+    private val originalTxnData by lazy {
+        paymentModel.originalDateAndTime?.let { timeDate ->
+            paymentModel.originalStan?.let {
+                stan ->
+                OriginalTransactionInfoData(originalStan = stan,
+                    originalTransmissionDateAndTime = timeDate)
+            }
+        }
     }
 
     private val cancelDialog by lazy {
@@ -106,6 +117,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
             PaymentModel.TransactionType.COMPLETION -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.COMPLETION)
+                cardViewModel.setOriginalTxnInfo(originalTxnData!!)
                 transactionType = TransactionType.Completion
             }
 
@@ -168,9 +180,17 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 when (it) {
                     PaymentModel.PaymentType.CARD -> {}
                     PaymentModel.PaymentType.PAY_CODE -> {
-                        Toast.makeText(context, "Paycode", Toast.LENGTH_LONG)}
-                    PaymentModel.PaymentType.QR_CODE -> {}
-                    PaymentModel.PaymentType.USSD -> {}
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentPayCode(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.QR_CODE -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentQrCodeFragment(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.USSD -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentUssd(paymentModel)
+                        navigate(direction)
+                    }
                 }
 
             }
@@ -243,6 +263,8 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 //Show Card detected view
                 showCardDetectedView()
             }
+
+            is EmvMessage.CardDetails -> cardType = message.cardType
 
             // when card gets removed
             is EmvMessage.CardRemoved -> {
@@ -327,19 +349,22 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 transactionResult = TransactionResult(
                     paymentType = PaymentType.Card,
                     dateTime = DisplayUtils.getIsoString(now),
-                    amount = paymentModel.formattedAmount,
+                    amount = paymentModel.amount.toString(),
                     type = transactionType,
                     authorizationCode = response.authCode,
                     responseMessage = responseMsg,
                     responseCode = response.responseCode,
                     cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
                     stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone
+                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.icc, src = txnInfo.src,
+                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
+                    month = response.month, time = response.time,
+                    originalTransmissionDateTime = response.transmissionDateTime
                 )
 
                 dismissAlert()
 
-                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(
+                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(paymentModel,
                     TransactionResponseModel(transactionResult = transactionResult,
                         transactionType = PaymentModel.TransactionType.CARD_PURCHASE)
                 )

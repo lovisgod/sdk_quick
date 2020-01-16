@@ -3,18 +3,20 @@ package com.interswitchng.smartpos.shared.services.kimono
 import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
-import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.services.iso8583.utils.TerminalInfoParser
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
 import com.interswitchng.smartpos.shared.services.kimono.models.*
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
@@ -26,11 +28,32 @@ import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-internal class KimonoHttpServiceImpl(private val context: Context, private val device: POSDevice,
+internal class KimonoHttpServiceImpl(private val context: Context,
+                                     private val store: KeyValueStore,
+                                     private val device: POSDevice,
 
                                      private val httpService: IKimonoHttpService) : IsoService{
     override fun downloadTerminalParameters(terminalId: String): Boolean {
-       return true;
+
+
+
+        try {
+
+
+            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
+                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
+                    "")?.also {
+
+                it.persist(store) }
+            logger.log("Terminal Data => $terminalData")
+
+            return true
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+        }
+
+        return false
     }
 
 
@@ -40,11 +63,11 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
     override fun downloadKey(terminalId: String): Boolean {
 
         // load test keys
-        val tik = Constants.ISW_DUKPT_IPEK
-        val ksn = Constants.ISW_DUKPT_KSN
+//        val tik = Constants.ISW_DUKPT_IPEK
+//        val ksn = Constants.ISW_DUKPT_KSN
 
         // load keys
-        device.loadInitialKey(tik, ksn)
+//        device.loadInitialKey(tik, ksn)
         return true
     }
 
@@ -66,8 +89,7 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
 
 
     override  fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-
-        val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)
+      val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {
@@ -188,13 +210,15 @@ internal class KimonoHttpServiceImpl(private val context: Context, private val d
                 cardPIN = "",
                 cardPAN = pan,
                 cardTrack2 = track2,
-                stan = stan,
-                accountType = AccountType.Default,
-                amount = paymentInfo.amount,
-                csn = "",
+                icc = "",
+                iccFull = IccData(),
                 src = src,
+                csn = "",
+                amount = paymentInfo.amount,
+                stan = stan,
                 purchaseType = PurchaseType.PayCode,
-                icc = ""
+                accountType = AccountType.Default,
+                pinKsn = ""
         )
 
         val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)

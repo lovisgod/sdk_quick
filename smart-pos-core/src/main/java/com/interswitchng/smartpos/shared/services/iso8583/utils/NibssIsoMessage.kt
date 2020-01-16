@@ -29,4 +29,19 @@ class NibssIsoMessage(val message: IsoMessage)  {
         p.println( "$indent</isomsg>")
 
     }
+
+
+    fun copyFieldsFrom(isoMessage: NibssIsoMessage): NibssIsoMessage {
+        // copyFieldsFrom all none-null values
+        for (i in 0 until 129) {
+            // extract field from isoMessage
+            val field = isoMessage.message.getField<Any>(i)
+
+            if (field != null) {
+                message.setValue(i, field.value, field.type, field.length)
+            }
+        }
+
+        return this
+    }
 }

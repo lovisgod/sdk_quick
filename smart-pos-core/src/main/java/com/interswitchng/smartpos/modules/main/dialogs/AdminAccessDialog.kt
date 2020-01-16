@@ -76,6 +76,8 @@ class AdminAccessDialog constructor(
                 cardViewModel.readCardPan()
             }
 
+            is EmvMessage.CardDetails -> {}
+
             // when card should be inserted
             is EmvMessage.InsertCard -> {
 

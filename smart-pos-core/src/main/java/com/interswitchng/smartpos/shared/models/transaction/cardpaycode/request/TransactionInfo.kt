@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request
 
+import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 
 
 /**
@@ -8,73 +10,66 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
  * out to the EPMS for [PurchaseType] Transactions
  */
 internal data class TransactionInfo(
-        val cardExpiry: String,
-        val cardPIN: String,
-        val cardPAN: String,
-        val cardTrack2: String,
-        var icc: String,
-        var src: String, // service restriction code
-        var csn: String, // card sequence number
-        val amount: Int,
-        val stan: String,
-        val purchaseType: PurchaseType,
-        val accountType: AccountType,
-        var originalTransactionInfoData: OriginalTransactionInfoData? = null) {
+    val cardExpiry: String,
+    val cardPIN: String,
+    val cardPAN: String,
+    val cardTrack2: String,
+    var icc: String,
+    var iccFull: IccData,
+    var src: String, // service restriction code
+    var csn: String, // card sequence number
+    val amount: Int,
+    val stan: String,
+    val purchaseType: PurchaseType,
+    val accountType: AccountType,
+    var originalTransactionInfoData: OriginalTransactionInfoData? = null,
+    val pinKsn: String) {
 
 
     companion object {
-            fun fromEmv(emv: EmvData, paymentInfo: PaymentInfo, purchaseType: PurchaseType, accountType: AccountType) = TransactionInfo (
-                cardExpiry =  emv.cardExpiry,
-                cardPAN = emv.cardPAN,
-                cardPIN =  emv.cardPIN,
-                cardTrack2 =  emv.cardTrack2,
-                icc = emv.icc,
-                src = emv.src,
-                csn = emv.csn,
-                amount = paymentInfo.amount * 100,
-                stan = paymentInfo.getStan(),
-                purchaseType = purchaseType,
-                accountType = accountType
-            )
-            fun forCardNotPresent(
-                    emv: EmvData,
-                    cardExpiry: String,
-                    cardPan: String,
-                    cardPin: String,
-                    paymentInfo: PaymentInfo,
-                    accountType: AccountType
-            ): TransactionInfo {
-                    return TransactionInfo(
-                        cardExpiry =  cardExpiry,
-                        cardPAN = cardPan,
-                        cardPIN =  cardPin,
-                        cardTrack2 =  emv.cardTrack2,
-                        icc = emv.icc,
-                        src = emv.src,
-                        csn = emv.csn,
-                        amount = paymentInfo.amount,
-                        stan = paymentInfo.getStan(),
-                        purchaseType = PurchaseType.Card,
-                        accountType = accountType,
-                        originalTransactionInfoData=OriginalTransactionInfoData(paymentInfo.originalStanId,"",paymentInfo.originalAuthId,"")
-                    )
-            }
+        fun fromEmv(emv: EmvData, paymentInfo: PaymentInfo, purchaseType: PurchaseType, accountType: AccountType) = TransactionInfo (
+            cardExpiry =  emv.cardExpiry,
+            cardPAN = emv.cardPAN,
+            cardPIN =  emv.cardPIN,
+            iccFull=emv.iccFullData,
+            cardTrack2 =  emv.cardTrack2,
+            icc = emv.icc,
+            src = emv.src,
+            csn = emv.csn,
+            pinKsn=emv.pinKsn,
+            amount = paymentInfo.amount * 100,
+            stan = paymentInfo.getStan(),
+            purchaseType = purchaseType,
+            originalTransactionInfoData=OriginalTransactionInfoData(paymentInfo.originalStanId,"",paymentInfo.originalAuthId,""),
+            accountType = accountType)
+
+        fun fromTxnResult(txnResult: TransactionResult) = TransactionInfo(
+            cardExpiry = txnResult.cardExpiry,
+            cardPAN = txnResult.cardPan,
+            cardPIN = txnResult.cardPin,
+            cardTrack2 =  txnResult.cardTrack2,
+            icc = txnResult.icc,
+            src = txnResult.src,
+            csn = txnResult.csn,
+            amount = txnResult.amount.toInt(),
+            stan = txnResult.stan,
+            purchaseType = PurchaseType.Card,
+            accountType = AccountType.Default,
+            originalTransactionInfoData = OriginalTransactionInfoData(
+                originalTransmissionDateAndTime = txnResult.originalTransmissionDateTime,
+                month = txnResult.month, time = txnResult.time),
+            pinKsn = "",
+            iccFull = IccData()
+        )
+
     }
 }
 
 internal data class OriginalTransactionInfoData(
-        var originalStan: String?,
-        var originalTransmissionDateAndTime: String?,
-        var originalAuthorizationId: String?,
-        var originalAmount: String?
-) {
-        companion object {
-                fun addOriginalTransactionInfo(originalStan: String? = null,
-                                               originalTransmissionDateAndTime: String? = null,
-                                               originalAuthorizationId: String? = null,
-                                               originalAmount: String? = null) = OriginalTransactionInfoData(originalStan,
-                        originalTransmissionDateAndTime,
-                        originalAuthorizationId,
-                                originalAmount)
-        }
-}
+    var originalStan: String? = EMPTY_STRING,
+    var originalTransmissionDateAndTime: String = EMPTY_STRING,
+    var originalAuthorizationId: String? = EMPTY_STRING,
+    var originalAmount: String = EMPTY_STRING,
+    var month: String = EMPTY_STRING,
+    var time: String = EMPTY_STRING
+)

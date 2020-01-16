@@ -70,23 +70,23 @@ class SettingsActivity : MenuActivity() {
     private fun setupButtons() {
 
 
-        val adapter = ArrayAdapter(baseContext, android.R.layout.simple_spinner_item, listOf("Nibss", "Kimono"))
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        settlementTypeSpinner.adapter = adapter
-        settlementTypeSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                // either one will work as well
-                // val item = parent.getItemAtPosition(position) as String
-                val item = adapter.getItem(position)
-
-
-
-            }
-        }
+//        val adapter = ArrayAdapter(baseContext, android.R.layout.simple_spinner_item, listOf("Nibss", "Kimono"))
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        settlementTypeSpinner.adapter = adapter
+//        settlementTypeSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//            }
+//
+//            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+//                // either one will work as well
+//                // val item = parent.getItemAtPosition(position) as String
+//                val item = adapter.getItem(position)
+//
+//
+//
+//            }
+//        }
 
 
         // set up buttons
@@ -141,11 +141,11 @@ class SettingsActivity : MenuActivity() {
 
                 settingsViewModel.downloadTerminalConfig(terminalID)
 
-                var position =  settlementTypeSpinner.selectedItemPosition
-                if (position==0)
-                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"nibss")
-                else if(position==1)
-                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
+//                var position =  settlementTypeSpinner.selectedItemPosition
+//                if (position==0)
+//                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"nibss")
+//                else if(position==1)
+//                    store.saveString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
             }
         }
     }
@@ -162,10 +162,10 @@ class SettingsActivity : MenuActivity() {
 
 
         if (selectedSettlement=="kimono"){
-
+            settlementTypeSpinner.setText("KIMONO")
         }
         else {
-
+            settlementTypeSpinner.setText("NIBSS")
         }
 
 

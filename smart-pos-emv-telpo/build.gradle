@@ -18,6 +18,7 @@ android {
         versionName versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexKeepFile file('multidex-config.txt')
     }
 
     buildTypes {

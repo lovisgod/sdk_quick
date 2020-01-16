@@ -118,7 +118,10 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         hasEnteredPin = true
 
         return if (!isCancelled) when (result) {
-            EmvService.EMV_TRUE -> logger.log("Offline approved").let { EmvResult.ONLINE_REQUIRED }
+            EmvService.EMV_TRUE -> {
+                runBlocking { channel.send(EmvMessage.CardDetails(telpoEmvImplementation.getCardType())) }
+                logger.log("Offline approved").let { EmvResult.ONLINE_REQUIRED }
+            }
             else -> logger.log("Offline declined").let { EmvResult.OFFLINE_DENIED }
         } else logger.log("Transaction was cancelled").let { EmvResult.CANCELLED }
     }
@@ -149,13 +152,15 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             val expiry = strTrack2.split("D")[1].substring(0, 4)
             val src = strTrack2.split("D")[1].substring(4, 7)
 
-
             val icc = telpoEmvImplementation.getIccData()
+            val iccFull=telpoEmvImplementation.getIccFullData()
+
             val aid = StringUtil.toHexString(telpoEmvImplementation.getTLV(0x9F06)!!)
             // get the card sequence number
             val csnStr = StringUtil.toHexString(telpoEmvImplementation.getTLV(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
             val csn = "0$csnStr"
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = "")
+
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data, icc = icc, AID = aid, src = src, csn = csn, pinKsn = "",iccFullData = iccFull)
         }
     }
 }

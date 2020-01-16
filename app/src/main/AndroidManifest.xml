@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.interswitchng.interswitchpossdkdemo">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:name=".POSApplication"
         android:allowBackup="true"
@@ -27,17 +29,19 @@
         <activity
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar"
-            android:name="com.interswitchng.smartpos.modules.main.MainActivity">
+            android:name="com.interswitchng.smartpos.modules.main.MainActivity"/>
+        <activity
+            android:theme="@style/ISW.NoActionBar"
+            android:noHistory="true"
+            android:name="com.interswitchng.smartpos.modules.setup.SetupActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity
-            android:theme="@style/ISW.NoActionBar"
-            android:noHistory="true"
-            android:name="com.interswitchng.smartpos.modules.setup.SetupActivity"/>
     </application>
 
 </manifest>

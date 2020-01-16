@@ -9,6 +9,8 @@ import com.gojuno.koptional.None
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.core.UserType
@@ -30,7 +32,9 @@ import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_qr_code.*
 import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 import kotlinx.android.synthetic.main.isw_fragment_qr_code.*
+import kotlinx.android.synthetic.main.isw_fragment_qr_code.change_payment_method
 import kotlinx.android.synthetic.main.isw_generating_code_layout.*
+import kotlinx.android.synthetic.main.isw_layout_card_found.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -46,6 +50,8 @@ class QrCodeFragment : BaseFragment(TAG) {
 
     private val qrCodeFragmentArgs by navArgs<QrCodeFragmentArgs>()
     private val paymentModel by lazy { qrCodeFragmentArgs.PaymentModel }
+
+    private lateinit var paymentTypeDialog: PaymentTypeDialog
 
     private val paymentInfo by lazy {
         PaymentInfo(paymentModel.amount, IswPos.getNextStan())
@@ -66,6 +72,8 @@ class QrCodeFragment : BaseFragment(TAG) {
     private fun setupUI() {
         // func returns lifecycle
         val owner = { lifecycle }
+        showPaymentOptions()
+        isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
 
         configureProgressBar()
 
@@ -137,6 +145,30 @@ class QrCodeFragment : BaseFragment(TAG) {
             qrViewModel.getQrCode(request, context!!)
         } else runWithInternet {
             getQrCode()
+        }
+    }
+
+    private fun showPaymentOptions() {
+        change_payment_method.setOnClickListener {
+            paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
+                when (it) {
+                    PaymentModel.PaymentType.QR_CODE -> {}
+                    PaymentModel.PaymentType.PAY_CODE -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentPayCode(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.CARD -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentCardTransactions(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.USSD -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentUssd(paymentModel)
+                        navigate(direction)
+                    }
+                }
+
+            }
+            paymentTypeDialog.show(childFragmentManager, CardTransactionsFragment.TAG)
         }
     }
 
@@ -218,7 +250,8 @@ class QrCodeFragment : BaseFragment(TAG) {
             responseCode = transaction.responseCode,
             cardPan = "", cardExpiry = "", cardType = CardType.None,
             stan = paymentInfo.getStan(), pinStatus = "", AID = "",
-            code = qrData!!, telephone = iswPos.config.merchantTelephone
+            code = qrData!!, telephone = iswPos.config.merchantTelephone, csn = "", icc = "", cardTrack2 = "", cardPin = "",
+            src = ""
         )
     }
 

@@ -57,6 +57,10 @@ abstract class BaseFragment (fragmentName: String) : Fragment() {
 
     protected fun navigateUp() = findNavController().navigateUp()
 
+    protected fun navigate(action: () -> Unit) {
+        
+    }
+
     protected fun navigate(directionId: Int) {
         findNavController().navigate(directionId)
     }

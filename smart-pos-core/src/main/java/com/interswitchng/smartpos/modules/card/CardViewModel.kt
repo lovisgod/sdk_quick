@@ -13,10 +13,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.*
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.toast
@@ -46,7 +43,11 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
     private var transactionType: TransactionType = TransactionType.CARD_PURCHASE
 
+
+    private lateinit var originalTxnData: OriginalTransactionInfoData
+
     fun getCardPAN() = emv.getPan()
+
 
     fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {
 
@@ -150,7 +151,6 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-
     fun processOnline(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo): Optional<Pair<TransactionResponse, EmvData>> {
 
         // get emv data captured by card
@@ -195,8 +195,11 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         return when (transactionType) {
             TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)
             TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
-            TransactionType.COMPLETION -> isoService.initiateCompletion(terminalInfo, txnInfo)
             TransactionType.REFUND -> isoService.initiateRefund(terminalInfo, txnInfo)
+            TransactionType.COMPLETION -> {
+                txnInfo.originalTransactionInfoData = originalTxnData
+                isoService.initiateCompletion(terminalInfo, txnInfo)
+            }
             else -> null
         }
     }
@@ -217,5 +220,9 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
     fun setTransactionType(selectedTransactionType: TransactionType) {
         transactionType = selectedTransactionType
+    }
+
+    fun setOriginalTxnInfo(originalTxnInfo: OriginalTransactionInfoData) {
+        this.originalTxnData = originalTxnInfo
     }
 }

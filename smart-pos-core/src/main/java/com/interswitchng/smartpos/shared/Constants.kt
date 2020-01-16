@@ -13,7 +13,8 @@ object Constants {
     internal const val BANKS_END_POINT = "till/short-codes/1"
     internal const val AUTH_END_POINT = "oauth/token"
 
-    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
+//    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
+internal const val KIMONO_END_POINT = "kmw/kimonoservice"
     // EMAIL
     internal const val EMAIL_END_POINT = "mail/send"
     internal const val EMAIL_TEMPLATE_ID = "d-c33c9a651cea40dd9b0ee4615593dcb4"
@@ -24,7 +25,7 @@ object Constants {
     internal const val KEY_SESSION_KEY = "session_key"
     internal const val KEY_PIN_KEY = "pin_key"
     internal const val TERMINAL_CONFIG_TYPE = "kimono_or_nibss"
-
+    internal const val SETTINGS_TERMINAL_CONFIG_TYPE = "settings_kimono_or_nibss"
     // UTIL CONSTANTS
 
     const val EMPTY_STRING = ""

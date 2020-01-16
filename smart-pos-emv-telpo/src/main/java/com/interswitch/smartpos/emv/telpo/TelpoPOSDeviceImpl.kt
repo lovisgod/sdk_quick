@@ -42,7 +42,7 @@ class TelpoPOSDeviceImpl constructor(
         internal const val INDEX_TIK: Byte = 0x01
         internal const val INDEX_TMK: Byte = 0x01
         internal const val INDEX_TPK: Byte = 0x03
-        internal const val DEVICE_NAME: String = "PAX"
+        internal const val DEVICE_NAME: String = "TELPO"
 
         internal lateinit var companyLogo: Bitmap private set
 

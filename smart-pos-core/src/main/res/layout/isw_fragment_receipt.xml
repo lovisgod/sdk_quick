@@ -252,4 +252,21 @@
         app:layout_constraintTop_toBottomOf="@+id/isw_print_receipt"
         app:rippleColor="@android:color/white" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_reversal"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginBottom="5dp"
+        android:text="Do Reversal"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/iswColorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:iconGravity="textStart"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_share_receipt"
+        app:rippleColor="@android:color/white" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

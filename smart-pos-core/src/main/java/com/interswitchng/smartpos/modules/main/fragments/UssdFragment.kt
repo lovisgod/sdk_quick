@@ -9,9 +9,9 @@ import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.navArgs
@@ -19,41 +19,27 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.IswPos
-
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.ussdqr.adapters.BankListAdapter
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.UssdViewModel
-import com.interswitchng.smartpos.modules.ussdqr.views.SelectBankBottomSheet
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.core.UserType
-import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
-import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
-import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.transaction.PaymentType
-import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Bank
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.CodeResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
-import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.*
-import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_ussd.*
-import kotlinx.android.synthetic.main.isw_content_amount.*
-import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
-import kotlinx.android.synthetic.main.isw_fragment_qr_code.*
 import kotlinx.android.synthetic.main.isw_fragment_ussd.*
 import kotlinx.android.synthetic.main.isw_generating_code_layout.*
 import kotlinx.android.synthetic.main.isw_select_bank_view.*
 import kotlinx.android.synthetic.main.isw_ussd_content_layout.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -68,6 +54,8 @@ class UssdFragment : BaseFragment(TAG) {
     private var selectedBankName = EMPTY_STRING
 
     private val ussdViewModel: UssdViewModel by viewModel()
+
+    private lateinit var paymentTypeDialog: PaymentTypeDialog
 
     private var ussdCode: String? = null
     private val dialog by lazy { DialogUtils.getLoadingDialog(context!!) }
@@ -102,6 +90,7 @@ class UssdFragment : BaseFragment(TAG) {
     private fun setupUI() {
         // Set up Bank Selection
         setUpBankSelectionUI()
+        showPaymentOptions()
         if (DeviceUtils.isConnectedToInternet(context!!)) {
             // load banks if not loaded
             if (hasBanks.not()) runWithInternet {
@@ -111,6 +100,30 @@ class UssdFragment : BaseFragment(TAG) {
             observeViewModel()
         } else runWithInternet {
             setupUI()
+        }
+    }
+
+    private fun showPaymentOptions() {
+        change_payment_method.setOnClickListener {
+            paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
+                when (it) {
+                    PaymentModel.PaymentType.USSD -> {}
+                    PaymentModel.PaymentType.PAY_CODE -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentPayCode(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.QR_CODE -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentQrCodeFragment(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.CARD -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentCardTransactions(paymentModel)
+                        navigate(direction)
+                    }
+                }
+
+            }
+            paymentTypeDialog.show(childFragmentManager, CardTransactionsFragment.TAG)
         }
     }
 

@@ -141,6 +141,7 @@
             android:gravity="start"
             android:inputType="number"
             android:text="281"
+            android:maxEms="4"
             android:textColor="@color/iswColorPrimary"
             android:textSize="15sp" />
 

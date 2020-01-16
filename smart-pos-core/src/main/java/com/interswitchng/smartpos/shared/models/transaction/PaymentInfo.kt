@@ -15,8 +15,8 @@ internal class PaymentInfo: Parcelable {
     var bankCode: String
     lateinit var currentStan: String
 
-    var originalStanId:String?
-    var originalAuthId:String?
+    var originalStanId:String? = ""
+    var originalAuthId:String? = ""
 
     constructor(amount: Int, bankCode: String?,originalStanId:String?="",originalAuthId:String?="") {
         this.amount = amount

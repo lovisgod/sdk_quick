@@ -29,7 +29,7 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
         for (item in slip) printItem(item)
 
         // print thank you message at end of slip
-        val thankYouMsg = PrintObject.Data("Thanks for using PAX POS", PrintStringConfiguration(displayCenter = true))
+        val thankYouMsg = PrintObject.Data("Thanks for using Telpo POS", PrintStringConfiguration(displayCenter = true))
         printItem(thankYouMsg)
 
         // print users copy
@@ -69,10 +69,10 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
                 when {
                     printConfig.isTitle -> {
                         printer.setGray(7)
-                        printer.setFontSize(36)
+                        printer.setTextSize(36)
                     }
                     else -> {
-                        printer.setFontSize(24)
+                        printer.setTextSize(24)
                     }
                 }
 

@@ -3,12 +3,13 @@ package com.interswitch.smartpos.emv.telpo.emv
 import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
 import com.interswitch.smartpos.emv.telpo.models.getAllCapks
-import com.interswitch.smartpos.emv.telpo.utils.DefaultAPPCAPK
+import com.interswitch.smartpos.emv.telpo.utils.EmvUtils.bcd2Str
 import com.interswitch.smartpos.emv.telpo.utils.TelpoEmvUtils
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
 import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
@@ -35,6 +36,7 @@ internal class TelpoEmvImplementation (
     private val emvService by lazy { EmvService.getInstance().apply { setListener(TelpoEmvServiceListener()) }}
 
     lateinit var cardPan: String
+    private var tries = 0
 
     private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
 
@@ -45,11 +47,39 @@ internal class TelpoEmvImplementation (
     }
 
     private fun addCAPKIntoEmvLib(capks: List<EmvCAPK>) {
-        capks.forEach { capk ->
-            val ret = EmvService.Emv_AddCapk(capk)
-            selectedRID = StringUtil.toHexString(capk.RID)
-            logger.log("Add CAPK result == $ret")
-            logger.log("Selected RID == $selectedRID")
+        var ret: Int
+        var tlv = EmvTLV(0x4F)
+
+        ret = emvService.Emv_GetTLV(tlv)
+        if (ret != EmvService.EMV_TRUE) {
+            tlv = EmvTLV(0x84)
+            ret = emvService.Emv_GetTLV(tlv)
+        }
+
+        if (ret == EmvService.EMV_TRUE) {
+            val rid = ByteArray(5)
+            System.arraycopy(tlv.Value, 0, rid, 0, 5)
+
+            tlv = EmvTLV(0x8F)
+            ret = emvService.Emv_GetTLV(tlv)
+
+            if (ret == EmvService.EMV_TRUE) {
+                val keyId = tlv.Value[0]
+                logger.log("KeyID ===== $keyId")
+
+                capks.forEach { capk ->
+                    val capkRID = StringUtil.toHexString(capk.RID)
+                    val ridString = StringUtil.toHexString(rid)
+                    if (capkRID == ridString) {
+                        if (keyId.toInt() != -1 || capk.KeyID == keyId) {
+                            selectedRID = StringUtil.toHexString(capk.RID)
+                            logger.log("Add CAPK result == $ret")
+                            logger.log("Selected RID == $selectedRID")
+                            ret = EmvService.Emv_AddCapk(capk)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -69,18 +99,6 @@ internal class TelpoEmvImplementation (
             logger.logErr("Emv Service Open Fail: RET CODE ==== $ret")
             return ret
         }
-
-        EmvService.Emv_RemoveAllApp()
-        val appList = TelpoEmvUtils.createAppList(config.first, config.second)
-        appList.forEach { app ->
-            val result = EmvService.Emv_AddApp(app)
-            if (result == EmvService.EMV_TRUE) logger.logErr("Add app success : AID = ${StringUtil.toHexString(app.AID)}")
-            else return result.also { logger.logErr("Add app failed : RET = $result, AID = ${StringUtil.toHexString(app.AID)}") }
-        }
-
-        EmvService.Emv_RemoveAllCapk()
-        val capks = config.second.getAllCapks()
-        addCAPKIntoEmvLib(capks)
 
         pinCallback.showInsertCard()
 
@@ -110,9 +128,20 @@ internal class TelpoEmvImplementation (
         }
 
         emvService.Emv_SetParam(emvParameter)
+        EmvService.Emv_RemoveAllApp()
+        val appList = TelpoEmvUtils.createAppList(config.first, config.second)
+        appList.forEach { app ->
+            val result = EmvService.Emv_AddApp(app)
+            if (result == EmvService.EMV_TRUE) logger.logErr("Add app success : AID = ${StringUtil.toHexString(app.AID)}")
+            else return result.also { logger.logErr("Add app failed : RET = $result, AID = ${StringUtil.toHexString(app.AID)}") }
+        }
 
         ret = emvService.Emv_StartApp(EmvService.EMV_FALSE)
-        logger.logErr("Emv Service Start Application: RET CODE ==== $ret")
+        logger.logErr("Start App: RET CODE ==== $ret")
+
+        EmvService.Emv_RemoveAllCapk()
+        val capks = config.second.getAllCapks()
+        addCAPKIntoEmvLib(capks)
 
         return ret
     }
@@ -130,13 +159,20 @@ internal class TelpoEmvImplementation (
 
     fun getCardType(): CardType {
         val aids = config.second
-        val selected = aids.cards.firstOrNull { ::selectedRID.isInitialized && it.aid.startsWith(selectedRID) }
-        val isCard = { type: CardType -> selected?.name?.startsWith(type.code, true) ?: false}
+        val selected = aids.cards.firstOrNull {
+            ::selectedRID.isInitialized && it.aid.startsWith(selectedRID)
+        }
+        val isCard = { type: CardType ->
+            selected?.name?.startsWith(type.code, true) ?: false
+        }
 
         var cardType = CardType.None
         // find matching card
         for (type in CardType.values()) {
-            if (isCard(type)) cardType = type
+            if (isCard(type)){
+                cardType = type
+                break
+            }
         }
 
         // return type
@@ -182,15 +218,54 @@ internal class TelpoEmvImplementation (
         return TelpoEmvUtils.buildIccString(tagValues)
     }
 
-    fun ICCData.getTlv() {
+    internal fun getIccFullData(): IccData {
+        // set icc data using specified icc tags
+
+
+        return IccData(
+                TRANSACTION_AMOUNT = ICCData.TRANSACTION_AMOUNT.getTlv() ?: "",
+                ANOTHER_AMOUNT = ICCData.ANOTHER_AMOUNT.getTlv() ?: "",
+                APPLICATION_INTERCHANGE_PROFILE = ICCData.APPLICATION_INTERCHANGE_PROFILE.getTlv() ?: "",
+                APPLICATION_TRANSACTION_COUNTER = ICCData.APPLICATION_TRANSACTION_COUNTER.getTlv() ?: "",
+                CRYPTOGRAM_INFO_DATA = ICCData.CRYPTOGRAM_INFO_DATA.getTlv() ?: "",
+                AUTHORIZATION_REQUEST = ICCData.AUTHORIZATION_REQUEST.getTlv() ?: "",
+                CARD_HOLDER_VERIFICATION_RESULT = ICCData.CARD_HOLDER_VERIFICATION_RESULT.getTlv() ?: "",
+                ISSUER_APP_DATA = ICCData.ISSUER_APP_DATA.getTlv() ?: "",
+                TERMINAL_VERIFICATION_RESULT = ICCData.TERMINAL_VERIFICATION_RESULT.getTlv() ?: "",
+                // remove leading zero in currency and country codes
+                TRANSACTION_CURRENCY_CODE = ICCData.TRANSACTION_CURRENCY_CODE.getTlv()?.substring(1) ?: "",
+                TERMINAL_COUNTRY_CODE = ICCData.TERMINAL_COUNTRY_CODE.getTlv()?.substring(1) ?: "",
+
+                TERMINAL_TYPE = ICCData.TERMINAL_TYPE.getTlv() ?: "",
+                TERMINAL_CAPABILITIES = ICCData.TERMINAL_CAPABILITIES.getTlv() ?: "",
+                TRANSACTION_DATE = ICCData.TRANSACTION_DATE.getTlv() ?: "",
+                TRANSACTION_TYPE = ICCData.TRANSACTION_TYPE.getTlv() ?: "",
+                UNPREDICTABLE_NUMBER = ICCData.UNPREDICTABLE_NUMBER.getTlv() ?: ""
+                //,Segun check this
+//                DEDICATED_FILE_NAME = ICCData.DEDICATED_FILE_NAME.getTlv() ?: ""
+
+        ).apply {
+
+
+            val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
+
+            for (tag in REQUEST_TAGS) {
+                val tlv = getTLV(tag.tag)
+                tagValues.add(Pair(tag, tlv))
+            }
+
+            iccAsString = TelpoEmvUtils.buildIccString(tagValues)
+            INTERFACE_DEVICE_SERIAL_NUMBER = ICCData.INTERFACE_DEVICE_SERIAL_NUMBER.getTlv() ?: ""
+            APP_VERSION_NUMBER = ICCData.APP_VERSION_NUMBER.getTlv() ?: ""
+        }
+
 
     }
-
     inner class TelpoEmvServiceListener : EmvServiceListener() {
 
         override fun onInputAmount(amountData: EmvAmountData?): Int {
             amountData?.let {
-                it.Amount = amount.toLong()
+                it.Amount = (amount * 100).toLong() //Convert to kobo
                 it.TransCurrCode = 566.toShort() /*566 is Nigeria's currency number*/
                 it.ReferCurrCode = 566.toShort()
                 it.CashbackAmount = 0L
@@ -199,11 +274,20 @@ internal class TelpoEmvImplementation (
                 it.ReferCurrExp = 0.toByte()
                 it.TransCurrExp = 0.toByte()
             }
+            val result = emvService.Emv_SetTLV(EmvTLV((ICCData.TRANSACTION_AMOUNT.tag)))
             return EmvService.EMV_TRUE
         }
 
         override fun onInputPin(pinData: EmvPinData?): Int {
-            runBlocking { pinCallback.enterPin(false, 0, 0, "") }
+            runBlocking {
+                pinCallback.enterPin(
+                    pinData?.Pin == null,
+                    tries,
+                    pinData?.RemainCount?.toInt() ?: 0,
+                    cardPan
+                )
+                tries++
+            }
 
             val pinParameter = PinParam(context)
             val pan = EmvTLV(0x5A)
@@ -221,7 +305,7 @@ internal class TelpoEmvImplementation (
                 WaitSec = 100
                 MaxPinLen = 6
                 MinPinLen= 4
-                IsShowCardNo = 1
+                IsShowCardNo = 0
                 Amount = "$amount"
             }
 
@@ -280,10 +364,18 @@ internal class TelpoEmvImplementation (
 
         override fun onVerifyCert(): Int = EmvService.EMV_TRUE
 
-        override fun onSelectApp(p0: Array<out EmvCandidateApp>?): Int = p0!![0].index.toInt()
+        override fun onSelectApp(p0: Array<out EmvCandidateApp>?): Int {
+//            EmvService.Emv_RemoveAllCapk()
+//            val capks = config.second.getAllCapks()
+//            addCAPKIntoEmvLib(capks)
+
+            return p0!![0].index.toInt()
+        }
 
         override fun onMir_FinishReadAppData(): Int = 0
 
         override fun onSelectAppFail(p0: Int): Int = EmvService.EMV_TRUE
     }
+
+    private fun ICCData.getTlv(): String? = getTLV(tag)?.let(::bcd2Str)
 }

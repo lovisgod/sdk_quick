@@ -1,4 +1,3 @@
-
 package com.interswitchng.smartpos.modules.main.fragments
 
 import android.os.Bundle
@@ -8,16 +7,15 @@ import com.gojuno.koptional.None
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeViewModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.utilities.DeviceUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.toast
-import kotlinx.android.synthetic.main.isw_activity_pay_code.*
-import kotlinx.android.synthetic.main.isw_content_amount.*
 import kotlinx.android.synthetic.main.isw_fragment_paycode.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -30,6 +28,7 @@ class PayCodeFragment : BaseFragment(TAG) {
     private val payCodeFragmentArgs by navArgs<PayCodeFragmentArgs>()
     private val paymentModel by lazy { payCodeFragmentArgs.PaymentModel }
 
+    private lateinit var paymentTypeDialog: PaymentTypeDialog
 
     private val paymentInfo by lazy {
         PaymentInfo(paymentModel.amount, IswPos.getNextStan())
@@ -40,8 +39,9 @@ class PayCodeFragment : BaseFragment(TAG) {
     }
 
     private fun setupUI() {
+        showPaymentOptions()
         isw_pay_code_amount.text = paymentModel.formattedAmount
-
+        isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
 
         isw_pay_code_btn.setOnClickListener {
 
@@ -82,6 +82,30 @@ class PayCodeFragment : BaseFragment(TAG) {
                 .show(supportFragmentManager, ScanBottomSheet.toString())
         }*/
 
+    }
+
+    private fun showPaymentOptions() {
+        change_payment_method.setOnClickListener {
+            paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
+                when (it) {
+                    PaymentModel.PaymentType.PAY_CODE -> {}
+                    PaymentModel.PaymentType.USSD -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentUssd(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.QR_CODE -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentQrCodeFragment(paymentModel)
+                        navigate(direction)
+                    }
+                    PaymentModel.PaymentType.CARD -> {
+                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentCardTransactions(paymentModel)
+                        navigate(direction)
+                    }
+                }
+
+            }
+            paymentTypeDialog.show(childFragmentManager, CardTransactionsFragment.TAG)
+        }
     }
 
     private fun processOnline() {

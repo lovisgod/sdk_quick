@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.EmailService
+import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.TransactionLogService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
@@ -17,12 +18,15 @@ import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class TransactionResultViewModel(private val posDevice: POSDevice,
                                           private val emailService: EmailService,
-                                          private val transactionLogService: TransactionLogService) : RootViewModel() {
+                                          private val transactionLogService: TransactionLogService,
+                                          private val isoService: IsoService) : RootViewModel() {
 
 
 
@@ -44,6 +48,7 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
     private val _emailDialog = MutableLiveData<Boolean>()
     val emailDialog: LiveData<Boolean> = _emailDialog
 
+    private val emv by lazy { posDevice.getEmvCardReader() }
 
     fun sendMail(email: String, result: TransactionResult, terminalInfo: TerminalInfo) {
 
@@ -83,7 +88,9 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
 
         uiScope.launch {
             // get printer status on IO thread
-            val printStatus = withContext(ioScope) { posDevice.printer.canPrint() }
+            val printStatus = withContext(ioScope) {
+                posDevice.printer.canPrint()
+            }
 
             when (printStatus) {
                 is PrintStatus.Error -> {
@@ -123,5 +130,16 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
         // get and log transaction to storage
         val resultLog = TransactionLog.fromResult(result)
         transactionLogService.logTransactionResult(resultLog)
+    }
+
+    fun initiateReversal(terminalInfo: TerminalInfo, transactionInfo: TransactionInfo) {
+        logger.log("Called reversal inside vm")
+        CoroutineScope(ioScope).launch {
+            logger.log("Called reversal inside vm ioscope")
+           val result = isoService.initiateReversal(terminalInfo, transactionInfo)
+           logger.log(result?.responseCode!!)
+        }
+
+
     }
 }

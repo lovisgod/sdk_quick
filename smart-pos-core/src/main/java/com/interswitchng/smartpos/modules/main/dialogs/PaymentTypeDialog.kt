@@ -27,15 +27,19 @@ class PaymentTypeDialog constructor(
         }
         isw_card_payment.setOnClickListener {
             paymentTypeClickListener.invoke(PaymentModel.PaymentType.CARD)
+            dismiss()
         }
         isw_qr_code.setOnClickListener {
             paymentTypeClickListener.invoke(PaymentModel.PaymentType.QR_CODE)
+            dismiss()
         }
         isw_pay_code.setOnClickListener {
             paymentTypeClickListener.invoke(PaymentModel.PaymentType.PAY_CODE)
+            dismiss()
         }
         isw_ussd.setOnClickListener {
             paymentTypeClickListener.invoke(PaymentModel.PaymentType.USSD)
+            dismiss()
         }
     }
 }

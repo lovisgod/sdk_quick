@@ -85,7 +85,9 @@ internal val networkModule = module {
         val interceptor = HttpLoggingInterceptor()
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
-        val kimonoServiceUrl = "https://qa.interswitchng.com/"
+//        val kimonoServiceUrl = "https://qa.interswitchng.com/"
+
+        val kimonoServiceUrl = "https://kimono.interswitchng.com/"
         val builder = Retrofit.Builder()
                 .addConverterFactory(SimpleXmlConverterFactory.create())
               .addConverterFactory(ToStringConverterFactory())
