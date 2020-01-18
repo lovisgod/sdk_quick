@@ -29,9 +29,10 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
         val paymentType = pairString("channel", info.paymentType.toString())
         val stan = pairString("stan", info.stan)
         val date = pairString("date", info.dateTime)
+        val dateTime = pairString("Date Time", info.originalDateTime)
         val amount = pairString("amount", info.amount)
         val authCode = pairString("authentication code", info.authorizationCode)
-        val list = mutableListOf(txnType, paymentType, stan, date, line, amount, line)
+        val list = mutableListOf(txnType, paymentType, stan, date, dateTime, line, amount, line)
 
         // check if its card transaction
         if (info.cardPan.isNotEmpty()) {
