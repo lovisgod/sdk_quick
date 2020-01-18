@@ -232,4 +232,14 @@
     <string name="isw_raise">Raise</string>
     <string name="isw_check_dispute_status">Check Dispute Status</string>
     <string name="isw_or">Or</string>
+
+    <string name="isw_action_save">Save Config</string>
+    <string name="isw_title_merchant_id">Merchant ID</string>
+
+    <string name="isw_title_merchant_name_and_location">Merchant Name and Location</string>
+    <string name="isw_title_merchant_category_code">Merchant Category Code</string>
+    <string name="isw_title_server_config">Server Config:</string>
+    <string name="isw_title_country_code">Country Code</string>
+    <string name="isw_title_currency_code">Currency Code</string>
+    <string name="isw_title_terminal_capabilities">Terminal Capabilities</string>
 </resources>

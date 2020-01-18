@@ -29,10 +29,6 @@ class DownloadKeyFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (TerminalInfo.get(store) != null) {
-            val direction = DownloadKeyFragmentDirections.iswActionGotoFragmentMerchantCard()
-            navigate(direction)
-        }
         // set the text values
         setupTexts()
         // setup button listeners
@@ -56,8 +52,6 @@ class DownloadKeyFragment : BaseFragment(TAG) {
             if (TerminalInfo.get(store) == null) {
                 toast("Download terminal configuration to continue!")
             } else {
-                val direction = DownloadKeyFragmentDirections.iswActionGotoFragmentMerchantCard()
-                navigate(direction)
             }
         }
     }
@@ -87,7 +81,7 @@ class DownloadKeyFragment : BaseFragment(TAG) {
                 store.saveString(SettingsActivity.KEY_TERMINAL_ID, terminalID)
 
                 // trigger download keys
-                settingsViewModel.downloadKeys(terminalID)
+//                settingsViewModel.downloadKeys(terminalID)
             }
         }
 
@@ -111,7 +105,7 @@ class DownloadKeyFragment : BaseFragment(TAG) {
                 tvTerminalInfoDate.visibility = View.GONE
 
                 // trigger download terminal config
-                settingsViewModel.downloadTerminalConfig(terminalID)
+//                settingsViewModel.downloadTerminalConfig(terminalID)
             }
         }
     }

@@ -3,9 +3,11 @@ package com.interswitchng.smartpos.shared.services.iso8583
 import android.content.Context
 import com.interswitchng.smartpos.IswPos.Companion.getNextStan
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_PIN_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_SESSION_KEY
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
@@ -31,6 +33,7 @@ import java.util.*
 
 internal class IsoServiceImpl(
         private val context: Context,
+        private val posDevice: POSDevice,
         private val store: KeyValueStore,
         private val socket: IsoSocket) : IsoService {
 
@@ -114,23 +117,82 @@ internal class IsoServiceImpl(
         return null
     }
 
-    override fun downloadKey(terminalId: String): Boolean {
+
+
+    private fun makeKeyCall(terminalId: String, ip: String, port: Int, code: String, key: String): String? {
+        try {
+
+            val now = Date()
+            val stan = getNextStan()
+
+            val message = NibssIsoMessage(messageFactory.newMessage(0x800))
+            message
+                    .setValue(3, code)
+                    .setValue(7, timeAndDateFormatter.format(now))
+                    .setValue(11, stan)
+                    .setValue(12, timeFormatter.format(now))
+                    .setValue(13, monthFormatter.format(now))
+                    .setValue(41, terminalId)
+
+            // remove unset fields
+            message.message.removeFields(62, 64)
+            message.dump(System.out, "request -- ")
+
+            // set server Ip and port
+            socket.setIpAndPort(ip, port)
+
+            // open to socket endpoint
+            socket.open()
+
+            // send request and process response
+            val response = socket.sendReceive(message.message.writeData())
+            // close connection
+            socket.close()
+
+            // read message
+            val msg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
+            msg.dump(System.out, "response -- ")
+
+
+            // extract encrypted key with clear key
+            val encryptedKey = msg.message.getField<String>(SRCI)
+            val decryptedKey = TripleDES.soften(key, encryptedKey.value)
+            logger.log("Decrypted Key => $decryptedKey")
+
+            return decryptedKey
+        } catch (e: UnsupportedEncodingException) {
+            logger.logErr(e.localizedMessage)
+        } catch (e: ParseException) {
+            logger.logErr(e.localizedMessage)
+        } catch (e: java.lang.Exception) {
+            logger.logErr(e.localizedMessage)
+        }
+
+        return null
+    }
+
+    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
         // getResult clear key
-        val cms = context.getString(R.string.isw_cms)
+        val cms = Constants.ISW_CMS
 
         // getResult master key & save
-        val isDownloaded = makeKeyCall(terminalId, "9A0000", cms)?.let { masterKey ->
+        val isDownloaded = makeKeyCall(terminalId, ip, port, "9A0000", cms)?.let { masterKey ->
             store.saveString(KEY_MASTER_KEY, masterKey)
-
+            // load master key into pos
+            posDevice.loadMasterKey(masterKey)
+//
             // getResult pin key & save
-            val isSessionSaved = makeKeyCall(terminalId, "9B0000", masterKey)?.let { sessionKey ->
+            val isSessionSaved = makeKeyCall(terminalId, ip, port, "9B0000", masterKey)?.let { sessionKey ->
                 store.saveString(KEY_SESSION_KEY, sessionKey)
                 true
             }
 
             // getResult pin key & save
-            val isPinSaved = makeKeyCall(terminalId, "9G0000", masterKey)?.let { pinKey ->
+            val isPinSaved = makeKeyCall(terminalId, ip, port, "9G0000", masterKey)?.let { pinKey ->
                 store.saveString(KEY_PIN_KEY, pinKey)
+
+                // load pin key into pos device
+                posDevice.loadPinKey(pinKey)
                 true
             }
 
@@ -139,8 +201,107 @@ internal class IsoServiceImpl(
 
         return isDownloaded == true
     }
+//    override fun downloadKey(terminalId: String): Boolean {
+//        // getResult clear key
+//        val cms = context.getString(R.string.isw_cms)
+//
+//        // getResult master key & save
+//        val isDownloaded = makeKeyCall(terminalId, "9A0000", cms)?.let { masterKey ->
+//            store.saveString(KEY_MASTER_KEY, masterKey)
+//
+//            // getResult pin key & save
+//            val isSessionSaved = makeKeyCall(terminalId, "9B0000", masterKey)?.let { sessionKey ->
+//                store.saveString(KEY_SESSION_KEY, sessionKey)
+//                true
+//            }
+//
+//            // getResult pin key & save
+//            val isPinSaved = makeKeyCall(terminalId, "9G0000", masterKey)?.let { pinKey ->
+//                store.saveString(KEY_PIN_KEY, pinKey)
+//                true
+//            }
+//
+//            isPinSaved == true && isSessionSaved == true
+//        }
+//
+//        return isDownloaded == true
+//    }
+//
+//    override fun downloadTerminalParameters(terminalId: String): Boolean {
+//        try {
+//            val code = "9C0000"
+//            val field62 = "01009280824266"
+//
+//            val now = Date()
+//            val stan = getNextStan()
+//
+//            val message = NibssIsoMessage(messageFactory.newMessage(0x800))
+//            message
+//                    .setValue(3, code)
+//                    .setValue(7, timeAndDateFormatter.format(now))
+//                    .setValue(11, stan)
+//                    .setValue(12, timeFormatter.format(now))
+//                    .setValue(13, monthFormatter.format(now))
+//                    .setValue(41, terminalId)
+//                    .setValue(62, field62)
+//
+//
+//            val bytes = message.message.writeData()
+//            val length = bytes.size
+//            val temp = ByteArray(length - 64)
+//            if (length >= 64) {
+//                System.arraycopy(bytes, 0, temp, 0, length - 64)
+//            }
+//
+//
+//            // confirm that key was downloaded
+//            val key = store.getString(KEY_SESSION_KEY, "")
+//            if (key.isEmpty()) return false
+//
+//            val hashValue = IsoUtils.getMac(key, temp) //SHA256
+//            message.setValue(64, hashValue)
+//            message.dump(System.out, "parameter request ---- ")
+//
+//            // open socket connection
+//            socket.open()
+//
+//            // send request and receive response
+//            val response = socket.sendReceive(message.message.writeData())
+//            // close connection
+//            socket.close()
+//
+//            // read message
+//            val responseMessage = NibssIsoMessage(messageFactory.parseMessage(response, 0))
+//            responseMessage.dump(System.out, "parameter response ---- ")
+//
+//
+//            // getResult string formatted terminal info
+//            val terminalDataString = responseMessage.message.getField<String>(62).value
+//            logger.log("Terminal Data String => $terminalDataString")
+//
+//            //TODO
+//
+//
+//
+//           // var merchantId="2ISW00000000001"
+//
+//            // parse and save terminal info
+//            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also {
+//               // it.merchantId="2ISW00000000001"
+//                it.persist(store) }
+//            logger.log("Terminal Data => $terminalData")
+//
+//            return true
+//        } catch (e: Exception) {
+//            logger.log(e.localizedMessage)
+//            e.printStackTrace()
+//        }
+//
+//        return false
+//    }
 
-    override fun downloadTerminalParameters(terminalId: String): Boolean {
+
+    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
         try {
             val code = "9C0000"
             val field62 = "01009280824266"
@@ -175,6 +336,9 @@ internal class IsoServiceImpl(
             message.setValue(64, hashValue)
             message.dump(System.out, "parameter request ---- ")
 
+            // set server Ip and port
+            socket.setIpAndPort(ip, port)
+
             // open socket connection
             socket.open()
 
@@ -192,16 +356,8 @@ internal class IsoServiceImpl(
             val terminalDataString = responseMessage.message.getField<String>(62).value
             logger.log("Terminal Data String => $terminalDataString")
 
-            //TODO
-
-
-
-           // var merchantId="2ISW00000000001"
-
             // parse and save terminal info
-            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also {
-               // it.merchantId="2ISW00000000001"
-                it.persist(store) }
+            val terminalData = TerminalInfoParser.parse(terminalId, ip, port, terminalDataString, store)?.also { it.persist(store) }
             logger.log("Terminal Data => $terminalData")
 
             return true
@@ -247,7 +403,7 @@ internal class IsoServiceImpl(
                     .setValue(42, terminalInfo.merchantId)
                     .setValue(43, terminalInfo.merchantNameAndLocation)
                     .setValue(49, terminalInfo.currencyCode)
-                    .setValue(55, transaction.icc)
+                    .setValue(55, transaction.iccString)
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -345,7 +501,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -631,7 +787,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
 
             message.setValue(123, "510101511344101")
             // remove unset fields
@@ -720,7 +876,7 @@ internal class IsoServiceImpl(
                 .setValue(42, terminalInfo.merchantId)
                 .setValue(43, terminalInfo.merchantNameAndLocation)
                 .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.icc)
+                .setValue(55, transaction.iccString)
                 .setValue(90, originalDataElement)
                 .setValue(95, replacementAmount)
                 .setValue(123, "510101511344101")

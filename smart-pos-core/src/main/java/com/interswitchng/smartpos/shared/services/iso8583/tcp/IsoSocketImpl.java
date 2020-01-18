@@ -70,6 +70,13 @@ public class IsoSocketImpl implements IsoSocket {
         this.timeout = timeout;
     }
 
+
+    @Override
+    public void setIpAndPort(String ip, int port) {
+        this.serverIp = ip;
+        this.serverPort = port;
+    }
+
     private byte[] concat(byte[] A, byte[] B) {
         int aLen = A.length;
         int bLen = B.length;

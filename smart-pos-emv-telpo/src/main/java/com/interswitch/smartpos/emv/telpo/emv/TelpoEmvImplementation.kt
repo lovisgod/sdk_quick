@@ -38,7 +38,11 @@ internal class TelpoEmvImplementation (
     lateinit var cardPan: String
     private var tries = 0
 
+    // get terminal config and EMV apps
     private val config: Pair<TerminalConfig, EmvAIDs> by lazy { FileUtils.getConfigurations(context) }
+
+
+
 
     private var amount: Int = 0
 

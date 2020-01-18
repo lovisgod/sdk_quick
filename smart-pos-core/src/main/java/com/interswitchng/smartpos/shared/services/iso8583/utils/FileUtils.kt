@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.shared.services.iso8583.utils;
 
 import android.content.Context;
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.TerminalConfig
 import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
 import org.simpleframework.xml.core.Persister
@@ -78,4 +79,18 @@ object FileUtils {
 
         return Pair(terminalConfig, emvApps)
     }
+
+//    fun getConfigurations(context: Context, terminalInfo: TerminalInfo): Pair<TerminalConfig, EmvAIDs> {
+//        // get resource streams
+//        val emvStr = context.resources.openRawResource(R.raw.isw_emv_config)
+//        val terminalStr = context.resources.openRawResource(R.raw.isw_terminal_config)
+//        // extract values
+//        val emvApps = getAids(emvStr)
+//        val terminalConfig = getTerminalConfig(terminalStr)
+//        // reset terminal capabilities if configured on the terminal
+//        terminalConfig.terminalcapability = terminalInfo.capabilities ?: terminalConfig.terminalcapability
+//
+//        return Pair(terminalConfig, emvApps)
+//    }
+
 }

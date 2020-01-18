@@ -8,6 +8,12 @@ package com.interswitchng.smartpos.shared.interfaces.library
  */
 internal interface IsoSocket {
 
+
+    /**
+     * Sets the connection ip address and port
+     */
+    fun setIpAndPort(ip: String, port: Int)
+
     /**
      * Sets the connection timeout in milliseconds
      */

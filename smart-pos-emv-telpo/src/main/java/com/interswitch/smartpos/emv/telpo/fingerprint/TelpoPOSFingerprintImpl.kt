@@ -54,7 +54,7 @@ class TelpoPOSFingerprintImpl : POSFingerprint {
         }
         channel.send(Fingerprint.Detected(bitmap))
 
-        FileUtils(context).saveMerchantFingerPrint(phoneNumber, fingerPrintISO, channel)
+        FileUtils(context).saveMerchantFingerPrint(channel, phoneNumber, fingerPrintISO)
 
         //This delay is for the UI to change before the dialog dismisses
         delay(1000)

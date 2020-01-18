@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/isw_setup_graph"
-    app:startDestination="@id/fragment_download_keys">
+    app:startDestination="@id/fragment_merchant_card">
 
-    <fragment android:id="@+id/fragment_download_keys"
-        android:name="com.interswitchng.smartpos.modules.setup.fragments.DownloadKeyFragment"
-        tools:layout="@layout/isw_activity_settings">
+<!--    <fragment android:id="@+id/fragment_download_keys"-->
+<!--        android:name="com.interswitchng.smartpos.modules.setup.fragments.DownloadKeyFragment"-->
+<!--        tools:layout="@layout/isw_activity_settings">-->
 
-        <action
-            android:id="@+id/isw_action_goto_fragment_merchant_card"
-            app:destination="@id/fragment_merchant_card"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+<!--        <action-->
+<!--            android:id="@+id/isw_action_goto_fragment_merchant_card"-->
+<!--            app:destination="@id/fragment_merchant_card"-->
+<!--            app:enterAnim="@anim/slide_in_right"-->
+<!--            app:exitAnim="@anim/slide_out_left"-->
+<!--            app:popEnterAnim="@anim/slide_in_left"-->
+<!--            app:popExitAnim="@anim/slide_out_right"/>-->
 
-    </fragment>
+<!--    </fragment>-->
 
     <fragment android:id="@+id/fragment_merchant_card"
         android:name="com.interswitchng.smartpos.modules.setup.fragments.MerchantCardFragment"
