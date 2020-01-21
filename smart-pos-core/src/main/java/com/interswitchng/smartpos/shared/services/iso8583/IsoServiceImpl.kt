@@ -761,14 +761,14 @@ internal class IsoServiceImpl(
         terminalInfo: TerminalInfo,
         transaction: TransactionInfo
     ): TransactionResponse? {
+        val now = Date()
+        val transmissionDateTime = timeAndDateFormatter.format(now)
         try {
-            val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x100))
             val processCode = "60" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
             val randomReference = "000000$stan"
-            val transmissionDateTime = timeAndDateFormatter.format(now)
 
             message
                 .setValue(2, transaction.cardPAN)
@@ -813,7 +813,7 @@ internal class IsoServiceImpl(
 
             // open connection
             val isConnected = socket.open()
-            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+            if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "", transmissionDateTime = transmissionDateTime)
 
             val request = message.message.writeData()
             val response = socket.sendReceive(request)
@@ -836,7 +836,7 @@ internal class IsoServiceImpl(
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
-            return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+            return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "", transmissionDateTime = transmissionDateTime)
         }
     }
 
