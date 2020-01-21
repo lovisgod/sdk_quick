@@ -93,7 +93,8 @@ data class TransactionResult(
                     cardType.name,
                     cardExpiry,
                     authorizationCode,
-                    pinStatus)
+                    pinStatus,
+                    originalTransmissionDateTime)
 
 
     /// function to extract
