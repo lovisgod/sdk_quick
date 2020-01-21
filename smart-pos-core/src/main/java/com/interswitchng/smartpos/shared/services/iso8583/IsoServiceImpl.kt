@@ -226,80 +226,6 @@ internal class IsoServiceImpl(
 //
 //        return isDownloaded == true
 //    }
-//
-//    override fun downloadTerminalParameters(terminalId: String): Boolean {
-//        try {
-//            val code = "9C0000"
-//            val field62 = "01009280824266"
-//
-//            val now = Date()
-//            val stan = getNextStan()
-//
-//            val message = NibssIsoMessage(messageFactory.newMessage(0x800))
-//            message
-//                    .setValue(3, code)
-//                    .setValue(7, timeAndDateFormatter.format(now))
-//                    .setValue(11, stan)
-//                    .setValue(12, timeFormatter.format(now))
-//                    .setValue(13, monthFormatter.format(now))
-//                    .setValue(41, terminalId)
-//                    .setValue(62, field62)
-//
-//
-//            val bytes = message.message.writeData()
-//            val length = bytes.size
-//            val temp = ByteArray(length - 64)
-//            if (length >= 64) {
-//                System.arraycopy(bytes, 0, temp, 0, length - 64)
-//            }
-//
-//
-//            // confirm that key was downloaded
-//            val key = store.getString(KEY_SESSION_KEY, "")
-//            if (key.isEmpty()) return false
-//
-//            val hashValue = IsoUtils.getMac(key, temp) //SHA256
-//            message.setValue(64, hashValue)
-//            message.dump(System.out, "parameter request ---- ")
-//
-//            // open socket connection
-//            socket.open()
-//
-//            // send request and receive response
-//            val response = socket.sendReceive(message.message.writeData())
-//            // close connection
-//            socket.close()
-//
-//            // read message
-//            val responseMessage = NibssIsoMessage(messageFactory.parseMessage(response, 0))
-//            responseMessage.dump(System.out, "parameter response ---- ")
-//
-//
-//            // getResult string formatted terminal info
-//            val terminalDataString = responseMessage.message.getField<String>(62).value
-//            logger.log("Terminal Data String => $terminalDataString")
-//
-//            //TODO
-//
-//
-//
-//           // var merchantId="2ISW00000000001"
-//
-//            // parse and save terminal info
-//            val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also {
-//               // it.merchantId="2ISW00000000001"
-//                it.persist(store) }
-//            logger.log("Terminal Data => $terminalData")
-//
-//            return true
-//        } catch (e: Exception) {
-//            logger.log(e.localizedMessage)
-//            e.printStackTrace()
-//        }
-//
-//        return false
-//    }
-
 
     override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
         try {
@@ -336,9 +262,8 @@ internal class IsoServiceImpl(
             message.setValue(64, hashValue)
             message.dump(System.out, "parameter request ---- ")
 
-            // set server Ip and port
+             //set server Ip and port
             socket.setIpAndPort(ip, port)
-
             // open socket connection
             socket.open()
 
@@ -356,8 +281,19 @@ internal class IsoServiceImpl(
             val terminalDataString = responseMessage.message.getField<String>(62).value
             logger.log("Terminal Data String => $terminalDataString")
 
+            //TODO
+
+
+
+           // var merchantId="2ISW00000000001"
+
             // parse and save terminal info
             val terminalData = TerminalInfoParser.parse(terminalId, ip, port, terminalDataString, store)?.also { it.persist(store) }
+
+            // parse and save terminal info
+           // val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also {
+               // it.merchantId="2ISW00000000001"
+           //     it.persist(store) }
             logger.log("Terminal Data => $terminalData")
 
             return true
@@ -368,6 +304,75 @@ internal class IsoServiceImpl(
 
         return false
     }
+//
+//
+//    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
+//        try {
+//            val code = "9C0000"
+//            val field62 = "01009280824266"
+//
+//            val now = Date()
+//            val stan = getNextStan()
+//
+//            val message = NibssIsoMessage(messageFactory.newMessage(0x800))
+//            message
+//                    .setValue(3, code)
+//                    .setValue(7, timeAndDateFormatter.format(now))
+//                    .setValue(11, stan)
+//                    .setValue(12, timeFormatter.format(now))
+//                    .setValue(13, monthFormatter.format(now))
+//                    .setValue(41, terminalId)
+//                    .setValue(62, field62)
+//
+//
+//            val bytes = message.message.writeData()
+//            val length = bytes.size
+//            val temp = ByteArray(length - 64)
+//            if (length >= 64) {
+//                System.arraycopy(bytes, 0, temp, 0, length - 64)
+//            }
+//
+//
+//            // confirm that key was downloaded
+//            val key = store.getString(KEY_SESSION_KEY, "")
+//            if (key.isEmpty()) return false
+//
+//            val hashValue = IsoUtils.getMac(key, temp) //SHA256
+//            message.setValue(64, hashValue)
+//            message.dump(System.out, "parameter request ---- ")
+//
+//            // set server Ip and port
+//            socket.setIpAndPort(ip, port)
+//
+//            // open socket connection
+//            socket.open()
+//
+//            // send request and receive response
+//            val response = socket.sendReceive(message.message.writeData())
+//            // close connection
+//            socket.close()
+//
+//            // read message
+//            val responseMessage = NibssIsoMessage(messageFactory.parseMessage(response, 0))
+//            responseMessage.dump(System.out, "parameter response ---- ")
+//
+//
+//            // getResult string formatted terminal info
+//            val terminalDataString = responseMessage.message.getField<String>(62).value
+//            logger.log("Terminal Data String => $terminalDataString")
+//
+//            // parse and save terminal info
+//            val terminalData = TerminalInfoParser.parse(terminalId, ip, port, terminalDataString, store)?.also { it.persist(store) }
+//            logger.log("Terminal Data => $terminalData")
+//
+//            return true
+//        } catch (e: Exception) {
+//            logger.log(e.localizedMessage)
+//            e.printStackTrace()
+//        }
+//
+//        return false
+//    }
 
     override fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {

@@ -2,29 +2,22 @@ package com.interswitchng.smartpos
 
 import android.app.Application
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.di.networkModule
 import com.interswitchng.smartpos.di.serviceModule
 import com.interswitchng.smartpos.di.viewModels
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
-import com.interswitchng.smartpos.modules.main.fragments.AmountFragment
-import com.interswitchng.smartpos.modules.main.fragments.AmountFragmentDirections
-import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.menu.report.ReportActivity
 import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
-import com.interswitchng.smartpos.modules.menu.settings.SettlementSelectionActivity
+import com.interswitchng.smartpos.modules.menu.settings.TerminalSettingsActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
-import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.POSConfig
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult
@@ -174,7 +167,7 @@ class IswPos private constructor(private val app: Application, internal val devi
          * This method loads the settings screen
          */
         @JvmStatic
-        fun showSettlementSelectionScreen() = showScreen(SettlementSelectionActivity::class.java)
+        fun showSettlementSelectionScreen() = showScreen(TerminalSettingsActivity::class.java)
 
 
         /**

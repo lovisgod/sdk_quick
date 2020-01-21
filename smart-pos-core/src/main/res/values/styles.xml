@@ -154,6 +154,19 @@
     </style>
 
 
+    <style name="ISW.FullScreenDialogStyleTransparent" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimaryDark">@color/iswColorPrimaryDark</item>
+        <item name="colorPrimary">@color/iswColorPrimary</item>
+
+        <!-- Set this to true if you want Full Screen without status bar -->
+        <item name="android:windowFullscreen">false</item>
+
+        <item name="android:windowIsFloating">false</item>
+
+        <!-- This is important! Don't forget to set window background -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 
     <style name="ISW.MyButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="enforceMaterialTheme">@style/ISW.GreenButtonThemeOverlay</item>
