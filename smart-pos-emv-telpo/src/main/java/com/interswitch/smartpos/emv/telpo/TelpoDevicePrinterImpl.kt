@@ -1,7 +1,10 @@
 package com.interswitch.smartpos.emv.telpo
 
 import android.content.Context
-import android.media.ThumbnailUtils
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Matrix
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
@@ -19,12 +22,13 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
     override fun printSlip(slip: List<PrintObject>, user: UserType): PrintStatus {
         printer.apply {
             reset()
-            setMonoSpace(true)
             setAlgin(UsbThermalPrinter.ALGIN_LEFT)
         }
+
+        printer.walkPaper(30)
+
         //Print the company's logo
-        val printBitmap = ThumbnailUtils.extractThumbnail(TelpoPOSDeviceImpl.companyLogo, 244, 116)
-        printer.printLogo(printBitmap, true)
+        printCompanyLogo()
 
         for (item in slip) printItem(item)
 
@@ -39,7 +43,7 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
         return try {
             printer.printString()
             // set step distance
-            printer.walkPaper(80)
+            printer.walkPaper(30)
             PrintStatus.Ok("Printed")
         } catch (exception: TelpoException) {
             PrintStatus.Ok("Failed to print: ${exception.localizedMessage}")
@@ -57,7 +61,6 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
     }
 
     private fun printItem(item: PrintObject) {
-
         when (item) {
             is PrintObject.Line -> printer.addString(line)
             is PrintObject.BitMap -> printer.printLogo(item.bitmap, true)
@@ -69,16 +72,12 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
                 when {
                     printConfig.isTitle -> {
                         printer.setGray(7)
-                        printer.setTextSize(36)
+                        printer.setTextSize(30)
                     }
                     else -> {
                         printer.setTextSize(24)
                     }
                 }
-
-                // set gray thickness
-//                if (printConfig.isBold || printConfig.isTitle) printer.setGray(4)
-//                else printer.setGray(2)
 
                 // print string
                 if (printConfig.displayCenter) {
@@ -91,6 +90,90 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
             }
 
         }
+    }
+
+    fun printCompanyLogo() {
+        printer.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE)
+        TelpoPOSDeviceImpl.companyLogo.also { logo ->
+            // copy out bitmap
+            val it = logo.copy(logo.config, logo.isMutable)
+            val smallScale =
+                if (it.width == it.height) getScaledDownBitmap(it)
+                else getScaledDownBitmap(it, threshold = 200)
+            val paddingLeft = ((SCREEN_NORMAL_LENGTH * 12.5) - smallScale.width) / 2 // 1 dot in print is 12.5px
+
+            // add padding to bitmap
+            val outputBitmap = Bitmap.createBitmap(smallScale.width + paddingLeft.toInt(), smallScale.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(outputBitmap)
+            // draw logo in output bitmap
+            canvas.drawColor(Color.WHITE)
+            canvas.drawBitmap(smallScale, paddingLeft.toFloat(), 0f, null)
+
+            // print bitmap
+            printer.printLogo(outputBitmap, false)
+        }
+    }
+
+    /**
+     * @param bitmap the Bitmap to be scaled
+     * @param threshold the maxium dimension (either width or height) of the scaled bitmap
+     * @param isNecessaryToKeepOrig is it necessary to keep the original bitmap? If not recycle the original bitmap to prevent memory leak.
+     */
+
+    fun getScaledDownBitmap(bitmap: Bitmap, threshold: Int = 150, isNecessaryToKeepOrig: Boolean = false): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        var newWidth = width
+        var newHeight = height
+
+        if (width > height && width > threshold) {
+            newWidth = threshold
+            newHeight = (height * newWidth.toFloat() / width).toInt()
+        }
+
+        if (width in (height + 1)..threshold) {
+            //the bitmap is already smaller than our required dimension, no need to resize it
+            return bitmap
+        }
+
+        if (width < height && height > threshold) {
+            newHeight = threshold
+            newWidth = (width * newHeight.toFloat() / height).toInt()
+        }
+
+        if (height in (width + 1)..threshold) {
+            //the bitmap is already smaller than our required dimension, no need to resize it
+            return bitmap
+        }
+
+        if (width == height && width > threshold) {
+            newWidth = threshold
+            newHeight = newWidth
+        }
+
+        return if (width == height && width <= threshold) {
+            //the bitmap is already smaller than our required dimension, no need to resize it
+            bitmap
+        } else getResizedBitmap(bitmap, newWidth, newHeight, isNecessaryToKeepOrig)
+
+    }
+
+    private fun getResizedBitmap(bm: Bitmap, newWidth: Int, newHeight: Int, isNecessaryToKeepOrig: Boolean): Bitmap {
+        val width = bm.width
+        val height = bm.height
+        val scaleWidth = newWidth.toFloat() / width
+        val scaleHeight = newHeight.toFloat() / height
+        // CREATE A MATRIX FOR THE MANIPULATION
+        val matrix = Matrix()
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        // "RECREATE" THE NEW BITMAP
+        val resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false)
+        if (!isNecessaryToKeepOrig) {
+            bm.recycle()
+        }
+        return resizedBitmap
     }
 
     companion object {

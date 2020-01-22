@@ -1,22 +1,19 @@
 package com.interswitchng.smartpos.modules.menu.settings
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.setup.SetupActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
@@ -24,9 +21,6 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.utilities.*
-import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
-import kotlinx.android.synthetic.main.isw_activity_settings.*
 import kotlinx.android.synthetic.main.isw_activity_settings.btnDownloadKeys
 import kotlinx.android.synthetic.main.isw_activity_settings.btnDownloadTerminalConfig
 import kotlinx.android.synthetic.main.isw_activity_settings.etTerminalId
@@ -37,7 +31,6 @@ import kotlinx.android.synthetic.main.isw_activity_settings.tvKeyDate
 import kotlinx.android.synthetic.main.isw_activity_settings.tvKeys
 import kotlinx.android.synthetic.main.isw_activity_settings.tvTerminalInfo
 import kotlinx.android.synthetic.main.isw_activity_settings.tvTerminalInfoDate
-import kotlinx.android.synthetic.main.isw_activity_settlement_selection_settings.*
 import kotlinx.android.synthetic.main.isw_activity_terminal_settings.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -106,6 +99,8 @@ class SettlementSelectionActivity : MenuActivity() {
     private val store: KeyValueStore by inject()
     private val settingsViewModel: SettingsViewModel by viewModel()
 
+    private val isFromSettings by lazy { intent.getBooleanExtra("FROM_SETTINGS", false) }
+
     private val alert by lazy {
         DialogUtils.getAlertDialog(this)
                 .setTitle("Invalid Configuration")
@@ -118,9 +113,16 @@ class SettlementSelectionActivity : MenuActivity() {
         setContentView(R.layout.isw_activity_terminal_settings)
 
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
+        if (isFromSettings) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+        } else {
+            if (TerminalInfo.get(store) != null) {
+                val intent = Intent(this, SetupActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
 
         // setup button listeners
         setupButtons()
@@ -156,6 +158,11 @@ class SettlementSelectionActivity : MenuActivity() {
             return true
         } else if (item?.itemId == R.id.saveConfig) {
             saveConfig()
+            if (!isFromSettings) {
+                val intent = Intent(this, SetupActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
             return true
         }
 

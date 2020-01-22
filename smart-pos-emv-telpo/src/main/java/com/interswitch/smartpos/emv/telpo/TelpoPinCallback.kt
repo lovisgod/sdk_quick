@@ -4,7 +4,7 @@ interface TelpoPinCallback {
 
     suspend fun showInsertCard()
 
-    fun getPinResult(panBlock: String): Int
+    val pinResult: Int
 
     suspend fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String)
 

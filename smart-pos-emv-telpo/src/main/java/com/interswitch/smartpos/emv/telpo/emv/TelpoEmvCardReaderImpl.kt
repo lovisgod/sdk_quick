@@ -4,16 +4,18 @@ import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.telpo.emv.EmvService
+import com.telpo.pinpad.PinParam
+import com.telpo.pinpad.PinpadService
 import com.telpo.tps550.api.util.StringUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.sendBlocking
 import kotlin.coroutines.coroutineContext
 
 class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, TelpoPinCallback {
@@ -23,10 +25,14 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
     private lateinit var channel: Channel<EmvMessage>
     private lateinit var channelScope: CoroutineScope
 
+    private var amount: Int = 0
+
     private lateinit var terminalInfo: TerminalInfo
 
     private var isCancelled = false
-    private var pinResult: Int = EmvService.EMV_TRUE
+
+    private var cardPinResult: Int = EmvService.EMV_TRUE
+
     private var pinData: String? = null
     private var hasEnteredPin: Boolean = false
 
@@ -49,7 +55,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         }
     }
 
-    override fun getPinResult(panBlock: String): Int = EmvService.EMV_TRUE
+    override val pinResult: Int = cardPinResult
 
     override suspend fun enterPin(
         isOnline: Boolean,
@@ -58,6 +64,33 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         panBlock: String
     ) {
         channel.send(EmvMessage.EnterPin)
+
+        if (triesCount > 0) {
+            channel.sendBlocking(EmvMessage.PinError(offlineTriesLeft))
+        } else {
+            val pinParameter = PinParam(context)
+            pinParameter.apply {
+                KeyIndex = 1
+                WaitSec = 100
+                MaxPinLen = 6
+                MinPinLen= 4
+                IsShowCardNo = 0
+                Amount = "$amount"
+                CardNo = telpoEmvImplementation.cardPan
+            }
+            PinpadService.Open(context)
+            cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {
+                PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
+                PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
+                PinpadService.PIN_OK -> {
+                    pinData = StringUtil.toHexString(pinParameter.Pin_Block)
+                    if (pinData!!.contains("00000000")) {
+                        EmvService.ERR_NOPIN
+                    } else EmvService.EMV_TRUE
+                }
+                else -> EmvService.EMV_FALSE
+            }
+        }
     }
 
     override suspend fun showPinOk() = channel.send(EmvMessage.PinOk)
@@ -70,13 +103,14 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         channel: Channel<EmvMessage>,
         scope: CoroutineScope
     ) {
+        this.amount = amount
         this.terminalInfo = terminalInfo
         telpoEmvImplementation.setAmount(amount)
 
         this.channel = channel
         this.channelScope = scope
 
-        val result = telpoEmvImplementation.setupContactEmvTransaction()
+        val result = telpoEmvImplementation.setupContactEmvTransaction(terminalInfo)
         logger.logErr("Result: $result")
 
         val resultMsg = when (result) {
@@ -119,7 +153,10 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
         return if (!isCancelled) when (result) {
             EmvService.EMV_TRUE -> {
-                runBlocking { channel.send(EmvMessage.CardDetails(telpoEmvImplementation.getCardType())) }
+                runBlocking {
+                    channel.send(EmvMessage.CardDetails(telpoEmvImplementation.getCardType()))
+                    delay(1000)
+                }
                 logger.log("Offline approved").let { EmvResult.ONLINE_REQUIRED }
             }
             else -> logger.log("Offline declined").let { EmvResult.OFFLINE_DENIED }
@@ -134,14 +171,13 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
     override fun cancelTransaction() {
         if (!isCancelled) {
             isCancelled = true
-//            ped.setInputPinListener(null) // remove the pin pad
         }
     }
 
     override fun getTransactionInfo(): EmvData? {
         return telpoEmvImplementation.getTrack2()?.let {
             // get pinData (only for online PIN)
-            val carPin = pinData ?: ""
+            val cardPin = pinData ?: ""
 
             // get track 2 string
             val track2data = StringUtil.toHexString(it)
@@ -159,7 +195,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             val csnStr = StringUtil.toHexString(telpoEmvImplementation.getTLV(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
             val csn = "0$csnStr"
 
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = carPin, cardTrack2 = track2data,  icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = "")
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = cardPin, cardTrack2 = track2data,  icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = "")
         }
     }
 }

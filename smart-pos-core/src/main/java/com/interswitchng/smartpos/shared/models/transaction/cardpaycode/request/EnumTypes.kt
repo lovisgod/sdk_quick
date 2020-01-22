@@ -15,7 +15,7 @@ internal enum class PurchaseType {
  * This enum type identifies the
  * different Bank Account types
  */
-internal enum class AccountType(val value: String) {
+enum class AccountType(val value: String) {
     Default("00"),
     Savings("10"),
     Current("20"),

@@ -119,7 +119,7 @@ class CardActivity : BaseActivity() {
                         // before starting transaction
                         runWithInternet {
                             // try starting transaction
-                            cardViewModel.startTransaction(this, paymentInfo, accountType, terminalInfo)
+                            cardViewModel.startTransaction(this)
                         }
                     }
                     dialog.dismiss()

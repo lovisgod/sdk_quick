@@ -179,7 +179,6 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
     override fun getPinResult(panBlock: String) = pinResult
 
-
     override suspend fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String) {
 
         try {

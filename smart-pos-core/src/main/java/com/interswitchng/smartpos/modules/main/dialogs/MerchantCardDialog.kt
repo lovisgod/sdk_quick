@@ -57,7 +57,7 @@ class MerchantCardDialog constructor(
             // when card has been read
             is EmvMessage.CardRead -> {
                 //Dismiss the dialog showing "Reading Card"
-                cardViewModel.readCardPan()
+                cardViewModel.startTransaction(requireContext())
             }
 
             // when card gets removed

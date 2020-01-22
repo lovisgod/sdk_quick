@@ -78,7 +78,12 @@
             android:label="Settings"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ISW.NoActionBar" />
+            android:theme="@style/ISW.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".modules.home.PurchaseActivity"
             android:launchMode="singleTop"

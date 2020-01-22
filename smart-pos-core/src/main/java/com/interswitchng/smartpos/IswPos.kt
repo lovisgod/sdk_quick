@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.di.serviceModule
 import com.interswitchng.smartpos.di.viewModels
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
+import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
 import com.interswitchng.smartpos.modules.menu.report.ReportActivity
 import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
@@ -186,6 +187,9 @@ class IswPos private constructor(private val app: Application, internal val devi
         @JvmStatic
         fun showSettlementSelectionScreen() = showScreen(SettlementSelectionActivity::class.java)
 
+        @JvmStatic
+        fun showMainActivity() = showScreen(MainActivity::class.java)
+
 
         /**
          * This method loads the dashboard screen
@@ -196,6 +200,9 @@ class IswPos private constructor(private val app: Application, internal val devi
         private fun showScreen(clazz: Class<*>) {
             val app = INSTANCE.app
             val intent = Intent(app, clazz).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (clazz.isAssignableFrom(SettlementSelectionActivity::class.java)) {
+                intent.putExtra("FROM_SETTINGS", true)
+            }
             app.startActivity(intent)
         }
 

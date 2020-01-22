@@ -12,6 +12,8 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import kotlinx.android.synthetic.main.isw_fragment_merchant_card_setup.*
 import kotlinx.android.synthetic.main.isw_layout_supervisors_card_pin.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -27,6 +29,9 @@ class MerchantCardFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (store.getBoolean("SETUP")) {
+            proceedToMainActivity()
+        }
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })
@@ -41,8 +46,10 @@ class MerchantCardFragment : BaseFragment(TAG) {
             val cardPAN = cardViewModel.getCardPAN()!!
             setupViewModel.saveMerchantPAN(cardPAN)
             store.saveBoolean("SETUP", true)
-            requireActivity().finish()
+            val direction = MerchantCardFragmentDirections.iswActionGotoFragmentSetupComplete()
+            navigate(direction)
         }
+
         isw_link_fingerprint.setOnClickListener {
             val cardPAN = cardViewModel.getCardPAN()!!
             logger.logErr(cardPAN)
@@ -50,6 +57,11 @@ class MerchantCardFragment : BaseFragment(TAG) {
             val direction = MerchantCardFragmentDirections.iswActionGotoFragmentPhoneNumber()
             navigate(direction)
         }
+    }
+
+    private fun proceedToMainActivity() {
+        IswPos.showMainActivity()
+        requireActivity().finish()
     }
 
     private fun processMessage(message: EmvMessage) {
@@ -75,8 +87,9 @@ class MerchantCardFragment : BaseFragment(TAG) {
 
             // when card has been read
             is EmvMessage.CardRead -> {
-                //Dismiss the dialog showing "Reading Card"
-                cardViewModel.readCardPan()
+                runBlocking { delay(1000) }
+
+                cardViewModel.startTransaction(requireContext())
             }
 
             // when card gets removed

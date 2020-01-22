@@ -31,6 +31,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
 
+        <action
+            android:id="@+id/isw_action_goto_fragment_setup_complete"
+            app:destination="@id/fragment_setup_complete"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
 
     <fragment android:id="@+id/fragment_phone_number"

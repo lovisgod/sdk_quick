@@ -9,7 +9,7 @@ import com.interswitchng.smartpos.IswPos
  * This class represents the purchase request
  * triggered by external source that depends the SDK
  */
-internal class PaymentInfo: Parcelable {
+class PaymentInfo: Parcelable {
 
     val amount: Int
     var bankCode: String

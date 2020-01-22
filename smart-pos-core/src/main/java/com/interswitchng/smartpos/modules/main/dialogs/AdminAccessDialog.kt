@@ -73,7 +73,7 @@ class AdminAccessDialog constructor(
 
             // when card is detected
             is EmvMessage.CardDetected -> {
-                cardViewModel.readCardPan()
+                cardViewModel.startTransaction(requireContext())
             }
 
             is EmvMessage.CardDetails -> {}
