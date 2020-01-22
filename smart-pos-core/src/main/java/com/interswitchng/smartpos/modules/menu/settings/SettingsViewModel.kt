@@ -23,15 +23,6 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
     private val _configDownloadSuccess = MutableLiveData<Boolean>()
     val configDownloadSuccess: LiveData<Boolean> = _configDownloadSuccess
 
-//
-//    fun downloadKeys(terminalId: String) {
-//        uiScope.launch {
-//            val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId) }
-//            _keysDownloadSuccess.value = isSuccessful
-//
-//
-//        }
-//    }
 
 
     fun downloadKeys(terminalId: String, ip: String, port: Int, isKimono: Boolean) {
@@ -49,14 +40,7 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
             _configDownloadSuccess.value = isSuccessful
         }
     }
-//
-//    fun downloadTerminalConfig(terminalId: String) {
-//        val isoService: IsoService = get { parametersOf(isKimono) }
-//        uiScope.launch {
-//            val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId) }
-//            _configDownloadSuccess.value = isSuccessful
-//        }
-//    }
+
 
     fun getTerminalInformation(xmlFile: InputStream): TerminalInformation = FileUtils.readXml(TerminalInformation::class.java, xmlFile)
 

@@ -173,7 +173,8 @@ internal class IsoServiceImpl(
 
     override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
         // getResult clear key
-        val cms = Constants.ISW_CMS
+        val cms =Constants.ISW_CMS
+        //val cms2 = context.getString(R.string.isw_cms)
 
         // getResult master key & save
         val isDownloaded = makeKeyCall(terminalId, ip, port, "9A0000", cms)?.let { masterKey ->
@@ -201,31 +202,6 @@ internal class IsoServiceImpl(
 
         return isDownloaded == true
     }
-//    override fun downloadKey(terminalId: String): Boolean {
-//        // getResult clear key
-//        val cms = context.getString(R.string.isw_cms)
-//
-//        // getResult master key & save
-//        val isDownloaded = makeKeyCall(terminalId, "9A0000", cms)?.let { masterKey ->
-//            store.saveString(KEY_MASTER_KEY, masterKey)
-//
-//            // getResult pin key & save
-//            val isSessionSaved = makeKeyCall(terminalId, "9B0000", masterKey)?.let { sessionKey ->
-//                store.saveString(KEY_SESSION_KEY, sessionKey)
-//                true
-//            }
-//
-//            // getResult pin key & save
-//            val isPinSaved = makeKeyCall(terminalId, "9G0000", masterKey)?.let { pinKey ->
-//                store.saveString(KEY_PIN_KEY, pinKey)
-//                true
-//            }
-//
-//            isPinSaved == true && isSessionSaved == true
-//        }
-//
-//        return isDownloaded == true
-//    }
 
     override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
         try {
@@ -438,7 +414,8 @@ internal class IsoServiceImpl(
             val hashValue = IsoUtils.getMac(sessionKey, temp) //SHA256
             message.setValue(128, hashValue)
             message.dump(System.out, "request -- ")
-
+            //set server Ip and port
+            socket.setIpAndPort(terminalInfo.serverIp, terminalInfo.serverPort)
             // open connection
             val isConnected = socket.open()
             if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
