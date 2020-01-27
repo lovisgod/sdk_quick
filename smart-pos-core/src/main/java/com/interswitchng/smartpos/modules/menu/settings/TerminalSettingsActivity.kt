@@ -21,79 +21,15 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.utilities.*
-import kotlinx.android.synthetic.main.isw_activity_settings.btnDownloadKeys
-import kotlinx.android.synthetic.main.isw_activity_settings.btnDownloadTerminalConfig
-import kotlinx.android.synthetic.main.isw_activity_settings.etTerminalId
-import kotlinx.android.synthetic.main.isw_activity_settings.progressKeyDownload
-import kotlinx.android.synthetic.main.isw_activity_settings.progressTerminalDownload
-import kotlinx.android.synthetic.main.isw_activity_settings.toolbar
-import kotlinx.android.synthetic.main.isw_activity_settings.tvKeyDate
-import kotlinx.android.synthetic.main.isw_activity_settings.tvKeys
-import kotlinx.android.synthetic.main.isw_activity_settings.tvTerminalInfo
-import kotlinx.android.synthetic.main.isw_activity_settings.tvTerminalInfoDate
+import com.interswitchng.smartpos.shared.utilities.DialogUtils
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_terminal_settings.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-//
-//class SettlementSelectionActivity : MenuActivity() {
-//
-//    private val store: KeyValueStore by inject()
-//
-//protected val iswPos: IswPos by inject()
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.isw_activity_settlement_selection_settings)
-//
-//        setSupportActionBar(toolbar)
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        supportActionBar?.setDisplayShowHomeEnabled(true)
-//        handleClicks()
-//
-//
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-//        // set back click to go back
-//        if (item?.itemId == android.R.id.home) {
-//            finish()
-//            return true
-//        }
-//
-//        return super.onOptionsItemSelected(item)
-//    }
-//
-//
-//    private fun handleClicks() {
-//        iswKimonoSettings.setOnClickListener {
-//
-//            TerminalInfo.setSettingsSettlementChoice(true,store)
-//
-//         store.saveString(Constants.TERMINAL_CONFIG_TYPE,"kimono")
-//
-//            iswPos.gotoSettings()
-//        }
-//
-//
-//        iswNibssSettings.setOnClickListener {
-//            TerminalInfo.setSettingsSettlementChoice(false,store)
-//            store.saveString(Constants.TERMINAL_CONFIG_TYPE,"nibss")
-//            iswPos.gotoSettings()
-//        }
-//
-//
-//    }
-//
-//    companion object {
-//        const val TAG = "Setting Settlement Selection Fragment"
-//    }
-//}
 
-
-
-class SettlementSelectionActivity : MenuActivity() {
+class TerminalSettingsActivity : MenuActivity() {
 
     private val instance: IswPos by inject()
     private val store: KeyValueStore by inject()

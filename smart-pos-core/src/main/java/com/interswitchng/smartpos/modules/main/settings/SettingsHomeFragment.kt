@@ -1,13 +1,13 @@
 package com.interswitchng.smartpos.modules.main.settings
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
+import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
+import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_settings_home.*
 
@@ -30,7 +30,7 @@ class SettingsHomeFragment : BaseFragment(TAG) {
 
     private fun handleClicks() {
         isw_account_container.setOnClickListener {
-            it.findNavController().navigate(R.id.isw_goto_account_fragment_action)
+            authorizeAndPerformAction { it.findNavController().navigate(R.id.isw_goto_account_fragment_action) }
         }
 
         isw_settings_toolbar_label.setOnClickListener {
@@ -38,12 +38,26 @@ class SettingsHomeFragment : BaseFragment(TAG) {
         }
 
         isw_download_settings_btn.setOnClickListener {
-
-
-//            iswPos.gotoSettings()
-
-            iswPos.gotoSettlementSelection()
+           authorizeAndPerformAction { iswPos.gotoSettlementSelection() }
         }
+    }
+
+    private fun authorizeAndPerformAction(action: () -> Unit) {
+        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+            if (isValidated) {
+                action.invoke()
+            } else {
+                toast("Unauthorized Access!!")
+            }
+        }
+        val dialog = MerchantCardDialog {
+            when (it) {
+                MerchantCardDialog.AUTHORIZED -> action.invoke()
+                MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
+                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(requireFragmentManager(), FingerprintBottomDialog.TAG)
+            }
+        }
+        dialog.show(requireFragmentManager(), MerchantCardDialog.TAG)
     }
 
     companion object {

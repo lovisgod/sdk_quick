@@ -190,9 +190,9 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
             val iccFull=telpoEmvImplementation.getIccFullData()
 
-            val aid = StringUtil.toHexString(telpoEmvImplementation.getTLV(0x9F06)!!)
+            val aid = telpoEmvImplementation.getTLVString(0x9F06)!!
             // get the card sequence number
-            val csnStr = StringUtil.toHexString(telpoEmvImplementation.getTLV(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!)
+            val csnStr = telpoEmvImplementation.getTLV(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!
             val csn = "0$csnStr"
 
             EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = cardPin, cardTrack2 = track2data,  icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = "")

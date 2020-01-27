@@ -10,10 +10,10 @@ import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
+import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.menu.report.ReportActivity
 import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
-import com.interswitchng.smartpos.modules.menu.settings.SettlementSelectionActivity
-import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
+import com.interswitchng.smartpos.modules.menu.settings.TerminalSettingsActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
@@ -185,7 +185,7 @@ class IswPos private constructor(private val app: Application, internal val devi
          * This method loads the settings screen
          */
         @JvmStatic
-        fun showSettlementSelectionScreen() = showScreen(SettlementSelectionActivity::class.java)
+        fun showSettlementSelectionScreen() = showScreen(TerminalSettingsActivity::class.java)
 
         @JvmStatic
         fun showMainActivity() = showScreen(MainActivity::class.java)
@@ -200,7 +200,7 @@ class IswPos private constructor(private val app: Application, internal val devi
         private fun showScreen(clazz: Class<*>) {
             val app = INSTANCE.app
             val intent = Intent(app, clazz).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            if (clazz.isAssignableFrom(SettlementSelectionActivity::class.java)) {
+            if (clazz.isAssignableFrom(TerminalSettingsActivity::class.java)) {
                 intent.putExtra("FROM_SETTINGS", true)
             }
             app.startActivity(intent)

@@ -3,7 +3,6 @@ package com.interswitch.smartpos.emv.telpo.emv
 import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
 import com.interswitch.smartpos.emv.telpo.models.getAllCapks
-import com.interswitch.smartpos.emv.telpo.utils.EmvUtils.bcd2Str
 import com.interswitch.smartpos.emv.telpo.utils.TelpoEmvUtils
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
@@ -15,8 +14,6 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.telpo.emv.*
 import com.telpo.emv.util.StringUtil
-import com.telpo.pinpad.PinParam
-import com.telpo.pinpad.PinpadService
 import kotlinx.coroutines.runBlocking
 import java.io.UnsupportedEncodingException
 import java.nio.charset.Charset
@@ -132,7 +129,7 @@ internal class TelpoEmvImplementation (
             TerminalType = terminalConfig.terminaltype.toByte()
             Capability = StringUtil.hexStringToByte(terminalConfig.terminalcapability)
             ExCapability = StringUtil.hexStringToByte(terminalConfig.extendedterminalcapability)
-            CountryCode = StringUtil.hexStringToByte(terminalInfo.countryCode)
+            CountryCode = terminalInfo.countryCode.toByteArray()
         }
 
         emvService.Emv_SetParam(emvParameter)
@@ -187,6 +184,8 @@ internal class TelpoEmvImplementation (
         return cardType
     }
 
+    fun getTLVString(tag: Int): String? = getTLV(tag)?.let { StringUtil.bytesToHexString_upcase(it) }
+
     fun getTLV(tag: Int): ByteArray? {
         val tlv = EmvTLV(tag)
         if (emvService.Emv_GetTLV(tlv) == EmvService.EMV_TRUE) {
@@ -217,7 +216,7 @@ internal class TelpoEmvImplementation (
         logger.log("---------------------------------------------")
         for (tag in REQUEST_TAGS) {
             val tlv = getTLV(tag.tag)
-            val str = tlv?.let { StringUtil.bytesToHexString(it) }
+            val str = tlv?.let { it }
             logger.log("tag: ${tag.name}, hex: $str")
         }
         logger.log("---------------------------------------------")
@@ -250,7 +249,7 @@ internal class TelpoEmvImplementation (
                 TERMINAL_VERIFICATION_RESULT = ICCData.TERMINAL_VERIFICATION_RESULT.getTlv() ?: "",
                 // remove leading zero in currency and country codes
                 TRANSACTION_CURRENCY_CODE = ICCData.TRANSACTION_CURRENCY_CODE.getTlv()?.substring(1) ?: "",
-                TERMINAL_COUNTRY_CODE = ICCData.TERMINAL_COUNTRY_CODE.getTlv()?.substring(1) ?: "",
+                TERMINAL_COUNTRY_CODE = ICCData.TRANSACTION_CURRENCY_CODE.getTlv()?.substring(1) ?: "",
 
                 TERMINAL_TYPE = ICCData.TERMINAL_TYPE.getTlv() ?: "",
                 TERMINAL_CAPABILITIES = ICCData.TERMINAL_CAPABILITIES.getTlv() ?: "",
@@ -266,8 +265,12 @@ internal class TelpoEmvImplementation (
             val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
 
             for (tag in REQUEST_TAGS) {
-                val tlv = getTLV(tag.tag)
-                tagValues.add(Pair(tag, tlv))
+                if (tag == ICCData.TERMINAL_COUNTRY_CODE) {
+                    tagValues.add(Pair(tag, byteArrayOf(5, 66)))
+                } else {
+                    val tlv = getTLV(tag.tag)
+                    tagValues.add(Pair(tag, tlv))
+                }
             }
 
             iccAsString = TelpoEmvUtils.buildIccString(tagValues)
@@ -279,6 +282,7 @@ internal class TelpoEmvImplementation (
     }
     inner class TelpoEmvServiceListener : EmvServiceListener() {
 
+        @ExperimentalStdlibApi
         override fun onInputAmount(amountData: EmvAmountData?): Int {
             amountData?.let {
                 it.Amount = amount.toLong() //Convert to kobo
@@ -287,9 +291,13 @@ internal class TelpoEmvImplementation (
                 it.CashbackAmount = 0L
                 it.TransactionType = 0.toByte()
                 it.ReferCurrCon = 0
-                it.ReferCurrExp = 0.toByte()
+                it.ReferCurrExp = 0.01.toByte()
                 it.TransCurrExp = 0.toByte()
             }
+
+            val tlv = getTLVString(0x9F1A)
+            logger.logErr("Country code: $tlv")
+
             emvService.Emv_SetTLV(EmvTLV((ICCData.TRANSACTION_AMOUNT.tag)))
             return EmvService.EMV_TRUE
         }
@@ -361,5 +369,5 @@ internal class TelpoEmvImplementation (
         override fun onSelectAppFail(p0: Int): Int = EmvService.EMV_TRUE
     }
 
-    private fun ICCData.getTlv(): String? = getTLV(tag)?.let(::bcd2Str)
+    private fun ICCData.getTlv(): String? = tag.let(::getTLVString)
 }

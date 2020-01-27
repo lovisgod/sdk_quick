@@ -19,7 +19,7 @@ class PaymentInfo: Parcelable {
     var originalAuthId:String? = ""
 
     constructor(amount: Int, bankCode: String?,originalStanId:String?="",originalAuthId:String?="") {
-        this.amount = amount*100
+        this.amount = amount
         this.bankCode = bankCode  ?: ""
         this.originalStanId=originalStanId
         this.originalAuthId=originalAuthId
@@ -27,6 +27,8 @@ class PaymentInfo: Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
+            parcel.readString(),
+            parcel.readString(),
             parcel.readString())
 
     fun getStan() = IswPos.getNextStan().also { currentStan = it }
@@ -34,6 +36,8 @@ class PaymentInfo: Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(amount)
         parcel.writeString(bankCode)
+        parcel.writeString(originalStanId)
+        parcel.writeString(originalAuthId)
     }
 
     override fun describeContents(): Int {

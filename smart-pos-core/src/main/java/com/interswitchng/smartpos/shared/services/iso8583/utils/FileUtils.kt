@@ -88,6 +88,7 @@ object FileUtils {
         val emvApps = getAids(emvStr)
         val terminalConfig = getTerminalConfig(terminalStr)
         // reset terminal capabilities if configured on the terminal
+        //TAKENOTE: LINE MAY NOT BE NEEDED
         terminalConfig.terminalcapability = terminalInfo.capabilities ?: terminalConfig.terminalcapability
 
         return Pair(terminalConfig, emvApps)
