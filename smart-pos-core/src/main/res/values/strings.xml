@@ -90,7 +90,7 @@
     <string name="isw_hint_enter_ussd_code">Enter this code: %1$s to pay using your mobile banking app or Quickteller
     </string>
     <string name="isw_ussd_code_hint_text">%s \n %s \n Customers should dial the USSD</string>
-    <string name="isw_title_confirmation_in_progress">Confirmation in Progress</string>
+    <string name="isw_title_confirmation_in_progress">Sending and Receiving</string>
     <string name="isw_action_change">Change</string>
     <string name="isw_hint_default_account">Default</string>
     <string name="isw_title_re_print_receipt">Re-Print Receipt</string>
@@ -170,7 +170,7 @@
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="isw_amount_with_naira_sign"># %s</string>
     <string name="isw_registered_fingerprint">Registered Fingerprint</string>
     <string name="isw_setup_profiles_for_fingerprint">Setup profiles for Fingerprint</string>
     <string name="isw_there_are_no_registered_fingerprint">There are no registered fingerprint</string>

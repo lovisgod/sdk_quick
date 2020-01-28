@@ -186,7 +186,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             // reset text
             text = ""
             // notify callback to show pin
-            channel.sendBlocking(EmvMessage.EnterPin)
+            channel.send(EmvMessage.EnterPin)
 
             // set check interval
             ped.setIntervalTime(1, 1)
@@ -284,6 +284,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         channelScope.launch(Dispatchers.IO) {
             // check if the user cancelled pin input
             if (key == EKeyCode.KEY_CANCEL) callTransactionCancelled(RetCode.EMV_USER_CANCEL, "User cancelled PIN input")
+            else if (key == EKeyCode.KEY_ENTER && text.isEmpty()) channel.send(EmvMessage.EmptyPin)
             else if (key == EKeyCode.KEY_ENTER && text.length < 4) channel.send(EmvMessage.IncompletePin)
             else channel.send(EmvMessage.PinText(text))
         }

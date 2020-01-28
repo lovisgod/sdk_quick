@@ -51,23 +51,27 @@ class ReceiptFragment : BaseFragment(TAG) {
                 transactionResponseIcon.setImageResource(R.drawable.isw_round_done_padded)
                 isw_transaction_msg.text = "Your transaction was successful"
                 when (transactionResponseModel.transactionType) {
-                    PaymentModel.TransactionType.CARD_PURCHASE -> isw_receipt_text.text = getString(R.string.isw_thank_you)
-                    PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_receipt_text.text = getString(R.string.isw_pre_authorization_completed)
-                    PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_receipt_text.text = getString(R.string.isw_card_not_present_completed)
+                    PaymentModel.TransactionType.CARD_PURCHASE -> isw_receipt_text.text =
+                        getString(R.string.isw_thank_you)
+                    PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_receipt_text.text =
+                        getString(R.string.isw_pre_authorization_completed)
+                    PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_receipt_text.text =
+                        getString(R.string.isw_card_not_present_completed)
                 }
             }
 
             else -> {
                 transactionResponseIcon.setImageResource(R.drawable.isw_failure)
                 isw_receipt_text.text = "Failed!"
-                isw_transaction_msg.text = result?.responseMessage//"Your transaction was unsuccessful"
+                isw_transaction_msg.text =
+                    result?.responseMessage//"Your transaction was unsuccessful"
             }
         }
     }
 
     private fun displayTransactionDetails() {
         isw_date_text.text = result?.dateTime
-        isw_amount_paid.text = result?.amount
+        isw_amount_paid.text = getString(R.string.isw_amount_with_naira_sign, result?.amount)
 
         val cardTypeName = when (result?.cardType) {
             CardType.MASTER -> "Master Card"
@@ -84,7 +88,7 @@ class ReceiptFragment : BaseFragment(TAG) {
 
     private fun logTransaction() {
         result?.let {
-            //resultViewModel.logTransaction(it)
+            resultViewModel.logTransaction(it)
         }
     }
 
@@ -97,18 +101,19 @@ class ReceiptFragment : BaseFragment(TAG) {
             }
             startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
-try {
-    isw_done.setOnClickListener {
-        val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
-        val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.isw_transaction, true)
-                .setLaunchSingleTop(true)
-                .build()
-        navigate(direction,navOptions)
-    }
-}catch (Ex:Exception){
-
-}
+        try {
+            transactionResponseIcon.setOnClickListener {
+                val direction =
+                    ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.isw_transaction, true)
+                    .setLaunchSingleTop(true)
+                    .build()
+                navigate(direction, navOptions)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
 
         isw_reversal.setOnClickListener {
@@ -134,11 +139,9 @@ try {
             printSlip?.let {
                 if (!hasPrintedCustomerCopy) {
                     resultViewModel.printSlip(UserType.Customer, it)
-                }
-                else if (hasPrintedMerchantCopy) {
+                } else if (hasPrintedMerchantCopy) {
                     resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
-                }
-                else {
+                } else {
                     // if has not printed merchant copy
                     // print merchant copy
                     resultViewModel.printSlip(UserType.Merchant, it)

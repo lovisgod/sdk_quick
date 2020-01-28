@@ -59,7 +59,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
     private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.stan,paymentModel.authorizationId)
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan(), paymentModel.stan, paymentModel.authorizationId)
     }
 
     private val originalTxnData by lazy {
@@ -167,10 +167,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                     }
                 }
             }
-        }
-
-        isw_toolbar.setNavigationOnClickListener {
-            navigateUp()
         }
     }
 
@@ -286,6 +282,14 @@ class CardTransactionsFragment : BaseFragment(TAG) {
             is EmvMessage.IncompletePin -> {
 
                 alert.setTitle("Invalid Pin")
+                alert.setMessage("Please press the CANCEL (X) button and try again")
+                alert.show()
+            }
+
+            // when the user enters an incomplete pin
+            is EmvMessage.EmptyPin -> {
+
+                alert.setTitle("Empty Pin")
                 alert.setMessage("Please press the CANCEL (X) button and try again")
                 alert.show()
             }

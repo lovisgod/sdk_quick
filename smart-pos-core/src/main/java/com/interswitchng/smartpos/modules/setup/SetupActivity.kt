@@ -125,6 +125,11 @@ class SetupActivity : AppCompatActivity() {
 
             }
 
+            // when pin is incorrect
+            is EmvMessage.EmptyPin -> {
+
+            }
+
             // when user cancels transaction
             is EmvMessage.TransactionCancelled -> {
 

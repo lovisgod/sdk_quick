@@ -27,17 +27,6 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/isw_guideline"/>
 
-    <ImageView
-            android:layout_marginTop="@dimen/alerter_activity_vertical_margin"
-            android:id="@+id/backImg"
-            android:scaleType="fitStart"
-            android:layout_marginHorizontal="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/isw_ic_navback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
     <TextView
             android:id="@+id/isw_pin_label"
             android:layout_width="wrap_content"
