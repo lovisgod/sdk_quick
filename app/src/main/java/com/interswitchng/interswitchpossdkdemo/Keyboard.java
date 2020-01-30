@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.interswitchng.smartpos.R;
+
 public class Keyboard implements View.OnClickListener {
 
     interface KeyBoardListener {
