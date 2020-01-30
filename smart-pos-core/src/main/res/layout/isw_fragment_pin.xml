@@ -92,12 +92,12 @@
                 android:digits="0123456789"
                 android:gravity="center"
                 android:inputType="numberPassword"
-                android:maxLength="4"
+                android:maxLength="6"
                 android:textIsSelectable="false"
                 android:clickable="false"
                 android:focusable="false"
                 android:textSize="20sp"
-                tools:text="44445"/>
+                tools:text="444459"/>
 
     </LinearLayout>
 

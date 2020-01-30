@@ -139,14 +139,17 @@ class ReceiptFragment : BaseFragment(TAG) {
             printSlip?.let {
                 if (!hasPrintedCustomerCopy) {
                     resultViewModel.printSlip(UserType.Customer, it)
+                    hasPrintedCustomerCopy = true
                 } else if (hasPrintedMerchantCopy) {
                     resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
+                    isw_print_receipt.isClickable = false
                 } else {
                     // if has not printed merchant copy
                     // print merchant copy
                     resultViewModel.printSlip(UserType.Merchant, it)
                     // change print text to re-print
-                    //printBtn.text = getString(R.string.isw_title_re_print_receipt)
+                    isw_print_receipt.text = getString(R.string.isw_title_re_print_receipt)
+                    hasPrintedMerchantCopy = true
                 }
             }
         }

@@ -173,7 +173,7 @@ internal class IsoServiceImpl(
 
     override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
         // getResult clear key
-        val cms =Constants.ISW_CMS
+        val cms = Constants.ISW_CMS
         //val cms2 = context.getString(R.string.isw_cms)
 
         // getResult master key & save

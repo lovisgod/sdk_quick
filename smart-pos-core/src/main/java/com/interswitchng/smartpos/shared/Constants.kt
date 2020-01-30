@@ -63,8 +63,8 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
 
     val ISW_TERMINAL_IP: String get() {
         val iswPos = IswPos.getInstance()
-        return if (iswPos.config.environment == Environment.Test) Constants.Test.ISW_TERMINAL_IP
-        else Constants.Production.ISW_TERMINAL_IP
+        return if (iswPos.config.environment == Environment.Test) Test.ISW_TERMINAL_IP
+        else Production.ISW_TERMINAL_IP
     }
 
     val ISW_DUKPT_IPEK: String get() {
@@ -106,7 +106,7 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
         const val ISW_IMAGE_BASE_URL = "https://mufasa.interswitchng.com/p/paymentgateway/"
         const val ISW_KIMONO_URL = "https://kimono.interswitchng.com/kmw/v2/kimonoservice"
         const val ISW_KIMONO_BASE_URL = "https://kimono.interswitchng.com/"
-        const val ISW_TERMINAL_IP = "196.6.103.73"
+        const val ISW_TERMINAL_IP = "196.6.103.18"
     }
 
     private object Test {

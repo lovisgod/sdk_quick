@@ -95,7 +95,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (IswPos.isConfigured()) {
             setTransactionType()
-            handleClicks()
             observeViewModel()
             cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         } else {
@@ -128,35 +127,17 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         }
     }
 
-    private fun handleClicks() {
-
-        // show PaymentTypeDialog and listen for clicks
-        showPaymentOptions()
-
-        isw_card_found_continue.setOnClickListener {
-            when (paymentModel.type) {
-                PaymentModel.TransactionType.CARD_PURCHASE -> {
-                    accountTypeDialog = AccountTypeDialog {
-                        accountType = when (it) {
-                            0 -> AccountType.Default
-                            1 -> AccountType.Savings
-                            2 -> AccountType.Current
-                            else -> AccountType.Default
-                        }
-
-                        runWithInternet {
-                            cardViewModel.startTransaction(
-                                context!!,
-                                paymentInfo,
-                                accountType,
-                                terminalInfo
-                            )
-                        }
+    private fun showAccountTypeDialog() {
+        when (paymentModel.type) {
+            PaymentModel.TransactionType.CARD_PURCHASE -> {
+                accountTypeDialog = AccountTypeDialog {
+                    accountType = when (it) {
+                        0 -> AccountType.Default
+                        1 -> AccountType.Savings
+                        2 -> AccountType.Current
+                        else -> AccountType.Default
                     }
-                    accountTypeDialog.show(childFragmentManager, TAG)
-                }
 
-                else -> {
                     runWithInternet {
                         cardViewModel.startTransaction(
                             context!!,
@@ -165,6 +146,18 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                             terminalInfo
                         )
                     }
+                }
+                accountTypeDialog.show(childFragmentManager, TAG)
+            }
+
+            else -> {
+                runWithInternet {
+                    cardViewModel.startTransaction(
+                        context!!,
+                        paymentInfo,
+                        accountType,
+                        terminalInfo
+                    )
                 }
             }
         }
@@ -373,6 +366,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
         //Show Card Detected View
         isw_card_found.show()
+
+        //Show account dialog
+        showAccountTypeDialog()
 
         when (paymentModel.type) {
             PaymentModel.TransactionType.CARD_PURCHASE ->  isw_change_payment_method_group.visibility = View.VISIBLE
