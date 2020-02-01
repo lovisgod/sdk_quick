@@ -17,5 +17,6 @@ data class TransactionInfo(
         val cardExpiry: String,
         val authorizationCode: String,
         val pinStatus: String,
-        val originalDateTime: String
+        val originalDateTime: String,
+        val responseCode: String
 )

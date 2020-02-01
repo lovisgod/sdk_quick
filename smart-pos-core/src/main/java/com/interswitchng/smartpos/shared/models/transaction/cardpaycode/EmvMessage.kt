@@ -81,4 +81,10 @@ sealed class EmvMessage {
 
     object ProcessingTransaction: EmvMessage()
 
+
+    /**
+     * Indicates an empty pin is entered as at the time the user presses enter.
+     */
+    object EmptyPin: EmvMessage()
+
 }

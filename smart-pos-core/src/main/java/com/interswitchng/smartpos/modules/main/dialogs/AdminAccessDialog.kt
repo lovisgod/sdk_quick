@@ -114,6 +114,11 @@ class AdminAccessDialog constructor(
 //                cardPin.setText(message.text)
             }
 
+            // when user types in pin
+            is EmvMessage.EmptyPin -> {
+//                cardPin.setText(message.text)
+            }
+
             // when pin has been validated
             is EmvMessage.PinOk -> {
 //                println("Called PIN OKAY")

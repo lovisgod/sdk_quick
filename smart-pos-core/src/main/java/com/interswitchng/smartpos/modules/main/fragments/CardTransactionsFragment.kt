@@ -65,7 +65,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     private val originalTxnData by lazy {
         paymentModel.originalDateAndTime?.let { timeDate ->
             paymentModel.originalStan?.let {
-                    stan ->
+                stan ->
                 OriginalTransactionInfoData(originalStan = stan,
                     originalTransmissionDateAndTime = timeDate)
             }
@@ -95,7 +95,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (IswPos.isConfigured()) {
             setTransactionType()
-            handleClicks()
+            isw_toolbar.setNavigationOnClickListener {
+                navigateUp()
+            }
             observeViewModel()
             cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         } else {
@@ -128,21 +130,16 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         }
     }
 
-    private fun handleClicks() {
-
-        // show PaymentTypeDialog and listen for clicks
-        showPaymentOptions()
-
-        isw_card_found_continue.setOnClickListener {
-            when (paymentModel.type) {
-                PaymentModel.TransactionType.CARD_PURCHASE -> {
-                    accountTypeDialog = AccountTypeDialog {
-                        accountType = when (it) {
-                            0 -> AccountType.Default
-                            1 -> AccountType.Savings
-                            2 -> AccountType.Current
-                            else -> AccountType.Default
-                        }
+    private fun showAccountTypeDialog() {
+        when (paymentModel.type) {
+            PaymentModel.TransactionType.CARD_PURCHASE -> {
+                accountTypeDialog = AccountTypeDialog {
+                    accountType = when (it) {
+                        0 -> AccountType.Default
+                        1 -> AccountType.Savings
+                        2 -> AccountType.Current
+                        else -> AccountType.Default
+                    }
 
                         runWithInternet {
                             cardViewModel.startTransaction(requireContext())
@@ -156,11 +153,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                         cardViewModel.startTransaction(requireContext())
                     }
                 }
-            }
-        }
-
-        isw_toolbar.setNavigationOnClickListener {
-            navigateUp()
         }
     }
 
@@ -290,6 +282,14 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 alert.show()
             }
 
+            // when the user enters an incomplete pin
+            is EmvMessage.EmptyPin -> {
+
+                alert.setTitle("Empty Pin")
+                alert.setMessage("Please press the CANCEL (X) button and try again")
+                alert.show()
+            }
+
             // when pin is incorrect
             is EmvMessage.PinError -> {
                 alert.setTitle("Invalid Pin")
@@ -370,6 +370,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
         //Show Card Detected View
         isw_card_found.show()
+
+        //Show account dialog
+        showAccountTypeDialog()
 
         when (paymentModel.type) {
             PaymentModel.TransactionType.CARD_PURCHASE ->  isw_change_payment_method_group.visibility = View.VISIBLE

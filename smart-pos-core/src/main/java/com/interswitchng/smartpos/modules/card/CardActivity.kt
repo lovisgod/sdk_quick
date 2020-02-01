@@ -290,6 +290,14 @@ class CardActivity : BaseActivity() {
                 cancelTransaction(message.reason)
             }
 
+            // when the user enters an incomplete pin
+            is EmvMessage.EmptyPin -> {
+
+                alert.setTitle("Empty Pin")
+                alert.setMessage("Please press the CANCEL (X) button and try again")
+                alert.show()
+            }
+
             // when transaction is processing
             is EmvMessage.ProcessingTransaction -> {
                 // change hint text

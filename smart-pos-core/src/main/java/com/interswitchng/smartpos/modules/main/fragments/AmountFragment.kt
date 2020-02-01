@@ -8,7 +8,6 @@ import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
-import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
@@ -44,8 +43,6 @@ class AmountFragment : BaseFragment(TAG) {
             PaymentModel.TransactionType.REFUND -> {
                 isw_proceed.text = getString(R.string.isw_refund)
             }
-
-
         }
     }
 
@@ -56,10 +53,6 @@ class AmountFragment : BaseFragment(TAG) {
             } else {
                 proceedWithPayment()
             }
-        }
-
-        isw_amount_toolbar.setNavigationOnClickListener {
-            navigateUp()
         }
     }
 

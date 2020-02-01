@@ -53,7 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+      <!--  <TextView
             android:paddingTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             android:text="DONE"
             android:id="@+id/isw_done"
             android:textColor="@android:color/white"
-            android:paddingRight="50dp" />
+            android:paddingRight="50dp" />-->
 
     </androidx.appcompat.widget.Toolbar>
 
