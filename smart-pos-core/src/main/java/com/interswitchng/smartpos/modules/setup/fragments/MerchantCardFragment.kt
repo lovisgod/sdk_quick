@@ -135,6 +135,9 @@ class MerchantCardFragment : BaseFragment(TAG) {
             is EmvMessage.ProcessingTransaction -> {
 
             }
+            EmvMessage.EmptyPin ->{
+
+            }
         }
     }
 

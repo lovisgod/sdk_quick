@@ -102,14 +102,14 @@ class ReceiptFragment : BaseFragment(TAG) {
             startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
         try {
-            isw_done.setOnClickListener {
-                val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
-                val navOptions = NavOptions.Builder()
-                    .setPopUpTo(R.id.isw_transaction, true)
-                    .setLaunchSingleTop(true)
-                    .build()
-                navigate(direction,navOptions)
-            }
+//            isw_done.setOnClickListener {
+//                val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
+//                val navOptions = NavOptions.Builder()
+//                    .setPopUpTo(R.id.isw_transaction, true)
+//                    .setLaunchSingleTop(true)
+//                    .build()
+//                navigate(direction,navOptions)
+//            }
         }catch (Ex:Exception){
 
         }

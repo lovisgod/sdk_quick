@@ -9,6 +9,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.isw_settings_home.*
 
 class SettingsHomeFragment : BaseFragment(TAG) {
@@ -38,10 +39,28 @@ class SettingsHomeFragment : BaseFragment(TAG) {
         }
 
         isw_download_settings_btn.setOnClickListener {
-           authorizeAndPerformAction { iswPos.gotoSettlementSelection() }
+              authorizeAndPerformAction { iswPos.goToSettingsUpdatePage() }
+             //iswPos.goToSettingsUpdatePage()
         }
     }
 
+
+    private lateinit var dialog: MerchantCardDialog
+    private  fun performOperation(){
+
+    }
+
+
+//    private val alert by lazy {
+//        DialogUtils.getAlertDialog(requireContext())
+//                .setTitle("Invalid Configuration")
+//                .setMessage("The configuration contains invalid parameters, please fix the errors and try saving again")
+//                .setPositiveButton(android.R.string.ok) { dialog, _ ->
+//
+//                    dialog.dismiss()
+//
+//                }
+//    }
     private fun authorizeAndPerformAction(action: () -> Unit) {
         val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
             if (isValidated) {
@@ -50,13 +69,32 @@ class SettingsHomeFragment : BaseFragment(TAG) {
                 toast("Unauthorized Access!!")
             }
         }
-        val dialog = MerchantCardDialog {
+
+        val alert by lazy {
+            DialogUtils.getAlertDialog(requireContext())
+                    .setTitle("Invalid Configuration")
+                    .setMessage("The configuration contains invalid parameters, please fix the errors and try saving again")
+                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
+
+                        dialog.dismiss()
+                        action.invoke()
+                    }
+        }
+         dialog = MerchantCardDialog {
             when (it) {
                 MerchantCardDialog.AUTHORIZED -> action.invoke()
                 MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
+                MerchantCardDialog.NOT_ENROLLED -> { alert.setTitle("Supervisor's card not enrolled")
+                    alert.setMessage("You have not yet enrolled a supervisor's card. Please enroll a supervisor's card on the settings page after downloading terminal configuration.")
+                    alert.show()
+
+                }
+
+
                 MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(requireFragmentManager(), FingerprintBottomDialog.TAG)
             }
         }
+        dialog.setIsEnrollment(false);
         dialog.show(requireFragmentManager(), MerchantCardDialog.TAG)
     }
 

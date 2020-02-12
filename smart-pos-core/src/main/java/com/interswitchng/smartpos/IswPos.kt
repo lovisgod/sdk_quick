@@ -77,7 +77,7 @@ class IswPos private constructor(private val app: Application, internal val devi
 
     fun gotoSettings() = showSettingsScreen()
 
-    fun gotoSettlementSelection() = showSettlementSelectionScreen()
+    fun goToSettingsUpdatePage() = showSettingsUpdateScreen()
 
     fun gotoDashboard() = showDashboardScreen()
 
@@ -185,7 +185,7 @@ class IswPos private constructor(private val app: Application, internal val devi
          * This method loads the settings screen
          */
         @JvmStatic
-        fun showSettlementSelectionScreen() = showScreen(TerminalSettingsActivity::class.java)
+        fun showSettingsUpdateScreen() = showScreen(TerminalSettingsActivity::class.java)
 
         @JvmStatic
         fun showMainActivity() = showScreen(MainActivity::class.java)

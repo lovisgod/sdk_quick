@@ -13,11 +13,17 @@ import androidx.core.widget.ImageViewCompat
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.card.model.CardTransactionState
+import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
+import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.setup.SetupActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.utilities.*
@@ -54,12 +60,19 @@ class TerminalSettingsActivity : MenuActivity() {
             supportActionBar?.setDisplayShowHomeEnabled(true)
         } else {
             if (TerminalInfo.get(store) != null) {
-                val intent = Intent(this, SetupActivity::class.java)
-                startActivity(intent)
-                finish()
+                //That is when the enrollment should take place
+//                val intent = Intent(this, SetupActivity::class.java)
+//                startActivity(intent)
+//                finish()
             }
-        }
+            else
+            {
+                //That is when the enrollment should take place
+            }
 
+
+        }
+        fetchSupervisorDetais()
         // setup button listeners
         setupButtons()
         // set the text values
@@ -231,7 +244,18 @@ class TerminalSettingsActivity : MenuActivity() {
 
         btnChangePassword.setOnClickListener {
             // validate user input
-            validateUserPassword()
+//          //  validateUserPassword()
+//            authorizeAndPerformAction {
+//
+//                validateUserPassword()
+//
+//
+//
+//            }
+
+
+            authorizeAndPerformAction { fetchSupervisorDetais() }
+
         }
     }
 
@@ -463,6 +487,63 @@ class TerminalSettingsActivity : MenuActivity() {
     }
 
 
+
+
+    private lateinit var dialog: MerchantCardDialog
+
+
+
+
+
+    private  fun performOperation(){
+
+    }
+    private fun authorizeAndPerformAction(action: () -> Unit) {
+        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+            if (isValidated) {
+                action.invoke()
+            } else {
+                toast("Unauthorized Access!!")
+            }
+        }
+
+        dialog = MerchantCardDialog {
+            when (it) {
+                MerchantCardDialog.AUTHORIZED -> action.invoke()
+                MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
+                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(supportFragmentManager, FingerprintBottomDialog.TAG)
+            }
+        }
+        dialog.setIsEnrollment(true)
+//        accountTypeDialog.show(childFragmentManager, TAG)
+        dialog.show(supportFragmentManager, MerchantCardDialog.TAG)
+    }
+
+
+
+
+    fun fetchSupervisorDetais(){
+    val savedPan = store.getString("M3RCHANT_PAN", "")
+    if(savedPan==""){
+        supervisorStatusHeader.setText("Supervisor's card not set")
+        btnChangePassword.setText("Enroll supervisor's card")
+
+
+    }
+   else{
+        supervisorStatusHeader.setText("")
+        btnChangePassword.setText("Change supervisor's card")
+    }
+
+}
+
+
+    private val cardViewModel: CardViewModel by viewModel()
+
+    val terminalInfo by lazy { TerminalInfo.get(store)!! }
+
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == RC_FILE_READ) {
 
@@ -489,5 +570,11 @@ class TerminalSettingsActivity : MenuActivity() {
         const val KEY_DATE_TERMINAL = "key_download_terminal_date"
         const val KEY_DATE_KEYS = "key_download_key_date"
         const val RC_FILE_READ = 49239
+
+
+        const val AUTHORIZED = 0
+        const val FAILED = 1
+        const val USE_FINGERPRINT = 2
+        const val TAG = "Merchant Card Dialog"
     }
 }

@@ -95,9 +95,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (IswPos.isConfigured()) {
             setTransactionType()
-            isw_toolbar.setNavigationOnClickListener {
-                navigateUp()
-            }
+//            isw_toolbar.setNavigationOnClickListener {
+//                navigateUp()
+//            }
             observeViewModel()
             cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         } else {
@@ -160,7 +160,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         change_payment_method.setOnClickListener {
             paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
                 when (it) {
-                    PaymentModel.PaymentType.CARD -> {}
+                    PaymentModel.PaymentType.CARD -> {
+
+                    }
                     PaymentModel.PaymentType.PAY_CODE -> {
                         val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentPayCode(paymentModel)
                         navigate(direction)

@@ -130,9 +130,11 @@ public class POSApplication extends Application   {
 ////
 //            device = service;
 
-//            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
-//            service.setCompanyLogo(bm);
-            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
+            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
+            service.setCompanyLogo(bm);
+
+
+          //  TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
             device = service;
             fingerprint = new TelpoPOSFingerprintImpl();
         }
