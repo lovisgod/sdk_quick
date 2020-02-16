@@ -57,9 +57,10 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
             val transaction = TransactionResponseModel()
             transaction.transactionType = PaymentModel.TransactionType.CARD_PURCHASE
             val direction =
-                ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptfragment(
+                ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptFragment(
                     payment,
-                    transaction
+                    transaction,
+                    false
                 )
             navigate(direction)
         }, 7000)

@@ -25,6 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.Koin.Companion.logger
+import org.koin.standalone.KoinComponent
 
 internal class TransactionResultViewModel(private val posDevice: POSDevice,
                                           private val emailService: EmailService,
@@ -143,7 +144,5 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
            val result = isoService.initiateReversal(terminalInfo, transactionInfo)
            logger.log(result?.responseCode!!)
         }
-
-
     }
 }

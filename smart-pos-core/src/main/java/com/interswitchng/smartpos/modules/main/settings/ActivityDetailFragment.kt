@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragmentDirections
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.models.payment
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import kotlinx.android.synthetic.main.isw_activity_detail.*
@@ -20,6 +23,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
     private val activityDetailFragmentArgs by navArgs<ActivityDetailFragmentArgs>()
     private val transactionLog by lazy { activityDetailFragmentArgs.TransactionLog }
     lateinit var  transactionType: String
+    lateinit var paymentType: PaymentType
 
     override val layoutId: Int
         get() = R.layout.isw_activity_detail
@@ -31,7 +35,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
     }
 
     private fun setUpUI() {
-        val paymentType = when (transactionLog.paymentType) {
+        paymentType = when (transactionLog.paymentType) {
             PaymentType.PayCode.ordinal -> PaymentType.PayCode
             PaymentType.USSD.ordinal -> PaymentType.USSD
             PaymentType.QR.ordinal -> PaymentType.QR
@@ -73,7 +77,14 @@ class ActivityDetailFragment : BaseFragment(TAG) {
                     else -> PaymentModel.TransactionType.CARD_PURCHASE
                 }
             }
-            val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentAmount(payment)
+
+            val transactionResult = transactionLog.toResult()
+            val transactionResponseModel = TransactionResponseModel(transactionResult = transactionResult,
+                transactionType = payment.type!! )
+
+            val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentReceipt(PaymentModel = payment,
+                TransactionResponseModel = transactionResponseModel, IsFromActivityDetail = true)
+
             navigate(direction)
         }
 

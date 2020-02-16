@@ -2,7 +2,6 @@ package com.interswitchng.smartpos.shared.services.iso8583
 
 import android.content.Context
 import com.interswitchng.smartpos.IswPos.Companion.getNextStan
-import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_PIN_KEY
@@ -13,7 +12,6 @@ import com.interswitchng.smartpos.shared.interfaces.library.IsoSocket
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.*
@@ -28,7 +26,6 @@ import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
 import java.io.UnsupportedEncodingException
 import java.text.ParseException
-import java.time.LocalDateTime
 import java.util.*
 
 internal class IsoServiceImpl(
@@ -41,17 +38,13 @@ internal class IsoServiceImpl(
 
     override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
         //TODO implememnt call home functionality
-
-        return  false;
+        return  false
     }
-
 
     private val logger by lazy { Logger.with("IsoServiceImpl") }
 
-
     private val messageFactory by lazy {
         try {
-
             val data = FileUtils.getFromAssets(context)
             val string = String(data!!)
             val stringReader = StringReader(string)
@@ -116,8 +109,6 @@ internal class IsoServiceImpl(
 
         return null
     }
-
-
 
     private fun makeKeyCall(terminalId: String, ip: String, port: Int, code: String, key: String): String? {
         try {
@@ -280,75 +271,6 @@ internal class IsoServiceImpl(
 
         return false
     }
-//
-//
-//    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
-//        try {
-//            val code = "9C0000"
-//            val field62 = "01009280824266"
-//
-//            val now = Date()
-//            val stan = getNextStan()
-//
-//            val message = NibssIsoMessage(messageFactory.newMessage(0x800))
-//            message
-//                    .setValue(3, code)
-//                    .setValue(7, timeAndDateFormatter.format(now))
-//                    .setValue(11, stan)
-//                    .setValue(12, timeFormatter.format(now))
-//                    .setValue(13, monthFormatter.format(now))
-//                    .setValue(41, terminalId)
-//                    .setValue(62, field62)
-//
-//
-//            val bytes = message.message.writeData()
-//            val length = bytes.size
-//            val temp = ByteArray(length - 64)
-//            if (length >= 64) {
-//                System.arraycopy(bytes, 0, temp, 0, length - 64)
-//            }
-//
-//
-//            // confirm that key was downloaded
-//            val key = store.getString(KEY_SESSION_KEY, "")
-//            if (key.isEmpty()) return false
-//
-//            val hashValue = IsoUtils.getMac(key, temp) //SHA256
-//            message.setValue(64, hashValue)
-//            message.dump(System.out, "parameter request ---- ")
-//
-//            // set server Ip and port
-//            socket.setIpAndPort(ip, port)
-//
-//            // open socket connection
-//            socket.open()
-//
-//            // send request and receive response
-//            val response = socket.sendReceive(message.message.writeData())
-//            // close connection
-//            socket.close()
-//
-//            // read message
-//            val responseMessage = NibssIsoMessage(messageFactory.parseMessage(response, 0))
-//            responseMessage.dump(System.out, "parameter response ---- ")
-//
-//
-//            // getResult string formatted terminal info
-//            val terminalDataString = responseMessage.message.getField<String>(62).value
-//            logger.log("Terminal Data String => $terminalDataString")
-//
-//            // parse and save terminal info
-//            val terminalData = TerminalInfoParser.parse(terminalId, ip, port, terminalDataString, store)?.also { it.persist(store) }
-//            logger.log("Terminal Data => $terminalData")
-//
-//            return true
-//        } catch (e: Exception) {
-//            logger.log(e.localizedMessage)
-//            e.printStackTrace()
-//        }
-//
-//        return false
-//    }
 
     override fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {
@@ -539,7 +461,6 @@ internal class IsoServiceImpl(
                 return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, transmissionDateTime = timeDateNow)
             }
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
             e.printStackTrace()
             return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
@@ -631,7 +552,6 @@ internal class IsoServiceImpl(
                 return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = "")
             }
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
             e.printStackTrace()
             return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }

@@ -208,7 +208,7 @@
         confirmation sms shortly.
     </string>
     <string name="isw_sent">Sent</string>
-    <string name="customer_info">Customer Info</string>
+    <string name="isw_customer_info">Customer Info</string>
     <string name="isw_raise_dispute">Raise a Dispute</string>
     <string name="isw_dispute_status">Dispute Status</string>
     <string name="isw_get_reward">Get a Reward</string>
@@ -225,6 +225,10 @@
     <string name="isw_title_currency_code">Currency Code</string>
     <string name="isw_title_terminal_capabilities">Terminal Capabilities</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="isw_receipt_date">Date:  %s</string>
+    <string name="isw_receipt_payment_type">Payment type:  %s</string>
+    <string name="isw_receipt_amount">Amount: # %s</string>
+
+
 </resources>
