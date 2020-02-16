@@ -422,8 +422,9 @@ internal class IsoServiceImpl(
 
 
             val request = message.message.writeData()
-            logger.log(IsoUtils.bytesToHex(request))
+            logger.log("Purchase Request HEX ---> ${IsoUtils.bytesToHex(request)}")
             val response = socket.sendReceive(request)
+            logger.log("Purchase Response HEX ---> ${IsoUtils.bytesToHex(response!!)}")
             // close connection
             socket.close()
 
@@ -520,7 +521,9 @@ internal class IsoServiceImpl(
 
 
             val request = message.message.writeData()
+            logger.log("Refund Request HEX is --->${IsoUtils.bytesToHex(request)}")
             val response = socket.sendReceive(request)
+            logger.log("Refund Response HEX is --->${IsoUtils.bytesToHex(response!!)}")
             // close connection
             socket.close()
 

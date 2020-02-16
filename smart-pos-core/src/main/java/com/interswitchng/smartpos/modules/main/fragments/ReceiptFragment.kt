@@ -142,7 +142,6 @@ class ReceiptFragment : BaseFragment(TAG) {
                     hasPrintedCustomerCopy = true
                 } else if (hasPrintedMerchantCopy) {
                     resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
-                    isw_print_receipt.isClickable = false
                 } else {
                     // if has not printed merchant copy
                     // print merchant copy
