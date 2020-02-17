@@ -85,8 +85,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="17dp"
                 android:layout_marginLeft="17dp"
-                android:textSize="12sp"
-                android:visibility="gone"
+                android:textSize="14sp"
+                android:visibility="visible"
                 tools:text="Payment Method"
                 app:layout_constraintStart_toEndOf="@+id/isw_transaction_icon"
                 app:layout_constraintTop_toBottomOf="@+id/isw_transaction_name" />
@@ -114,16 +114,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_text" />
 
             <TextView
-                android:id="@+id/isw_reference_id_text"
+                android:id="@+id/isw_transaction_type_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="#0D0E11"
                 android:textSize="14sp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="@+id/isw_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_value_text"
-                tools:text="REF ID: #00ISJOJSNJDNU8DW904" />
+                tools:text="Transaction Type: Purchase" />
 
             <TextView
                 android:id="@+id/isw_textview6"
@@ -134,7 +134,7 @@
                 android:textSize="16sp"
                 android:text="Other details"
                 app:layout_constraintStart_toStartOf="@+id/isw_guideline"
-                app:layout_constraintTop_toBottomOf="@+id/isw_reference_id_text" />
+                app:layout_constraintTop_toBottomOf="@+id/isw_transaction_type_text" />
 
             <View
                 android:id="@+id/isw_divider"
@@ -200,7 +200,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button"
-                android:id="@+id/isw_refund_label"
+                android:id="@+id/isw_more_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -221,9 +221,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/isw_time_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:rippleColor="@android:color/white"
-                app:icon="@drawable/isw_ic_print"
                 app:iconGravity="textStart"
-                android:text="START REFUND" />
+                android:text="@string/isw_more" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

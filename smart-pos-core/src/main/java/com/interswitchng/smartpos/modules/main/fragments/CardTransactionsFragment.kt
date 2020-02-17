@@ -321,6 +321,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         isw_scanning_card.show()
     }
 
+<<<<<<< HEAD
 //    private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
 //
 //        when (transactionResponse) {
@@ -365,6 +366,53 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 //            }
 //        }
 //    }
+=======
+    private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
+
+        when (transactionResponse) {
+            is None -> logger.log("Unable to complete transaction")
+            is Some -> {
+                // extract info
+                val response = transactionResponse.value.first
+                val emvData = transactionResponse.value.second
+                val txnInfo =
+                    TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+
+                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                val pinStatus = when {
+                    pinOk || response.responseCode == IsoUtils.OK -> "PIN Verified"
+                    else -> "PIN Unverified"
+                }
+
+                val now = Date()
+                transactionResult = TransactionResult(
+                    paymentType = PaymentType.Card,
+                    dateTime = DisplayUtils.getIsoString(now),
+                    amount = paymentModel.amount.toString(),
+                    type = transactionType,
+                    authorizationCode = response.authCode,
+                    responseMessage = responseMsg,
+                    responseCode = response.responseCode,
+                    cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
+                    stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
+                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.iccString, src = txnInfo.src,
+                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
+                    month = response.month, time = response.time,
+                    originalTransmissionDateTime = response.transmissionDateTime
+                )
+
+                dismissAlert()
+
+                val transactionResponseModel = TransactionResponseModel(transactionResult = transactionResult,
+                    transactionType = PaymentModel.TransactionType.CARD_PURCHASE)
+
+                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentReceipt(PaymentModel = paymentModel,
+                    TransactionResponseModel = transactionResponseModel, IsFromActivityDetail = false)
+                navigate(direction)
+            }
+        }
+    }
+>>>>>>> 40d6d329fc68f06c5fc2cb178fde3c40f80d4ffc
 
     private fun showCardDetectedView() {
         //Hide Scanning Card View

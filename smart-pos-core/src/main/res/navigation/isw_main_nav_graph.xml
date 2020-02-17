@@ -111,6 +111,7 @@
 
         <argument android:name="PaymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
+<<<<<<< HEAD
 
         <argument android:name="TransactionType"
             app:argType="com.interswitchng.smartpos.shared.models.printer.info.TransactionType"/>
@@ -129,6 +130,11 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"/>
 
+=======
+        <action android:id="@+id/isw_action_isw_fragment_processing_transaction_to_isw_receipt_fragment"
+                app:destination="@id/isw_fragment_receipt" app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"/>
+>>>>>>> 40d6d329fc68f06c5fc2cb178fde3c40f80d4ffc
         <action android:id="@+id/isw_action_isw_fragment_processing_transaction_to_isw_transactionfailurefragment"
             app:destination="@id/isw_transactionfailurefragment"/>
 
@@ -143,6 +149,9 @@
         <argument android:name="TransactionResponseModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.TransactionResponseModel"/>
 
+        <argument android:name="IsFromActivityDetail"
+            app:argType= "boolean"/>
+
         <action
             android:id="@+id/isw_action_goto_fragment_transaction"
             app:destination="@id/isw_transaction"
@@ -151,11 +160,13 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
 
-
-        <action android:id="@+id/isw_action_isw_receiptfragment_to_isw_transaction"
-            app:destination="@id/isw_transaction" app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_in_right"/>
-
+        <action
+            android:id="@+id/isw_action_goto_fragment_amount"
+            app:destination="@id/isw_fragment_amount"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment android:id="@+id/isw_fragment_card_details"
@@ -268,15 +279,6 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
 
-        <action
-            android:id="@+id/isw_action_goto_fragment_amount"
-            app:destination="@id/isw_fragment_amount"
-            app:popUpTo="@id/isw_transaction"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-
         <argument android:name="TransactionLog"
             app:argType="com.interswitchng.smartpos.shared.models.transaction.TransactionLog"/>
     </fragment>
@@ -343,17 +345,6 @@
         <action android:id="@+id/isw_action_isw_billpaymentfragment2_to_isw_fragment_pay_code"
                 app:destination="@id/isw_fragment_pay_code" app:enterAnim="@anim/slide_in_right"
                 app:exitAnim="@anim/slide_out_left"/>
-    </fragment>
-    <fragment android:id="@+id/isw_receiptfragment"
-              android:name="com.interswitchng.smartpos.modules.main.fragments.ReceiptFragment"
-              android:label="ReceiptFragment">
-        <argument android:name="PaymentModel"
-                  app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel"/>
-        <argument android:name="TransactionResponseModel"
-                  app:argType="com.interswitchng.smartpos.modules.main.models.TransactionResponseModel"/>
-        <action android:id="@+id/isw_action_isw_receiptfragment_to_isw_transaction"
-                app:destination="@id/isw_transaction" app:enterAnim="@anim/slide_in_left"
-                app:exitAnim="@anim/slide_in_right"/>
     </fragment>
     <fragment android:id="@+id/isw_paycodefragment"
               android:name="com.interswitchng.smartpos.modules.main.fragments.PayCodeFragment"

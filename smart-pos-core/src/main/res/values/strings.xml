@@ -154,14 +154,16 @@
     <string name="isw_status">Status</string>
     <string name="isw_processing_transaction">Processing %s</string>
     <string name="isw_share_receipt">Share Receipt</string>
-    <string name="isw_pre_authorize">PRE-AUTHORIZE</string>
-    <string name="isw_refund">REFUND</string>
+    <string name="isw_pre_authorize">Pre-Authorization</string>
+    <string name="isw_refund">Refund</string>
+    <string name="isw_reversal">Reversal</string>
     <string name="isw_pre_authorization_completed">Pre-Authorization Completed!</string>
     <string name="isw_thank_you">Thank You!</string>
     <string name="isw_admin_access_required">Admin access required</string>
     <string name="isw_enter_card_details">Enter Card Details</string>
     <string name="isw_card_not_present_completed">Card Not Present Completed</string>
     <string name="isw_completion_completed">Completion Completed</string>
+    <string name="isw_transaction_type">Transaction Type: %s</string>
 
     <string-array name="isw_account_types">
         <item name="default_account">Default Account</item>
@@ -218,7 +220,7 @@
         confirmation sms shortly.
     </string>
     <string name="isw_sent">Sent</string>
-    <string name="customer_info">Customer Info</string>
+    <string name="isw_customer_info">Customer Info</string>
     <string name="isw_raise_dispute">Raise a Dispute</string>
     <string name="isw_dispute_status">Dispute Transaction Status</string>
     <string name="isw_get_reward">Get a Reward</string>
@@ -242,4 +244,11 @@
     <string name="isw_title_country_code">Country Code</string>
     <string name="isw_title_currency_code">Currency Code</string>
     <string name="isw_title_terminal_capabilities">Terminal Capabilities</string>
+
+
+    <string name="isw_receipt_date">Date:  %s</string>
+    <string name="isw_receipt_payment_type">Payment type:  %s</string>
+    <string name="isw_receipt_amount">Amount: # %s</string>
+
+
 </resources>

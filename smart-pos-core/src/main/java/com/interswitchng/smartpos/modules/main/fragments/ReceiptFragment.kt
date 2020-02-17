@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.main.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
@@ -23,12 +24,16 @@ class ReceiptFragment : BaseFragment(TAG) {
     private val receiptFragmentArgs by navArgs<ReceiptFragmentArgs>()
     private val transactionResponseModel by lazy { receiptFragmentArgs.TransactionResponseModel }
     private val result by lazy { transactionResponseModel.transactionResult }
+    private val isFromActivityDetail by lazy { receiptFragmentArgs.IsFromActivityDetail }
+    private val type by lazy { receiptFragmentArgs.PaymentModel.type }
+    private val paymentModel by lazy { receiptFragmentArgs.PaymentModel }
 
     private val resultViewModel: TransactionResultViewModel by viewModel()
 
     private var printSlip: TransactionSlip? = null
     private var hasPrintedMerchantCopy = false
     private var hasPrintedCustomerCopy = false
+    private var hasClickedReversal = false
 
 
     override val layoutId: Int
@@ -70,8 +75,8 @@ class ReceiptFragment : BaseFragment(TAG) {
     }
 
     private fun displayTransactionDetails() {
-        isw_date_text.text = result?.dateTime
-        isw_amount_paid.text = getString(R.string.isw_amount_with_naira_sign, result?.amount)
+        isw_date_text.text = getString(R.string.isw_receipt_date, result?.dateTime)
+        isw_amount_paid.text = getString(R.string.isw_receipt_amount, result?.amount)
 
         val cardTypeName = when (result?.cardType) {
             CardType.MASTER -> "Master Card"
@@ -83,24 +88,16 @@ class ReceiptFragment : BaseFragment(TAG) {
             else -> "Unknown Card"
         }
 
-        isw_payment_type.text = cardTypeName
+        isw_payment_type.text = getString(R.string.isw_receipt_payment_type, cardTypeName)
     }
 
     private fun logTransaction() {
         result?.let {
-            resultViewModel.logTransaction(it)
+            if (isFromActivityDetail.not()) resultViewModel.logTransaction(it)
         }
     }
 
     private fun handleClicks() {
-        isw_share_receipt.setOnClickListener {
-            val shareIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, "")
-                type = "image/*"
-            }
-            startActivity(Intent.createChooser(shareIntent, "Select Application"))
-        }
         try {
 //            isw_done.setOnClickListener {
 //                val direction = ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
@@ -116,7 +113,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         try {
             transactionResponseIcon.setOnClickListener {
                 val direction =
-                    ReceiptFragmentDirections.iswActionIswReceiptfragmentToIswTransaction()
+                    ReceiptFragmentDirections.iswActionGotoFragmentTransaction()
                 val navOptions = NavOptions.Builder()
                     .setPopUpTo(R.id.isw_transaction, true)
                     .setLaunchSingleTop(true)
@@ -127,20 +124,62 @@ class ReceiptFragment : BaseFragment(TAG) {
             e.printStackTrace()
         }
 
-
-        isw_reversal.setOnClickListener {
-            val txnInfo = TransactionInfo.fromTxnResult(result!!)
-            resultViewModel.initiateReversal(terminalInfo, txnInfo)
+        isw_share_receipt.setOnClickListener {
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, "")
+                type = "image/*"
+            }
+            startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
 
+        isw_reversal.setOnClickListener {
+            if (hasClickedReversal.not()) {
+                val txnInfo = TransactionInfo.fromTxnResult(result!!)
+                resultViewModel.initiateReversal(terminalInfo, txnInfo)
+                hasClickedReversal = true
+                it.isClickable = false
+                Toast.makeText(context, "You have initiated a reversal", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        isw_refund.setOnClickListener {
+            paymentModel.type = PaymentModel.TransactionType.REFUND
+            val direction = ReceiptFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
+            navigate(direction)
+        }
     }
 
     private fun setUpUI() {
         displayTransactionResultIconAndMessage()
         displayTransactionDetails()
         logTransaction()
+        displayButtons()
         handleClicks()
         handlePrint()
+    }
+
+    private fun displayButtons() {
+        if (isFromActivityDetail) {
+            when(type) {
+                PaymentModel.TransactionType.CARD_PURCHASE -> {
+                    isw_reversal.visibility = View.VISIBLE
+                    isw_refund.visibility = View.VISIBLE
+                }
+                else -> {}
+            }
+
+            isw_print_receipt.apply {
+                visibility = View.VISIBLE
+                text = getString(R.string.isw_title_re_print_receipt)
+            }
+
+            isw_share_receipt.visibility = View.VISIBLE
+
+        } else {
+            isw_print_receipt.visibility = View.VISIBLE
+        }
+
     }
 
     private fun handlePrint() {
@@ -154,7 +193,6 @@ class ReceiptFragment : BaseFragment(TAG) {
                     hasPrintedCustomerCopy = true
                 } else if (hasPrintedMerchantCopy) {
                     resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
-                    isw_print_receipt.isClickable = false
                 } else {
                     // if has not printed merchant copy
                     // print merchant copy

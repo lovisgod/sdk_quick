@@ -103,6 +103,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                     }
                 }
             }
+<<<<<<< HEAD
         }
     }
 
@@ -144,6 +145,18 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                     csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
                     month = response.month, time = response.time,
                     originalTransmissionDateTime = response.transmissionDateTime
+=======
+        }, 6000)
+
+        Handler().postDelayed({
+            val transaction = TransactionResponseModel()
+            transaction.transactionType = PaymentModel.TransactionType.CARD_PURCHASE
+            val direction =
+                ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptFragment(
+                    payment,
+                    transaction,
+                    false
+>>>>>>> 40d6d329fc68f06c5fc2cb178fde3c40f80d4ffc
                 )
 
                 dismissAlert()
