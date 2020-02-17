@@ -11,21 +11,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.10" />
+        app:layout_constraintGuide_percent="0.20" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/isw_guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.15" />
+        app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/isw_guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.05" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/isw_guideline2"
@@ -41,6 +41,31 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/isw_guideline" />
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/isw_processing_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:contentInsetStartWithNavigation="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--  <TextView
+              android:paddingTop="30dp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:paddingEnd="50dp"
+              android:paddingBottom="30dp"
+              android:text="DONE"
+              android:id="@+id/isw_done"
+              android:textColor="@android:color/white"
+              android:paddingRight="50dp" />-->
+
+    </androidx.appcompat.widget.Toolbar>
+
     <View
         android:id="@+id/isw_view"
         android:layout_width="match_parent"
@@ -48,14 +73,13 @@
         android:background="@drawable/isw_card_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/isw_guideline"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="1.0"
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageView
         android:id="@+id/transactionResponseIcon"
         android:layout_width="100dp"
         android:layout_height="0dp"
-        android:src="@drawable/isw_round_done_padded"
         tools:src="@drawable/isw_failure"
         app:layout_constraintBottom_toTopOf="@+id/isw_guideline4"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
@@ -71,7 +95,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_guideline4" />
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline4" />
 
     <TextView
         android:id="@+id/isw_transaction_msg"
@@ -87,12 +111,12 @@
         android:id="@+id/isw_materialcardview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="50dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toBottomOf="@+id/isw_amount_paid"
+        app:layout_constraintBottom_toTopOf="@+id/isw_print_receipt"
         app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/isw_guideline2"
@@ -102,61 +126,107 @@
 
     <TextView
         android:id="@+id/isw_date_text"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        tools:text="Date: 2019-11-22 / 10:00AM"
+        android:layout_marginTop="10dp"
+        tools:text="2019-11-22 / 10:00AM"
+        app:layout_constraintBottom_toTopOf="@+id/isw_textview7"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
         app:layout_constraintTop_toTopOf="@+id/isw_materialcardview"
         app:layout_constraintVertical_chainStyle="packed" />
 
-
-
     <TextView
-        android:id="@+id/isw_payment_type"
-        android:layout_width="0dp"
+        android:visibility="gone"
+        android:id="@+id/isw_textview7"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        tools:text="Payment Type: Master card"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:text="Customer Name"
+        android:textColor="#8097B1"
+        app:layout_constraintBottom_toTopOf="@+id/isw_customer_name"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
         app:layout_constraintTop_toBottomOf="@+id/isw_date_text" />
 
     <TextView
-        android:id="@+id/isw_amount_paid"
-        android:layout_width="0dp"
+        android:visibility="gone"
+        android:id="@+id/isw_customer_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        tools:text="Amount: NGN 10,000.00"
+        android:text="Captain Kowaski"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_textview9"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview7" />
+
+    <TextView
+        android:id="@+id/isw_textview9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Payment Type"
+        android:textColor="#8097B1"
+        app:layout_constraintBottom_toTopOf="@+id/isw_payment_type"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_customer_name" />
+
+    <TextView
+        android:id="@+id/isw_payment_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="First Bank Master Card"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_textview10"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview9" />
+
+    <TextView
+        android:id="@+id/isw_textview10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Amount Paid"
+        android:textColor="#8097B1"
+        app:layout_constraintBottom_toTopOf="@+id/isw_amount_paid"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_payment_type" />
+
+    <TextView
+        android:id="@+id/isw_amount_paid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="NGN 10,000.00"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_materialcardview"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_payment_type" />
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview10" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/isw_print_receipt"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginTop="30dp"
-        android:text="@string/isw_title_print_receipt"
-        android:visibility="visible"
         app:icon="@drawable/isw_ic_print"
         app:iconGravity="textStart"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/isw_title_print_receipt"
+        app:layout_constraintBottom_toTopOf="@+id/isw_share_receipt"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
@@ -165,14 +235,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/isw_share_receipt"
-        style="@style/Widget.MaterialComponents.Button"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginBottom="5dp"
         android:text="@string/isw_share_receipt"
         app:strokeWidth="1dp"
-        android:visibility="gone"
         app:strokeColor="@color/iswColorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:icon="@drawable/isw_ic_share"
         app:iconGravity="textStart"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
@@ -183,36 +253,19 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/isw_reversal"
-        style="@style/Widget.MaterialComponents.Button"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="0dp"
-        android:visibility="gone"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginBottom="5dp"
-        android:text="@string/isw_reversal"
+        android:text="Do Reversal"
         app:strokeWidth="1dp"
         app:strokeColor="@color/iswColorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:iconGravity="textStart"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_share_receipt"
-        app:rippleColor="@android:color/white" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/isw_refund"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginBottom="5dp"
-        android:text="@string/isw_refund"
-        android:visibility="gone"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/iswColorPrimary"
-        app:iconGravity="textStart"
-        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_reversal"
         app:rippleColor="@android:color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

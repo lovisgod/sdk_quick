@@ -44,14 +44,33 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         when (payment.type) {
-            PaymentModel.TransactionType.CARD_PURCHASE -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Transaction")
-            PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Pre-Authorization")
-            PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Card-Not-Present")
-            else -> isw_processing_text.text = getString(R.string.isw_processing_transaction, "Completion")
+            PaymentModel.TransactionType.CARD_PURCHASE -> isw_processing_text.text =
+                getString(R.string.isw_processing_transaction, "Transaction")
+            PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_processing_text.text =
+                getString(R.string.isw_processing_transaction, "Pre-Authorization")
+            PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_processing_text.text =
+                getString(R.string.isw_processing_transaction, "Card-Not-Present")
+            else -> isw_processing_text.text =
+                getString(R.string.isw_processing_transaction, "Completion")
         }
-        isw_connecting.setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_gray_stroke, 0, 0, 0)
-        isw_authenticating.setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_gray_stroke, 0, 0, 0)
-        isw_receiving.setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_gray_stroke, 0, 0, 0)
+        isw_connecting.setCompoundDrawablesWithIntrinsicBounds(
+            R.drawable.isw_round_gray_stroke,
+            0,
+            0,
+            0
+        )
+        isw_authenticating.setCompoundDrawablesWithIntrinsicBounds(
+            R.drawable.isw_round_gray_stroke,
+            0,
+            0,
+            0
+        )
+        isw_receiving.setCompoundDrawablesWithIntrinsicBounds(
+            R.drawable.isw_round_gray_stroke,
+            0,
+            0,
+            0
+        )
 
         observeViewModel()
 
@@ -83,19 +102,31 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                         }
                         CardViewModel.OnlineProcessResult.ONLINE_APPROVED -> {
                             isw_connecting.apply {
-                                setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_done, 0,0,0)
+                                setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.isw_round_done,
+                                    0,
+                                    0,
+                                    0
+                                )
                                 text = "Connected"
 
-                                isw_connection_progress.progress = isw_connection_progress.progress + 30
+                                isw_connection_progress.progress =
+                                    isw_connection_progress.progress + 30
                             }
 
                             runBlocking { delay(1000) }
 
                             isw_authenticating.apply {
-                                setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_done, 0,0,0)
+                                setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.isw_round_done,
+                                    0,
+                                    0,
+                                    0
+                                )
                                 text = "Authenticated"
 
-                                isw_connection_progress.progress = isw_connection_progress.progress + 30
+                                isw_connection_progress.progress =
+                                    isw_connection_progress.progress + 30
                             }
 
                             context?.toast("Transaction Approved")
@@ -112,7 +143,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
             is None -> logger.log("Unable to complete transaction")
             is Some -> {
                 isw_receiving.apply {
-                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_done, 0,0,0)
+                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_done, 0, 0, 0)
                     text = "Received"
 
                     isw_connection_progress.progress = isw_connection_progress.progress + 30
@@ -138,20 +169,34 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                     authorizationCode = response.authCode,
                     responseMessage = responseMsg,
                     responseCode = response.responseCode,
-                    cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
-                    stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.iccString, src = txnInfo.src,
-                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
-                    month = response.month, time = response.time,
+                    cardPan = txnInfo.cardPAN,
+                    cardExpiry = txnInfo.cardExpiry,
+                    cardType = cardType,
+                    stan = response.stan,
+                    pinStatus = pinStatus,
+                    AID = emvData.AID,
+                    code = "",
+                    telephone = iswPos.config.merchantTelephone,
+                    icc = txnInfo.iccString,
+                    src = txnInfo.src,
+                    csn = txnInfo.csn,
+                    cardPin = txnInfo.cardPIN,
+                    cardTrack2 = txnInfo.cardTrack2,
+                    month = response.month,
+                    time = response.time,
                     originalTransmissionDateTime = response.transmissionDateTime
                 )
 
                 dismissAlert()
 
-                val direction = ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptfragment(payment,
-                    TransactionResponseModel(transactionResult = transactionResult,
-                        transactionType = PaymentModel.TransactionType.CARD_PURCHASE)
-                )
+                val direction =
+                    ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptFragment(
+                        payment,
+                        TransactionResponseModel(
+                            transactionResult = transactionResult,
+                            transactionType = PaymentModel.TransactionType.CARD_PURCHASE
+                        ), false
+                    )
                 navigate(direction)
             }
         }

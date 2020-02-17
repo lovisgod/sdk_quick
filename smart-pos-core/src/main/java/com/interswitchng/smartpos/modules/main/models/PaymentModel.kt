@@ -22,7 +22,7 @@ data class PaymentModel (
     }
 
     enum class TransactionType {
-        CARD_PURCHASE, PRE_AUTHORIZATION, CARD_NOT_PRESENT, COMPLETION, REFUND, ECASH, ECHANGE
+        CARD_PURCHASE, PRE_AUTHORIZATION, CARD_NOT_PRESENT, COMPLETION, REFUND, ECASH, ECHANGE, REVERSAL
     }
 
     enum class PaymentType {

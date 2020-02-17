@@ -30,7 +30,9 @@ class SettingsHomeFragment : BaseFragment(TAG) {
 
     private fun handleClicks() {
         isw_account_container.setOnClickListener {
-            authorizeAndPerformAction { it.findNavController().navigate(R.id.isw_goto_account_fragment_action) }
+            authorizeAndPerformAction {
+                it.findNavController().navigate(R.id.isw_goto_account_fragment_action)
+            }
         }
 
         isw_settings_toolbar_label.setOnClickListener {
@@ -38,23 +40,26 @@ class SettingsHomeFragment : BaseFragment(TAG) {
         }
 
         isw_download_settings_btn.setOnClickListener {
-           authorizeAndPerformAction { iswPos.gotoSettlementSelection() }
+            authorizeAndPerformAction { iswPos.gotoSettlementSelection() }
         }
     }
 
     private fun authorizeAndPerformAction(action: () -> Unit) {
-        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+        val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
             if (isValidated) {
                 action.invoke()
             } else {
                 toast("Unauthorized Access!!")
             }
         }
-        val dialog = MerchantCardDialog {
+        val dialog = MerchantCardDialog(isAuthorization = true) {
             when (it) {
                 MerchantCardDialog.AUTHORIZED -> action.invoke()
                 MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
-                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(requireFragmentManager(), FingerprintBottomDialog.TAG)
+                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(
+                    requireFragmentManager(),
+                    FingerprintBottomDialog.TAG
+                )
             }
         }
         dialog.show(requireFragmentManager(), MerchantCardDialog.TAG)
