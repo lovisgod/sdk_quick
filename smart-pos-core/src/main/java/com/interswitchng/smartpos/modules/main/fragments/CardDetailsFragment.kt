@@ -7,15 +7,16 @@ import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.models.TransactionResultModel
 import com.interswitchng.smartpos.modules.main.models.cardModel
-import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import kotlinx.android.synthetic.main.isw_fragment_card_details.*
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class CardDetailsFragment : BaseFragment(TAG) {
 
@@ -25,12 +26,10 @@ class CardDetailsFragment : BaseFragment(TAG) {
     private lateinit var accountTypeDialog: AccountTypeDialog
     private var accountType = AccountType.Default
 
-    private val cardViewModel: CardViewModel by sharedViewModel()
-    private lateinit var paymentInfo: PaymentInfo
-
-    private val DEFAULT_AMOUNT = "0.00"
-
-    private var amount = Constants.EMPTY_STRING
+    private val cardViewModel: CardViewModel by viewModel()
+    private val paymentInfo by lazy {
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+    }
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_card_details
@@ -53,27 +52,27 @@ class CardDetailsFragment : BaseFragment(TAG) {
                     2 -> AccountType.Current
                     else -> AccountType.Default
                 }
-                paymentModel.newPayment {
-                    amount = isw_amount.text.toString().toInt()
-                }
 
-//                runWithInternet {
-//                    cardViewModel.processOnline(
-//                        paymentInfo,
-//                        terminalInfo
-//                    )
-//                }
+                runWithInternet {
+                    cardViewModel.processOnline(
+                            paymentInfo,
+                            accountType,
+                            terminalInfo
+
+                    )
+                }
             }
-            paymentInfo = PaymentInfo(paymentModel.amount, IswPos.getNextStan())
             accountTypeDialog.show(childFragmentManager, CardTransactionsFragment.TAG)
-            val direction =
-                CardDetailsFragmentDirections.iswActionIswFragmentCardDetailsToIswProcessingTransaction(
+//            val direction =
+//                    CardDetailsFragmentDirections.iswActionIswFragmentCardDetailsToIswPaycodefragment(paymentModel)
+
+            val direction =    CardDetailsFragmentDirections.iswActionIswFragmentCardDetailsToIswProcessingTransaction(
                     paymentModel,
                     TransactionType.CardNotPresent,
                     CardType.None,
                     AccountType.Default,
                     paymentInfo
-                )
+            )
             navigate(direction)
         }
     }

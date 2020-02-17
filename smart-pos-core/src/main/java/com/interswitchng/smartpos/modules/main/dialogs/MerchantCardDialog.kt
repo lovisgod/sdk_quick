@@ -186,8 +186,8 @@ else if(terminalInfo== null){
                 //Show Card detected view
 //                showCardDetectedView()
 
-
-                cardViewModel.startTransaction(requireContext())
+                //TODO: Uncomment this, was commented out during conflict resolution
+                //cardViewModel.startTransaction(requireContext())
 
 
             }

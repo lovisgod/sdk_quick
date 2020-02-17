@@ -22,11 +22,8 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-<<<<<<< HEAD
-=======
 import org.koin.core.Koin.Companion.logger
 import org.koin.standalone.KoinComponent
->>>>>>> 40d6d329fc68f06c5fc2cb178fde3c40f80d4ffc
 
 internal class TransactionResultViewModel(private val posDevice: POSDevice,
                                           private val emailService: EmailService,

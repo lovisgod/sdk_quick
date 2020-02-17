@@ -59,7 +59,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     private val paymentModel by lazy { cardPaymentFragmentArgs.PaymentModel }
 
     private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.originalStan,paymentModel.authorizationId)
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan(), paymentModel.stan, paymentModel.authorizationId)
     }
 
     private val originalTxnData by lazy {
@@ -95,9 +95,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (IswPos.isConfigured()) {
             setTransactionType()
-//            isw_toolbar.setNavigationOnClickListener {
-//                navigateUp()
-//            }
             observeViewModel()
             cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         } else {
@@ -141,18 +138,28 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                         else -> AccountType.Default
                     }
 
-                        runWithInternet {
-                            cardViewModel.startTransaction(requireContext())
-                        }
-                    }
-                    accountTypeDialog.show(childFragmentManager, TAG)
-                }
-
-                else -> {
                     runWithInternet {
-                        cardViewModel.startTransaction(requireContext())
+                        cardViewModel.startTransaction(
+                            context!!,
+                            paymentInfo,
+                            accountType,
+                            terminalInfo
+                        )
                     }
                 }
+                accountTypeDialog.show(childFragmentManager, TAG)
+            }
+
+            else -> {
+                runWithInternet {
+                    cardViewModel.startTransaction(
+                        context!!,
+                        paymentInfo,
+                        accountType,
+                        terminalInfo
+                    )
+                }
+            }
         }
     }
 
@@ -160,21 +167,11 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         change_payment_method.setOnClickListener {
             paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
                 when (it) {
-                    PaymentModel.PaymentType.CARD -> {
-
-                    }
+                    PaymentModel.PaymentType.CARD -> {}
                     PaymentModel.PaymentType.PAY_CODE -> {
-                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentPayCode(paymentModel)
-                        navigate(direction)
-                    }
-                    PaymentModel.PaymentType.QR_CODE -> {
-                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentQrCodeFragment(paymentModel)
-                        navigate(direction)
-                    }
-                    PaymentModel.PaymentType.USSD -> {
-                        val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentUssd(paymentModel)
-                        navigate(direction)
-                    }
+                        Toast.makeText(context, "Paycode", Toast.LENGTH_LONG)}
+                    PaymentModel.PaymentType.QR_CODE -> {}
+                    PaymentModel.PaymentType.USSD -> {}
                 }
 
             }
@@ -193,9 +190,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
             }
 
             // observe transaction response
-//            transactionResponse.observe(owner) {
-//                it?.let(::processResponse)
-//            }
+            transactionResponse.observe(owner) {
+                it?.let(::processResponse)
+            }
 
             // observe online process results
             onlineResult.observe(owner) {
@@ -308,10 +305,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
             // when transaction is processing
             is EmvMessage.ProcessingTransaction -> {
-                val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentProcessingTransaction(
-                    paymentModel, transactionType, cardType, accountType, paymentInfo
-                )
-                navigate(direction)
+
+                // show transaction progress alert
+                showProgressAlert(false)
             }
         }
     }
@@ -321,7 +317,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         isw_scanning_card.show()
     }
 
-<<<<<<< HEAD
 //    private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
 //
 //        when (transactionResponse) {
@@ -366,7 +361,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 //            }
 //        }
 //    }
-=======
     private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
 
         when (transactionResponse) {
@@ -412,7 +406,6 @@ class CardTransactionsFragment : BaseFragment(TAG) {
             }
         }
     }
->>>>>>> 40d6d329fc68f06c5fc2cb178fde3c40f80d4ffc
 
     private fun showCardDetectedView() {
         //Hide Scanning Card View

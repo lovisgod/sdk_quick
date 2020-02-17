@@ -68,53 +68,16 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-//    fun startCardLessTransaction(
-//        cardExpiry: String,
-//        cardPan: String,
-//        cardPin: String,
-//        terminalInfo: TerminalInfo,
-//        paymentInfo: PaymentInfo,
-//        accountType: AccountType
-//    ) {
-//        uiScope.launch {
-//            val emvData = emv.getTransactionInfo()
-//            if (emvData != null) {
-//                val txnInfo = TransactionInfo.forCardNotPresent(
-//                    emvData, cardExpiry, cardPan, cardPin, paymentInfo, accountType
-//                )
-//                withContext(ioScope) {
-//                    val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
-//                    val result = when (response) {
-//                        null -> {
-//                            _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
-//                            None
-//                        }
-//                        else -> {
-//                            // complete transaction by applying scripts
-//                            // only when responseCode is 'OK'
-//                            if (response.responseCode == IsoUtils.OK) {
-//                                // get result code of applying server response
-//                                val completionResult = emv.completeTransaction(response)
-//
-//                                // react to result code
-//                                when (completionResult) {
-//                                    EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
-//                                    else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
-//                                }
-//                            }
-//                            Some(Pair(response, emvData))
-//                        }
-//                    }
-//                    _transactionResponse.value = result
-//                }
-//            }
-//        }
-//    }
+    fun readCard() {
+        val result = emv.startTransaction()
+    }
+
+    fun startCardLessTransaction() {
+
+    }
 
 
-    fun startTransaction(
-        context: Context
-    ) {
+    fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo) {
         uiScope.launch {
             //  start card transaction in IO thread
            // paymentInfo.amount=paymentInfo.amount*100;
@@ -125,9 +88,9 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                     // set message as transaction processing
                     _emvMessage.value = EmvMessage.ProcessingTransaction
                     // trigger online transaction process in IO thread
-//                    val response = withContext(ioScope) { processOnline(paymentInfo, accountType, terminalInfo) }
-//                    // publish transaction response
-//                    _transactionResponse.value = response
+                    val response = withContext(ioScope) { processOnline(paymentInfo, accountType, terminalInfo) }
+                    // publish transaction response
+                    _transactionResponse.value = response
                 }
 
                 EmvResult.CANCELLED -> {
@@ -149,45 +112,44 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-    fun processOnline(paymentInfo: PaymentInfo, terminalInfo: TerminalInfo, accountType: AccountType) {
+
+    fun processOnline(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo): Optional<Pair<TransactionResponse, EmvData>> {
+
         // get emv data captured by card
         val emvData = emv.getTransactionInfo()
 
         // return response based on data
-        uiScope.launch {
-            if (emvData != null) {
-                // create transaction info and issue online purchase request
-                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-                val response = withContext(ioScope) { initiateTransaction(transactionType, terminalInfo, txnInfo) }
+        if (emvData != null) {
+            // create transaction info and issue online purchase request
+            val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+            val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
 
-                when (response) {
-                    null -> {
-                        _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
-                        _transactionResponse.value = None
-                    }
-                    else -> {
-                        // complete transaction by applying scripts
-                        // only when responseCode is 'OK'
-                        if (response.responseCode == IsoUtils.OK) {
-                            // get result code of applying server response
-                            val completionResult = emv.completeTransaction(response)
 
-                            // react to result code
-                            when (completionResult) {
-                                EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
-                                else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
-                            }
-                        }
-
-                        delay(2000)
-
-                        _transactionResponse.value = Some(Pair(response, emvData))
-                    }
+            when (response) {
+                null -> {
+                    _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
+                    return None
                 }
-            } else {
-                _onlineResult.postValue(OnlineProcessResult.NO_EMV)
-                _transactionResponse.value = None
+                else -> {
+                    // complete transaction by applying scripts
+                    // only when responseCode is 'OK'
+                    if (response.responseCode == IsoUtils.OK) {
+                        // get result code of applying server response
+                        val completionResult = emv.completeTransaction(response)
+
+                        // react to result code
+                        when (completionResult) {
+                            EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
+                            else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
+                        }
+                    }
+
+                    return Some(Pair(response, emvData))
+                }
             }
+        } else {
+            _onlineResult.postValue(OnlineProcessResult.NO_EMV)
+            return None
         }
     }
 

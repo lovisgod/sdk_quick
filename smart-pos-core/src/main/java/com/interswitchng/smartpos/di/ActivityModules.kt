@@ -45,12 +45,12 @@ internal val viewModels = module {
         CardViewModel(get(), isoService)
     }
 
-    viewModel {
-        val store: KeyValueStore = get()
-        val terminalInfo = TerminalInfo.get(store)
-        val isKimono = terminalInfo?.isKimono ?: false
+//    viewModel {
+//        val store: KeyValueStore = get()
+//        val terminalInfo = TerminalInfo.get(store)
+//        val isKimono = terminalInfo?.isKimono ?: false
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
 //    viewModel { TransactionResultViewModel(get(), get(), get(), get()) }
 
@@ -59,14 +59,14 @@ internal val viewModels = module {
     viewModel { TransactionResultViewModel(get(), get(), get(), get()) }
 
 
-=======
-        val isoService: IsoService = get { parametersOf(isKimono)}
-        TransactionResultViewModel(get(), get(), get(), isoService)
-    }
-
-    viewModel { FingerprintViewModel(get(), get()) }
-
->>>>>>> 40d6d329fc68f06c5fc2cb178fde3c40f80d4ffc
+//=======
+//        val isoService: IsoService = get { parametersOf(isKimono)}
+//        TransactionResultViewModel(get(), get(), get(), isoService)
+//    }
+//
+//    viewModel { FingerprintViewModel(get(), get()) }
+//
+//>>>>>>> 40d6d329fc68f06c5fc2cb178fde3c40f80d4ffc
     viewModel { HistoryViewModel(get()) }
 
     viewModel { ReportViewModel(get()) }

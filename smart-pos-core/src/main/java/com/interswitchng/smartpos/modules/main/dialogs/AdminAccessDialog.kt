@@ -73,7 +73,8 @@ class AdminAccessDialog constructor(
 
             // when card is detected
             is EmvMessage.CardDetected -> {
-                cardViewModel.startTransaction(requireContext())
+                //TODO: Uncomment this, was commented out during conflict resolution
+//                cardViewModel.startTransaction(requireContext())
             }
 
             is EmvMessage.CardDetails -> {}

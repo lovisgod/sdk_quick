@@ -89,7 +89,9 @@ class MerchantCardFragment : BaseFragment(TAG) {
             is EmvMessage.CardRead -> {
                 runBlocking { delay(1000) }
 
-                cardViewModel.startTransaction(requireContext())
+                //TODO: Uncomment this, was commented out during conflict resolution
+                //cardViewModel.startTransaction(requireContext())
+
             }
 
             // when card gets removed
