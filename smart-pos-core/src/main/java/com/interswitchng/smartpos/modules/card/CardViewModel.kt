@@ -77,6 +77,45 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     }
 
 
+    //
+
+    fun startTransaction(
+            context: Context
+    ) {
+        uiScope.launch {
+            //  start card transaction in IO thread
+            // paymentInfo.amount=paymentInfo.amount*100;
+            val result = withContext(ioScope) { emv.startTransaction() }
+
+            when (result) {
+                EmvResult.ONLINE_REQUIRED -> {
+                    // set message as transaction processing
+                    _emvMessage.value = EmvMessage.ProcessingTransaction
+                    // trigger online transaction process in IO thread
+//                    val response = withContext(ioScope) { processOnline(paymentInfo, accountType, terminalInfo) }
+//                    // publish transaction response
+//                    _transactionResponse.value = response
+                }
+
+                EmvResult.CANCELLED -> {
+                    // transaction has already been cancelled
+                    context.toast("Transaction was cancelled")
+                }
+                else -> {
+                    context.toast("Error processing card transaction")
+
+                    // show cancelled transaction if its not
+                    // already triggered by card removal
+                    if (!cardRemoved) {
+                        // trigger transaction cancel
+                        val reason = "Unable to process card transaction"
+                        _emvMessage.value = EmvMessage.TransactionCancelled(-1, reason)
+                    }
+                }
+            }
+        }
+    }
+
     fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo) {
         uiScope.launch {
             //  start card transaction in IO thread
