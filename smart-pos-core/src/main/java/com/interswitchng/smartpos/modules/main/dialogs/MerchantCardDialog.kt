@@ -2,9 +2,11 @@ package com.interswitchng.smartpos.modules.main.dialogs
 
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
@@ -34,13 +36,33 @@ class MerchantCardDialog constructor(
     private var isEnrollment:Boolean=false
 
 
+//
+//    /**
+//     * Changes size of dialog based on keyboard visibility state
+//     */
+//    private fun setDialogHeight(expanded: Boolean) {
+//        val dialog = dialog as BottomSheetDialog?
+//        val bottomSheet =
+//                dialog!!.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout?
+//        val behavior = BottomSheetBehavior.from(bottomSheet!!)
+//
+//        val displayMetrics = activity!!.resources.displayMetrics
+//
+//        val width = displayMetrics.widthPixels
+//        val height = displayMetrics.heightPixels
+//
+//        val maxHeight = (height * 0.88).toInt()
+//
+//        behavior.peekHeight = if (expanded) maxHeight else -1
+//    }
+
     override val layoutId: Int
         get() = R.layout.isw_sheet_layout_admin_merchant_card
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.ISW_FullScreenDialogStyleTransparent)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.ISW_DialogStyle)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

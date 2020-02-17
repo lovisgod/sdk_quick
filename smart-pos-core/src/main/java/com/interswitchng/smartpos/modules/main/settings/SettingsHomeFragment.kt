@@ -51,16 +51,9 @@ class SettingsHomeFragment : BaseFragment(TAG) {
     }
 
 
-//    private val alert by lazy {
-//        DialogUtils.getAlertDialog(requireContext())
-//                .setTitle("Invalid Configuration")
-//                .setMessage("The configuration contains invalid parameters, please fix the errors and try saving again")
-//                .setPositiveButton(android.R.string.ok) { dialog, _ ->
-//
-//                    dialog.dismiss()
-//
-//                }
-//    }
+
+
+    //authorizeAndPerformAction { it.findNavController().navigate(R.id.isw_goto_account_fragment_action) }
     private fun authorizeAndPerformAction(action: () -> Unit) {
         val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
             if (isValidated) {

@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
+import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.core.UserType
@@ -14,6 +16,7 @@ import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -134,21 +137,77 @@ class ReceiptFragment : BaseFragment(TAG) {
         }
 
         isw_reversal.setOnClickListener {
-            if (hasClickedReversal.not()) {
-                val txnInfo = TransactionInfo.fromTxnResult(result!!)
-                resultViewModel.initiateReversal(terminalInfo, txnInfo)
-                hasClickedReversal = true
-                it.isClickable = false
-                Toast.makeText(context, "You have initiated a reversal", Toast.LENGTH_SHORT).show()
+
+            authorizeAndPerformAction {
+
+                if (hasClickedReversal.not()) {
+                    val txnInfo = TransactionInfo.fromTxnResult(result!!)
+                    resultViewModel.initiateReversal(terminalInfo, txnInfo)
+                    hasClickedReversal = true
+                    it.isClickable = false
+                    Toast.makeText(context, "You have initiated a reversal", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
         isw_refund.setOnClickListener {
-            paymentModel.type = PaymentModel.TransactionType.REFUND
-            val direction = ReceiptFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
-            navigate(direction)
+
+            authorizeAndPerformAction {
+
+                paymentModel.type = PaymentModel.TransactionType.REFUND
+                val direction = ReceiptFragmentDirections.iswActionGotoFragmentAmount(paymentModel)
+                navigate(direction)
+
+            }
+
         }
     }
+
+
+
+
+
+
+    private lateinit var dialog: MerchantCardDialog
+    //authorizeAndPerformAction { it.findNavController().navigate(R.id.isw_goto_account_fragment_action) }
+    private fun authorizeAndPerformAction(action: () -> Unit) {
+        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+            if (isValidated) {
+                action.invoke()
+            } else {
+                toast("Unauthorized Access!!")
+            }
+        }
+
+        val alert by lazy {
+            DialogUtils.getAlertDialog(requireContext())
+                    .setTitle("Invalid Configuration")
+                    .setMessage("The configuration contains invalid parameters, please fix the errors and try saving again")
+                    .setPositiveButton(android.R.string.ok) { dialog, _ ->
+
+                        dialog.dismiss()
+                        action.invoke()
+                    }
+        }
+        dialog = MerchantCardDialog {
+            when (it) {
+                MerchantCardDialog.AUTHORIZED -> action.invoke()
+                MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
+                MerchantCardDialog.NOT_ENROLLED -> {
+                    alert.setTitle("Supervisor's card not enrolled")
+                    alert.setMessage("You have not yet enrolled a supervisor's card. Please enroll a supervisor's card on the settings page after downloading terminal configuration.")
+                    alert.show()
+
+                }
+
+
+                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(requireFragmentManager(), FingerprintBottomDialog.TAG)
+            }
+        }
+        dialog.setIsEnrollment(false);
+        dialog.show(requireFragmentManager(), MerchantCardDialog.TAG)
+    }
+
 
     private fun setUpUI() {
         displayTransactionResultIconAndMessage()

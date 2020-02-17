@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import kotlinx.android.synthetic.main.isw_activity_settings.*
 import kotlinx.android.synthetic.main.isw_settings_account.*
 
 class AccountFragment : BaseFragment(TAG) {
@@ -27,6 +28,12 @@ class AccountFragment : BaseFragment(TAG) {
     }
 
     private fun handleClicks() {
+
+        if(terminalInfo!=null){
+            isw_profile_details_sub_text.setText(terminalInfo.merchantNameAndLocation)
+            isw_enable_refund_sub_text.setText(terminalInfo.merchantId)
+        }
+
         isw_fingerprint_container.setOnClickListener {
             it.findNavController().navigate(R.id.isw_goto_account_fingerprint_fragment_action)
         }

@@ -28,6 +28,8 @@
         <item name="android:focusable">true</item>
     </style>
 
+
+
     <style name="ISW.PaymentContent">
         <item name="android:layout_marginRight">@dimen/isw_content_margin</item>
         <item name="android:layout_marginLeft">@dimen/isw_content_margin</item>
@@ -136,6 +138,14 @@
 
         <!-- This is important! Don't forget to set window background -->
         <item name="android:windowBackground">@android:color/black</item>
+    </style>
+
+    <style name="ISW.DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimaryDark">@color/iswColorPrimaryDark</item>
+        <item name="colorPrimary">@color/iswColorPrimary</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <style name="IswDatePicker" parent="Theme.AppCompat.Light.Dialog">
