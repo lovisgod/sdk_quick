@@ -49,6 +49,8 @@ class MerchantCardDialog constructor(
             // when card is detected
             is EmvMessage.CardDetected -> {}
 
+            is EmvMessage.EmptyPin -> {}
+
             is EmvMessage.CardDetails -> {}
 
             // when card should be inserted

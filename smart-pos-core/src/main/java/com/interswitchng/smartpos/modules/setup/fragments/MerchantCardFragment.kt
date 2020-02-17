@@ -76,6 +76,8 @@ class MerchantCardFragment : BaseFragment(TAG) {
                 isw_enter_pin_layout.visibility = View.GONE
             }
 
+            is EmvMessage.EmptyPin -> {}
+
             is EmvMessage.CardDetails -> {}
 
             // when card should be inserted
