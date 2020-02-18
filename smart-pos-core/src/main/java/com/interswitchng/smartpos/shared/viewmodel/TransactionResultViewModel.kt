@@ -135,11 +135,13 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
     }
 
     fun initiateReversal(terminalInfo: TerminalInfo, transactionInfo: TransactionInfo) {
+        println("Called me the chairman of reversal")
         logger.log("Called reversal inside vm")
         CoroutineScope(ioScope).launch {
             logger.log("Called reversal inside vm ioscope")
            val result = isoService.initiateReversal(terminalInfo, transactionInfo)
            logger.log(result?.responseCode!!)
+            println("Called reversal response code --->${result?.responseCode}")
         }
     }
 }

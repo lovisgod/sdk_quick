@@ -186,7 +186,6 @@ class ReceiptFragment : BaseFragment(TAG) {
                     .setPositiveButton(android.R.string.ok) { dialog, _ ->
 
                         dialog.dismiss()
-                        action.invoke()
                     }
         }
         dialog = MerchantCardDialog {
