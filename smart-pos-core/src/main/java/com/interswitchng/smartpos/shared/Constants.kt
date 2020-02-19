@@ -101,7 +101,7 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
 
     private object Production {
 
-        const val ISW_USSD_QR_BASE_URL = "https://www.interswitchgroup.com/paymentgateway/api/v1/"
+        const val ISW_USSD_QR_BASE_URL = "https://api.interswitchng.com/paymentgateway/api/v1/"
         const val ISW_TOKEN_BASE_URL = "https://passport.interswitchng.com/passport/"
         const val ISW_IMAGE_BASE_URL = "https://mufasa.interswitchng.com/p/paymentgateway/"
         const val ISW_KIMONO_URL = "https://kimono.interswitchng.com/kmw/v2/kimonoservice"
@@ -110,7 +110,7 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
     }
 
     private object Test {
-        const val ISW_USSD_QR_BASE_URL = "https://www.interswitchgroup.com/paymentgateway/api/v1/"
+        const val ISW_USSD_QR_BASE_URL = "https://api.interswitchng.com/paymentgateway/api/v1/"
         const val ISW_TOKEN_BASE_URL = "https://passport.interswitchng.com/passport/"
         const val ISW_IMAGE_BASE_URL = "https://mufasa.interswitchng.com/p/paymentgateway/"
         const val ISW_KIMONO_URL = "https://qa.interswitchng.com/kmw/v2/kimonoservice"

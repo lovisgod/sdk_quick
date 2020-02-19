@@ -5,13 +5,18 @@ import android.content.Context
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
+import com.interswitchng.smartpos.shared.models.core.IswLocal
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.get
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-internal object DisplayUtils {
+internal object DisplayUtils: KoinComponent {
 
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
@@ -85,6 +90,24 @@ internal object DisplayUtils {
         }
         try {
             imm.hideSoftInputFromWindow(view.windowToken, 0)
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
+    }
+
+    fun getAmountWithCurrency(amount: String): String {
+        val store: KeyValueStore  = get()
+
+        // get the currency based on the terminal's configured currency code
+        val currency = when (val config = TerminalInfo.get(store)) {
+            null -> ""
+            else -> when(config.currencyCode) {
+                IswLocal.NIGERIA.code -> IswLocal.NIGERIA.currency
+                IswLocal.GHANA.code -> IswLocal.GHANA.currency
+                IswLocal.USA.code -> IswLocal.USA.currency
+                else -> ""
+            }
+        }
+
+        return "$currency $amount"
     }
 }

@@ -92,7 +92,7 @@
         app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toBottomOf="@+id/isw_amount_paid"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_stan"
         app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/isw_guideline2"
@@ -104,8 +104,7 @@
         android:id="@+id/isw_date_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
@@ -115,7 +114,18 @@
         app:layout_constraintTop_toTopOf="@+id/isw_materialcardview"
         app:layout_constraintVertical_chainStyle="packed" />
 
-
+    <TextView
+        android:id="@+id/isw_payment_type_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/isw_payment_type"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/isw_date_text" />
 
     <TextView
         android:id="@+id/isw_payment_type"
@@ -123,13 +133,27 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        tools:text="Payment Type: Master card"
+
+        tools:text="First Bank Master card"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/isw_date_text" />
+        app:layout_constraintTop_toBottomOf="@+id/isw_payment_type_label" />
+
+    <TextView
+        android:id="@+id/isw_amount_paid_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/isw_amount_paid"
+        android:textSize="14sp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_payment_type" />
 
     <TextView
         android:id="@+id/isw_amount_paid"
@@ -139,12 +163,39 @@
         android:layout_marginLeft="20dp"
         tools:text="Amount: NGN 10,000.00"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_payment_type" />
+        app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid_label" />
+
+    <TextView
+        android:id="@+id/isw_stan_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/isw_stan"
+        android:textSize="14sp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_amount_paid" />
+
+    <TextView
+        android:id="@+id/isw_stan"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        tools:text="0849399"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_stan_label" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/isw_print_receipt"
@@ -155,7 +206,7 @@
         app:icon="@drawable/isw_ic_print"
         app:iconGravity="textStart"
         android:text="@string/isw_title_print_receipt"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"

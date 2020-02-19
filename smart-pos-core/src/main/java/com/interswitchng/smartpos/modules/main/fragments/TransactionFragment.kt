@@ -32,7 +32,7 @@ class TransactionFragment: BaseFragment(TAG) {
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
                     1 -> {
-                        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+                      /*  val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
                             if (isValidated) {
                                 val payment = payment {
                                     type = PaymentModel.TransactionType.PRE_AUTHORIZATION
@@ -60,7 +60,14 @@ class TransactionFragment: BaseFragment(TAG) {
                                 }
                             }
                         }
-                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
+                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)*/
+
+                        val payment = payment {
+                            type = PaymentModel.TransactionType.PRE_AUTHORIZATION
+                        }
+
+                        val direction = TransactionFragmentDirections.iswActionGotoFragmentAmount(payment)
+                        navigate(direction)
                     }
                     2 -> {
                         val payment = payment {

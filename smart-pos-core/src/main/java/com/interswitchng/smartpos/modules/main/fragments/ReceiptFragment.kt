@@ -11,12 +11,15 @@ import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.models.core.IswLocal
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -79,7 +82,10 @@ class ReceiptFragment : BaseFragment(TAG) {
 
     private fun displayTransactionDetails() {
         isw_date_text.text = getString(R.string.isw_receipt_date, result?.dateTime)
-        isw_amount_paid.text = getString(R.string.isw_receipt_amount, result?.amount)
+        val amountWithCurrency = DisplayUtils.getAmountWithCurrency(result!!.amount)
+        isw_amount_paid.text = getString(R.string.isw_receipt_amount, amountWithCurrency)
+
+        isw_stan.text = result!!.stan
 
         val cardTypeName = when (result?.cardType) {
             CardType.MASTER -> "Master Card"
