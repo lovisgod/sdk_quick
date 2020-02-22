@@ -25,6 +25,7 @@ class TelpoPOSDeviceImpl constructor(
     override fun loadInitialKey(initialKey: String, ksn: String) {
         val keyValue = StringUtil.toBytes(initialKey)
         val ksnValue = StringUtil.toBytes(ksn)
+//        PinpadService.TP_PinpadWriteDukptIPEK(keyValue)
     }
 
     override fun loadMasterKey(masterKey: String) {

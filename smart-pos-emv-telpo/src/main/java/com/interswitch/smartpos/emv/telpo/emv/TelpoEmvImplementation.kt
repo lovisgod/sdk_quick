@@ -287,8 +287,8 @@ internal class TelpoEmvImplementation (
                 it.CashbackAmount = 0L
                 it.TransactionType = 0.toByte()
                 it.ReferCurrCon = 0
-                it.ReferCurrExp = 0.01.toByte()
-                it.TransCurrExp = 0.toByte()
+                it.ReferCurrExp = 100.toByte()
+                it.TransCurrExp = 100.toByte()
             }
 
             val tlv = getTLVString(0x9F1A)

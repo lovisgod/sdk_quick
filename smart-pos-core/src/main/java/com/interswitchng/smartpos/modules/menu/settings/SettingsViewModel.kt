@@ -28,7 +28,9 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
     fun downloadKeys(terminalId: String, ip: String, port: Int, isKimono: Boolean) {
         val isoService: IsoService = get { parametersOf(isKimono) }
         uiScope.launch {
-            val isSuccessful = withContext(ioScope) { isoService.downloadKey(terminalId, ip, port) }
+            val isSuccessful = withContext(ioScope) {
+                isoService.downloadKey(terminalId, ip, port)
+            }
             _keysDownloadSuccess.value = isSuccessful
         }
     }

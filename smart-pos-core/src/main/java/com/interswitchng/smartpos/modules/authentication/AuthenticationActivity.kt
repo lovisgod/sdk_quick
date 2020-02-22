@@ -14,6 +14,6 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_login)
-        isw_sdk_version.text = getString(R.string.isw_sdk_version, BuildConfig.VERSION_NAME)
+//        isw_sdk_version.text = getString(R.string.isw_sdk_version, BuildConfig.VERSION_NAME)
     }
 }
