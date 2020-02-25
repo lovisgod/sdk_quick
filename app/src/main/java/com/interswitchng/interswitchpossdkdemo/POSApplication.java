@@ -90,7 +90,7 @@ public class POSApplication extends Application   {
                 public EmvCardReader getEmvCardReader() {
                     return new EmvCardReader() {
                         @Override
-                        public Object setupTransaction(int amount, @NotNull TerminalInfo terminalInfo, @NotNull Channel<EmvMessage> channel, @NotNull CoroutineScope scope, @NotNull Continuation<? super Unit> o) {
+                        public Object setupTransaction(double amount, @NotNull TerminalInfo terminalInfo, @NotNull Channel<EmvMessage> channel, @NotNull CoroutineScope scope, @NotNull Continuation<? super Unit> o) {
                             return null;
                         }
 

@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.InputValidator
+import com.interswitchng.smartpos.shared.utilities.Logger
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 import java.util.*
@@ -29,7 +30,8 @@ internal class PurchaseRequest
             var pinData=""
 
 
-            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
+            val amount = String.format(Locale.getDefault(), "%012f", transaction.amount)
+            Logger.with("purchaserequest").logErr(amount)
             val now = Date()
             val date = DateUtils.dateFormatter.format(now)
             var icc= getIcc(terminalInfo,amount,date,transaction)

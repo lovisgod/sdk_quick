@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.shared
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.shared.models.core.Environment
 import com.interswitchng.smartpos.shared.utilities.KeysUtils
+import com.interswitchng.smartpos.shared.utilities.Logger
 
 object Constants {
 
@@ -82,8 +83,10 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
 
     val ISW_CMS: String get() {
         val iswPos = IswPos.getInstance()
+        //return KeysUtils.testCMS()
         return if(iswPos.config.environment == Environment.Test) KeysUtils.testCMS()
         else KeysUtils.productionCMS()
+
     }
 
 

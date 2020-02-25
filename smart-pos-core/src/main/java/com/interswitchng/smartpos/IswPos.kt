@@ -44,7 +44,7 @@ import java.util.*
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
-    fun initiatePayment(activity: FragmentActivity, amount: Int, paymentType: PaymentType?) {
+    fun initiatePayment(activity: FragmentActivity, amount: Double, paymentType: PaymentType?) {
 
         if (!isConfigured()) throw NotConfiguredException()
 

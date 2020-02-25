@@ -35,7 +35,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })
-        cardViewModel.setupTransaction(0, terminalInfo)
+        cardViewModel.setupTransaction(0.00, terminalInfo)
 
         if (!IswPos.hasFingerprint()) {
             isw_skip_fingerprint.text = resources.getString(R.string.isw_finish)

@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PaymentModel (
-    var amount: Int = 0,
+    var amount: Double = 0.00,
     var formattedAmount: String = EMPTY_STRING,
     var type: TransactionType? = null,
     var paymentType: PaymentType? = null,

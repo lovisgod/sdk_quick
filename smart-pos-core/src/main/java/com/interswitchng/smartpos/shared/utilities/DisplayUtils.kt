@@ -67,7 +67,7 @@ internal object DisplayUtils: KoinComponent {
      * @param amount A value in integer representing the transaction amount
      * @return A string representation of the decimal notation for the amount
      */
-    fun getAmountString(amount: Float): String {
+    fun getAmountString(amount: Double): String {
 
         val numberFormat = NumberFormat.getInstance()
         numberFormat.minimumFractionDigits = 2
@@ -107,7 +107,7 @@ internal object DisplayUtils: KoinComponent {
                 else -> ""
             }
         }
-
+        Logger.with("Display Utils").logErr( amount)
         return "$currency $amount"
     }
 }

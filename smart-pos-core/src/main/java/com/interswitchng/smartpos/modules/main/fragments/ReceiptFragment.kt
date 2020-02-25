@@ -20,6 +20,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -83,6 +84,8 @@ class ReceiptFragment : BaseFragment(TAG) {
     private fun displayTransactionDetails() {
         isw_date_text.text = getString(R.string.isw_receipt_date, result?.dateTime)
         val amountWithCurrency = DisplayUtils.getAmountWithCurrency(result!!.amount)
+        Logger.with("Reciept fragment").logErr(amountWithCurrency)
+        Logger.with("Recipet fragment amount").logErr(result!!.amount)
         isw_amount_paid.text = getString(R.string.isw_receipt_amount, amountWithCurrency)
 
         isw_stan.text = result!!.stan

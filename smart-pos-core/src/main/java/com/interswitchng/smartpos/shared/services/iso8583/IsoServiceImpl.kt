@@ -21,6 +21,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeAn
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.yearAndMonthFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.TIMEOUT_CODE
+import com.interswitchng.smartpos.shared.utilities.KeysUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
@@ -166,6 +167,7 @@ internal class IsoServiceImpl(
         // getResult clear key
         val cms =Constants.ISW_CMS
         //val cms2 = context.getString(R.string.isw_cms)
+        Logger.with("Constants Keys").logErr(cms.toString())
 
         // getResult master key & save
         val isDownloaded = makeKeyCall(terminalId, ip, port, "9A0000", cms)?.let { masterKey ->
@@ -262,6 +264,7 @@ internal class IsoServiceImpl(
                // it.merchantId="2ISW00000000001"
            //     it.persist(store) }
             logger.log("Terminal Data => $terminalData")
+            logger.logErr(terminalData.toString())
 
             return true
         } catch (e: Exception) {

@@ -41,9 +41,9 @@ internal class TelpoEmvImplementation (
     private lateinit var terminalInfo: TerminalInfo
 
 
-    private var amount: Int = 0
+    private var amount: Double = 0.00
 
-    fun setAmount(amount: Int) {
+    fun setAmount(amount: Double) {
         this.amount = amount
     }
 

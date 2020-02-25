@@ -122,7 +122,7 @@ else if(terminalInfo== null){
 
 
         observeViewModel()
-        cardViewModel.setupTransaction(1, terminalInfo)
+        cardViewModel.setupTransaction(1.00, terminalInfo)
         if (!IswPos.hasFingerprint()) {
             //  isw_use_fingerprint.visibility = View.GONE
         }

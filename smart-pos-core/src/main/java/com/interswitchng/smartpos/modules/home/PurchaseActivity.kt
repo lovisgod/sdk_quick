@@ -22,7 +22,7 @@ class PurchaseActivity : AppCompatActivity(), Keyboard.KeyBoardListener {
     private lateinit var keyboard: Keyboard
     private val defaultAmount = "0.00"
     private var current = ""
-    private var currentAmount: Int = 0
+    private var currentAmount: Double = 0.00
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,13 +50,16 @@ class PurchaseActivity : AppCompatActivity(), Keyboard.KeyBoardListener {
             val cleanString = textAmount.replace("[$,.]".toRegex(), "")
 
             val parsed = java.lang.Double.parseDouble(cleanString)
+            Logger.with("PurchaseActivity").logErr(parsed.toString())
             val numberFormat = NumberFormat.getInstance()
             numberFormat.minimumFractionDigits = 2
             numberFormat.maximumFractionDigits = 2
             val formatted = numberFormat.format(parsed / 100)
+            Logger.with("PurchaseActivity").logErr(formatted.toString())
 
             amount.text = formatted
-            currentAmount = Integer.valueOf(cleanString)
+            currentAmount = cleanString.toDouble()
+            Logger.with("PurchaseActivity").logErr(currentAmount.toString())
             current = cleanString
             keyboard.setText(cleanString)
         }
@@ -68,10 +71,11 @@ class PurchaseActivity : AppCompatActivity(), Keyboard.KeyBoardListener {
             toast("Amount value is required")
         } else {
             makePayment(currentAmount, null)
+            Logger.with("PurchaseActivity").logErr(currentAmount.toString())
         }
     }
 
-    private fun makePayment(amount: Int, type: PaymentType?) {
+    private fun makePayment(amount: Double, type: PaymentType?) {
         try {
             // trigger payment
             IswPos.getInstance().initiatePayment(this, amount, type)
