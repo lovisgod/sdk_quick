@@ -192,6 +192,49 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+    fun processOnlineCNP(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo,expiryDate: String,cardPan:String): Optional<Pair<TransactionResponse, EmvData>> {
+
+        // get emv data captured by card
+        val emvData = emv.getTransactionInfo()
+        emvData!!.cardExpiry=expiryDate
+        emvData.cardPAN=cardPan
+
+        // return response based on data
+        if (emvData != null) {
+            // create transaction info and issue online purchase request
+            val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+            val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
+
+
+            when (response) {
+                null -> {
+                    _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
+                    return None
+                }
+                else -> {
+                    // complete transaction by applying scripts
+                    // only when responseCode is 'OK'
+                    if (response.responseCode == IsoUtils.OK) {
+                        // get result code of applying server response
+                        val completionResult = emv.completeTransaction(response)
+
+                        // react to result code
+                        when (completionResult) {
+                            EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
+                            else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
+                        }
+                    }
+
+                    return Some(Pair(response, emvData))
+                }
+            }
+        } else {
+            _onlineResult.postValue(OnlineProcessResult.NO_EMV)
+            return None
+        }
+    }
+
+
     private fun initiateTransaction(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
         return when (transactionType) {
             TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)

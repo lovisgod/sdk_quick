@@ -82,7 +82,7 @@
             android:id="@+id/isw_card_pan"
             android:gravity="start"
             android:inputType="number"
-            android:text="5463 8477 2981 2718"
+            android:text=""
             android:textColor="@color/iswColorPrimary"
             android:textSize="15sp" />
 
@@ -110,8 +110,8 @@
             android:layout_height="match_parent"
             android:id="@+id/isw_card_expiry_date"
             android:gravity="start"
-            android:inputType="number"
-            android:text="10/23"
+            android:inputType="text"
+            android:text=""
             android:textColor="@color/iswColorPrimary"
             android:textSize="15sp" />
 
@@ -140,7 +140,7 @@
             android:id="@+id/isw_cvv"
             android:gravity="start"
             android:inputType="number"
-            android:text="281"
+            android:text=""
             android:maxEms="4"
             android:textColor="@color/iswColorPrimary"
             android:textSize="15sp" />
@@ -170,7 +170,7 @@
             android:id="@+id/isw_amount"
             android:gravity="start"
             android:inputType="number"
-            android:text="N280,100.00"
+            android:text="1.01"
             android:textColor="@color/iswColorPrimary"
             android:textSize="15sp" />
 

@@ -36,12 +36,14 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
+        var amountInput=isw_amount.text.toString()
         val cardModel = cardModel {
             cvv = isw_cvv.text.toString()
             cardPan = isw_card_pan.text.toString()
             expiryDate = isw_card_expiry_date.text.toString()
         }
         paymentModel.newPayment {
+            amount=amountInput.toDouble()
             card = cardModel
         }
         isw_proceed.setOnClickListener {
@@ -54,11 +56,12 @@ class CardDetailsFragment : BaseFragment(TAG) {
                 }
 
                 runWithInternet {
-                    cardViewModel.processOnline(
+                    cardViewModel.processOnlineCNP(
                             paymentInfo,
                             accountType,
-                            terminalInfo
-
+                            terminalInfo,
+                            cardModel.expiryDate!!,
+                            cardModel.cardPan!!
                     )
                 }
             }
