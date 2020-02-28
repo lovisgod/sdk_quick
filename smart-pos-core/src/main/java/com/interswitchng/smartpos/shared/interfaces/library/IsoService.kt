@@ -51,6 +51,17 @@ internal interface IsoService {
       fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
 
 
+    /**
+     * Initiates a card not present transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the purchase information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+      fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse?
+
+
 
     /**
      * Polls the server at intervals to show that the terminal is active, and returns the

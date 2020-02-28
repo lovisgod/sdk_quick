@@ -12,15 +12,15 @@ import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 
 
 internal data class TransactionInfo(
-        val cardExpiry: String,
-        val cardPIN: String,
-        val cardPAN: String,
+        var cardExpiry: String,
+        var cardPIN: String,
+        var cardPAN: String,
         val cardTrack2: String,
         val iccString: String,
         val iccData: IccData,
         val src: String, // service restriction code
         val csn: String, // card sequence number
-        val amount: Double,
+        var amount: Double,
         val stan: String,
         val purchaseType: PurchaseType,
         val accountType: AccountType,

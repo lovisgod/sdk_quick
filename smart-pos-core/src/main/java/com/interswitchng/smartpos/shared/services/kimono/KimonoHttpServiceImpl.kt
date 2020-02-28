@@ -36,28 +36,28 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                                      private val httpService: IKimonoHttpService) : IsoService{
 
 
-//    override fun downloadTerminalParameters(terminalId: String): Boolean {
-//
-//
-//
-//        try {
-//
-//
-//            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
-//                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
-//                    "")?.also {
-//
-//                it.persist(store) }
-//            logger.log("Terminal Data => $terminalData")
-//
-//            return true
-//        } catch (e: Exception) {
-//            logger.log(e.localizedMessage)
-//            e.printStackTrace()
-//        }
-//
-//        return false
-//    }
+    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
+
+
+
+        try {
+
+
+            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
+                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
+                    "")?.also {
+
+                it.persist(store) }
+            logger.log("Terminal Data => $terminalData")
+
+            return true
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+        }
+
+        return false
+    }
 
 
     val logger by lazy { Logger.with(this.javaClass.name) }
@@ -137,6 +137,46 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             logger.log(e.localizedMessage)
             e.printStackTrace()
           //  initiateReversal(request, request.stan) // TODO change stan to authId
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+
+    }
+
+    override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        val requestBody: String = PurchaseRequest.toCNPPurchaseString(device,terminalInfo,transaction)
+        val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
+
+        try {
+            val responseBody = httpService.makePurchase(body).run()
+            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+
+
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = responseBody.message()
+                )
+            } else {
+                TransactionResponse(
+                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        scripts =  purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description//data.description
+
+                )
+            }
+
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            //  initiateReversal(request, request.stan) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
     }

@@ -88,7 +88,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         //Logger.with("Recipet fragment amount").logErr(result!!.amount)
         isw_amount_paid.text = getString(R.string.isw_receipt_amount, amountWithCurrency)
 
-        isw_stan.text = result?.stan
+        isw_stan.text = result?.stan?.padStart(6,'0')
 
         val cardTypeName = when (result?.cardType) {
             CardType.MASTER -> "Master Card"

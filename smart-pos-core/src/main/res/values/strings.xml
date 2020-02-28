@@ -255,6 +255,7 @@
     <string name="isw_stan">Stan</string>
     <string name="isw_authorization_code_label">Authorization Code</string>
     <string name="isw_receipt_amount">%1$s</string>
+    <string name="isw_card_type">Card Type</string>
 
 
 </resources>

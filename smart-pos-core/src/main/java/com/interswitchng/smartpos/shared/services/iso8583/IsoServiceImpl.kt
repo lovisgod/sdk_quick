@@ -35,6 +35,9 @@ internal class IsoServiceImpl(
         private val store: KeyValueStore,
         private val socket: IsoSocket) : IsoService {
 
+    override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
     override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {

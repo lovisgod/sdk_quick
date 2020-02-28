@@ -67,8 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Thank You!"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
+        android:textColor="#8097B1"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_guideline4" />
@@ -78,7 +77,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Your transaction was successful."
-        android:textColor="#8097B1"
+        android:textColor="#000000"
+        android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_receipt_text" />
@@ -121,7 +121,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:text="@string/isw_payment_type"
+        android:text="@string/isw_card_type"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"

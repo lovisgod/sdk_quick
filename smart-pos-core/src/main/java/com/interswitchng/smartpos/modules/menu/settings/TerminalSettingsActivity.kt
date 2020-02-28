@@ -371,7 +371,7 @@ class TerminalSettingsActivity : MenuActivity() {
             store.saveNumber(KEY_DATE_TERMINAL, date.time)
 
             // setup text
-            setupTexts()
+            //setupTexts()
 
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_check)
