@@ -37,8 +37,8 @@ class CardDetailsFragment : BaseFragment(TAG) {
     private val cardDetailsFragmentArgs by navArgs<CardDetailsFragmentArgs>()
     private val paymentModel by lazy { cardDetailsFragmentArgs.PaymentModel }
 
-   // private lateinit var accountTypeDialog: AccountTypeDialog
-   private lateinit var transactionType: TransactionType
+   private lateinit var transactionResponseModel: TransactionResponseModel
+   private var transactionType: TransactionType = TransactionType.CardNotPresent
     private var accountType = AccountType.Default
     private lateinit var transactionResult: TransactionResult
     private var pinOk = false
@@ -66,18 +66,22 @@ class CardDetailsFragment : BaseFragment(TAG) {
             card = cardModel
         }
 
+        cardViewModel.transactionResponse.observe(this,androidx.lifecycle.Observer {
+            processResponse(it)
+        })
+
         isw_proceed.setOnClickListener {
             runWithInternet {
-                 var responseData= cardViewModel.processOnlineCNP(
+                cardViewModel.processOnlineCNP(
                         paymentInfo,
                         accountType,
                         terminalInfo,
                         cardModel.expiryDate!!,
                         cardModel.cardPan!!
                 )
-                processResponse(responseData)
+               // processResponse(responseData)
             }
-
+            /**/
         }
     }
 
@@ -91,7 +95,6 @@ class CardDetailsFragment : BaseFragment(TAG) {
                 val emvData = transactionResponse.value.second
                 val txnInfo =
                         TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-
                 val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
                 Logger.with("transactionrESponseModel").logErr(responseMsg)
 
@@ -115,7 +118,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
                         month = response.month, time = response.time,
                         originalTransmissionDateTime = response.transmissionDateTime
                 )
-                val transactionResponseModel = TransactionResponseModel(transactionResult = transactionResult,
+                transactionResponseModel = TransactionResponseModel(transactionResult = transactionResult,
                         transactionType = PaymentModel.TransactionType.CARD_PURCHASE)
                 Logger.with("transactionrESponseModel").logErr(transactionResponseModel.toString())
 

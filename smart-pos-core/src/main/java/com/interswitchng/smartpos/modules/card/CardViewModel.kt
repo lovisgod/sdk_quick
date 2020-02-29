@@ -193,58 +193,64 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-    fun processOnlineCNP(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo,expiryDate: String,cardPan:String): Optional<Pair<TransactionResponse, EmvData>> {
+    fun processOnlineCNP(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo,expiryDate: String,cardPan:String) {
 
-        var responseProcessed: Optional<Pair<TransactionResponse, EmvData>> = None
+        //var responseProcessed: Optional<Pair<TransactionResponse, EmvData>> = None
 
         uiScope.launch {
-            withContext(ioScope){
 
-                val emvData = emv.getTransactionInfo()
+            val emvData = emv.getTransactionInfo()
+            if (emvData != null) {
+            val response=withContext(ioScope){
+
                 emvData!!.cardExpiry=expiryDate
                 emvData.cardPAN=cardPan
 
                 // return response based on data
-                if (emvData != null) {
-                    // create transaction info and issue online purchase request
-                    val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
-                    val response = initiateCNPTransaction(transactionType, terminalInfo, txnInfo)
-                    Logger.with("response CardViewModel").logErr(response.toString())
-                    when (response) {
-                        null -> {
-                            _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
-                            //return@withContext None
-                            responseProcessed = None
-                        }
-                        else -> {
-                            // complete transaction by applying scripts
-                            // only when responseCode is 'OK'
+                // create transaction info and issue online purchase request
+                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
-                                // get result code of applying server response
-                                val completionResult = emv.completeTransaction(response)
+                initiateCNPTransaction(transactionType, terminalInfo, txnInfo)
+                //Logger.with("response CardViewModel").logErr(response.toString())
 
-                                // react to result code
-                                when (completionResult) {
-                                    EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
-                                    else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
-                                }
+            }
 
-
-                            //return@withContext Some(Pair(response, emvData))
-                            responseProcessed =  Some(Pair(response, emvData))
-                        }
-                    }
-                } else {
-                    _onlineResult.postValue(OnlineProcessResult.NO_EMV)
+            when (response) {
+                null -> {
+                    _onlineResult.postValue(OnlineProcessResult.NO_RESPONSE)
                     //return@withContext None
-                    responseProcessed = None
+                    _transactionResponse.value = None
+                }
+                else -> {
+                    //                            // complete transaction by applying scripts
+                    //                            // only when responseCode is 'OK'
+                    //
+                    //                                // get result code of applying server response
+                    val completionResult = emv.completeTransaction(response)
+
+                    // react to result code
+                    when (completionResult) {
+                        EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(OnlineProcessResult.ONLINE_APPROVED)
+                        else -> _onlineResult.postValue(OnlineProcessResult.ONLINE_DENIED)
+                    }
+
+
+                    //return@withContext Some(Pair(response, emvData))
+                    _transactionResponse.value =  Some(Pair(response, emvData))
                 }
             }
+            } else {
+                _onlineResult.postValue(OnlineProcessResult.NO_EMV)
+                //return None
+            }
         }
-               // get emv data captured by card
-                return responseProcessed
+
     }
+
+               // get emv data captured by card
+                //return responseProcessed
+
 
 
     private fun initiateTransaction(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
