@@ -23,10 +23,10 @@ class MakePaymentDialog constructor(
             optionClickListener.invoke(1)
             dismiss()
         }
-        isw_card_not_present.setOnClickListener {
-            optionClickListener.invoke(2)
-            dismiss()
-        }
+//        isw_card_not_present.setOnClickListener {
+//            optionClickListener.invoke(2)
+//            dismiss()
+//        }
         isw_completion.setOnClickListener {
             optionClickListener.invoke(3)
             dismiss()

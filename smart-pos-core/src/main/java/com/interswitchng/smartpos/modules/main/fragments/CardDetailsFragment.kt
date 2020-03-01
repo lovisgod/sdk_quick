@@ -64,6 +64,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
         paymentModel.newPayment {
             amount=amountInput.toDouble()
             card = cardModel
+
         }
 
         cardViewModel.transactionResponse.observe(this,androidx.lifecycle.Observer {
@@ -71,6 +72,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
         })
 
         isw_proceed.setOnClickListener {
+            Logger.with("Proceed CardDetails").log("Hi You clicked Me")
             runWithInternet {
                 cardViewModel.processOnlineCNP(
                         paymentInfo,
@@ -79,11 +81,11 @@ class CardDetailsFragment : BaseFragment(TAG) {
                         cardModel.expiryDate!!,
                         cardModel.cardPan!!
                 )
-               // processResponse(responseData)
             }
-            /**/
         }
     }
+
+
 
 
     private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {

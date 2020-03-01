@@ -37,6 +37,7 @@ internal class IsoServiceImpl(
 
     override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
 
@@ -271,7 +272,7 @@ internal class IsoServiceImpl(
 
             return true
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
+            //logger.log(e.localizedMessage)
             e.printStackTrace()
         }
 
@@ -293,7 +294,7 @@ internal class IsoServiceImpl(
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
-                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
                     .setValue(7, timeDateNow)
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
@@ -393,7 +394,7 @@ internal class IsoServiceImpl(
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
+                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
                 .setValue(7, timeDateNow)
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))
@@ -478,7 +479,7 @@ internal class IsoServiceImpl(
             val originalTransactionInfoData = transaction.originalTransactionInfoData
             val month = originalTransactionInfoData?.month
             val time = originalTransactionInfoData?.time
-            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount * 100)
+            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
             val message = NibssIsoMessage(messageFactory.newMessage(0x420))
             val processCode = "00" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
@@ -567,7 +568,7 @@ internal class IsoServiceImpl(
 
         try {
             val pan = generatePan(code)
-            val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
+            val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount.toInt())
             val now = Date()
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "001000"
@@ -676,10 +677,12 @@ internal class IsoServiceImpl(
             val stan = transaction.stan
             val randomReference = "000000$stan"
 
+            Logger.with("IsoServiceImpl").log(transaction.amount.toString())
+
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
+                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
                 .setValue(7, transmissionDateTime)
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))
@@ -701,6 +704,7 @@ internal class IsoServiceImpl(
                 .setValue(55, transaction.iccString)
 
             message.setValue(123, "510101511344101")
+
             // remove unset fields
             message.message.removeFields(32, 52, 53, 54, 56, 59, 60, 62, 64, 124)
 
@@ -768,7 +772,7 @@ internal class IsoServiceImpl(
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
+                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
                 .setValue(7, timeAndDateFormatter.format(now))
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))

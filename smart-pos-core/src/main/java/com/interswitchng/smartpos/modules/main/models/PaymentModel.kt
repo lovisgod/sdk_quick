@@ -26,7 +26,7 @@ data class PaymentModel (
     }
 
     enum class PaymentType {
-        CARD, QR_CODE, USSD, PAY_CODE
+        CARD, QR_CODE, USSD, PAY_CODE,CARD_NOT_PRESENT
     }
 
     fun newPayment(block: PaymentModel.() -> Unit) {

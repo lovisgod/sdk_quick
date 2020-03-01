@@ -52,6 +52,7 @@ class ReceiptFragment : BaseFragment(TAG) {
 
     private fun displayTransactionResultIconAndMessage() {
         println("Called responseCode ----> ${result?.responseCode}")
+        Logger.with("Reciept Fragment").logErr(result?.responseCode.toString())
         when (result?.responseCode) {
             IsoUtils.TIMEOUT_CODE -> {
                 transactionResponseIcon.setImageResource(R.drawable.isw_failure)

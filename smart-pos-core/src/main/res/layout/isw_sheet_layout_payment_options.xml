@@ -96,7 +96,8 @@
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_pre_authorization"
         app:strokeColor="@color/iswColorPrimary"
-        app:strokeWidth="1dp" />
+        app:strokeWidth="1dp"
+        android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/isw_completion"

@@ -39,8 +39,9 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
         uiScope.launch {
             val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId, ip, port) }
             _configDownloadSuccess.value = isSuccessful
-            Logger.with("Settings ViewModel").logErr(isoService.downloadTerminalParameters(terminalId,ip,port).toString())
-        }
+            //Logger.with("Settings ViewModel").logErr(isoService.downloadTerminalParameters(terminalId,ip,port).toString())
+        println("Settings ViewModel : $isSuccessful")
+    }
     }
 
 

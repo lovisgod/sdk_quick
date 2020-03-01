@@ -41,5 +41,9 @@ class PaymentTypeDialog constructor(
             paymentTypeClickListener.invoke(PaymentModel.PaymentType.USSD)
             dismiss()
         }
+        isw_card_not_present.setOnClickListener{
+            paymentTypeClickListener.invoke(PaymentModel.PaymentType.CARD_NOT_PRESENT)
+            dismiss()
+        }
     }
 }

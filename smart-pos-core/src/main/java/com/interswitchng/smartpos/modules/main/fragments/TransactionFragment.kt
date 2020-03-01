@@ -69,36 +69,36 @@ class TransactionFragment: BaseFragment(TAG) {
                         val direction = TransactionFragmentDirections.iswActionGotoFragmentAmount(payment)
                         navigate(direction)
                     }
-                    2 -> {
-                        val payment = payment {
-                            type = PaymentModel.TransactionType.CARD_NOT_PRESENT
-                        }
-                        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
-                            if (isValidated) {
-                                val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
-                                navigate(direction)
-                            } else {
-                                toast("Fingerprint Verification Failed!!")
-                                navigateUp()
-                            }
-                        }
-                        val dialog = MerchantCardDialog { type ->
-                            when (type) {
-                                MerchantCardDialog.AUTHORIZED -> {
-                                    val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
-                                    navigate(direction)
-                                }
-                                MerchantCardDialog.FAILED -> {
-                                    toast("Merchant Card Verification Failed!!")
-                                    navigateUp()
-                                }
-                                MerchantCardDialog.USE_FINGERPRINT -> {
-                                    fingerprintDialog.show(childFragmentManager, FingerprintBottomDialog.TAG)
-                                }
-                            }
-                        }
-                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
-                    }
+//                    2 -> {
+//                        val payment = payment {
+//                            type = PaymentModel.TransactionType.CARD_NOT_PRESENT
+//                        }
+//                        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+//                            if (isValidated) {
+//                                val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
+//                                navigate(direction)
+//                            } else {
+//                                toast("Fingerprint Verification Failed!!")
+//                                navigateUp()
+//                            }
+//                        }
+//                        val dialog = MerchantCardDialog { type ->
+//                            when (type) {
+//                                MerchantCardDialog.AUTHORIZED -> {
+//                                    val direction = TransactionFragmentDirections.iswActionGotoFragmentCardDetails(payment)
+//                                    navigate(direction)
+//                                }
+//                                MerchantCardDialog.FAILED -> {
+//                                    toast("Merchant Card Verification Failed!!")
+//                                    navigateUp()
+//                                }
+//                                MerchantCardDialog.USE_FINGERPRINT -> {
+//                                    fingerprintDialog.show(childFragmentManager, FingerprintBottomDialog.TAG)
+//                                }
+//                            }
+//                        }
+//                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
+//                    }
                     3 -> {
                         val payment = payment {
                             type = PaymentModel.TransactionType.COMPLETION

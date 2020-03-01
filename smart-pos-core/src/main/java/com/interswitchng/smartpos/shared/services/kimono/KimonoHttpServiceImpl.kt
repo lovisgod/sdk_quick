@@ -35,29 +35,29 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
                                      private val httpService: IKimonoHttpService) : IsoService{
 
-
-    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
-
-
-
-        try {
-
-
-            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
-                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
-                    "")?.also {
-
-                it.persist(store) }
-            logger.log("Terminal Data => $terminalData")
-
-            return true
-        } catch (e: Exception) {
-            logger.log(e.localizedMessage)
-            e.printStackTrace()
-        }
-
-        return false
-    }
+//
+//    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
+//
+//
+//
+//        try {
+//
+//
+//            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
+//                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
+//                    "")?.also {
+//
+//                it.persist(store) }
+//            logger.log("Terminal Data => $terminalData")
+//
+//            return true
+//        } catch (e: Exception) {
+//            logger.log(e.localizedMessage)
+//            e.printStackTrace()
+//        }
+//
+//        return false
+//    }
 
 
     val logger by lazy { Logger.with(this.javaClass.name) }

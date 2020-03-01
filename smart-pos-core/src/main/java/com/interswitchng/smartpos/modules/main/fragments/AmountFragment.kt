@@ -73,7 +73,6 @@ class AmountFragment : BaseFragment(TAG) {
             formattedAmount = latestAmount
 
         }
-        Logger.with("Amount Fragment").logErr(amount.toString())
 
         when (payment.type) {
             PaymentModel.TransactionType.CARD_PURCHASE -> {
@@ -110,6 +109,15 @@ class AmountFragment : BaseFragment(TAG) {
                             }
 
                             val direction = AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
+                            navigate(direction)
+                        }
+
+                        PaymentModel.PaymentType.CARD_NOT_PRESENT -> {
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentCardDetails(payment)
                             navigate(direction)
                         }
                     }
