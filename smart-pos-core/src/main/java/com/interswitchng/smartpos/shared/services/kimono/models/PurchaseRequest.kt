@@ -27,7 +27,7 @@ internal class PurchaseRequest
 
             var pinData=""
 
-            val amount = String.format(Locale.getDefault(), "%012f", transaction.amount)
+            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
             Logger.with("purchaserequest").logErr(amount)
             val now = Date()
             val date = DateUtils.dateFormatter.format(now)
@@ -54,8 +54,7 @@ internal class PurchaseRequest
 
             var pinData=""
 
-
-            val amount = String.format(Locale.getDefault(), "%012f", transaction.amount)
+            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
             Logger.with("purchaserequest").logErr(amount)
             val now = Date()
             val date = DateUtils.dateFormatter.format(now)
@@ -101,7 +100,7 @@ internal class PurchaseRequest
             if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType> </pinData>"""
             var dedicatedFileTag=""
 
-            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
+            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
             val now = Date()
             val date = DateUtils.dateFormatter.format(now)
             var icc= getIcc(terminalInfo,amount,date,transaction)
@@ -141,7 +140,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
     var pinData=""
 
 
-    val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
+    val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
     val now = Date()
     val date = DateUtils.dateFormatter.format(now)
     var icc= getIcc(terminalInfo,amount,date,transaction)
@@ -204,7 +203,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
             var pinData=""
             if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType></pinData>"""
 
-            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
+            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
             val now = Date()
             val date = DateUtils.dateFormatter.format(now)
             var icc= getIcc(terminalInfo,amount,date,transaction)
@@ -245,7 +244,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
             var pinData=""
             if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType></pinData>"""
 
-            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
+            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
             val now = Date()
             val date = DateUtils.dateFormatter.format(now)
             var icc= getIcc(terminalInfo,amount,date,transaction)

@@ -47,7 +47,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
     private val cardViewModel: CardViewModel by viewModel()
     private var cardType = CardType.None
     private val paymentInfo by lazy {
-        PaymentInfo(paymentModel.amount, IswPos.getNextStan())
+        PaymentInfo(paymentModel.amount, IswPos.getNextStan(),paymentModel.stan,paymentModel.authorizationId)
     }
 
     override val layoutId: Int
@@ -64,6 +64,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
         paymentModel.newPayment {
             amount=amountInput.toDouble()
             card = cardModel
+            paymentType=PaymentModel.PaymentType.CARD_NOT_PRESENT
 
         }
 
@@ -73,6 +74,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
         isw_proceed.setOnClickListener {
             Logger.with("Proceed CardDetails").log("Hi You clicked Me")
+
             runWithInternet {
                 cardViewModel.processOnlineCNP(
                         paymentInfo,
