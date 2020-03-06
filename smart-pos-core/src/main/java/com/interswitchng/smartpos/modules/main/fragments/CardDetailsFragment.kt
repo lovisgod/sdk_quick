@@ -56,14 +56,8 @@ class CardDetailsFragment : BaseFragment(TAG) {
                 paymentModel.newPayment {
                     amount = isw_amount.text.toString().toInt()
                 }
-
-//                runWithInternet {
-//                    cardViewModel.processOnline(
-//                        paymentInfo,
-//                        terminalInfo
-//                    )
-//                }
             }
+
             paymentInfo = PaymentInfo(paymentModel.amount, IswPos.getNextStan())
             accountTypeDialog.show(childFragmentManager, CardTransactionsFragment.TAG)
             val direction =

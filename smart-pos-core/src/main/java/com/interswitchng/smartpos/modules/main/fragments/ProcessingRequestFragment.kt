@@ -187,8 +187,6 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                     originalTransmissionDateTime = response.transmissionDateTime
                 )
 
-                dismissAlert()
-
                 val direction =
                     ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptFragment(
                         payment,
