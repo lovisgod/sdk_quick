@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardActivity
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
@@ -54,6 +55,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     // getResult payment info
     internal lateinit var paymentInfo: PaymentInfo
+
+    internal lateinit var billPaymentModel: BillPaymentModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

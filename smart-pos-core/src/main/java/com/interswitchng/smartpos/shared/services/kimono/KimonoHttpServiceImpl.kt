@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.shared.services.kimono
 import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
@@ -17,9 +18,8 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.services.iso8583.utils.TerminalInfoParser
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
-import com.interswitchng.smartpos.shared.services.kimono.models.*
+import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.utilities.Logger
 import okhttp3.MediaType
@@ -34,6 +34,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                                      private val device: POSDevice,
 
                                      private val httpService: IKimonoHttpService) : IsoService{
+
 
 //
 //    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
@@ -77,14 +78,66 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
 
-        // load test keys
-        val tik = Constants.ISW_DUKPT_IPEK
-        val ksn = Constants.ISW_DUKPT_KSN
+        /* // load test keys
+         val tik = Constants.ISW_DUKPT_IPEK
+         val ksn = Constants.ISW_DUKPT_KSN
 
-        // load keys
-        device.loadInitialKey(tik, ksn)
-        return true
+         // load keys
+         device.loadInitialKey(tik, ksn)
+         return true*/
+        //val requestBody = NewKeyRequest.create(terminalId)
+        //val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
+
+
+        try {
+            val responseBody = httpService.getKimonoKey(cmd = "key", terminalId = terminalId, pkmod = Constants.PKMOD, pkex = Constants.PKEX, pkv = "1", keyset_id = "000002", der_en = "1").run()
+            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
+
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var keyResponse = XmlPullParserHandler().parse(inputStream)
+
+            if (!responseBody.isSuccessful || keyResponse == null) {
+                Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
+                return false
+            } else {
+                //store.saveString(Constants.KIMONO_KEY, responseBody.body().toString())
+                Logger.with("KeyResponseMessage").log(responseBody.body().toString())
+                return true
+            }
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+        }
+        return false
+
+
     }
+
+    /* fun downloadKeyKimono(terminalId:String):Boolean{
+         val requestBody = NewKeyRequest.create(terminalId)
+         //val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
+
+         try{
+             val responseBody = httpService.getKimonoKey(requestBody).run()
+             var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+
+             val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+             var keyResponse=     XmlPullParserHandler().parse( inputStream)
+             if(!responseBody.isSuccessful || keyResponse==null){
+                 Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
+                 return false
+             }
+             else{
+                  store.saveString(Constants.KIMONO_KEY, responseBody.message().toString())
+                          return true
+             }
+         }
+         catch(e:Exception){
+             logger.log(e.localizedMessage)
+             e.printStackTrace()
+         }
+         return false
+     }*/
 
 
     override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
@@ -144,6 +197,45 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         val requestBody: String = PurchaseRequest.toCNPPurchaseString(device,terminalInfo,transaction)
+        val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
+
+        try {
+            val responseBody = httpService.makePurchase(body).run()
+            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
+
+
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse = XmlPullParserHandler().parse(inputStream)
+
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = responseBody.message()
+                )
+            } else {
+                TransactionResponse(
+                        responseCode = purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode = purchaseResponse.authCode,// data.authCode,
+                        scripts = purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description//data.description
+
+                )
+            }
+
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            //  initiateReversal(request, request.stan) // TODO change stan to authId
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+    }
+
+    override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, billPaymentModel: BillPaymentModel): TransactionResponse? {
+        val requestBody: String = PurchaseRequest.toBillPaymentString(device, terminalInfo, txnInfo, billPaymentModel)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {

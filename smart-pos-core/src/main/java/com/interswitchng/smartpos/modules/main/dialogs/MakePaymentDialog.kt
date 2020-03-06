@@ -31,6 +31,10 @@ class MakePaymentDialog constructor(
             optionClickListener.invoke(3)
             dismiss()
         }
+        isw_bill_payment.setOnClickListener {
+            optionClickListener.invoke(4)
+            dismiss()
+        }
     }
 
     companion object {

@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.shared.services.iso8583
 
 import android.content.Context
 import com.interswitchng.smartpos.IswPos.Companion.getNextStan
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_PIN_KEY
@@ -21,7 +22,6 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeAn
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.yearAndMonthFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.TIMEOUT_CODE
-import com.interswitchng.smartpos.shared.utilities.KeysUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
@@ -34,6 +34,9 @@ internal class IsoServiceImpl(
         private val posDevice: POSDevice,
         private val store: KeyValueStore,
         private val socket: IsoSocket) : IsoService {
+    override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, billPaymentModel: BillPaymentModel): TransactionResponse? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

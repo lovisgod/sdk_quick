@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel.TransactionType
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
@@ -16,11 +17,9 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResul
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.*
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.utilities.toast
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -117,7 +116,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-    fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo) {
+    fun startTransaction(context: Context, paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo, billPaymentModel: BillPaymentModel) {
         uiScope.launch {
             //  start card transaction in IO thread
            // paymentInfo.amount=paymentInfo.amount*100;
@@ -128,7 +127,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                     // set message as transaction processing
                     _emvMessage.value = EmvMessage.ProcessingTransaction
                     // trigger online transaction process in IO thread
-                    val response = withContext(ioScope) { processOnline(paymentInfo, accountType, terminalInfo) }
+                    val response = withContext(ioScope) { processOnline(paymentInfo, accountType, terminalInfo, billPaymentModel) }
                     // publish transaction response
                     _transactionResponse.value = response
                 }
@@ -153,16 +152,17 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     }
 
 
-    fun processOnline(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo): Optional<Pair<TransactionResponse, EmvData>> {
+    fun processOnline(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo, billPaymentModel: BillPaymentModel): Optional<Pair<TransactionResponse, EmvData>> {
 
         // get emv data captured by card
         val emvData = emv.getTransactionInfo()
+
 
         // return response based on data
         if (emvData != null) {
             // create transaction info and issue online purchase request
             val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-            val response = initiateTransaction(transactionType, terminalInfo, txnInfo)
+            val response = initiateTransaction(transactionType, terminalInfo, txnInfo, billPaymentModel)
 
 
             when (response) {
@@ -203,7 +203,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
             if (emvData != null) {
             val response=withContext(ioScope){
 
-                emvData!!.cardExpiry=expiryDate
+                emvData.cardExpiry = expiryDate
                 emvData.cardPAN=cardPan
 
                 // return response based on data
@@ -252,12 +252,12 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                 //return responseProcessed
 
 
-
-    private fun initiateTransaction(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
+    private fun initiateTransaction(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo, billPaymentModel: BillPaymentModel): TransactionResponse? {
         return when (transactionType) {
             TransactionType.CARD_PURCHASE -> isoService.initiateCardPurchase(terminalInfo, txnInfo)
             TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
             TransactionType.REFUND -> isoService.initiateRefund(terminalInfo, txnInfo)
+            TransactionType.BILL_PAYMENT -> isoService.initiateBillPayment(terminalInfo, txnInfo, billPaymentModel)
             TransactionType.COMPLETION -> {
                 txnInfo.originalTransactionInfoData = originalTxnData
                 isoService.initiateCompletion(terminalInfo, txnInfo)

@@ -2,13 +2,12 @@ package com.interswitchng.smartpos.shared.interfaces.retrofit
 
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants
-import com.interswitchng.smartpos.shared.services.kimono.models.*
+import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.KimonoKeyRequest
-import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-
 import retrofit2.http.*
+
 internal interface IKimonoHttpService {
 
 
@@ -52,5 +51,17 @@ internal interface IKimonoHttpService {
     @POST("")
     fun getPinKey(@Url endpoint: String,
             @Body request: KimonoKeyRequest): Simple<ResponseBody>
+
+
+    @Headers("Content-Type: application/xml")
+    @GET(Constants.KIMONO_KEY_END_POINT)
+    fun getKimonoKey(@Query("cmd") cmd: String,
+                     @Query("terminal_id") terminalId: String,
+                     @Query("pkmod") pkmod: String,
+                     @Query("pkex") pkex: String,
+                     @Query("pkv") pkv: String,
+                     @Query("keyset_id") keyset_id: String,
+                     @Query("der_en") der_en: String): Simple<ResponseBody>
+
 
 }

@@ -3,9 +3,7 @@ package com.interswitchng.smartpos.modules.main.fragments
 import android.os.Bundle
 import android.view.View
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MakePaymentDialog
-import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.payment
 import com.interswitchng.smartpos.shared.activities.BaseFragment
@@ -106,6 +104,12 @@ class TransactionFragment: BaseFragment(TAG) {
                         
                         val direction = TransactionFragmentDirections.iswActionGotoFragmentAuthentication(payment)
                         navigate(direction)
+                    }
+                    4 -> {
+                        val payment = payment {
+                            type = PaymentModel.TransactionType.BILL_PAYMENT
+                        }
+                        navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
                 }
             }
