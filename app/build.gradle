@@ -68,9 +68,9 @@ dependencies {
 
     implementation "androidx.multidex:multidex:$multidex_version"
 
-    releaseImplementation "com.interswitchng:smart-pos-core:$versionName"
-    releaseImplementation "com.interswitchng:smart-pos-emv-pax:$versionName"
-    releaseImplementation "com.interswitchng:smart-pos-usb:$versionName"
+    //releaseImplementation "com.interswitchng:smart-pos-core:$versionName"
+    //releaseImplementation "com.interswitchng:smart-pos-emv-pax:$versionName"
+    //releaseImplementation "com.interswitchng:smart-pos-usb:$versionName"
 
 
     // kotlin coroutine libs
@@ -81,6 +81,11 @@ dependencies {
     implementation project(':smart-pos-emv-pax')
     implementation project(':smart-pos-emv-telpo')
     implementation project(':smart-pos-usb')
+
+    releaseImplementation project(':smart-pos-core')
+    releaseImplementation project(':smart-pos-emv-pax')
+    releaseImplementation project(':smart-pos-emv-telpo')
+    releaseImplementation project(':smart-pos-usb')
 
 
     testImplementation 'junit:junit:4.12'

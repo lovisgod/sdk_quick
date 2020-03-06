@@ -13,6 +13,9 @@ import androidx.core.widget.ImageViewCompat
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
+import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.setup.SetupActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.MenuActivity
@@ -39,9 +42,9 @@ class TerminalSettingsActivity : MenuActivity() {
 
     private val alert by lazy {
         DialogUtils.getAlertDialog(this)
-                .setTitle("Invalid Configuration")
-                .setMessage("The configuration contains invalid parameters, please fix the errors and try saving again")
-                .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+            .setTitle("Invalid Configuration")
+            .setMessage("The configuration contains invalid parameters, please fix the errors and try saving again")
+            .setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,12 +57,17 @@ class TerminalSettingsActivity : MenuActivity() {
             supportActionBar?.setDisplayShowHomeEnabled(true)
         } else {
             if (TerminalInfo.get(store) != null) {
-                val intent = Intent(this, SetupActivity::class.java)
-                startActivity(intent)
-                finish()
+                //That is when the enrollment should take place
+//                val intent = Intent(this, SetupActivity::class.java)
+//                startActivity(intent)
+//                finish()
+            } else {
+                //That is when the enrollment should take place
             }
-        }
 
+
+        }
+        fetchSupervisorDetails()
         // setup button listeners
         setupButtons()
         // set the text values
@@ -111,14 +119,14 @@ class TerminalSettingsActivity : MenuActivity() {
 
             // check validity of all fields
             val invalidTerminalId = InputValidator(terminalId)
-                    .isNotEmpty().isAlphaNumeric()
-                    .isExactLength(8)
+                .isNotEmpty().isAlphaNumeric()
+                .isExactLength(8)
 
             val invalidServerIp = InputValidator(ip).isNotEmpty().isValidIp()
 
             val invalidServerPort = InputValidator(port).isNotEmpty()
-                    .isNumber().hasMaxLength(5)
-                    .isNumberBetween(0, 65535)
+                .isNumber().hasMaxLength(5)
+                .isNumberBetween(0, 65535)
 
 
             // show all error on the page
@@ -157,7 +165,12 @@ class TerminalSettingsActivity : MenuActivity() {
                 tvKeyDate.visibility = View.GONE
 
                 // trigger download keys
-                settingsViewModel.downloadKeys(terminalID, serverIp, serverPort.toInt(), switchKimono.isChecked)
+                settingsViewModel.downloadKeys(
+                    terminalID,
+                    serverIp,
+                    serverPort.toInt(),
+                    switchKimono.isChecked
+                )
             }
         }
 
@@ -185,7 +198,12 @@ class TerminalSettingsActivity : MenuActivity() {
                 tvTerminalInfoDate.visibility = View.GONE
 
                 // trigger download terminal config
-                settingsViewModel.downloadTerminalConfig(terminalID, serverIp, serverPort.toInt(), switchKimono.isChecked)
+                settingsViewModel.downloadTerminalConfig(
+                    terminalID,
+                    serverIp,
+                    serverPort.toInt(),
+                    switchKimono.isChecked
+                )
             }
         }
 
@@ -225,17 +243,29 @@ class TerminalSettingsActivity : MenuActivity() {
             }
 
             // set the terminal-info download container based on kimono flag
-            terminalInfoDownloadContainer.visibility = if (button.isChecked) View.GONE else View.VISIBLE
+            terminalInfoDownloadContainer.visibility =
+                if (button.isChecked) View.GONE else View.VISIBLE
         }
 
 
         btnChangePassword.setOnClickListener {
             // validate user input
-            validateUserPassword()
+//          //  validateUserPassword()
+//            authorizeAndPerformAction {
+//
+//                validateUserPassword()
+//
+//
+//
+//            }
+
+
+            authorizeAndPerformAction { fetchSupervisorDetails() }
+
         }
     }
 
-    private fun setupTexts(terminalInfo: TerminalInfo? =  TerminalInfo.get(store)) {
+    private fun setupTexts(terminalInfo: TerminalInfo? = TerminalInfo.get(store)) {
         val terminalDate = store.getNumber(KEY_DATE_TERMINAL, -1)
         val keysDate = store.getNumber(KEY_DATE_KEYS, -1)
 
@@ -281,7 +311,6 @@ class TerminalSettingsActivity : MenuActivity() {
         val serverIp = terminalInfo?.serverIp ?: Constants.ISW_TERMINAL_IP
         val serverPort = terminalInfo?.serverPort ?: BuildConfig.ISW_TERMINAL_PORT
         val serverUrl = terminalInfo?.serverUrl ?: Constants.ISW_KIMONO_URL
-
 
 
         // server config
@@ -347,12 +376,15 @@ class TerminalSettingsActivity : MenuActivity() {
             store.saveNumber(KEY_DATE_TERMINAL, date.time)
 
             // setup text
-            setupTexts()
+            //setupTexts()
 
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_check)
             val color = ContextCompat.getColor(this, R.color.iswTextColorSuccessDark)
-            ImageViewCompat.setImageTintList(btnDownloadTerminalConfig, ColorStateList.valueOf(color))
+            ImageViewCompat.setImageTintList(
+                btnDownloadTerminalConfig,
+                ColorStateList.valueOf(color)
+            )
         } else {
             val message = "No terminal configuration"
             tvTerminalInfoDate.text = getString(R.string.isw_title_date, message)
@@ -361,7 +393,10 @@ class TerminalSettingsActivity : MenuActivity() {
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_error)
             val color = ContextCompat.getColor(this, R.color.iswTextColorError)
-            ImageViewCompat.setImageTintList(btnDownloadTerminalConfig, ColorStateList.valueOf(color))
+            ImageViewCompat.setImageTintList(
+                btnDownloadTerminalConfig,
+                ColorStateList.valueOf(color)
+            )
         }
     }
 
@@ -392,8 +427,10 @@ class TerminalSettingsActivity : MenuActivity() {
         errorInfo.apply {
             if (terminalId.isNotEmpty()) tiTerminalId.error = terminalId
             if (merchantId.isNotEmpty()) tiMerchantId.error = merchantId
-            if (merchantCategoryCode.isNotEmpty()) tiMerchantCategoryCode.error = merchantCategoryCode
-            if (merchantNameAndLocation.isNotEmpty()) tiMerchantNameAndLocation.error = merchantNameAndLocation
+            if (merchantCategoryCode.isNotEmpty()) tiMerchantCategoryCode.error =
+                merchantCategoryCode
+            if (merchantNameAndLocation.isNotEmpty()) tiMerchantNameAndLocation.error =
+                merchantNameAndLocation
             if (countryCode.isNotEmpty()) tiCountryCode.error = countryCode
             if (currencyCode.isNotEmpty()) tiCurrencyCode.error = currencyCode
             if (callHomeTimeInMin.isNotEmpty()) tiCallHomeTime.error = callHomeTimeInMin
@@ -427,12 +464,12 @@ class TerminalSettingsActivity : MenuActivity() {
         // get old password and check validation
         val oldPassword = etOldPassword.text.toString()
         val oldPasswordValidator = InputValidator(oldPassword)
-                .isNotEmpty().isExactLength(6).isNumber()
+            .isNotEmpty().isExactLength(6).isNumber()
 
         // get new password and check validation
         val newPassword = etNewPassword.text.toString()
         val newPasswordValidator = InputValidator(newPassword)
-                .isNotEmpty().isExactLength(6).isNumber()
+            .isNotEmpty().isExactLength(6).isNumber()
 
         // confirm password if no validation error
         if (!oldPasswordValidator.hasError) {
@@ -463,6 +500,57 @@ class TerminalSettingsActivity : MenuActivity() {
     }
 
 
+    private lateinit var dialog: MerchantCardDialog
+
+
+    private fun performOperation() {
+
+    }
+
+    private fun authorizeAndPerformAction(action: () -> Unit) {
+        val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
+            if (isValidated) {
+                action.invoke()
+            } else {
+                toast("Unauthorized Access!!")
+            }
+        }
+
+        dialog = MerchantCardDialog {
+            when (it) {
+                MerchantCardDialog.AUTHORIZED -> action.invoke()
+                MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
+                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(
+                    supportFragmentManager,
+                    FingerprintBottomDialog.TAG
+                )
+            }
+        }
+//        accountTypeDialog.show(childFragmentManager, TAG)
+        dialog.show(supportFragmentManager, MerchantCardDialog.TAG)
+    }
+
+
+    private fun fetchSupervisorDetails() {
+        val savedPan = store.getString("M3RCHANT_PAN", "")
+        if (savedPan == "") {
+            supervisorStatusHeader.text = "Supervisor's card not set"
+            btnChangePassword.text = "Enroll supervisor's card"
+
+
+        } else {
+            supervisorStatusHeader.text = ""
+            btnChangePassword.text = "Change supervisor's card"
+        }
+
+    }
+
+
+    private val cardViewModel: CardViewModel by viewModel()
+
+    val terminalInfo by lazy { TerminalInfo.get(store)!! }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == RC_FILE_READ) {
 
@@ -489,5 +577,11 @@ class TerminalSettingsActivity : MenuActivity() {
         const val KEY_DATE_TERMINAL = "key_download_terminal_date"
         const val KEY_DATE_KEYS = "key_download_key_date"
         const val RC_FILE_READ = 49239
+
+
+        const val AUTHORIZED = 0
+        const val FAILED = 1
+        const val USE_FINGERPRINT = 2
+        const val TAG = "Merchant Card Dialog"
     }
 }

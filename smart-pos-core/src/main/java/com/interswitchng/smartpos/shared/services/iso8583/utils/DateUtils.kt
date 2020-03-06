@@ -22,7 +22,7 @@ internal object DateUtils {
 
     val shortDateFormat = SimpleDateFormat( "dd MMMM, yyyy")
 
-    val universalDateFormat by lazy {  SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss.sssZ") }
+    val universalDateFormat by lazy {  SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss") }
 
 
 

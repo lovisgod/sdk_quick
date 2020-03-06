@@ -10,6 +10,7 @@ import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.utilities.Logger
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
 import java.text.NumberFormat
 
@@ -58,15 +59,19 @@ class AmountFragment : BaseFragment(TAG) {
 
     private fun proceedWithPayment() {
         val latestAmount = isw_amount.text.toString()
+        Logger.with("Amount Fragment").logErr(latestAmount)
         val latestAmountWithoutComma = latestAmount.replace("[$,]".toRegex(), "")
+        Logger.with("Amount Fragment").logErr(latestAmountWithoutComma)
         val dotIndex = latestAmountWithoutComma.indexOfFirst {
             it == '.'
         }
 
         val stringWithoutCommaAndDot =  latestAmountWithoutComma.substring(0, dotIndex)
         payment.newPayment {
-            amount = Integer.valueOf(stringWithoutCommaAndDot)
+            amount = latestAmount.toDouble()
+                    //stringWithoutCommaAndDot.toDouble()
             formattedAmount = latestAmount
+
         }
 
         when (payment.type) {
@@ -104,6 +109,15 @@ class AmountFragment : BaseFragment(TAG) {
                             }
 
                             val direction = AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
+                            navigate(direction)
+                        }
+
+                        PaymentModel.PaymentType.CARD_NOT_PRESENT -> {
+                            payment.newPayment {
+                                paymentType = it
+                            }
+
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentCardDetails(payment)
                             navigate(direction)
                         }
                     }

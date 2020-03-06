@@ -843,21 +843,22 @@
             <!-- admin access -->
 
             <TextView
+                android:id="@+id/supervisorStatusHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/isw_content_margin"
                 android:layout_marginTop="40dp"
                 android:layout_marginEnd="@dimen/isw_content_margin"
                 android:layout_marginBottom="@dimen/isw_content_small_margin"
-                android:text="Change Admin Password"
-                android:textColor="@color/iswColorPrimary"
+                android:text="Supervisor's card not set"
+                android:textColor="@color/alert_default_error_background"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/btnDownloadKeys"
                 app:layout_constraintStart_toStartOf="parent" />
 
 
-            <LinearLayout
+            <LinearLayout android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/isw_content_margin"
@@ -897,7 +898,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <LinearLayout android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/isw_content_margin"
@@ -946,7 +947,7 @@
                 android:layout_marginEnd="@dimen/isw_content_padding"
                 android:layout_marginBottom="@dimen/isw_content_padding"
                 android:backgroundTint="@color/iswColorPrimary"
-                android:text="Change Password"
+                android:text="Enroll supervisor's card"
                 android:textColor="@color/iswTextColorPrimary"
 
                 />

@@ -30,7 +30,7 @@ interface EmvCardReader {
      * @see TerminalInfo
      * @see EmvMessage
      */
-    suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope)
+    suspend fun setupTransaction(amount: Double, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope)
 
 
     /**

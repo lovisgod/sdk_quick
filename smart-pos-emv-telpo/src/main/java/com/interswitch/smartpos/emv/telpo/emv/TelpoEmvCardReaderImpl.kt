@@ -25,7 +25,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
     private lateinit var channel: Channel<EmvMessage>
     private lateinit var channelScope: CoroutineScope
 
-    private var amount: Int = 0
+    private var amount: Double = 0.00
 
     private lateinit var terminalInfo: TerminalInfo
 
@@ -97,12 +97,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
     override fun getPan(): String? = telpoEmvImplementation.cardPan
 
-    override suspend fun setupTransaction(
-        amount: Int,
-        terminalInfo: TerminalInfo,
-        channel: Channel<EmvMessage>,
-        scope: CoroutineScope
-    ) {
+    override suspend fun setupTransaction(amount: Double, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
         this.amount = amount
         this.terminalInfo = terminalInfo
         telpoEmvImplementation.setAmount(amount)

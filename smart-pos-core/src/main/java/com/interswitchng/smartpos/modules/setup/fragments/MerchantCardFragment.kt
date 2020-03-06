@@ -35,7 +35,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })
-        cardViewModel.setupTransaction(0, terminalInfo)
+        cardViewModel.setupTransaction(0.00, terminalInfo)
 
         if (!IswPos.hasFingerprint()) {
             isw_skip_fingerprint.text = resources.getString(R.string.isw_finish)
@@ -91,7 +91,9 @@ class MerchantCardFragment : BaseFragment(TAG) {
             is EmvMessage.CardRead -> {
                 runBlocking { delay(1000) }
 
-                cardViewModel.startTransaction(requireContext())
+                //TODO: Uncomment this, was commented out during conflict resolution
+                //cardViewModel.startTransaction(requireContext())
+
             }
 
             // when card gets removed
@@ -135,6 +137,9 @@ class MerchantCardFragment : BaseFragment(TAG) {
 
             // when transaction is processing
             is EmvMessage.ProcessingTransaction -> {
+
+            }
+            EmvMessage.EmptyPin ->{
 
             }
         }

@@ -28,7 +28,10 @@
             android:name=".modules.home.HomeActivity"
             android:label="@string/isw_label_app_title"
             android:screenOrientation="portrait"
-            android:theme="@style/ISW.NoActionBar" />
+            android:theme="@style/ISW.NoActionBar" >
+
+
+        </activity>
         <activity
             android:name=".modules.ussdqr.activities.UssdActivity"
             android:label="USSD"
@@ -79,10 +82,10 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".modules.home.PurchaseActivity"

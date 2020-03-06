@@ -78,7 +78,7 @@ class SettingsActivity : MenuActivity(), AdapterView.OnItemSelectedListener {
         // setup sdk config texts
         // --- set min amount
         val config = iswPos.config.purchaseConfig
-        val minAmount = DisplayUtils.getAmountString(config.minimumAmount.toFloat())
+        val minAmount = DisplayUtils.getAmountString(config.minimumAmount.toDouble())
         etMinAmount.setText(minAmount)
         // --- set email
         etMerchantEmail.setText(config.vendorEmail)

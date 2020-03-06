@@ -560,6 +560,77 @@
 
         </emvcard>
 
+<!--        &lt;!&ndash;-China Unionpay Co. Ltd&ndash;&gt;-->
+<!--        <emvcard>-->
+
+<!--            <name>China Unionpay Co. Ltd</name>-->
+<!--            <aid>A00000033301</aid>-->
+<!--            <partialmatch>true</partialmatch>-->
+
+<!--            <keys>-->
+
+
+<!--                <key>-->
+<!--                    <keyidx>0F</keyidx>-->
+<!--                    <expdate>091231</expdate>-->
+<!--                    <modulus>-->
+<!--                    BBE9066D2517511D239C7BFA77884144AE20C7372F515147E8CE6537C54C0A6A4D45F8CA4D290870CDA59F1344EF71D17D3F35D92F3F06778D0D511EC2A7DC4FFEADF4FB1253CE37A7B2B5A3741227BEF72524DA7A2B7B1CB426BEE27BC513B0CB11AB99BC1BC61DF5AC6CC4D831D0848788CD74F6D543AD37C5A2B4C5D5A93B-->
+<!--                    </modulus>-->
+<!--                    <exponent>03</exponent>-->
+<!--                    <checksum>E881E390675D44C2DD81234DCE29C3F5AB2297A0</checksum>-->
+<!--                </key>-->
+
+<!--                <key>-->
+<!--                    <keyidx>10</keyidx>-->
+<!--                    <expdate>211231</expdate>-->
+<!--                    <modulus>-->
+<!--                        CF98DFEDB3D3727965EE7797723355E0751C81D2D3DF4D18EBAB9FB9D49F38C8C4A826B99DC9DEA3F01043D4BF22AC3550E2962A59639B1332156422F788B9C16D40135EFD1BA94147750575E636B6EBC618734C91C1D1BF3EDC2A46A43901668E0FFC136774080E888044F6A1E65DC9AAA8928DACBEB0DB55EA3514686C6A732CEF55EE27CF877F110652694A0E3484C855D882AE191674E25C296205BBB599455176FDD7BBC549F27BA5FE35336F7E29E68D783973199436633C67EE5A680F05160ED12D1665EC83D1997F10FD05BBDBF9433E8F797AEE3E9F02A34228ACE927ABE62B8B9281AD08D3DF5C7379685045D7BA5FCDE58637-->
+<!--                    </modulus>-->
+<!--                    <exponent>03</exponent>-->
+<!--                    <checksum>C729CF2FD262394ABC4CC173506502446AA9B9FD</checksum>-->
+<!--                </key>-->
+
+<!--            </keys>-->
+
+<!--        </emvcard>-->
+
+<!--        &lt;!&ndash;-JCB&ndash;&gt;-->
+<!--        <emvcard>-->
+
+<!--            <name>JCB</name>-->
+<!--            <aid>A00000006509</aid>-->
+<!--            <partialmatch>true</partialmatch>-->
+
+<!--            <keys>-->
+
+
+<!--                <key>-->
+<!--                    <keyidx>0F</keyidx>-->
+<!--                    <expdate>121231</expdate>-->
+<!--                    <modulus>-->
+<!--                    B72A8FEF5B27F2B550398FDCC256F714BAD497FF56094B7408328CB626AA6F0E6A9DF8388EB9887BC930170BCC1213E90FC070D52C8DCD0FF9E10FAD36801FE93FC998A721705091F18BC7C98241CADC15A2B9DA7FB963142C0AB640D5D0135E77EBAE95AF1B4FEFADCF9C012366BDDA0455C1564A68810D7127676D493890BD-->
+<!--                    </modulus>-->
+<!--                    <exponent>03</exponent>-->
+<!--                    <checksum>4410C6D51C2F83ADFD92528FA6E38A32DF048D0A</checksum>-->
+<!--                </key>-->
+
+<!--                <key>-->
+<!--                    <keyidx>10</keyidx>-->
+<!--                    <expdate>121231</expdate>-->
+<!--                    <modulus>-->
+<!--                    99B63464EE0B4957E4FD23BF923D12B61469B8FFF8814346B2ED6A780F8988EA9CF0433BC1E655F05EFA66D0C98098F25B659D7A25B8478A36E489760D071F54CDF7416948ED733D816349DA2AADDA227EE45936203CBF628CD033AABA5E5A6E4AE37FBACB4611B4113ED427529C636F6C3304F8ABDD6D9AD660516AE87F7F2DDF1D2FA44C164727E56BBC9BA23C0285-->
+<!--                    </modulus>-->
+<!--                    <exponent>03</exponent>-->
+<!--                    <checksum>C75E5210CBE6E8F0594A0F1911B07418CADB5BAB</checksum>-->
+<!--                </key>-->
+
+<!--            </keys>-->
+
+<!--        </emvcard>-->
+
+
+
+
 
     </emvcards>
 

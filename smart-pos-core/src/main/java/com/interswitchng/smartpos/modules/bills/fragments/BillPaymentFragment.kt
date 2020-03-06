@@ -86,7 +86,7 @@ class BillPaymentFragment : BaseFragment(TAG) {
 
         //val stringWithoutCommaAndDot =  latestAmountWithoutComma.substring(0, dotIndex)
         payment.newPayment {
-            amount = Integer.valueOf(sureAmount)
+            amount = sureAmount.toDouble()
             formattedAmount = latestAmount
         }
 

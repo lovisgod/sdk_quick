@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_home_list_item.view.*
 import java.util.*
 
@@ -37,7 +38,7 @@ class ActivityAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder
         item?.apply {
             holder.itemView.isw_txn_type.text = transactionType
             holder.itemView.isw_txn_amount.let {
-                it.text = it.context.getString(R.string.isw_currency_amount, this.amount)
+                it.text =  DisplayUtils.getAmountWithCurrency(this.amount)
             }
             val date = Date(time)
             holder.itemView.isw_txn_date.text = DateUtils.timeOfDateFormat.format(date)

@@ -55,7 +55,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     //     Implementation for ISW EmvCardReader interface
     //----------------------------------------------------------
 
-    override suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
+    override suspend fun setupTransaction(amount: Double, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
         // set amount and channel scope
         emvImpl.setAmount(amount)
         this.channel = channel

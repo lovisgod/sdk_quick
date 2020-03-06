@@ -123,7 +123,7 @@
     <string name="isw_enable_card_not_present">Enable card not present</string>
     <string name="isw_sample_text">Lorem ipsum dolor</string>
     <string name="isw_make_a_cash_withdrawal_from_this_terminal">Make a cash withdrawal from this terminal</string>
-    <string name="isw_transfer_funds_from_one_account_to_another">Transfer funds, Ecash, Arbiter and Echange</string>
+    <string name="isw_transfer_funds_from_one_account_to_another">Transfer, eCash, eChange, and Raise a Dispute</string>
     <string name="isw_transfer_money">Transfer Money</string>
     <string name="isw_bill_payment">Bill Payment</string>
     <string name="isw_pay_for_electricity_toll_tax_and_other_bills">Pay for electricity, toll, tax and other bills
@@ -146,6 +146,7 @@
     <string name="isw_qr_code">QR Code</string>
     <string name="isw_card_payment">Card Payment</string>
     <string name="isw_make_payment">Make Payment</string>
+    <string name="isw_payment_sub_text">Pay for items purchased</string>
     <string name="isw_default_account">Default Account</string>
     <string name="isw_savings_account">Savings Account</string>
     <string name="isw_current_account">Current Account</string>
@@ -199,12 +200,13 @@
     <string name="isw_bills">Bills Payment</string>
     <string name="search">Search</string>
     <string name="reference_number">Reference Number</string>
-    <string name="fund_your_ecash">Send money to any eCash wallet</string>
+    <string name="isw_fund_your_ecash">Receive payment from E-Cash wallet</string>
+    <string name="isw_eChange_text">Give digital change in E-Cash wallet</string>
     <string name="isw_more">More</string>
-    <string name="isw_ecash">E-Cash</string>
-    <string name="isw_echange">E-Change</string>
+    <string name="isw_ecash">eCash</string>
+    <string name="isw_echange">eChange</string>
     <string name="isw_arbiter">Arbiter</string>
-    <string name="isw_arbiter_info">Resolve disputed or incomplete transactions</string>
+    <string name="isw_arbiter_info">Log disputed transactions</string>
     <string name="isw_transfer_to_account">Transfer to Account</string>
     <string name="isw_transfer_to_account_info">Send money to bank accounts</string>
     <string name="isw_amount_hint">Amount</string>
@@ -224,8 +226,8 @@
     <string name="isw_customer_info">Customer Info</string>
     <string name="isw_raise_dispute">Raise a Dispute</string>
     <string name="isw_dispute_status">Dispute Transaction Status</string>
-    <string name="isw_get_reward">Get a Reward</string>
-    <string name="isw_get_reward_info">Loyalty rewards and redemption</string>
+    <string name="isw_get_reward">Get Reward</string>
+    <string name="isw_get_reward_info"> Earn and redeem customer loyalty rewards</string>
     <string name="customer_name">Customer Name</string>
     <string name="isw_transaction_id">Transaction ID</string>
     <string name="issue_type">Issue Type</string>
@@ -247,9 +249,14 @@
     <string name="isw_title_terminal_capabilities">Terminal Capabilities</string>
 
 
-    <string name="isw_receipt_date">Date:  %s</string>
-    <string name="isw_receipt_payment_type">Payment type:  %s</string>
-    <string name="isw_receipt_amount">Amount: # %s</string>
+    <string name="isw_receipt_date">%s</string>
+    <string name="isw_receipt_payment_type">%s</string>
+    <string name="isw_payment_type">Payment Type</string>
+    <string name="isw_amount_paid">Amount Paid</string>
+    <string name="isw_stan">Stan</string>
+    <string name="isw_authorization_code_label">Authorization Code</string>
+    <string name="isw_receipt_amount">%1$s</string>
+    <string name="isw_card_type">Card Type</string>
 
 
 </resources>

@@ -7,6 +7,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
+import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,7 +41,9 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
         uiScope.launch {
             val isSuccessful = withContext(ioScope) { isoService.downloadTerminalParameters(terminalId, ip, port) }
             _configDownloadSuccess.value = isSuccessful
-        }
+            //Logger.with("Settings ViewModel").logErr(isoService.downloadTerminalParameters(terminalId,ip,port).toString())
+        println("Settings ViewModel : $isSuccessful")
+    }
     }
 
 

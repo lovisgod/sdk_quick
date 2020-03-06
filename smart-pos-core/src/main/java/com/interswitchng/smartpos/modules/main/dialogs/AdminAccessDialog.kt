@@ -51,7 +51,7 @@ class AdminAccessDialog constructor(
 //            return
 //        }
 
-        cardViewModel.setupTransaction(0, terminalInfo)
+        cardViewModel.setupTransaction(0.00, terminalInfo)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -73,7 +73,8 @@ class AdminAccessDialog constructor(
 
             // when card is detected
             is EmvMessage.CardDetected -> {
-                cardViewModel.startTransaction(requireContext())
+                //TODO: Uncomment this, was commented out during conflict resolution
+//                cardViewModel.startTransaction(requireContext())
             }
 
             is EmvMessage.CardDetails -> {}

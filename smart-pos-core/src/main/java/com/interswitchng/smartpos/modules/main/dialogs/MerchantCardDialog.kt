@@ -12,6 +12,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
 import kotlinx.android.synthetic.main.isw_layout_insert_supervisors_card.*
+import kotlinx.android.synthetic.main.isw_layout_supervisors_card_detected.*
 import kotlinx.android.synthetic.main.isw_sheet_layout_admin_merchant_card.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -33,7 +34,7 @@ class MerchantCardDialog constructor(
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })
-        cardViewModel.setupTransaction(0, terminalInfo)
+        cardViewModel.setupTransaction(0.0, terminalInfo)
         if (!IswPos.hasFingerprint()) {
             isw_use_fingerprint.visibility = View.GONE
         }

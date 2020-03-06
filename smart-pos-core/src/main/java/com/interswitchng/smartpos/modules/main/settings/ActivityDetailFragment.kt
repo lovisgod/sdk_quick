@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
-import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragmentDirections
-import com.interswitchng.smartpos.modules.main.fragments.TransactionFragmentDirections
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.models.payment
@@ -25,7 +22,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
 
     private val activityDetailFragmentArgs by navArgs<ActivityDetailFragmentArgs>()
     private val transactionLog by lazy { activityDetailFragmentArgs.TransactionLog }
-    lateinit var transactionType: String
+    lateinit var  transactionType: String
     lateinit var paymentType: PaymentType
 
     override val layoutId: Int
@@ -45,7 +42,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
             else -> PaymentType.Card
         }
 
-        transactionType = when (transactionLog.transactionType) {
+        transactionType = when(transactionLog.transactionType) {
             TransactionType.Purchase.ordinal -> getString(R.string.isw_purchase)
             TransactionType.Pre_Authorization.ordinal -> getString(R.string.isw_pre_authorization)
             TransactionType.Completion.ordinal -> getString(R.string.isw_completion)
@@ -64,67 +61,36 @@ class ActivityDetailFragment : BaseFragment(TAG) {
         isw_transaction_name.text = paymentType.toString()
         isw_transaction_icon.setImageResource(cardIcon)
         isw_transaction_type.text = getString(R.string.isw_transaction_type, transactionType)
-        isw_amount_paid_value_text.text =
-            getString(R.string.isw_amount_with_naira_sign, transactionLog.amount)
-        isw_date_value_text.text = DateUtils.timeOfDateFormat.format(Date(transactionLog.time))
+        isw_amount_paid_value_text.text = getString(R.string.isw_amount_with_naira_sign, transactionLog.amount)
+        isw_date_value_text.text =  DateUtils.timeOfDateFormat.format(Date(transactionLog.time))
     }
 
     private fun handleMoreClick() {
         isw_more_label.setOnClickListener {
-            val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
-                if (isValidated) {
-                    gotoReceipt()
-                } else {
-                    toast("Fingerprint Verification Failed!!")
-                    navigateUp()
+            val payment = payment {
+                type = when(transactionType) {
+                    "Purchase" -> PaymentModel.TransactionType.CARD_PURCHASE
+                    "Pre-Authorization" -> PaymentModel.TransactionType.PRE_AUTHORIZATION
+                    "Completion" -> PaymentModel.TransactionType.COMPLETION
+                    "Refund" -> PaymentModel.TransactionType.REFUND
+                    "Reversal" -> PaymentModel.TransactionType.REVERSAL
+                    else -> PaymentModel.TransactionType.CARD_PURCHASE
                 }
             }
-            val dialog = MerchantCardDialog(isAuthorization = true) { type ->
-                when (type) {
-                    MerchantCardDialog.AUTHORIZED -> {
-                        gotoReceipt()
-                    }
-                    MerchantCardDialog.FAILED -> {
-                        toast("Merchant Card Verification Failed!!")
-                        navigateUp()
-                    }
-                    MerchantCardDialog.USE_FINGERPRINT -> {
-                        fingerprintDialog.show(childFragmentManager, FingerprintBottomDialog.TAG)
-                    }
-                }
-            }
-            dialog.show(childFragmentManager, MerchantCardDialog.TAG)
+
+            val transactionResult = transactionLog.toResult()
+            val transactionResponseModel = TransactionResponseModel(transactionResult = transactionResult,
+                transactionType = payment.type!! )
+
+            val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentReceipt(PaymentModel = payment,
+                TransactionResponseModel = transactionResponseModel, IsFromActivityDetail = true)
+
+            navigate(direction)
         }
 
         isw_activity_nav.setOnClickListener {
             navigateUp()
         }
-    }
-
-    private fun gotoReceipt() {
-        val payment = payment {
-            type = when (transactionType) {
-                "Purchase" -> PaymentModel.TransactionType.CARD_PURCHASE
-                "Pre-Authorization" -> PaymentModel.TransactionType.PRE_AUTHORIZATION
-                "Completion" -> PaymentModel.TransactionType.COMPLETION
-                "Refund" -> PaymentModel.TransactionType.REFUND
-                "Reversal" -> PaymentModel.TransactionType.REVERSAL
-                else -> PaymentModel.TransactionType.CARD_PURCHASE
-            }
-        }
-
-        val transactionResult = transactionLog.toResult()
-        val transactionResponseModel = TransactionResponseModel(
-            transactionResult = transactionResult,
-            transactionType = payment.type!!
-        )
-
-        val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentReceipt(
-            PaymentModel = payment,
-            TransactionResponseModel = transactionResponseModel, IsFromActivityDetail = true
-        )
-
-        navigate(direction)
     }
 
     companion object {

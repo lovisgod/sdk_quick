@@ -29,8 +29,7 @@ import java.util.*
 class ProcessingRequestFragment : BaseFragment(TAG) {
 
     private val processingRequestFragmentArgs by navArgs<ProcessingRequestFragmentArgs>()
-    private val payment by lazy { processingRequestFragmentArgs.PaymentModel }
-    private val paymentInfo by lazy { processingRequestFragmentArgs.PaymentInfo }
+    private val paymentModel by lazy { processingRequestFragmentArgs.PaymentModel }
     private val cardType by lazy { processingRequestFragmentArgs.CardType }
     private val transactionType by lazy { processingRequestFragmentArgs.TransactionType }
     private val accountType by lazy { processingRequestFragmentArgs.AccountType }
@@ -43,7 +42,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
     private val cardViewModel: CardViewModel by sharedViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        when (payment.type) {
+        when (paymentModel.type) {
             PaymentModel.TransactionType.CARD_PURCHASE -> isw_processing_text.text =
                 getString(R.string.isw_processing_transaction, "Transaction")
             PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_processing_text.text =
@@ -75,7 +74,17 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
         observeViewModel()
 
         runWithInternet {
-            cardViewModel.processOnline(paymentInfo, terminalInfo, accountType)
+            if (paymentModel.type == PaymentModel.TransactionType.CARD_NOT_PRESENT) {
+                cardViewModel.processOnlineCNP(
+                    paymentModel,
+                    accountType,
+                    terminalInfo,
+                    paymentModel.card!!.expiryDate!!,
+                    paymentModel.card!!.cardPan!!
+                )
+            } else {
+                cardViewModel.processOnline(paymentModel, accountType, terminalInfo)
+            }
         }
     }
 
@@ -152,7 +161,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 val response = transactionResponse.value.first
                 val emvData = transactionResponse.value.second
                 val txnInfo =
-                    TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+                    TransactionInfo.fromEmv(emvData, paymentModel, PurchaseType.Card, accountType)
 
                 val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
                 val pinStatus = when {
@@ -164,7 +173,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 transactionResult = TransactionResult(
                     paymentType = PaymentType.Card,
                     dateTime = DisplayUtils.getIsoString(now),
-                    amount = payment.amount.toString(),
+                    amount = paymentModel.amount.toString(),
                     type = transactionType,
                     authorizationCode = response.authCode,
                     responseMessage = responseMsg,
@@ -189,7 +198,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
 
                 val direction =
                     ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptFragment(
-                        payment,
+                        paymentModel,
                         TransactionResponseModel(
                             transactionResult = transactionResult,
                             transactionType = PaymentModel.TransactionType.CARD_PURCHASE

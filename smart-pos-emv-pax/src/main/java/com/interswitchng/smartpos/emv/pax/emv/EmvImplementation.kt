@@ -42,9 +42,9 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     private lateinit var terminalInfo: TerminalInfo
 
 
-    private var amount: Int = 0
+    private var amount: Double = 0.00
 
-    fun setAmount(amount: Int) {
+    fun setAmount(amount: Double) {
         this.amount = amount
     }
 
@@ -316,7 +316,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
             amountInfo[0] = amount.toLong()
             emvCallback.setCallBackResult(RetCode.EMV_OK)
 
-            val bytes = str2Bcd(Integer.toHexString(amount))
+            val bytes = str2Bcd(Integer.toHexString(amount.toInt()))
             val resultAmt = EMVCallback.EMVSetTLVData(ICCData.TRANSACTION_AMOUNT.tag.toShort(), bytes, bytes.size)
             if (resultAmt != RetCode.EMV_OK) logger.log("Error setting amount TLV: code - $resultAmt")
         }

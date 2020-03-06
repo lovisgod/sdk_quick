@@ -5,6 +5,7 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 
 
 /**
@@ -30,7 +31,7 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
         val stan = pairString("stan", info.stan)
         val date = pairString("date", info.dateTime)
         val dateTime = pairString("Date Time", info.originalDateTime)
-        val amount = pairString("amount", "# ${info.amount}")
+        val amount = pairString("amount", DisplayUtils.getAmountWithCurrency(info.amount))
         val authCode = pairString("authentication code", info.authorizationCode)
         val list = mutableListOf(txnType, paymentType, stan, date, dateTime, line, amount, line)
 

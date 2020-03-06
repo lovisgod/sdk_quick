@@ -2,6 +2,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -106,19 +107,40 @@
         android:gravity="start|center_vertical"
         android:padding="10dp"
         android:text="@string/isw_ussd"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
         app:cornerRadius="8dp"
         app:elevation="10dp"
-        android:textAllCaps="false"
-        app:rippleColor="@android:color/darker_gray"
-        android:textColor="@android:color/black"
         app:icon="@drawable/isw_ic_payment"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/isw_card_not_present"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_pay_code"
+        app:rippleColor="@android:color/darker_gray"
         app:strokeColor="@color/iswColorPrimary"
+        app:strokeWidth="1dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_card_not_present"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
+        android:gravity="start|center_vertical"
+        android:padding="10dp"
+        android:text="@string/isw_card_not_present"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        app:cornerRadius="8dp"
+        app:elevation="10dp"
+        app:icon="@drawable/isw_ic_payment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:rippleColor="@android:color/darker_gray"
+        app:strokeColor="@color/iswColorPrimary"
         app:strokeWidth="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
