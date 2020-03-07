@@ -21,8 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.interswitch.smartpos.emv.telpo.TelpoPOSDeviceImpl;
 import com.interswitchng.smartpos.IswPos;
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
 import com.interswitchng.smartpos.shared.models.core.Environment;
@@ -113,7 +113,8 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
-            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
+        //POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
+        TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
             device = service;
 

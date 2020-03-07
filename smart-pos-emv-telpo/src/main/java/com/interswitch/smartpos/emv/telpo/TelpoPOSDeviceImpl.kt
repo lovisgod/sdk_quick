@@ -37,6 +37,12 @@ class TelpoPOSDeviceImpl constructor(
         PinpadService.TP_WritePinKey(1, key, PinpadService.KEY_WRITE_DECRYPT, 0)
     }
 
+    fun setCompanyLogo(bitmap: Bitmap) {
+        companyLogo = bitmap
+
+
+    }
+
     companion object {
 
         internal const val INDEX_TIK: Byte = 0x01
