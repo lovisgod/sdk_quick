@@ -77,17 +77,16 @@ class SettingsHomeFragment : BaseFragment(TAG) {
             when (it) {
                 MerchantCardDialog.AUTHORIZED -> action.invoke()
                 MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
-                MerchantCardDialog.NOT_ENROLLED -> { alert.setTitle("Supervisor's card not enrolled")
-                    alert.setMessage("You have not yet enrolled a supervisor's card. Please enroll a supervisor's card on the settings page after downloading terminal configuration.")
-                    alert.show()
-
-                }
+//                MerchantCardDialog.NOT_ENROLLED -> { alert.setTitle("Supervisor's card not enrolled")
+//                    alert.setMessage("You have not yet enrolled a supervisor's card. Please enroll a supervisor's card on the settings page after downloading terminal configuration.")
+//                    alert.show()
+//
+//                }
 
 
                 MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(requireFragmentManager(), FingerprintBottomDialog.TAG)
             }
         }
-        dialog.setIsEnrollment(false);
         dialog.show(requireFragmentManager(), MerchantCardDialog.TAG)
     }
 

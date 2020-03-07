@@ -30,7 +30,7 @@
         android:layout_marginTop="20dp"
 
         android:gravity="center"
-        android:text="@string/isw_insert_supervisor_s_card"
+        android:text="@string/isw_enrol_supervisor_s_card"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toBottomOf="@+id/isw_pin"
 

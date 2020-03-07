@@ -129,7 +129,7 @@ internal class TelpoEmvImplementation (
             TerminalType = terminalConfig.terminaltype.toByte()
             Capability = StringUtil.hexStringToByte(terminalConfig.terminalcapability)
             ExCapability = StringUtil.hexStringToByte(terminalConfig.extendedterminalcapability)
-            CountryCode = terminalInfo.countryCode.toByteArray()
+            CountryCode = byteArrayOf(0x05.toByte(), 0x66.toByte())
         }
 
         emvService.Emv_SetParam(emvParameter)
@@ -184,7 +184,7 @@ internal class TelpoEmvImplementation (
         return cardType
     }
 
-    fun getTLVString(tag: Int): String? = getTLV(tag)?.let { StringUtil.bytesToHexString_upcase(it) }
+    fun getTLVString(tag: Int): String? = getTLV(tag)?.let { StringUtil.bytesToHexString(it) }
 
     fun getTLV(tag: Int): ByteArray? {
         val tlv = EmvTLV(tag)
@@ -265,12 +265,8 @@ internal class TelpoEmvImplementation (
             val tagValues: MutableList<Pair<ICCData, ByteArray?>> = mutableListOf()
 
             for (tag in REQUEST_TAGS) {
-                if (tag == ICCData.TERMINAL_COUNTRY_CODE) {
-                    tagValues.add(Pair(tag, byteArrayOf(5, 66)))
-                } else {
-                    val tlv = getTLV(tag.tag)
-                    tagValues.add(Pair(tag, tlv))
-                }
+                val tlv = getTLV(tag.tag)
+                tagValues.add(Pair(tag, tlv))
             }
 
             iccAsString = TelpoEmvUtils.buildIccString(tagValues)
@@ -291,8 +287,8 @@ internal class TelpoEmvImplementation (
                 it.CashbackAmount = 0L
                 it.TransactionType = 0.toByte()
                 it.ReferCurrCon = 0
-                it.ReferCurrExp = 0.01.toByte()
-                it.TransCurrExp = 0.toByte()
+                it.ReferCurrExp = 100.toByte()
+                it.TransCurrExp = 100.toByte()
             }
 
             val tlv = getTLVString(0x9F1A)

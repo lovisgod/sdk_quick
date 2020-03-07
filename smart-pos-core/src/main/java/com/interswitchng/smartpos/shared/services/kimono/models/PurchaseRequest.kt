@@ -50,8 +50,6 @@ internal class PurchaseRequest
 
             var pinData=""
 
-            Logger.with("amount kimono").log(transaction.amount.toString())
-
             val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
             Logger.with("purchaserequest").logErr(amount)
             val now = Date()
@@ -86,65 +84,6 @@ internal class PurchaseRequest
            <terminalInformation><batteryInformation>-1</batteryInformation> <currencyCode>${terminalInfo.currencyCode}</currencyCode><languageInfo>EN</languageInfo><merchantId>${terminalInfo.merchantId}</merchantId><merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> <posConditionCode>00</posConditionCode> <posDataCode>${if (hasPin) "510101511344101" else "511101511344101"}</posDataCode> <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${device.name}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${icc.INTERFACE_DEVICE_SERIAL_NUMBER}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber> <track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear> <track2>${track2}</track2></track2><emvData><AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults><iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan> <minorAmount>${ transaction.amount.toInt()}</minorAmount> ${pinData} <keyLabel>${keyLabel}</keyLabel></purchaseRequest>
         """
 
-//            <purchaseRequest>
-//            <cardPan>5198994054454371</cardPan>
-//            <terminalId>2ISW0256</terminalId>
-//            <requestType>Payment</requestType>
-//            <terminalInformation>
-//            <batteryInformation>100</batteryInformation>
-//            <currencyCode>566</currencyCode>
-//            <languageInfo>EN</languageInfo>
-//            <merchantId>2ISW123IFIS0254</merchantId>
-//            <merhcantLocation>MONDAY INEME WILLIAMS</merhcantLocation>
-//            <posConditionCode>00</posConditionCode>
-//            <posDataCode>510101511344101</posDataCode>
-//            <posEntryMode>051</posEntryMode>
-//            <posGeoCode>00234000000000566</posGeoCode>
-//            <printerStatus>1</printerStatus>
-//            <terminalId>2ISW0256</terminalId>
-//            <terminalType>22</terminalType>
-//            <transmissionDate></transmissionDate>
-//            <uniqueId>5C173336</uniqueId>
-//            </terminalInformation>
-//            <cardData>
-//            <cardSequenceNumber>01</cardSequenceNumber>
-//            <emvData>
-//            <AmountAuthorized>000000001000</AmountAuthorized>
-//            <AmountOther>000000000000</AmountOther>
-//            <ApplicationInterchangeProfile>3800</ApplicationInterchangeProfile>
-//            <atc>0496</atc>
-//            <Cryptogram>F049814E7F3C1036</Cryptogram>
-//            <CryptogramInformationData>80</CryptogramInformationData>
-//            <CvmResults>420300</CvmResults>
-//            <iad>0110A080002A00001EEA00000000000000FF</iad>
-//            <TransactionCurrencyCode>566</TransactionCurrencyCode>
-//            <TerminalVerificationResult>0080248000</TerminalVerificationResult>
-//            <TerminalCountryCode>566</TerminalCountryCode>
-//            <TerminalType>22</TerminalType>
-//            <TerminalCapabilities>E0F0C8</TerminalCapabilities>
-//            <TransactionDate>200305</TransactionDate>
-//            <TransactionType>00</TransactionType>
-//            <UnpredictableNumber>24C65416</UnpredictableNumber>
-//            <DedicatedFileName>A0000000041010</DedicatedFileName>
-//            </emvData>
-//            <track2>
-//            <pan>5198994054454371</pan>
-//            <expiryMonth>04</expiryMonth>
-//            <expiryYear>22</expiryYear>
-//            <track2>5198994054454371D22042219684810</track2>
-//            </track2>
-//            </cardData>
-//            <fromAccount></fromAccount>
-//            <stan>000001</stan>
-//            <minorAmount>1000</minorAmount>
-//            <pinData>
-//            <ksnd>605</ksnd>
-//            <ksn>000002DDDDE00002</ksn>
-//            <pinBlock>BD24A2ABE325C42D</pinBlock>
-//            <pinType>Dukpt</pinType>
-//            </pinData>
-//            <keyLabel>000002</keyLabel>
-//            </purchaseRequest>
             return requestBody
 
         }

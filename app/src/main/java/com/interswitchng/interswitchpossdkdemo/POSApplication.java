@@ -60,6 +60,7 @@ public class POSApplication extends Application   {
         POSFingerprint fingerprint;
 
         if (BuildConfig.MOCK) {
+            fingerprint = new TelpoPOSFingerprintImpl();
             device = new POSDevice() {
 
                 @Override

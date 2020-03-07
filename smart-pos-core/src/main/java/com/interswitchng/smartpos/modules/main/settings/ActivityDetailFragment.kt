@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragmentDirections
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.models.payment
@@ -12,10 +11,8 @@ import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
-import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_detail.*
 import java.util.*
 
@@ -62,7 +59,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
         isw_transaction_name.text = paymentType.toString()
         isw_transaction_icon.setImageResource(cardIcon)
         isw_transaction_type.text = getString(R.string.isw_transaction_type, transactionType)
-        isw_amount_paid_value_text.text = DisplayUtils.getAmountWithCurrency(transactionLog.amount)
+        isw_amount_paid_value_text.text = getString(R.string.isw_amount_with_naira_sign, transactionLog.amount)
         isw_date_value_text.text =  DateUtils.timeOfDateFormat.format(Date(transactionLog.time))
     }
 
