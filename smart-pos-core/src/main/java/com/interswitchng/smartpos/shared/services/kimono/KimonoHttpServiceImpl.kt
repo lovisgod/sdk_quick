@@ -244,7 +244,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
 
             val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+            var purchaseResponse = XmlPullParserHandler().parse(inputStream)
 
             return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
