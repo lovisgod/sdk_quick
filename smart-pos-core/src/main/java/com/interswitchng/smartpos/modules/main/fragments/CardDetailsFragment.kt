@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.modules.main.fragments
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.gojuno.koptional.None
@@ -9,10 +10,8 @@ import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
-import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
-import com.interswitchng.smartpos.modules.main.models.TransactionResultModel
 import com.interswitchng.smartpos.modules.main.models.cardModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -55,6 +54,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
+        isw_amount.text = Editable.Factory.getInstance().newEditable(paymentModel.amount.toString())
         var amountInput=isw_amount.text.toString()
         val cardModel = cardModel {
             cvv = isw_cvv.text.toString()
