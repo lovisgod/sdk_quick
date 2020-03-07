@@ -13,7 +13,9 @@ import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import kotlinx.android.synthetic.main.isw_fragment_card_details.*
+import kotlinx.android.synthetic.main.isw_fragment_bill_payment_new.*
+import kotlinx.android.synthetic.main.isw_fragment_card_details.isw_card_details_toolbar
+import kotlinx.android.synthetic.main.isw_fragment_card_details.isw_proceed
 
 class BillPaymentFragment : BaseFragment(TAG) {
 
