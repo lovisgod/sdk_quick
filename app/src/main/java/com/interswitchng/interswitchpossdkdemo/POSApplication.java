@@ -6,17 +6,19 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+
 import androidx.core.content.ContextCompat;
 import androidx.multidex.MultiDex;
+
+import com.interswitch.smartpos.emv.telpo.TelpoPOSDeviceImpl;
 import com.interswitch.smartpos.emv.telpo.fingerprint.TelpoPOSFingerprintImpl;
 import com.interswitchng.smartpos.IswPos;
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
+import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint;
 import com.interswitchng.smartpos.shared.models.core.Environment;
 import com.interswitchng.smartpos.shared.models.core.IswLocal;
-import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.shared.models.core.PurchaseConfig;
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo;
@@ -27,7 +29,6 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessa
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData;
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse;
-
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -128,7 +129,8 @@ public class POSApplication extends Application   {
 ////
 //            device = service;
 
-            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
+            // POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
+            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
 
 
