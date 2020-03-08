@@ -40,6 +40,8 @@ class TerminalSettingsActivity : MenuActivity() {
 
     private val isFromSettings by lazy { intent.getBooleanExtra("FROM_SETTINGS", false) }
 
+    private var supervisorCardIsEnrolled = false
+
     private val alert by lazy {
         DialogUtils.getAlertDialog(this)
             .setTitle("Invalid Configuration")
@@ -249,19 +251,13 @@ class TerminalSettingsActivity : MenuActivity() {
 
 
         btnChangePassword.setOnClickListener {
-            // validate user input
-//          //  validateUserPassword()
-//            authorizeAndPerformAction {
-//
-//                validateUserPassword()
-//
-//
-//
-//            }
-
-
-            authorizeAndPerformAction { fetchSupervisorDetails() }
-
+            if (supervisorCardIsEnrolled) {
+                authorizeAndPerformAction { fetchSupervisorDetails() }
+            } else {
+                val intent = Intent(this, SetupActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
@@ -526,7 +522,6 @@ class TerminalSettingsActivity : MenuActivity() {
                 )
             }
         }
-//        accountTypeDialog.show(childFragmentManager, TAG)
         dialog.show(supportFragmentManager, MerchantCardDialog.TAG)
     }
 
@@ -536,13 +531,12 @@ class TerminalSettingsActivity : MenuActivity() {
         if (savedPan == "") {
             supervisorStatusHeader.text = "Supervisor's card not set"
             btnChangePassword.text = "Enroll supervisor's card"
-
-
+            supervisorCardIsEnrolled = false
         } else {
             supervisorStatusHeader.text = ""
             btnChangePassword.text = "Change supervisor's card"
+            supervisorCardIsEnrolled = true
         }
-
     }
 
 
