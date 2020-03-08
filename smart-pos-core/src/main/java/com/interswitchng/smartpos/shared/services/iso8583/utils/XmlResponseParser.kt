@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.shared.services.iso8583.utils
 
 
+import com.interswitchng.smartpos.shared.services.kimono.models.BillPaymentResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseResponse
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
@@ -63,5 +64,57 @@ class XmlPullParserHandler {
             e.printStackTrace()
         }
         return purchaseResponse
+    }
+}
+
+class XmlPullParserHandlerBP {
+    private var billPaymentResponse: BillPaymentResponse = BillPaymentResponse()
+
+    private var text: String? = null
+
+    fun contains(tagname: String): Boolean {
+        return tagname.equals("reversalResponseWithoutOriginalDate", ignoreCase = true) || tagname.equals("reversalResponse", ignoreCase = true) || tagname.equals("completionResponse", ignoreCase = true) || tagname.equals("reservationResponse", ignoreCase = true) || tagname.equals("purchaseResponse", ignoreCase = true) || tagname.equals("channelResponse", ignoreCase = true) || tagname.equals("ifisBillPaymentCashoutResponse", ignoreCase = true)
+    }
+
+    fun parse(inputStream: InputStream): BillPaymentResponse {
+        try {
+            val factory = XmlPullParserFactory.newInstance()
+            factory.isNamespaceAware = true
+            val parser = factory.newPullParser()
+            parser.setInput(inputStream, null)
+            var eventType = parser.eventType
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                val tagname = parser.name
+                when (eventType) {
+
+                    XmlPullParser.START_TAG -> if (contains(tagname)) {
+                        // create a new instance of employee
+                        billPaymentResponse = BillPaymentResponse()
+                    }
+                    XmlPullParser.TEXT -> text = parser.text
+                    XmlPullParser.END_TAG -> if (contains(tagname)) {
+                        // add employee object to list
+                        return billPaymentResponse
+                    } else if (tagname.equals("stan", ignoreCase = true)) {
+                        billPaymentResponse.stan = text.toString()
+                    } else if (tagname.equals("responseCode", ignoreCase = true)) {
+                        billPaymentResponse.responseCode = text.toString()
+                    } else if (tagname.equals("responseMessage", ignoreCase = true)) {
+                        billPaymentResponse.description = text.toString()
+                    } else if (tagname.equals("transactionId", ignoreCase = true)) {
+                        billPaymentResponse.transactionId = text.toString()
+                    }
+                    else -> {
+                    }
+                }
+                eventType = parser.next()
+            }
+
+        } catch (e: XmlPullParserException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return billPaymentResponse
     }
 }

@@ -143,22 +143,32 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                             context!!,
                             paymentInfo,
                             accountType,
-                                terminalInfo,
-                                paymentModel.billPayment!!
+                                terminalInfo
                         )
                     }
                 }
                 accountTypeDialog.show(childFragmentManager, TAG)
             }
 
+            PaymentModel.TransactionType.BILL_PAYMENT -> {
+                runWithInternet {
+                    cardViewModel.startTransaction(
+                            context!!,
+                            paymentInfo,
+                            accountType,
+                            terminalInfo,
+                            paymentModel.billPayment!!
+                    )
+                }
+            }
+
             else -> {
                 runWithInternet {
                     cardViewModel.startTransaction(
-                        context!!,
-                        paymentInfo,
-                        accountType,
-                            terminalInfo,
-                            paymentModel.billPayment!!
+                            context!!,
+                            paymentInfo,
+                            accountType,
+                            terminalInfo
                     )
                 }
             }
@@ -374,7 +384,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 val txnInfo =
                     TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
-                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                val responseMsg = (response.responseDescription) ?: "Unknown Error"
                 val pinStatus = when {
                     pinOk || response.responseCode == IsoUtils.OK -> "PIN Verified"
                     else -> "PIN Unverified"

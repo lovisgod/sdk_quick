@@ -19,6 +19,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
+import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandlerBP
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.utilities.Logger
@@ -78,66 +79,40 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
 
-        /* // load test keys
+        // load test keys
          val tik = Constants.ISW_DUKPT_IPEK
          val ksn = Constants.ISW_DUKPT_KSN
 
          // load keys
          device.loadInitialKey(tik, ksn)
-         return true*/
-        //val requestBody = NewKeyRequest.create(terminalId)
-        //val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
+        return true
 
 
-        try {
-            val responseBody = httpService.getKimonoKey(cmd = "key", terminalId = terminalId, pkmod = Constants.PKMOD, pkex = Constants.PKEX, pkv = "1", keyset_id = "000002", der_en = "1").run()
-            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
-
-            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-            var keyResponse = XmlPullParserHandler().parse(inputStream)
-
-            if (!responseBody.isSuccessful || keyResponse == null) {
-                Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
-                return false
-            } else {
-                //store.saveString(Constants.KIMONO_KEY, responseBody.body().toString())
-                Logger.with("KeyResponseMessage").log(responseBody.body().toString())
-                return true
-            }
-        } catch (e: Exception) {
-            logger.log(e.localizedMessage)
-            e.printStackTrace()
-        }
-        return false
+//        try {
+//            val responseBody = httpService.getKimonoKey(cmd = "key", terminalId = terminalId, pkmod = Constants.PKMOD, pkex = Constants.PKEX, pkv = "1", keyset_id = "000002", der_en = "1").run()
+//            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
+//
+//            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+//            var keyResponse = XmlPullParserHandler().parse(inputStream)
+//
+//            if (!responseBody.isSuccessful || keyResponse == null) {
+//                Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
+//                return false
+//            } else {
+//                //store.saveString(Constants.KIMONO_KEY, responseBody.body().toString())
+//                Logger.with("KeyResponseMessage").log(responseBody.body().toString())
+//                return true
+//            }
+//        } catch (e: Exception) {
+//            logger.log(e.localizedMessage)
+//            e.printStackTrace()
+//        }
+//        return false
 
 
     }
 
-    /* fun downloadKeyKimono(terminalId:String):Boolean{
-         val requestBody = NewKeyRequest.create(terminalId)
-         //val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
-         try{
-             val responseBody = httpService.getKimonoKey(requestBody).run()
-             var responseXml= responseBody.body()?.bytes()?.let { String(it) }
-
-             val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-             var keyResponse=     XmlPullParserHandler().parse( inputStream)
-             if(!responseBody.isSuccessful || keyResponse==null){
-                 Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
-                 return false
-             }
-             else{
-                  store.saveString(Constants.KIMONO_KEY, responseBody.message().toString())
-                          return true
-             }
-         }
-         catch(e:Exception){
-             logger.log(e.localizedMessage)
-             e.printStackTrace()
-         }
-         return false
-     }*/
 
 
     override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
@@ -244,7 +219,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
 
             val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-            var purchaseResponse = XmlPullParserHandler().parse(inputStream)
+            var purchaseResponse = XmlPullParserHandlerBP().parse(inputStream)
 
             return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
@@ -258,7 +233,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 TransactionResponse(
                         responseCode =purchaseResponse.responseCode,//data.responseCode,
                         stan = purchaseResponse.stan,
-                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        authCode = "",//purchaseResponse.authCode,// data.authCode,
                         scripts =  purchaseResponse.stan,
                         responseDescription = purchaseResponse.description//data.description
 

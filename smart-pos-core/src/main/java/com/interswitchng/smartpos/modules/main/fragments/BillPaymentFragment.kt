@@ -7,12 +7,8 @@ import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
-import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
-import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import kotlinx.android.synthetic.main.isw_fragment_bill_payment_new.*
 import kotlinx.android.synthetic.main.isw_fragment_card_details.isw_card_details_toolbar
 import kotlinx.android.synthetic.main.isw_fragment_card_details.isw_proceed
@@ -22,12 +18,7 @@ class BillPaymentFragment : BaseFragment(TAG) {
     private val billPaymentFragmentArgs by navArgs<BillPaymentFragmentArgs>()
     private val paymentModel by lazy { billPaymentFragmentArgs.PaymentModel }
 
-    private lateinit var transactionResponseModel: TransactionResponseModel
-    private var transactionType: TransactionType = TransactionType.CardNotPresent
-    private var accountType = AccountType.Default
-    private lateinit var transactionResult: TransactionResult
-    private var pinOk = false
-    //lateinit var terminalInfo:TerminalInfo
+
 
 
     private val paymentInfo by lazy {
