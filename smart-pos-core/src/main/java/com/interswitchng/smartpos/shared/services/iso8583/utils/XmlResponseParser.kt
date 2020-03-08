@@ -2,8 +2,8 @@ package com.interswitchng.smartpos.shared.services.iso8583.utils
 
 
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseResponse
-import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserException
 import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.io.InputStream
@@ -14,7 +14,7 @@ class XmlPullParserHandler {
     private var text: String? = null
 
     fun contains(tagname:String):Boolean{
-        return  tagname.equals("reversalResponseWithoutOriginalDate", ignoreCase = true) ||  tagname.equals("reversalResponse", ignoreCase = true) ||  tagname.equals("completionResponse", ignoreCase = true) || tagname.equals("reservationResponse", ignoreCase = true) ||  tagname.equals("purchaseResponse", ignoreCase = true) || tagname.equals("channelResponse", ignoreCase = true)
+        return tagname.equals("reversalResponseWithoutOriginalDate", ignoreCase = true) || tagname.equals("reversalResponse", ignoreCase = true) || tagname.equals("completionResponse", ignoreCase = true) || tagname.equals("reservationResponse", ignoreCase = true) || tagname.equals("purchaseResponse", ignoreCase = true) || tagname.equals("channelResponse", ignoreCase = true) || tagname.equals("ifisBillPaymentCashoutResponse", ignoreCase = true)
     }
     fun parse(inputStream: InputStream): PurchaseResponse {
         try {
