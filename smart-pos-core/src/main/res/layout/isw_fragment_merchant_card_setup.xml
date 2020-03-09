@@ -69,7 +69,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="24dp"
-        tools:visibility="gone"
         android:src="@drawable/isw_ic_login_lock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -81,11 +80,10 @@
         layout="@layout/isw_layout_insert_supervisors_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/isw_imageview" />
 
     <include

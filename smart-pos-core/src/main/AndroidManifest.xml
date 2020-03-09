@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -14,11 +14,11 @@
     <uses-permission android:name="android.permission.NFC" />
 
     <application>
-<!--        <activity android:name=".modules.bills.BillsActivity"-->
-<!--                  android:label="@string/isw_label_app_title"-->
-<!--                  android:screenOrientation="portrait"-->
-<!--                  android:theme="@style/ISW.NoActionBar">-->
-<!--        </activity>-->
+        <!--        <activity android:name=".modules.bills.BillsActivity"-->
+        <!--                  android:label="@string/isw_label_app_title"-->
+        <!--                  android:screenOrientation="portrait"-->
+        <!--                  android:theme="@style/ISW.NoActionBar">-->
+        <!--        </activity>-->
 
         <meta-data
             android:name="preloaded_fonts"
@@ -28,7 +28,7 @@
             android:name=".modules.home.HomeActivity"
             android:label="@string/isw_label_app_title"
             android:screenOrientation="portrait"
-            android:theme="@style/ISW.NoActionBar" >
+            android:theme="@style/ISW.NoActionBar">
 
 
         </activity>
@@ -75,10 +75,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
 
-
         <activity
             android:name="com.interswitchng.smartpos.modules.menu.settings.TerminalSettingsActivity"
-            android:label="Settings"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar">
@@ -99,11 +97,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
 
-        <activity android:name="com.interswitchng.smartpos.modules.menu.report.ReportActivity"
+        <activity
+            android:name="com.interswitchng.smartpos.modules.menu.report.ReportActivity"
             android:label="Report"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/ISW.NoActionBar"  />
+            android:theme="@style/ISW.NoActionBar" />
 
     </application>
 

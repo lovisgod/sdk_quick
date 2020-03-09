@@ -17,9 +17,8 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.services.iso8583.utils.TerminalInfoParser
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
-import com.interswitchng.smartpos.shared.services.kimono.models.*
+import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.utilities.Logger
 import okhttp3.MediaType
@@ -134,7 +133,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             }
 
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
+            //logger.log(e.localizedMessage)
             e.printStackTrace()
           //  initiateReversal(request, request.stan) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
