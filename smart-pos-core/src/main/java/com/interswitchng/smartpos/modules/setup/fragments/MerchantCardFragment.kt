@@ -74,17 +74,17 @@ class MerchantCardFragment : BaseFragment(TAG) {
                 isw_insert_card_layout.visibility = View.GONE
                 isw_card_detected_layout.visibility = View.VISIBLE
                 isw_enter_pin_layout.visibility = View.GONE
-
-                isw_card_pan.text = cardViewModel.getCardPAN()
-
-                isw_card_detected_layout.visibility = View.GONE
-                isw_enter_pin_layout.visibility = View.VISIBLE
             }
 
             is EmvMessage.EmptyPin -> {
             }
 
             is EmvMessage.CardDetails -> {
+                isw_imageview.visibility = View.INVISIBLE
+                isw_insert_card_layout.visibility = View.GONE
+                isw_card_detected_layout.visibility = View.GONE
+                isw_enter_pin_layout.visibility = View.VISIBLE
+                isw_card_pan.text = cardViewModel.getCardPAN()
             }
 
             // when card should be inserted
@@ -96,7 +96,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
 
             // when card has been read
             is EmvMessage.CardRead -> {
-                runBlocking { delay(1000) }
+                cardViewModel.readCard()
             }
 
             // when card gets removed
@@ -116,9 +116,6 @@ class MerchantCardFragment : BaseFragment(TAG) {
 
             // when pin has been validated
             is EmvMessage.PinOk -> {
-//                isw_insert_card_layout.visibility = View.GONE
-//                isw_card_detected_layout.visibility = View.GONE
-//                isw_enter_pin_layout.visibility = View.VISIBLE
 //                toast("Pin OK")
             }
 

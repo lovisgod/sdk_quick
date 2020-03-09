@@ -69,6 +69,10 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+    fun readCard() {
+        emv.startTransaction()
+    }
+
     fun startTransaction(
         context: Context
     ) {

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:paddingTop="50px"
-
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-
+    android:orientation="vertical"
+    android:paddingTop="50dp">
 
     <TextView
         android:id="@+id/isw_pin"
@@ -15,42 +13,38 @@
         android:layout_height="0dp"
         android:textColor="@android:color/black"
         android:textSize="30sp"
+        android:visibility="gone"
         android:textStyle="bold"
-        android:text="123345"
-
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="123345" />
 
     <TextView
         android:id="@+id/isw_enrollmentLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-
         android:gravity="center"
         android:text="@string/isw_enrol_supervisor_s_card"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@+id/isw_pin"
-
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/isw_imageview7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/isw_imageview7"
-        android:textSize="20sp"
-        app:layout_constraintVertical_chainStyle="packed"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/isw_pin"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <ImageView
         android:id="@+id/isw_imageview7"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="300dp"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/isw_insert_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
