@@ -14,7 +14,6 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
-import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.setup.SetupActivity
@@ -22,13 +21,9 @@ import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.utilities.*
-import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.android.synthetic.main.isw_activity_terminal_settings.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -371,7 +366,7 @@ class TerminalSettingsActivity : MenuActivity() {
             store.saveNumber(KEY_DATE_TERMINAL, date.time)
 
             // setup text
-            //setupTexts()
+            setupTexts()
 
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_check)
@@ -525,14 +520,14 @@ class TerminalSettingsActivity : MenuActivity() {
     fun fetchSupervisorDetais(){
     val savedPan = store.getString("M3RCHANT_PAN", "")
     if(savedPan==""){
-        supervisorStatusHeader.setText("Supervisor's card not set")
-        btnChangePassword.setText("Enroll supervisor's card")
+        supervisorStatusHeader.text = "Supervisor's card not set"
+        btnChangePassword.text = "Enroll supervisor's card"
 
 
     }
    else{
-        supervisorStatusHeader.setText("")
-        btnChangePassword.setText("Change supervisor's card")
+        supervisorStatusHeader.text = ""
+        btnChangePassword.text = "Change supervisor's card"
     }
 
 }

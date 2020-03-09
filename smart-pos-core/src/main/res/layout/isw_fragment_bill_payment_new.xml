@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/iswColorPrimary"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/iswColorPrimary">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/isw_guideline"
@@ -45,27 +45,29 @@
         android:layout_height="0dp"
         android:background="@drawable/isw_card_background"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/isw_guideline"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/isw_merchant_name"
+        android:id="@+id/isw_bill_payment_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="@string/isw_enter_card_details"
+        android:text="@string/isw_bill_payment_details"
         android:textColor="@android:color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@id/isw_guideline"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/isw_card_pan_text_input"
+        android:id="@+id/isw_customer_id_text_input"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginTop="16dp"
-        android:hint="Card PAN"
+        android:hint="Customer Id"
         app:boxBackgroundColor="#F4F4F4"
         app:boxStrokeColor="@color/iswColorPrimary"
         app:boxStrokeWidthFocused="2dp"
@@ -77,9 +79,9 @@
         app:layout_constraintTop_toTopOf="@+id/isw_guideline">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isw_customer_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/isw_card_pan"
             android:gravity="start"
             android:inputType="number"
             android:textColor="@color/iswColorPrimary"
@@ -88,12 +90,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/isw_card_expiry_date_text_input"
+        android:id="@+id/isw_customer_email_text_input"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginTop="16dp"
-        android:hint="Expiry Date"
+        android:hint="Customer's Email"
         app:boxBackgroundColor="#F4F4F4"
         app:boxStrokeColor="@color/iswColorPrimary"
         app:boxStrokeWidthFocused="2dp"
@@ -102,12 +104,12 @@
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_card_pan_text_input">
+        app:layout_constraintTop_toBottomOf="@+id/isw_customer_id_text_input">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isw_customer_email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/isw_card_expiry_date"
             android:gravity="start"
             android:inputType="text"
             android:textColor="@color/iswColorPrimary"
@@ -116,12 +118,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/isw_cvv_text_input"
+        android:id="@+id/isw_customer_phone_number_input"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginTop="16dp"
-        android:hint="CVV"
+        android:hint="Phone Number"
         app:boxBackgroundColor="#F4F4F4"
         app:boxStrokeColor="@color/iswColorPrimary"
         app:boxStrokeWidthFocused="2dp"
@@ -130,12 +132,12 @@
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_card_expiry_date_text_input">
+        app:layout_constraintTop_toBottomOf="@+id/isw_customer_email_text_input">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isw_phone_number"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/isw_cvv"
             android:gravity="start"
             android:inputType="number"
             android:maxEms="4"
@@ -145,12 +147,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/isw_amount_text_input"
+        android:id="@+id/isw_payment_code_text_input"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginTop="16dp"
-        android:hint="Amount"
+        android:hint="Payment Code"
         app:boxBackgroundColor="#F4F4F4"
         app:boxStrokeColor="@color/iswColorPrimary"
         app:boxStrokeWidthFocused="2dp"
@@ -159,18 +161,47 @@
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/isw_cvv_text_input">
+        app:layout_constraintTop_toBottomOf="@+id/isw_customer_phone_number_input">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isw_payment_code"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/isw_amount"
             android:gravity="start"
             android:inputType="number"
             android:textColor="@color/iswColorPrimary"
             android:textSize="15sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/isw_bank_code_text_input"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginTop="16dp"
+        android:hint="Bank CBN Code"
+        app:boxBackgroundColor="#F4F4F4"
+        app:boxStrokeColor="@color/iswColorPrimary"
+        app:boxStrokeWidthFocused="2dp"
+        app:endIconMode="clear_text"
+        app:hintTextColor="@color/iswColorPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/isw_payment_code_text_input">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isw_bank_cbn_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:inputType="text"
+            android:textColor="@color/iswColorPrimary"
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/isw_proceed"

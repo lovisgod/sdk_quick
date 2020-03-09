@@ -11,8 +11,6 @@ import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
-import com.interswitchng.smartpos.shared.interfaces.library.IsoService
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
@@ -25,11 +23,13 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.utilities.*
+import com.interswitchng.smartpos.shared.utilities.DialogUtils
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
+import com.interswitchng.smartpos.shared.utilities.Logger
+import com.interswitchng.smartpos.shared.utilities.toast
 import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
-import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -119,7 +119,7 @@ class CardActivity : BaseActivity() {
                         // before starting transaction
                         runWithInternet {
                             // try starting transaction
-                            cardViewModel.startTransaction(this, paymentInfo, accountType, terminalInfo)
+                            cardViewModel.startTransaction(this, paymentInfo, accountType, terminalInfo, billPaymentModel)
                         }
                     }
                     dialog.dismiss()

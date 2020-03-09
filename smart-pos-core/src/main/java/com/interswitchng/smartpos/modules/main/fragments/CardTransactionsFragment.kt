@@ -23,14 +23,9 @@ import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.*
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.*
-import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.isw_activity_card.cardPin
 import kotlinx.android.synthetic.main.isw_fragment_card_payment.*
 import kotlinx.android.synthetic.main.isw_fragment_pin.*
@@ -124,6 +119,11 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.REFUND)
                 transactionType = TransactionType.Refund
             }
+
+            PaymentModel.TransactionType.BILL_PAYMENT -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.BILL_PAYMENT)
+                transactionType = TransactionType.BillPayment
+            }
         }
     }
 
@@ -143,20 +143,32 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                             context!!,
                             paymentInfo,
                             accountType,
-                            terminalInfo
+                                terminalInfo
                         )
                     }
                 }
                 accountTypeDialog.show(childFragmentManager, TAG)
             }
 
+            PaymentModel.TransactionType.BILL_PAYMENT -> {
+                runWithInternet {
+                    cardViewModel.startTransaction(
+                            context!!,
+                            paymentInfo,
+                            accountType,
+                            terminalInfo,
+                            paymentModel.billPayment!!
+                    )
+                }
+            }
+
             else -> {
                 runWithInternet {
                     cardViewModel.startTransaction(
-                        context!!,
-                        paymentInfo,
-                        accountType,
-                        terminalInfo
+                            context!!,
+                            paymentInfo,
+                            accountType,
+                            terminalInfo
                     )
                 }
             }
@@ -372,7 +384,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 val txnInfo =
                     TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
 
-                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                val responseMsg = (response.responseDescription) ?: "Unknown Error"
                 val pinStatus = when {
                     pinOk || response.responseCode == IsoUtils.OK -> "PIN Verified"
                     else -> "PIN Unverified"

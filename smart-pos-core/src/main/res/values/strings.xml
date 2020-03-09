@@ -256,6 +256,7 @@
     <string name="isw_authorization_code_label">Authorization Code</string>
     <string name="isw_receipt_amount">%1$s</string>
     <string name="isw_card_type">Card Type</string>
+    <string name="isw_bill_payment_details">Bill Payment Details</string>
 
 
 </resources>
