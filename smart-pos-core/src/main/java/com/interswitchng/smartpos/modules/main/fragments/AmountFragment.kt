@@ -117,8 +117,8 @@ class AmountFragment : BaseFragment(TAG) {
                                 paymentType = it
                             }
 
-                            /*val direction = AmountFragmentDirections.iswActionGotoFragmentCardDetails(payment)
-                            navigate(direction)*/
+                            val direction = AmountFragmentDirections.iswActionGotoFragmentCardDetails(payment)
+                            navigate(direction)
                         }
                     }
                 }
@@ -153,8 +153,8 @@ class AmountFragment : BaseFragment(TAG) {
                 navigate(direction)
             }
             PaymentModel.TransactionType.BILL_PAYMENT -> {
-                /*  val direction = AmountFragmentDirections.iswActionGotoFragmentBillPaymentNew(payment)
-                  navigate(direction)*/
+                val direction = AmountFragmentDirections.iswActionGotoFragmentBillPaymentNew(payment)
+                navigate(direction)
             }
         }
     }
