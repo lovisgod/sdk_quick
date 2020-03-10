@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.modules.main.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
@@ -24,6 +25,11 @@ class BillPaymentFragmentNew : BaseFragment(TAG) {
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_bill_payment_new
+
+    override fun onResume() {
+        activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        super.onResume()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
