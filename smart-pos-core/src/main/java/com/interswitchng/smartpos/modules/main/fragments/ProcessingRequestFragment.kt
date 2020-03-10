@@ -23,7 +23,7 @@ import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class ProcessingRequestFragment : BaseFragment(TAG) {
@@ -39,7 +39,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
     override val layoutId: Int
         get() = R.layout.isw_fragment_processing_transaction
 
-    private val cardViewModel: CardViewModel by sharedViewModel()
+    private val cardViewModel: CardViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         when (paymentModel.type) {
