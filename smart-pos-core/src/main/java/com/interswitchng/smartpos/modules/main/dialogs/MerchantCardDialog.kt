@@ -11,7 +11,6 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
-import kotlinx.android.synthetic.main.isw_layout_supervisors_card_detected.*
 import kotlinx.android.synthetic.main.isw_sheet_layout_admin_merchant_card.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -42,7 +41,7 @@ class MerchantCardDialog constructor(
             dismiss()
         }
         if (isAuthorization) {
-            isw_textview17.text = getString(R.string.isw_insert_supervisor_s_card)
+            //isw_textview17.text = getString(R.string.isw_insert_supervisor_s_card)
         }
     }
 
