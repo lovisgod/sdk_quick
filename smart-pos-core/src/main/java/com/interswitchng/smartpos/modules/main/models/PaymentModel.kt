@@ -7,15 +7,16 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PaymentModel (
-    var amount: Double = 0.00,
-    var formattedAmount: String = EMPTY_STRING,
-    var type: TransactionType? = null,
-    var paymentType: PaymentType? = null,
-    var card: CardModel? = null,
-    var authorizationId: String? = null,
-    var stan: String? = null,
-    var originalStan: String? = null,
-    var originalDateAndTime: String? = null
+        var amount: Double = 0.00,
+        var formattedAmount: String = EMPTY_STRING,
+        var type: TransactionType? = null,
+        var paymentType: PaymentType? = null,
+        var card: CardModel? = null,
+        var billPayment: BillPaymentModel? = null,
+        var authorizationId: String? = null,
+        var stan: String? = null,
+        var originalStan: String? = null,
+        var originalDateAndTime: String? = null
 ): Parcelable {
 
     fun getTransactionStan() = IswPos.getNextStan().also { stan = it }
@@ -25,7 +26,7 @@ data class PaymentModel (
     }
 
     enum class TransactionType {
-        CARD_PURCHASE, PRE_AUTHORIZATION, CARD_NOT_PRESENT, COMPLETION, REFUND, ECASH, ECHANGE, REVERSAL
+        CARD_PURCHASE, PRE_AUTHORIZATION, CARD_NOT_PRESENT, COMPLETION, REFUND, ECASH, ECHANGE, REVERSAL, BILL_PAYMENT
     }
 
     enum class PaymentType {

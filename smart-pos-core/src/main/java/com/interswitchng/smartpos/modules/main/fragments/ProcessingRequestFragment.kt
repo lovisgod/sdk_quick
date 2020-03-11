@@ -82,6 +82,12 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                         paymentModel.card!!.expiryDate!!,
                         paymentModel.card!!.cardPan!!
                 )
+            } else if (paymentModel.type == PaymentModel.TransactionType.BILL_PAYMENT) {
+                cardViewModel.processOnlineBP(
+                        paymentModel,
+                        accountType,
+                        terminalInfo
+                )
             } else {
                 cardViewModel.processOnline(paymentModel, accountType, terminalInfo)
             }
@@ -163,7 +169,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 val txnInfo =
                         TransactionInfo.fromEmv(emvData, paymentModel, PurchaseType.Card, accountType)
 
-                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                val responseMsg = (response.responseDescription) ?: "Unknown Error"
                 val pinStatus = when {
                     response.responseCode == IsoUtils.OK -> "PIN Verified"
                     else -> "PIN Unverified"

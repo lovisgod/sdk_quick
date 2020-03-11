@@ -111,6 +111,12 @@ class TransactionFragment : BaseFragment(TAG) {
                         }
                         dialog.show(childFragmentManager, MerchantCardDialog.TAG)
                     }
+                    4 -> {
+                        val payment = payment {
+                            type = PaymentModel.TransactionType.BILL_PAYMENT
+                        }
+                        navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
+                    }
                 }
             }
             sheet.show(childFragmentManager, MakePaymentDialog.TAG)

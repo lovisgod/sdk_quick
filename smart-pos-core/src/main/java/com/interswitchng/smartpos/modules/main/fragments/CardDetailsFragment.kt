@@ -16,7 +16,6 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
-import com.interswitchng.smartpos.shared.utilities.Logger
 import kotlinx.android.synthetic.main.isw_fragment_card_details.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -48,25 +47,27 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
-        isw_amount.text = Editable.Factory.getInstance().newEditable(paymentModel.amount.toString())
-        var amountInput=isw_amount.text.toString()
-        val cardModel = cardModel {
-            cvv = isw_cvv.text.toString()
-            cardPan = isw_card_pan.text.toString()
-            expiryDate = isw_card_expiry_date.text.toString()
-        }
-        paymentModel.newPayment {
-            amount = amountInput.toDouble()
-            card = cardModel
-            paymentType = PaymentModel.PaymentType.CARD_NOT_PRESENT
-        }
+
 
 //        cardViewModel.transactionResponse.observe(this, Observer {
 //            processResponse(it)
 //        })
 
         isw_proceed.setOnClickListener {
-            Logger.with("Proceed CardDetails").log("Hi You clicked Me")
+            //Logger.with("Proceed CardDetails").log("Hi You clicked Me")
+            isw_amount.text = Editable.Factory.getInstance().newEditable(paymentModel.amount.toString())
+            var amountInput = isw_amount.text.toString()
+            val cardModel = cardModel {
+                cvv = isw_cvv.text.toString()
+                cardPan = isw_card_pan.text.toString()
+                expiryDate = isw_card_expiry_date.text.toString()
+            }
+
+            paymentModel.newPayment {
+                amount = amountInput.toDouble()
+                card = cardModel
+                paymentType = PaymentModel.PaymentType.CARD_NOT_PRESENT
+            }
 
             runWithInternet {
                 val direction = CardDetailsFragmentDirections.iswActionIswFragmentCardDetailsToIswProcessingTransaction(
