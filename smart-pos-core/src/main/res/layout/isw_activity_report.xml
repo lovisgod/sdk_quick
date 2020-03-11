@@ -22,13 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/isw_content_margin"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:padding="@dimen/isw_content_padding"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/isw_button_eod"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
@@ -51,12 +51,22 @@
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="30 Jun, 2019"
             android:layout_marginStart="@dimen/isw_content_margin"
             android:layout_marginEnd="@dimen/isw_content_margin"
-            />
+            tools:text="30 Jun, 2019" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/isw_button_eod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:text="End Of Day"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/btnSelectDate" />
 
     <ProgressBar
         android:id="@+id/initialProgress"

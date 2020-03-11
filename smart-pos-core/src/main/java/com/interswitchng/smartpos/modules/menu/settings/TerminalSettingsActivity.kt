@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.setup.SetupActivity
@@ -103,7 +104,8 @@ class TerminalSettingsActivity : MenuActivity() {
         } else if (item?.itemId == R.id.saveConfig) {
             saveConfig()
             if (!isFromSettings) {
-                val intent = Intent(this, SetupActivity::class.java)
+//                val intent = Intent(this, SetupActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }

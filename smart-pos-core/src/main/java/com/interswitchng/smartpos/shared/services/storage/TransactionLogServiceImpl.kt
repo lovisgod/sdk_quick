@@ -77,4 +77,38 @@ class TransactionLogServiceImpl(private val monarchy: Monarchy) : TransactionLog
 
     }
 
+    override fun getTransactionFor(date: Date): LiveData<List<TransactionLog>> {
+
+        // calendar to generate first hour of day
+        val morningCalendar = Calendar.getInstance()
+        // get 12AM (00:00:00 AM) in the morning
+        val morning = morningCalendar.apply {
+            time = date
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        // calendar to generate last hour of day
+        val nightCalendar = Calendar.getInstance()
+        // get midnight 11:59PM (23:59:60 PM) in the midnight
+        val midnight = nightCalendar.apply {
+            time = date
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+
+        // query for stream of transaction logs for specified day by retrieving livedata list
+        return monarchy.findAllCopiedWithChanges { realm ->
+            realm.where<TransactionLog>()
+                .greaterThan("time", morning.timeInMillis)
+                .lessThan("time", midnight.timeInMillis)
+                .sort("time", Sort.DESCENDING)
+        }
+    }
+
 }
