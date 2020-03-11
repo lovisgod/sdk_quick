@@ -92,6 +92,11 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
 
     }
 
+    val ISW_CMS_TEST: String
+        get() {
+            return KeysUtils.testCMS()
+        }
+
 
     val ISW_KIMONO_BASE_URL: String get() {
         val iswPos = IswPos.getInstance()

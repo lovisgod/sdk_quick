@@ -39,8 +39,7 @@ internal class IsoServiceImpl(
     }
 
     override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates
     }
 
 
@@ -170,9 +169,17 @@ internal class IsoServiceImpl(
         return null
     }
 
-    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+    override fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
+        var cms: String
+        if (isNibbsTest) {
+            cms = Constants.ISW_CMS_TEST
+        } else {
+            cms = Constants.ISW_CMS
+        }
+
+        // load keys
         // getResult clear key
-        val cms =Constants.ISW_CMS
+
         //val cms2 = context.getString(R.string.isw_cms)
         Logger.with("Constants Keys").logErr(cms.toString())
 
@@ -201,7 +208,9 @@ internal class IsoServiceImpl(
         }
 
         return isDownloaded == true
+
     }
+
 
     override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
         try {

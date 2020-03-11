@@ -20,7 +20,7 @@ internal interface IsoService {
      * @param port the port number for the ip address
      * @return     boolean expression indicating the success or failure status of the key exchange
      */
-    fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+    fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
         return false
     }
 

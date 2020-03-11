@@ -20,11 +20,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="@dimen/isw_content_padding">
+
+            <TextView
+                android:id="@+id/configSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:padding="16dp"
+                android:paddingTop="@dimen/isw_content_padding"
+                android:paddingBottom="@dimen/isw_content_padding"
+                android:text="Configured To:"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -101,6 +115,41 @@
                     tools:checked="true" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_margin"
+                android:layout_marginTop="@dimen/isw_content_margin"
+                android:layout_marginEnd="@dimen/isw_content_margin"
+                android:orientation="horizontal"
+                android:padding="2dp">
+
+
+                <TextView
+                    android:id="@+id/tvIsNibbsTest"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/isw_content_small_margin"
+                    android:layout_weight="3"
+                    android:gravity="bottom"
+                    android:text="Switch To NIBBS Test"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Switch
+                    android:id="@+id/switchToNIBBS"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="@dimen/isw_content_small_margin"
+                    android:textSize="16sp"
+                    android:theme="@style/ISW.Switch"
+                    tools:checked="true" />
+
+            </LinearLayout>
+
 
             <View
                 android:layout_width="match_parent"

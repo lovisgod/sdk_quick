@@ -77,7 +77,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 //    }
 
 
-    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+    override fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
 
         // load test keys
         val tik = Constants.ISW_DUKPT_IPEK

@@ -169,7 +169,8 @@ class TerminalSettingsActivity : MenuActivity() {
                         terminalID,
                         serverIp,
                         serverPort.toInt(),
-                        switchKimono.isChecked
+                        switchKimono.isChecked,
+                        switchToNIBBS.isChecked
                 )
             }
         }
@@ -216,6 +217,11 @@ class TerminalSettingsActivity : MenuActivity() {
             // choose config file
             startActivityForResult(intent, RC_FILE_READ)
         }
+        /*  switchToNIBBS.setOnClickListener { button, _ ->
+              if(button.isChecked){
+
+              }
+          }*/
 
         switchKimono.setOnCheckedChangeListener { button, _ ->
 
@@ -231,6 +237,8 @@ class TerminalSettingsActivity : MenuActivity() {
 
                 // show server url field
                 etServerUrl.isEnabled = true
+
+                configSettings.text = "Configured To Kimono"
             } else {
                 // server not required if not kimono
                 etServerUrl.error = null
@@ -240,6 +248,8 @@ class TerminalSettingsActivity : MenuActivity() {
                 // show server and port fields
                 etServerPort.isEnabled = true
                 etServerIP.isEnabled = true
+
+                configSettings.text = "Configured to NIBBS"
             }
 
             // set the terminal-info download container based on kimono flag
