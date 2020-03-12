@@ -10,9 +10,9 @@ import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
 import androidx.multidex.MultiDex;
 
-import com.interswitch.smartpos.emv.telpo.TelpoPOSDeviceImpl;
 import com.interswitch.smartpos.emv.telpo.fingerprint.TelpoPOSFingerprintImpl;
 import com.interswitchng.smartpos.IswPos;
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
@@ -135,7 +135,9 @@ public class POSApplication extends Application {
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
-            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
+            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
+            //TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
+            service.setCompanyLogo(bm);
             device = service;
             fingerprint = new TelpoPOSFingerprintImpl();
         }

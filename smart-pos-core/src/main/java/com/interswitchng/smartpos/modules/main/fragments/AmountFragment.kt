@@ -68,8 +68,7 @@ class AmountFragment : BaseFragment(TAG) {
 
         val stringWithoutCommaAndDot =  latestAmountWithoutComma.substring(0, dotIndex)
         payment.newPayment {
-            amount = latestAmount.toDouble()
-                    //stringWithoutCommaAndDot.toDouble()
+            amount = stringWithoutCommaAndDot.toDouble()//latestAmount.toDouble()
             formattedAmount = latestAmount
 
         }
