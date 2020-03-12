@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.main.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
+import android.view.WindowManager
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
@@ -47,7 +48,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
-
+        isw_amount.text = Editable.Factory.getInstance().newEditable(paymentModel.amount.toString())
 
 //        cardViewModel.transactionResponse.observe(this, Observer {
 //            processResponse(it)
@@ -55,7 +56,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
         isw_proceed.setOnClickListener {
             //Logger.with("Proceed CardDetails").log("Hi You clicked Me")
-            isw_amount.text = Editable.Factory.getInstance().newEditable(paymentModel.amount.toString())
+
             var amountInput = isw_amount.text.toString()
             val cardModel = cardModel {
                 cvv = isw_cvv.text.toString()
@@ -84,6 +85,12 @@ class CardDetailsFragment : BaseFragment(TAG) {
             }
         }
     }
+
+    override fun onResume() {
+        activity!!.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        super.onResume()
+    }
+
 
 //    private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
 //        when (transactionResponse) {

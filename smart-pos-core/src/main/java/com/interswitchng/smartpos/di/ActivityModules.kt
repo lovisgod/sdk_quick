@@ -58,7 +58,7 @@ internal val viewModels = module {
 
     viewModel { HistoryViewModel(get()) }
 
-    viewModel { ReportViewModel(get(), get()) }
+    viewModel { ReportViewModel(get(), get(), get()) }
 
     viewModel {
         SettingsViewModel()

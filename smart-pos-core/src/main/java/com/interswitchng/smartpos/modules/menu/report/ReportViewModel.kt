@@ -2,10 +2,11 @@ package com.interswitchng.smartpos.modules.menu.report
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.TransactionLogService
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
@@ -18,11 +19,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class ReportViewModel(
-    private val posDevice: POSDevice,
-    private val transactionLogService: TransactionLogService
+internal class ReportViewModel(
+        private val posDevice: POSDevice,
+        private val transactionLogService: TransactionLogService,
+        private val store: KeyValueStore
+
 ) : RootViewModel() {
 
+    private val terminalInfo: TerminalInfo by lazy { TerminalInfo.get(store)!! }
 
     private val _printButton = MutableLiveData<Boolean>()
     val printButton: LiveData<Boolean> get() = _printButton
@@ -36,17 +40,17 @@ class ReportViewModel(
 
     // setup paged list config
     private val config = PagedList.Config.Builder()
-        .setEnablePlaceholders(false)
-        .setInitialLoadSizeHint(10)
-        .setPageSize(10)
-        .build()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(10)
+            .setPageSize(10)
+            .build()
 
     fun getReport(day: Date): LiveData<PagedList<TransactionLog>> {
         return transactionLogService.getTransactionFor(day, config)
     }
 
 
-    fun printEndOfDay(transactions: List<TransactionLog>) {
+    fun printEndOfDay(date: Date, transactions: List<TransactionLog>) {
 
         uiScope.launch {
             // get printer status on IO thread
@@ -60,13 +64,13 @@ class ReportViewModel(
                 }
                 else -> {
                     // get slip for current date
-                    val slipItems = transactions.toSlipItems()
+                    val slipItems = transactions.toSlipItems(date)
 
                     // print code in IO thread
                     val status = withContext(ioScope) {
                         posDevice.printer.printSlip(
-                            slipItems,
-                            UserType.Merchant
+                                slipItems,
+                                UserType.Merchant
                         )
                     }
 
@@ -90,33 +94,108 @@ class ReportViewModel(
     }
 
 
-    private fun List<TransactionLog>.toSlipItems(): MutableList<PrintObject> {
+    private fun List<TransactionLog>.toSlipItems(date: Date): MutableList<PrintObject> {
+
         // create the title for printout
         val title = PrintObject.Data("Purchase", PrintStringConfiguration(isTitle = true, displayCenter = true))
 
         // initialize list with the title and a line under
         val list = mutableListOf(title, PrintObject.Line)
 
-        // add title
+        //create the addressTitle for printout
+        val addressTitle = PrintObject.Data("Address", PrintStringConfiguration(isBold = true))
+        //add addressTitle
+        list.add(addressTitle)
+        //create the address for printout
+        val address = PrintObject.Data(terminalInfo.merchantNameAndLocation)
+        // add address
+        list.add(address)
 
+
+        //add line
+        list.add(PrintObject.Line)
+
+
+        //add terminalIdTitle
+        val terminalIdTitle = PrintObject.Data("TerminalId", PrintStringConfiguration(isBold = true))
+        //add terminalIdTitle
+        list.add(terminalIdTitle)
+        //create the terminalId for printout
+        val terminalId = PrintObject.Data(terminalInfo.terminalId)
+        // add terminalId
+        list.add(terminalId)
+
+
+        //add line
+        list.add(PrintObject.Line)
+
+        // add date
+        val dateString = DateUtils.shortDateFormat.format(date)
+        val dateTitle = PrintObject.Data("Date: $dateString", PrintStringConfiguration(isBold = true))
+        //add dateTitle
+        list.add(dateTitle)
+
+
+        // add line
+        list.add(PrintObject.Line)
+
+
+        // table title
+        val amountTitle = formatAmount("Amt")
+        val tableTitle = PrintObject.Data("Time $amountTitle Card State")
+        list.add(tableTitle)
+        list.add(PrintObject.Line)
+
+        var transactionApproved = 0
+        var transactionApprovedAmount = 0.0
         // add each item into the end of day list
         this.forEach {
             val slipItem = it.toSlipItem()
             list.add(slipItem)
-        }
 
-        // add the summary here
+            //add successful transactions
+            if (it.responseCode == IsoUtils.OK) {
+                transactionApproved += 1
+                transactionApprovedAmount += it.amount.toDouble()
+            }
+        }
+        // add line
+        list.add(PrintObject.Line)
+
+        //create summary title
+        val summary = PrintObject.Data("Summary", PrintStringConfiguration(isBold = true))
+        //add summaryTitle
+        list.add(summary)
+
+        // total number of transactions
+        val transactionSum = this.size
+
+        val transactionFailed = transactionSum - transactionApproved
+
+
+
+        list.add(PrintObject.Data("Total Transactions: $transactionSum", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Passed Transaction: $transactionApproved", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Failed Transaction: $transactionFailed", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Approved Amount: $transactionApprovedAmount", PrintStringConfiguration(isBold = true)))
 
         return list
     }
 
-    private fun TransactionLog.toSlipItem(): PrintObject  {
+    private fun TransactionLog.toSlipItem(): PrintObject {
         val date = Date(this.time)
         val dateStr = DateUtils.hourMinuteFormat.format(date)
-        val amount = this.amount
+        val amount = formatAmount(this.amount)
         val code = this.responseCode
+        val card = "0000"
         val status = if (code == IsoUtils.OK) "PASS" else "FAIL"
 
-        return PrintObject.Data("$dateStr - $amount - $code - $status")
+        return PrintObject.Data("$dateStr $amount $card $status")
+    }
+
+    private fun formatAmount(amount: String): String {
+        val spaceCount = 10 - amount.length
+        val padding = " ".repeat(spaceCount)
+        return amount + padding
     }
 }

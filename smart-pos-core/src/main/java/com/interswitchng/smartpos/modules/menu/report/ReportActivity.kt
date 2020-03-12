@@ -19,7 +19,6 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class ReportActivity : MenuActivity(), DatePickerDialog.OnDateSetListener {
-
     private val reportViewModel: ReportViewModel by viewModel()
 
     private lateinit var adapter: TransactionLogAdapter

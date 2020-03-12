@@ -2,9 +2,7 @@ package com.interswitchng.smartpos.modules.menu.report
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -13,18 +11,15 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.adapters.TransactionLogAdapter
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
-import com.interswitchng.smartpos.shared.utilities.isVisible
 import kotlinx.android.synthetic.main.isw_activity_report.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
-class ReportFragment() : BaseFragment("Report Fragment"), DatePickerDialog.OnDateSetListener {
+class ReportFragment : BaseFragment("Report Fragment"), DatePickerDialog.OnDateSetListener {
 
     private val reportViewModel: ReportViewModel by viewModel()
 
@@ -69,7 +64,7 @@ class ReportFragment() : BaseFragment("Report Fragment"), DatePickerDialog.OnDat
             transactions.observe( this, Observer {
                 it ?: return@Observer
 
-                reportViewModel.printEndOfDay(it)
+                reportViewModel.printEndOfDay(selectedDate, it)
             })
         }
 
