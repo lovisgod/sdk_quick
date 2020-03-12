@@ -100,14 +100,15 @@ internal class ReportViewModel(
         val title = PrintObject.Data("Purchase", PrintStringConfiguration(isTitle = true, displayCenter = true))
 
         // initialize list with the title and a line under
-        val list = mutableListOf(title, PrintObject.Line)
+        val newLine = PrintObject.Data("\n")
+        val list = mutableListOf(title, newLine, PrintObject.Line)
 
         //create the addressTitle for printout
-        val addressTitle = PrintObject.Data("Address", PrintStringConfiguration(isBold = true))
+        val addressTitle = PrintObject.Data("\nAddress\n", PrintStringConfiguration(isBold = true))
         //add addressTitle
         list.add(addressTitle)
         //create the address for printout
-        val address = PrintObject.Data(terminalInfo.merchantNameAndLocation)
+        val address = PrintObject.Data("${terminalInfo.merchantNameAndLocation}\n")
         // add address
         list.add(address)
 
@@ -117,11 +118,11 @@ internal class ReportViewModel(
 
 
         //add terminalIdTitle
-        val terminalIdTitle = PrintObject.Data("TerminalId", PrintStringConfiguration(isBold = true))
+        val terminalIdTitle = PrintObject.Data("TerminalId\n", PrintStringConfiguration(isBold = true))
         //add terminalIdTitle
         list.add(terminalIdTitle)
         //create the terminalId for printout
-        val terminalId = PrintObject.Data(terminalInfo.terminalId)
+        val terminalId = PrintObject.Data("${terminalInfo.terminalId}\n")
         // add terminalId
         list.add(terminalId)
 
@@ -131,7 +132,7 @@ internal class ReportViewModel(
 
         // add date
         val dateString = DateUtils.shortDateFormat.format(date)
-        val dateTitle = PrintObject.Data("Date: $dateString", PrintStringConfiguration(isBold = true))
+        val dateTitle = PrintObject.Data("Date: $dateString\n", PrintStringConfiguration(isBold = true))
         //add dateTitle
         list.add(dateTitle)
 
@@ -142,12 +143,13 @@ internal class ReportViewModel(
 
         // table title
         val amountTitle = formatAmount("Amt")
-        val tableTitle = PrintObject.Data("Time $amountTitle Card State")
+        val tableTitle = PrintObject.Data("Time  $amountTitle Card Status", PrintStringConfiguration(displayCenter = true))
         list.add(tableTitle)
         list.add(PrintObject.Line)
 
         var transactionApproved = 0
         var transactionApprovedAmount = 0.0
+
         // add each item into the end of day list
         this.forEach {
             val slipItem = it.toSlipItem()
@@ -163,7 +165,7 @@ internal class ReportViewModel(
         list.add(PrintObject.Line)
 
         //create summary title
-        val summary = PrintObject.Data("Summary", PrintStringConfiguration(isBold = true))
+        val summary = PrintObject.Data("Summary\n", PrintStringConfiguration(isBold = true))
         //add summaryTitle
         list.add(summary)
 
@@ -174,10 +176,11 @@ internal class ReportViewModel(
 
 
 
-        list.add(PrintObject.Data("Total Transactions: $transactionSum", PrintStringConfiguration(isBold = true)))
-        list.add(PrintObject.Data("Total Passed Transaction: $transactionApproved", PrintStringConfiguration(isBold = true)))
-        list.add(PrintObject.Data("Total Failed Transaction: $transactionFailed", PrintStringConfiguration(isBold = true)))
-        list.add(PrintObject.Data("Total Approved Amount: $transactionApprovedAmount", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Transactions: $transactionSum\n", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Passed Transaction: $transactionApproved\n", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Failed Transaction: $transactionFailed\n", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Approved Amount: $transactionApprovedAmount\n", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Line)
 
         return list
     }
@@ -190,7 +193,9 @@ internal class ReportViewModel(
         val card = "0000"
         val status = if (code == IsoUtils.OK) "PASS" else "FAIL"
 
-        return PrintObject.Data("$dateStr $amount $card $status")
+        val config = PrintStringConfiguration(displayCenter = true)
+
+        return PrintObject.Data("$dateStr $amount $card $status ", config)
     }
 
     private fun formatAmount(amount: String): String {
