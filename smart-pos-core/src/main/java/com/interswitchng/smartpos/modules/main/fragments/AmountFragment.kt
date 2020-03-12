@@ -60,15 +60,15 @@ class AmountFragment : BaseFragment(TAG) {
     private fun proceedWithPayment() {
         val latestAmount = isw_amount.text.toString()
         Logger.with("Amount Fragment").logErr(latestAmount)
-        val latestAmountWithoutComma = latestAmount.replace("[$,]".toRegex(), "")
+        val latestAmountWithoutComma = latestAmount.replace("[$,.]".toRegex(), "")
         Logger.with("Amount Fragment").logErr(latestAmountWithoutComma)
-        val dotIndex = latestAmountWithoutComma.indexOfFirst {
-            it == '.'
-        }
+//        val dotIndex = latestAmountWithoutComma.indexOfFirst {
+//            it == '.'
+//        }
 
-        val stringWithoutCommaAndDot =  latestAmountWithoutComma.substring(0, dotIndex)
+        //val stringWithoutCommaAndDot =  latestAmountWithoutComma.substring(0, dotIndex)
         payment.newPayment {
-            amount = stringWithoutCommaAndDot.toDouble()//latestAmount.toDouble()
+            amount = latestAmountWithoutComma.toInt()//latestAmount.toDouble()
             formattedAmount = latestAmount
 
         }

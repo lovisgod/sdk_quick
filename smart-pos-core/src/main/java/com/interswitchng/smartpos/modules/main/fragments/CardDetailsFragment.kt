@@ -48,7 +48,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
-        isw_amount.text = Editable.Factory.getInstance().newEditable(paymentModel.amount.toString())
+        isw_amount.text = Editable.Factory.getInstance().newEditable((paymentModel.amount / 100.0).toString())
 
 //        cardViewModel.transactionResponse.observe(this, Observer {
 //            processResponse(it)
@@ -65,7 +65,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
             }
 
             paymentModel.newPayment {
-                amount = amountInput.toDouble()
+                amount = amountInput.toInt()
                 card = cardModel
                 paymentType = PaymentModel.PaymentType.CARD_NOT_PRESENT
             }

@@ -11,14 +11,14 @@ import com.interswitchng.smartpos.IswPos
  */
 class PaymentInfo: Parcelable {
 
-    val amount: Double
+    val amount: Int
     var bankCode: String
     lateinit var currentStan: String
 
     var originalStanId:String? = ""
     var originalAuthId:String? = ""
 
-    constructor(amount: Double, bankCode: String?,originalStanId:String?="",originalAuthId:String?="") {
+    constructor(amount: Int, bankCode: String?, originalStanId: String? = "", originalAuthId: String? = "") {
         this.amount = amount
         this.bankCode = bankCode  ?: ""
         this.originalStanId=originalStanId
@@ -26,7 +26,7 @@ class PaymentInfo: Parcelable {
     }
 
     constructor(parcel: Parcel) : this(
-            parcel.readDouble(),
+            parcel.readInt(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString())
@@ -34,7 +34,7 @@ class PaymentInfo: Parcelable {
     fun getStan() = IswPos.getNextStan().also { currentStan = it }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeDouble(amount)
+        parcel.writeInt(amount)
         parcel.writeString(bankCode)
         parcel.writeString(originalStanId)
         parcel.writeString(originalAuthId)

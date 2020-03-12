@@ -78,7 +78,7 @@ internal object DisplayUtils: KoinComponent {
 
 
     fun getAmountString(paymentInfo: PaymentInfo): String {
-        val amount = paymentInfo.amount  / 100f
+        val amount: Double = paymentInfo.amount / 100.0
         return getAmountString(amount)
     }
 

@@ -22,6 +22,19 @@ import com.pax.jemv.emv.model.EmvMCKParam
 import com.pax.jemv.emv.model.EmvParam
 import kotlinx.coroutines.runBlocking
 import java.util.*
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.ByteArray
+import kotlin.Int
+import kotlin.LongArray
+import kotlin.Pair
+import kotlin.Short
+import kotlin.String
+import kotlin.Unit
+import kotlin.also
+import kotlin.apply
+import kotlin.isInitialized
+import kotlin.let
 
 
 /**
@@ -42,9 +55,9 @@ internal class EmvImplementation(private val context: Context, private val pinCa
     private lateinit var terminalInfo: TerminalInfo
 
 
-    private var amount: Double = 0.00
+    private var amount: Int = 0
 
-    fun setAmount(amount: Double) {
+    fun setAmount(amount: Int) {
         this.amount = amount
     }
 

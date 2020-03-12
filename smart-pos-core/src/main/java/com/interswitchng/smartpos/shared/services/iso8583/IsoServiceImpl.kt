@@ -306,7 +306,7 @@ internal class IsoServiceImpl(
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
-                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", (transaction.amount) / 100))
                     .setValue(7, timeDateNow)
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
@@ -406,7 +406,7 @@ internal class IsoServiceImpl(
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", (transaction.amount) / 100))
                 .setValue(7, timeDateNow)
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))
@@ -491,7 +491,7 @@ internal class IsoServiceImpl(
             val originalTransactionInfoData = transaction.originalTransactionInfoData
             val month = originalTransactionInfoData?.month
             val time = originalTransactionInfoData?.time
-            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
+            val amount = String.format(Locale.getDefault(), "%012d", (transaction.amount) / 100)
             val message = NibssIsoMessage(messageFactory.newMessage(0x420))
             val processCode = "00" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
@@ -694,7 +694,7 @@ internal class IsoServiceImpl(
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", (transaction.amount) / 100))
                 .setValue(7, transmissionDateTime)
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))
@@ -779,12 +779,12 @@ internal class IsoServiceImpl(
             val actualSettlementFee= "C00000000"
             val actualTransactionFee= "C00000000"
             val originalDataElement = "0100" + originalStan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
-            val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
+            val replacementAmount = String.format(Locale.getDefault(), "%012d", (transaction.amount) / 100) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", (transaction.amount) / 100))
                 .setValue(7, timeAndDateFormatter.format(now))
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))

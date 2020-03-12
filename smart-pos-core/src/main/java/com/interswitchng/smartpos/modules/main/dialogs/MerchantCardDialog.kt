@@ -32,7 +32,7 @@ class MerchantCardDialog constructor(
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })
-        cardViewModel.setupTransaction(0.0, terminalInfo)
+        cardViewModel.setupTransaction(0, terminalInfo)
         if (!IswPos.hasFingerprint()) {
             isw_use_fingerprint.visibility = View.GONE
         }

@@ -10,10 +10,10 @@ import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
-import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.menu.report.ReportActivity
 import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
 import com.interswitchng.smartpos.modules.menu.settings.TerminalSettingsActivity
+import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
 import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
 import com.interswitchng.smartpos.shared.Constants
@@ -44,7 +44,7 @@ import java.util.*
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
 
     @Throws(NotConfiguredException::class)
-    fun initiatePayment(activity: FragmentActivity, amount: Double, paymentType: PaymentType?) {
+    fun initiatePayment(activity: FragmentActivity, amount: Int, paymentType: PaymentType?) {
 
         if (!isConfigured()) throw NotConfiguredException()
 

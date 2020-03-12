@@ -179,7 +179,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 transactionResult = TransactionResult(
                         paymentType = PaymentType.Card,
                         dateTime = DisplayUtils.getIsoString(now),
-                        amount = paymentModel.amount.toString(),
+                        amount = (paymentModel.amount / 100.00).toString(),
                         type = transactionType,
                         authorizationCode = response.authCode,
                         responseMessage = responseMsg,

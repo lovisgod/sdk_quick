@@ -20,7 +20,7 @@ internal data class TransactionInfo(
         val iccData: IccData,
         val src: String, // service restriction code
         val csn: String, // card sequence number
-        var amount: Double,
+        var amount: Int,
         val stan: String,
         val purchaseType: PurchaseType,
         val accountType: AccountType,
@@ -65,7 +65,7 @@ internal data class TransactionInfo(
                 iccString = txnResult.icc,
                 src = txnResult.src,
                 csn = txnResult.csn,
-                amount = txnResult.amount.toDouble(),
+                amount = txnResult.amount.toInt(),
                 stan = txnResult.stan,
                 purchaseType = PurchaseType.Card,
                 accountType = AccountType.Default,

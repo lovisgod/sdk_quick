@@ -51,7 +51,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     fun getCardPAN() = emv.getPan()
 
 
-    fun setupTransaction(amount: Double, terminalInfo: TerminalInfo) {
+    fun setupTransaction(amount: Int, terminalInfo: TerminalInfo) {
 
         with(uiScope) {
             // launch job in IO thread to listen for messages
