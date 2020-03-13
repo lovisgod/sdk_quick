@@ -29,7 +29,7 @@ internal class PurchaseRequest
             var bankCbnCode = billPaymentModel.bankCbnCode
             var customerEmail = billPaymentModel.customerEmail
             var paymentCode = billPaymentModel.paymentCode
-            var transactionAmount = transaction.amount / 100
+            var transactionAmount = transaction.amount
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -88,7 +88,7 @@ internal class PurchaseRequest
         fun toCNPPurchaseString(device:POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
 
             var pinData=""
-            var transactionAmount = transaction.amount / 100
+            var transactionAmount = transaction.amount
 
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
             Logger.with("purchaserequest").logErr(amount)
@@ -114,7 +114,7 @@ internal class PurchaseRequest
 
 
             val hasPin = transaction.cardPIN.isNotEmpty()
-            var transactionAmount = transaction.amount / 100
+            var transactionAmount = transaction.amount
 
 
             var pinData=""
@@ -166,7 +166,7 @@ internal class PurchaseRequest
             var pinData=""
             if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType> </pinData>"""
             var dedicatedFileTag=""
-            var transactionAmount = transaction.amount / 100
+            var transactionAmount = transaction.amount
 
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
             val now = Date()
@@ -206,7 +206,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
     val hasPin = transaction.cardPIN.isNotEmpty()
 
     var pinData=""
-    var transactionAmount = transaction.amount / 100
+    var transactionAmount = transaction.amount
 
 
     val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -271,7 +271,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData=""
             if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType></pinData>"""
-            var transactionAmount = transaction.amount / 100
+            var transactionAmount = transaction.amount
 
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
             val now = Date()
@@ -313,7 +313,7 @@ fun toReservation(device:POSDevice,terminalInfo: TerminalInfo, transaction: Tran
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData=""
             if(hasPin) pinData= """<pinData><ksnd>605</ksnd><pinBlock></pinBlock><pinType>Dukpt</pinType></pinData>"""
-            var transactionAmount = transaction.amount / 100
+            var transactionAmount = transaction.amount
 
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
             val now = Date()

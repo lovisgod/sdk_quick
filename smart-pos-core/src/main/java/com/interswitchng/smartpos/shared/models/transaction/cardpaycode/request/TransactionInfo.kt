@@ -44,7 +44,7 @@ internal data class TransactionInfo(
                 iccData = emv.icc,
                 src = emv.src,
                 csn = emv.csn,
-                amount = paymentInfo.amount * 100,
+                amount = paymentInfo.amount,
                 stan = paymentInfo.getTransactionStan(),
                 purchaseType = purchaseType,
                 accountType = accountType,

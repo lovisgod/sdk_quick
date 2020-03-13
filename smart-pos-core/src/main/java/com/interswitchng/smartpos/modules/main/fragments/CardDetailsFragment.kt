@@ -48,6 +48,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
+
         isw_amount.text = Editable.Factory.getInstance().newEditable((paymentModel.amount / 100.0).toString())
 
 //        cardViewModel.transactionResponse.observe(this, Observer {
@@ -57,7 +58,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
         isw_proceed.setOnClickListener {
             //Logger.with("Proceed CardDetails").log("Hi You clicked Me")
 
-            var amountInput = isw_amount.text.toString()
+            var amountInput = paymentModel.amount
             val cardModel = cardModel {
                 cvv = isw_cvv.text.toString()
                 cardPan = isw_card_pan.text.toString()
@@ -65,7 +66,7 @@ class CardDetailsFragment : BaseFragment(TAG) {
             }
 
             paymentModel.newPayment {
-                amount = amountInput.toInt()
+                amount = amountInput
                 card = cardModel
                 paymentType = PaymentModel.PaymentType.CARD_NOT_PRESENT
             }

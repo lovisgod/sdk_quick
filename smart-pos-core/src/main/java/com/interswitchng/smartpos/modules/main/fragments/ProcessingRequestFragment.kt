@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
@@ -115,7 +116,8 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                             context?.toast("Transaction Declined")
                             //showContainer(CardTransactionState.Default)
                         }
-                        CardViewModel.OnlineProcessResult.ONLINE_APPROVED -> {
+                        //CardViewModel.OnlineProcessResult.ONLINE_APPROVED ->
+                        else -> {
                             isw_connecting.apply {
                                 setCompoundDrawablesWithIntrinsicBounds(
                                         R.drawable.isw_round_done,
@@ -168,8 +170,12 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 val emvData = transactionResponse.value.second
                 val txnInfo =
                         TransactionInfo.fromEmv(emvData, paymentModel, PurchaseType.Card, accountType)
-
-                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                var responseMsg: String
+                if (transactionType == TransactionType.BillPayment) {
+                    responseMsg = response.responseDescription ?: "UnknownError"
+                } else {
+                    responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                }
                 val pinStatus = when {
                     response.responseCode == IsoUtils.OK -> "PIN Verified"
                     else -> "PIN Unverified"
@@ -179,7 +185,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 transactionResult = TransactionResult(
                         paymentType = PaymentType.Card,
                         dateTime = DisplayUtils.getIsoString(now),
-                        amount = (paymentModel.amount / 100.00).toString(),
+                        amount = paymentModel.amount.toString(),
                         type = transactionType,
                         authorizationCode = response.authCode,
                         responseMessage = responseMsg,
