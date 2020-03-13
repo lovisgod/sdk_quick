@@ -13,7 +13,6 @@ import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
@@ -26,15 +25,13 @@ import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Code
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.PaymentStatus
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
-import com.interswitchng.smartpos.shared.utilities.*
+import com.interswitchng.smartpos.shared.utilities.DeviceUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
-import kotlinx.android.synthetic.main.isw_activity_qr_code.*
+import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 import kotlinx.android.synthetic.main.isw_fragment_qr_code.*
-import kotlinx.android.synthetic.main.isw_fragment_qr_code.change_payment_method
 import kotlinx.android.synthetic.main.isw_generating_code_layout.*
-import kotlinx.android.synthetic.main.isw_layout_card_found.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -210,29 +207,7 @@ class QrCodeFragment : BaseFragment(TAG) {
             ?.show()
     }
 
-    private fun showTransactionMocks(response: CodeResponse) {
-        mockButtonsContainer.visibility = View.VISIBLE
-        initiateButton.isEnabled = true
 
-        initiateButton.setOnClickListener {
-            if (DeviceUtils.isConnectedToInternet(context!!)) {
-                initiateButton.isEnabled = false
-                initiateButton.isClickable = false
-
-                // check transaction status
-                val status = TransactionStatus(response.transactionReference!!, iswPos.config.merchantCode)
-                qrViewModel.checkTransactionStatus(status)
-            } else runWithInternet {
-                initiateButton.performClick()
-            }
-        }
-
-        printCodeButton.isEnabled = true
-        printCodeButton.setOnClickListener {
-            qrViewModel.printCode(context!!, posDevice, UserType.Customer, printSlip)
-        }
-
-    }
 
     private fun getTransactionResult(transaction: Transaction): TransactionResult? {
         val now = Date()
@@ -258,8 +233,8 @@ class QrCodeFragment : BaseFragment(TAG) {
 
     override fun onCheckStopped() {
         super.onCheckStopped()
-        initiateButton.isEnabled = true
-        initiateButton.isClickable = true
+        //initiateButton.isEnabled = true
+        //initiateButton.isClickable = true
         qrViewModel.cancelPoll()
     }
 
