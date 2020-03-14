@@ -64,6 +64,11 @@ public class POSApplication extends Application {
             device = new POSDevice() {
 
                 @Override
+                public boolean getHasFingerPrintReader() {
+                    return false;
+                }
+
+                @Override
                 public String getName() {
                     return "";
                 }

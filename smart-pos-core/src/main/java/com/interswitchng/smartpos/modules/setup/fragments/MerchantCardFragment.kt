@@ -35,9 +35,20 @@ class MerchantCardFragment : BaseFragment(TAG) {
         })
         cardViewModel.setupTransaction(0, terminalInfo)
 
-        if (!IswPos.hasFingerprint()) {
+
+        // ensure device supports finger  print
+        val supportsFingerPrint = IswPos.getInstance().device.hasFingerPrintReader
+        if (!supportsFingerPrint) {
             isw_skip_fingerprint.text = resources.getString(R.string.isw_finish)
             isw_link_fingerprint.visibility = View.GONE
+        } else {
+            isw_link_fingerprint.setOnClickListener {
+                val cardPAN = cardViewModel.getCardPAN()!!
+                logger.logErr(cardPAN)
+                setupViewModel.saveMerchantPAN(cardPAN)
+                val direction = MerchantCardFragmentDirections.iswActionGotoFragmentPhoneNumber()
+                navigate(direction)
+            }
         }
 
         isw_skip_fingerprint.setOnClickListener {
@@ -48,13 +59,6 @@ class MerchantCardFragment : BaseFragment(TAG) {
             navigate(direction)
         }
 
-        isw_link_fingerprint.setOnClickListener {
-            val cardPAN = cardViewModel.getCardPAN()!!
-            logger.logErr(cardPAN)
-            setupViewModel.saveMerchantPAN(cardPAN)
-            val direction = MerchantCardFragmentDirections.iswActionGotoFragmentPhoneNumber()
-            navigate(direction)
-        }
     }
 
     private fun proceedToMainActivity() {

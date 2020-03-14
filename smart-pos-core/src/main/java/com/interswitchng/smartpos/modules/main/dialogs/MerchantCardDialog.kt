@@ -33,12 +33,16 @@ class MerchantCardDialog constructor(
             it?.let(::processMessage)
         })
         cardViewModel.setupTransaction(0, terminalInfo)
-        if (!IswPos.hasFingerprint()) {
+
+        // ensure device supports finger  print
+        val supportsFingerPrint = IswPos.getInstance().device.hasFingerPrintReader
+        if (!supportsFingerPrint) {
             isw_use_fingerprint.visibility = View.GONE
-        }
-        isw_use_fingerprint.setOnClickListener {
-            clickListener.invoke(USE_FINGERPRINT)
-            dismiss()
+        } else {
+            isw_use_fingerprint.setOnClickListener {
+                clickListener.invoke(USE_FINGERPRINT)
+                dismiss()
+            }
         }
         if (isAuthorization) {
             //isw_textview17.text = getString(R.string.isw_insert_supervisor_s_card)

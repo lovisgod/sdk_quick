@@ -6,11 +6,11 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import androidx.core.content.ContextCompat
 import com.interswitchng.smartpos.emv.pax.R
-import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
-import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
-import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.emv.pax.emv.DeviceImplNeptune
 import com.interswitchng.smartpos.emv.pax.utilities.EmvUtils
+import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
+import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.pax.dal.IDAL
 import com.pax.dal.entity.ECheckMode
 import com.pax.dal.entity.EPedKeyType
@@ -38,6 +38,8 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter,
     private val ped by lazy { dal.getPed(EPedType.INTERNAL) }
 
     override val name get() = DEVICE_NAME
+
+    override val hasFingerPrintReader: Boolean get() = false
 
     override fun getEmvCardReader(): EmvCardReader = factory()
 

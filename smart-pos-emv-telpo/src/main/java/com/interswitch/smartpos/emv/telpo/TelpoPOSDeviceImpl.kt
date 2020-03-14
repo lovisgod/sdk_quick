@@ -22,6 +22,8 @@ class TelpoPOSDeviceImpl constructor(
     override val name: String
         get() = DEVICE_NAME
 
+    override val hasFingerPrintReader: Boolean get() = true
+
     override fun loadInitialKey(initialKey: String, ksn: String) {
         val keyValue = StringUtil.toBytes(initialKey)
         val ksnValue = StringUtil.toBytes(ksn)

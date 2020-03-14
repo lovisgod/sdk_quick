@@ -104,10 +104,6 @@ class IswPos private constructor(private val app: Application, internal val devi
          */
         internal fun isConfigured () = TerminalInfo.get(store) != null
 
-        /**
-         * This function determines if the terminal has fingerprint functionality
-         */
-        fun hasFingerprint() = store.getBoolean(HAS_FINGERPRINT)
 
         /**
          * This method is responsible for setting up the terminal for the current application

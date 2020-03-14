@@ -13,6 +13,11 @@ interface POSDevice {
 
 
     /**
+     * The flag to check if POSDevice supports finger print
+     */
+    val hasFingerPrintReader: Boolean
+
+    /**
      * A member implementation of the printer [DevicePrinter]
      */
     val printer: DevicePrinter
