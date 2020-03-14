@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
@@ -49,8 +50,11 @@ internal class ReportViewModel(
         return transactionLogService.getTransactionFor(day, config)
     }
 
+    fun getReport(day: Date, transactionType: TransactionType): LiveData<PagedList<TransactionLog>> {
+        return transactionLogService.getTransactionFor(day, transactionType, config)
+    }
 
-    fun printEndOfDay(date: Date, transactions: List<TransactionLog>) {
+    fun printEndOfDay(date: Date, transactions: List<TransactionLog>, transactionType: TransactionType?) {
 
         uiScope.launch {
             // get printer status on IO thread
@@ -63,8 +67,10 @@ internal class ReportViewModel(
                     _printerMessage.value = printStatus.message
                 }
                 else -> {
+                    // get name of transaction type
+                    val typeName = transactionType?.name ?: "All"
                     // get slip for current date
-                    val slipItems = transactions.toSlipItems(date)
+                    val slipItems = transactions.toSlipItems(date, typeName)
 
                     // print code in IO thread
                     val status = withContext(ioScope) {
@@ -94,10 +100,18 @@ internal class ReportViewModel(
     }
 
 
-    private fun List<TransactionLog>.toSlipItems(date: Date): MutableList<PrintObject> {
+    fun getEndOfDay(date: Date, transactionType: TransactionType): LiveData<List<TransactionLog>> {
+        // disable print button
+        _printButton.value = false
+
+        return transactionLogService.getTransactionFor(date, transactionType)
+    }
+
+
+    private fun List<TransactionLog>.toSlipItems(date: Date, transactionType: String): MutableList<PrintObject> {
 
         // create the title for printout
-        val title = PrintObject.Data("Purchase", PrintStringConfiguration(isTitle = true, displayCenter = true))
+        val title = PrintObject.Data(transactionType, PrintStringConfiguration(isTitle = true, displayCenter = true))
 
         // initialize list with the title and a line under
         val newLine = PrintObject.Data("\n")

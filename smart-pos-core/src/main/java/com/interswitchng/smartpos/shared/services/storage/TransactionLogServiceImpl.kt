@@ -16,6 +16,7 @@ internal data class DayTime(val morning: Long, val midnight: Long)
 
 internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : TransactionLogService {
 
+
     override fun logTransactionResult(result: TransactionLog) = monarchy.writeAsync { realm ->
         // retrieve the latest id
         val currentId: Number = realm.where(TransactionLog::class.java).max("id") ?: 0
@@ -59,6 +60,27 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
 
     }
 
+
+    override fun getTransactionFor(date: Date, transactionType: TransactionType, pagedListConfig: PagedList.Config): LiveData<PagedList<TransactionLog>> {
+        // get the date range for current date as morning and midnight
+        val (morning, midnight) = getDateRange(date)
+
+        // query for stream of transaction logs for specified day by creating dataSource factory
+        val logDataSourceFactory = monarchy.createDataSourceFactory { realm ->
+            realm.where<TransactionLog>()
+                    .equalTo("transactionType", transactionType.ordinal)
+                    .greaterThan("time", morning)
+                    .lessThan("time", midnight)
+                    .sort("time", Sort.DESCENDING)
+        }
+
+        // create paged list builder for datasource factory
+        val livePagedBuilder = LivePagedListBuilder<Int, TransactionLog>(logDataSourceFactory, pagedListConfig)
+
+        // query for stream of transaction logs for specified day by retrieving livedata list
+        return monarchy.findAllPagedWithChanges(logDataSourceFactory, livePagedBuilder)
+    }
+
     override fun getTransactionFor(date: Date): LiveData<List<TransactionLog>> {
 
         // get the date range for current date as morning and midnight
@@ -73,7 +95,7 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
         }
     }
 
-    fun getTransactionFor(date: Date, transactionType: TransactionType): LiveData<List<TransactionLog>> {
+    override fun getTransactionFor(date: Date, transactionType: TransactionType): LiveData<List<TransactionLog>> {
         // get the date range for current date as morning and midnight
         val (morning, midnight) = getDateRange(date)
 

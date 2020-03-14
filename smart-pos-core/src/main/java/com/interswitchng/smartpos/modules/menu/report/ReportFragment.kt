@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -14,6 +15,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.dialogs.EndOfDayPrintDialog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.adapters.TransactionLogAdapter
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
@@ -21,7 +23,7 @@ import kotlinx.android.synthetic.main.isw_activity_report.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
+class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
 
     // setup spinner layout
     // attach listener to update global variable
@@ -35,7 +37,8 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
 
     private lateinit var endOfDayPrintDialog: EndOfDayPrintDialog
 
-    private lateinit var transactionType: String
+    val transactionTypes = arrayOf("All") + TransactionType.values().map { it.name }
+    private var transactionType: TransactionType? = null
 
 
     // initialize date as today
@@ -48,11 +51,20 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // setup the spinner
+        val spinnerAdapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                transactionTypes
+        )
+
+        spinnerTransactionTypes.adapter = spinnerAdapter
+        spinnerTransactionTypes.onItemSelectedListener = this
+
+
         // create paging adapter
         adapter = TransactionLogAdapter()
 
-        val transactionTypes = resources.getStringArray(R.array.isw_transaction_types)
-        setUpSpinner(transactionTypes)
         // setup recycler view
         rvTransactions.adapter = adapter
         rvTransactions.layoutManager = LinearLayoutManager(requireContext())
@@ -66,17 +78,21 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
         }
 
         // select today's reports
-        showReportFor(selectedDate)
+        showReportFor(selectedDate, transactionType)
 
         isw_button_eod.setOnClickListener {
-            /*val transactions = reportViewModel.getEndOfDay(selectedDate)
+            val transactions = when (transactionType) {
+                null -> reportViewModel.getEndOfDay(selectedDate)
+                else -> reportViewModel.getEndOfDay(selectedDate, transactionType!!)
+            }
+
 
             // observe the live data
-            transactions.observe(this, Observer {
+            transactions.observe(viewLifecycleOwner, Observer {
                 it ?: return@Observer
 
-                reportViewModel.printEndOfDay(selectedDate, it)
-            })*/
+                reportViewModel.printEndOfDay(selectedDate, it, transactionType)
+            })
 
         }
 
@@ -99,30 +115,29 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
 
     }
 
-    private fun setUpSpinner(transactionTypes: Array<String>) {
-        if (spinnerTransactionTypes != null) {
-            spinnerTransactionTypes.onItemSelectedListener = object :
-                    AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>,
-                                            view: View, position: Int, id: Long) {
-                    transactionType = transactionTypes[position]
-                    toast(transactionType)
-                }
+    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        // get the neame of the transaction type
+        val transactionTypeName = transactionTypes[position]
 
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // write code to perform some action
-                }
-            }
-        }
+        // get the enum value based on the name
+        transactionType =
+                if (position == 0) null
+                else TransactionType.valueOf(transactionTypeName)
+        toast(transactionTypeName)
+
+        // update recycler viw
+        showReportFor(selectedDate, transactionType)
     }
 
+    override fun onNothingSelected(parent: AdapterView<*>) {
+    }
 
-    private fun showReportFor(day: Date) {
+    private fun showReportFor(day: Date, transactionType: TransactionType?) {
         // set selected date
         selectedDate = day
 
         // set the date string
-        //tvDate.text = DateUtils.shortDateFormat.format(day)
+        tvDate.text = DateUtils.shortDateFormat.format(day)
 
         // show loader and hide recycler view
         initialProgress.visibility = View.VISIBLE
@@ -142,7 +157,11 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
             reportLiveData.removeObservers(owner)
 
         // get and observe new report
-        reportLiveData = reportViewModel.getReport(day)
+        reportLiveData = when (transactionType) {
+            null -> reportViewModel.getReport(day)
+            else -> reportViewModel.getReport(day, transactionType)
+        }
+
         reportLiveData.observe(owner) { submitList(it, day) }
     }
 
@@ -180,7 +199,7 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
         // show report for selected date
-        showReportFor(calendar.time)
+        showReportFor(calendar.time, transactionType)
     }
 
 

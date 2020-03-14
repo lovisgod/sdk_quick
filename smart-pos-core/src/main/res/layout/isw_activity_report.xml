@@ -48,6 +48,15 @@
             android:src="@drawable/isw_ic_calendar"
             android:tint="@color/iswTextColorSuccessDark" />
 
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/isw_content_margin"
+            android:layout_marginEnd="@dimen/isw_content_margin"
+            tools:text="30 Jun, 2019" />
+
     </LinearLayout>
 
     <Button
