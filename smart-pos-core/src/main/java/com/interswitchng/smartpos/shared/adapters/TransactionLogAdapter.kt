@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import java.util.*
 
 class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder>(diffCallback) {
@@ -96,7 +97,7 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
 
         fun bind(txn: TransactionLog?) {
             txn?.toResult()?.apply {
-                tvAmount.text = tvAmount.context.getString(R.string.isw_currency_amount, amount)
+                tvAmount.text = tvAmount.context.getString(R.string.isw_currency_amount, DisplayUtils.getAmountString(amount.toInt()))
                 tvTxnType.text = type.name
                 tvPaymentType.text = paymentType.name
 

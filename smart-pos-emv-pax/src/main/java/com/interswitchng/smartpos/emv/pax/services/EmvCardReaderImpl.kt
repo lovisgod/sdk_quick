@@ -24,7 +24,6 @@ import com.pax.jemv.clcommon.RetCode
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.sendBlocking
-import kotlin.concurrent.thread
 import kotlin.coroutines.coroutineContext
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult as CoreEmvResult
 
@@ -55,7 +54,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     //     Implementation for ISW EmvCardReader interface
     //----------------------------------------------------------
 
-    override suspend fun setupTransaction(amount: Double, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
+    override suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
         // set amount and channel scope
         emvImpl.setAmount(amount)
         this.channel = channel

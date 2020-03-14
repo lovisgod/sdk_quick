@@ -51,7 +51,7 @@ class AdminAccessDialog constructor(
 //            return
 //        }
 
-        cardViewModel.setupTransaction(0.00, terminalInfo)
+        cardViewModel.setupTransaction(0, terminalInfo)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

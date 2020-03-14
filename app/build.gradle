@@ -77,10 +77,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
-    debugImplementation project(':smart-pos-core')
-    debugImplementation project(':smart-pos-emv-pax')
-    debugImplementation project(':smart-pos-emv-telpo')
-    debugImplementation project(':smart-pos-usb')
+    implementation project(':smart-pos-core')
+    implementation project(':smart-pos-emv-pax')
+    implementation project(':smart-pos-emv-telpo')
+    implementation project(':smart-pos-usb')
 
     releaseImplementation project(':smart-pos-core')
     releaseImplementation project(':smart-pos-emv-pax')

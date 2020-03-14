@@ -35,4 +35,15 @@ interface TransactionLogService {
      */
     fun getTransactionFor(date: Date, pagedListConfig: PagedList.Config): LiveData<PagedList<TransactionLog>>
 
+
+    /** This function is responsible for retrieving transaction for a
+     * specific day, with the specified range of start to end of day
+     *
+     * @param date  the day for transactions to be retrieved
+     * @return  a list of transactions for that day
+     */
+    fun getTransactionFor(date: Date): LiveData<List<TransactionLog>>
+
+
+
 }

@@ -11,8 +11,6 @@ import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.core.IswLocal
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
@@ -24,7 +22,6 @@ import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.lang.Exception
 
 class ReceiptFragment : BaseFragment(TAG) {
 
@@ -202,18 +199,17 @@ class ReceiptFragment : BaseFragment(TAG) {
             when (it) {
                 MerchantCardDialog.AUTHORIZED -> action.invoke()
                 MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
-                MerchantCardDialog.NOT_ENROLLED -> {
-                    alert.setTitle("Supervisor's card not enrolled")
-                    alert.setMessage("You have not yet enrolled a supervisor's card. Please enroll a supervisor's card on the settings page after downloading terminal configuration.")
-                    alert.show()
-
-                }
+//                MerchantCardDialog.NOT_ENROLLED -> {
+//                    alert.setTitle("Supervisor's card not enrolled")
+//                    alert.setMessage("You have not yet enrolled a supervisor's card. Please enroll a supervisor's card on the settings page after downloading terminal configuration.")
+//                    alert.show()
+//
+//                }
 
 
                 MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(requireFragmentManager(), FingerprintBottomDialog.TAG)
             }
         }
-        dialog.setIsEnrollment(false);
         dialog.show(requireFragmentManager(), MerchantCardDialog.TAG)
     }
 

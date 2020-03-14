@@ -12,8 +12,6 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import kotlinx.android.synthetic.main.isw_fragment_merchant_card_setup.*
 import kotlinx.android.synthetic.main.isw_layout_supervisors_card_pin.*
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -35,7 +33,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })
-        cardViewModel.setupTransaction(0.00, terminalInfo)
+        cardViewModel.setupTransaction(0, terminalInfo)
 
         if (!IswPos.hasFingerprint()) {
             isw_skip_fingerprint.text = resources.getString(R.string.isw_finish)
@@ -67,7 +65,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
     private fun processMessage(message: EmvMessage) {
 
         // assigns value to ensure the when expression is exhausted
-        val ignore = when (message) {
+        when (message) {
 
             // when card is detected
             is EmvMessage.CardDetected -> {
@@ -87,11 +85,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
 
             // when card has been read
             is EmvMessage.CardRead -> {
-                runBlocking { delay(1000) }
-
-                //TODO: Uncomment this, was commented out during conflict resolution
-                //cardViewModel.startTransaction(requireContext())
-
+                cardViewModel.readCard()
             }
 
             // when card gets removed
@@ -137,7 +131,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
             is EmvMessage.ProcessingTransaction -> {
 
             }
-            EmvMessage.EmptyPin ->{
+            EmvMessage.EmptyPin -> {
 
             }
         }

@@ -32,11 +32,9 @@ class BillPaymentFragmentNew : BaseFragment(TAG) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
 
         isw_proceed.setOnClickListener {
-
-            isw_card_details_toolbar.setNavigationOnClickListener { navigateUp() }
 
             val billPaymentModel = BillPaymentModel {
                 customerId = isw_customer_id.text.toString()
@@ -47,18 +45,18 @@ class BillPaymentFragmentNew : BaseFragment(TAG) {
             }
 
             paymentModel.newPayment {
-                  amount = paymentInfo.amount
-                  billPayment = billPaymentModel
-              }
-              if (isw_customer_id.text.toString() == "" || isw_bank_cbn_code.text.toString() == "" || isw_payment_code.text.toString() == "") {
-                  toast("Some Fields are empty")
-              } else {
-                  paymentModel.newPayment {
-                      paymentType = PaymentModel.PaymentType.CARD
-                  }
-                  val direction = AmountFragmentDirections.iswActionGotoFragmentCardTransactions(paymentModel)
-                  navigate(direction)
-              }
+                amount = paymentInfo.amount
+                billPayment = billPaymentModel
+            }
+            if (isw_customer_id.text.toString() == "" || isw_bank_cbn_code.text.toString() == "" || isw_payment_code.text.toString() == "") {
+                toast("Some Fields are empty")
+            } else {
+                paymentModel.newPayment {
+                    paymentType = PaymentModel.PaymentType.CARD
+                }
+                val direction = AmountFragmentDirections.iswActionGotoFragmentCardTransactions(paymentModel)
+                navigate(direction)
+            }
 
         }
     }

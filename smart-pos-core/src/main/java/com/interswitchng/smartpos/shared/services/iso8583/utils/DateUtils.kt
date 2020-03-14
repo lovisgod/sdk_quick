@@ -24,6 +24,8 @@ internal object DateUtils {
 
     val universalDateFormat by lazy {  SimpleDateFormat("yyyy-MM-DD'T'HH:mm:ss") }
 
+    val hourMinuteFormat by lazy { SimpleDateFormat("HH:mm", Locale.ROOT) }
+
 
 
 }

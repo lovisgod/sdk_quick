@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.setup.SetupActivity
@@ -38,6 +39,8 @@ class TerminalSettingsActivity : MenuActivity() {
 
     private val isFromSettings by lazy { intent.getBooleanExtra("FROM_SETTINGS", false) }
 
+    private var supervisorCardIsEnrolled = false
+
     private val alert by lazy {
         DialogUtils.getAlertDialog(this)
                 .setTitle("Invalid Configuration")
@@ -59,15 +62,13 @@ class TerminalSettingsActivity : MenuActivity() {
 //                val intent = Intent(this, SetupActivity::class.java)
 //                startActivity(intent)
 //                finish()
-            }
-            else
-            {
+            } else {
                 //That is when the enrollment should take place
             }
 
 
         }
-        fetchSupervisorDetais()
+        fetchSupervisorDetails()
         // setup button listeners
         setupButtons()
         // set the text values
@@ -103,7 +104,8 @@ class TerminalSettingsActivity : MenuActivity() {
         } else if (item?.itemId == R.id.saveConfig) {
             saveConfig()
             if (!isFromSettings) {
-                val intent = Intent(this, SetupActivity::class.java)
+//                val intent = Intent(this, SetupActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }
@@ -165,7 +167,13 @@ class TerminalSettingsActivity : MenuActivity() {
                 tvKeyDate.visibility = View.GONE
 
                 // trigger download keys
-                settingsViewModel.downloadKeys(terminalID, serverIp, serverPort.toInt(), switchKimono.isChecked)
+                settingsViewModel.downloadKeys(
+                        terminalID,
+                        serverIp,
+                        serverPort.toInt(),
+                        switchKimono.isChecked,
+                        switchToNIBBS.isChecked
+                )
             }
         }
 
@@ -193,7 +201,12 @@ class TerminalSettingsActivity : MenuActivity() {
                 tvTerminalInfoDate.visibility = View.GONE
 
                 // trigger download terminal config
-                settingsViewModel.downloadTerminalConfig(terminalID, serverIp, serverPort.toInt(), switchKimono.isChecked)
+                settingsViewModel.downloadTerminalConfig(
+                        terminalID,
+                        serverIp,
+                        serverPort.toInt(),
+                        switchKimono.isChecked
+                )
             }
         }
 
@@ -206,6 +219,11 @@ class TerminalSettingsActivity : MenuActivity() {
             // choose config file
             startActivityForResult(intent, RC_FILE_READ)
         }
+        /*  switchToNIBBS.setOnClickListener { button, _ ->
+              if(button.isChecked){
+
+              }
+          }*/
 
         switchKimono.setOnCheckedChangeListener { button, _ ->
 
@@ -221,6 +239,8 @@ class TerminalSettingsActivity : MenuActivity() {
 
                 // show server url field
                 etServerUrl.isEnabled = true
+
+                configSettings.text = "Configured To Kimono"
             } else {
                 // server not required if not kimono
                 etServerUrl.error = null
@@ -230,31 +250,28 @@ class TerminalSettingsActivity : MenuActivity() {
                 // show server and port fields
                 etServerPort.isEnabled = true
                 etServerIP.isEnabled = true
+
+                configSettings.text = "Configured to NIBBS"
             }
 
             // set the terminal-info download container based on kimono flag
-            terminalInfoDownloadContainer.visibility = if (button.isChecked) View.GONE else View.VISIBLE
+            terminalInfoDownloadContainer.visibility =
+                    if (button.isChecked) View.GONE else View.VISIBLE
         }
 
 
         btnChangePassword.setOnClickListener {
-            // validate user input
-//          //  validateUserPassword()
-//            authorizeAndPerformAction {
-//
-//                validateUserPassword()
-//
-//
-//
-//            }
-
-
-            authorizeAndPerformAction { fetchSupervisorDetais() }
-
+            if (supervisorCardIsEnrolled) {
+                authorizeAndPerformAction { fetchSupervisorDetails() }
+            } else {
+                val intent = Intent(this, SetupActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
-    private fun setupTexts(terminalInfo: TerminalInfo? =  TerminalInfo.get(store)) {
+    private fun setupTexts(terminalInfo: TerminalInfo? = TerminalInfo.get(store)) {
         val terminalDate = store.getNumber(KEY_DATE_TERMINAL, -1)
         val keysDate = store.getNumber(KEY_DATE_KEYS, -1)
 
@@ -300,7 +317,6 @@ class TerminalSettingsActivity : MenuActivity() {
         val serverIp = terminalInfo?.serverIp ?: Constants.ISW_TERMINAL_IP
         val serverPort = terminalInfo?.serverPort ?: BuildConfig.ISW_TERMINAL_PORT
         val serverUrl = terminalInfo?.serverUrl ?: Constants.ISW_KIMONO_URL
-
 
 
         // server config
@@ -371,7 +387,10 @@ class TerminalSettingsActivity : MenuActivity() {
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_check)
             val color = ContextCompat.getColor(this, R.color.iswTextColorSuccessDark)
-            ImageViewCompat.setImageTintList(btnDownloadTerminalConfig, ColorStateList.valueOf(color))
+            ImageViewCompat.setImageTintList(
+                    btnDownloadTerminalConfig,
+                    ColorStateList.valueOf(color)
+            )
         } else {
             val message = "No terminal configuration"
             tvTerminalInfoDate.text = getString(R.string.isw_title_date, message)
@@ -380,7 +399,10 @@ class TerminalSettingsActivity : MenuActivity() {
             // set the drawable and color
             btnDownloadTerminalConfig.setImageResource(R.drawable.isw_ic_error)
             val color = ContextCompat.getColor(this, R.color.iswTextColorError)
-            ImageViewCompat.setImageTintList(btnDownloadTerminalConfig, ColorStateList.valueOf(color))
+            ImageViewCompat.setImageTintList(
+                    btnDownloadTerminalConfig,
+                    ColorStateList.valueOf(color)
+            )
         }
     }
 
@@ -411,8 +433,10 @@ class TerminalSettingsActivity : MenuActivity() {
         errorInfo.apply {
             if (terminalId.isNotEmpty()) tiTerminalId.error = terminalId
             if (merchantId.isNotEmpty()) tiMerchantId.error = merchantId
-            if (merchantCategoryCode.isNotEmpty()) tiMerchantCategoryCode.error = merchantCategoryCode
-            if (merchantNameAndLocation.isNotEmpty()) tiMerchantNameAndLocation.error = merchantNameAndLocation
+            if (merchantCategoryCode.isNotEmpty()) tiMerchantCategoryCode.error =
+                    merchantCategoryCode
+            if (merchantNameAndLocation.isNotEmpty()) tiMerchantNameAndLocation.error =
+                    merchantNameAndLocation
             if (countryCode.isNotEmpty()) tiCountryCode.error = countryCode
             if (currencyCode.isNotEmpty()) tiCurrencyCode.error = currencyCode
             if (callHomeTimeInMin.isNotEmpty()) tiCallHomeTime.error = callHomeTimeInMin
@@ -482,19 +506,15 @@ class TerminalSettingsActivity : MenuActivity() {
     }
 
 
-
-
     private lateinit var dialog: MerchantCardDialog
 
 
-
-
-
-    private  fun performOperation(){
+    private fun performOperation() {
 
     }
+
     private fun authorizeAndPerformAction(action: () -> Unit) {
-        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+        val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
             if (isValidated) {
                 action.invoke()
             } else {
@@ -506,37 +526,33 @@ class TerminalSettingsActivity : MenuActivity() {
             when (it) {
                 MerchantCardDialog.AUTHORIZED -> action.invoke()
                 MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
-                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(supportFragmentManager, FingerprintBottomDialog.TAG)
+                MerchantCardDialog.USE_FINGERPRINT -> fingerprintDialog.show(
+                        supportFragmentManager,
+                        FingerprintBottomDialog.TAG
+                )
             }
         }
-        dialog.setIsEnrollment(true)
-//        accountTypeDialog.show(childFragmentManager, TAG)
         dialog.show(supportFragmentManager, MerchantCardDialog.TAG)
     }
 
 
-
-
-    fun fetchSupervisorDetais(){
-    val savedPan = store.getString("M3RCHANT_PAN", "")
-    if(savedPan==""){
-        supervisorStatusHeader.text = "Supervisor's card not set"
-        btnChangePassword.text = "Enroll supervisor's card"
-
-
+    private fun fetchSupervisorDetails() {
+        val savedPan = store.getString("M3RCHANT_PAN", "")
+        if (savedPan == "") {
+            supervisorStatusHeader.text = "Supervisor's card not set"
+            btnChangePassword.text = "Enroll supervisor's card"
+            supervisorCardIsEnrolled = false
+        } else {
+            supervisorStatusHeader.text = ""
+            btnChangePassword.text = "Change supervisor's card"
+            supervisorCardIsEnrolled = true
+        }
     }
-   else{
-        supervisorStatusHeader.text = ""
-        btnChangePassword.text = "Change supervisor's card"
-    }
-
-}
 
 
     private val cardViewModel: CardViewModel by viewModel()
 
     val terminalInfo by lazy { TerminalInfo.get(store)!! }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

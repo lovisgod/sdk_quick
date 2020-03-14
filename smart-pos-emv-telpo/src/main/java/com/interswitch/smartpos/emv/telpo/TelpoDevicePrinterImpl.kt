@@ -17,7 +17,7 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
 
     private val printer = UsbThermalPrinter(context)
 
-    private val line: String = "-".repeat(SCREEN_NORMAL_LENGTH)
+    private val line: String = "-".repeat(SCREEN_LARGE_LENGTH)
 
     override fun printSlip(slip: List<PrintObject>, user: UserType): PrintStatus {
         printer.apply {

@@ -39,8 +39,7 @@ internal class IsoServiceImpl(
     }
 
     override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates
     }
 
 
@@ -170,9 +169,17 @@ internal class IsoServiceImpl(
         return null
     }
 
-    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+    override fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
+        var cms: String
+        if (isNibbsTest) {
+            cms = Constants.ISW_CMS_TEST
+        } else {
+            cms = Constants.ISW_CMS
+        }
+
+        // load keys
         // getResult clear key
-        val cms =Constants.ISW_CMS
+
         //val cms2 = context.getString(R.string.isw_cms)
         Logger.with("Constants Keys").logErr(cms.toString())
 
@@ -201,7 +208,9 @@ internal class IsoServiceImpl(
         }
 
         return isDownloaded == true
+
     }
+
 
     override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
         try {
@@ -297,7 +306,7 @@ internal class IsoServiceImpl(
             message
                     .setValue(2, transaction.cardPAN)
                     .setValue(3, processCode)
-                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
                     .setValue(7, timeDateNow)
                     .setValue(11, stan)
                     .setValue(12, timeFormatter.format(now))
@@ -397,7 +406,7 @@ internal class IsoServiceImpl(
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
                 .setValue(7, timeDateNow)
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))
@@ -482,7 +491,7 @@ internal class IsoServiceImpl(
             val originalTransactionInfoData = transaction.originalTransactionInfoData
             val month = originalTransactionInfoData?.month
             val time = originalTransactionInfoData?.time
-            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt())
+            val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
             val message = NibssIsoMessage(messageFactory.newMessage(0x420))
             val processCode = "00" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
@@ -685,7 +694,7 @@ internal class IsoServiceImpl(
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
                 .setValue(7, transmissionDateTime)
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))
@@ -770,12 +779,12 @@ internal class IsoServiceImpl(
             val actualSettlementFee= "C00000000"
             val actualTransactionFee= "C00000000"
             val originalDataElement = "0100" + originalStan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
-            val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
+            val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
-                .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount.toInt()))
+                    .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
                 .setValue(7, timeAndDateFormatter.format(now))
                 .setValue(11, stan)
                 .setValue(12, timeFormatter.format(now))

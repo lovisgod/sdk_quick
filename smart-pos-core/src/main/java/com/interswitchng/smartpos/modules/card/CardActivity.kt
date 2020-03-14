@@ -11,18 +11,13 @@ import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.model.CardTransactionState
 import com.interswitchng.smartpos.shared.activities.BaseActivity
-import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
-import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.response.Transaction
-import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
@@ -31,7 +26,6 @@ import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import kotlinx.android.synthetic.main.isw_activity_card.*
 import kotlinx.android.synthetic.main.isw_content_amount.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 
 class CardActivity : BaseActivity() {
@@ -119,7 +113,7 @@ class CardActivity : BaseActivity() {
                         // before starting transaction
                         runWithInternet {
                             // try starting transaction
-                            cardViewModel.startTransaction(this, paymentInfo, accountType, terminalInfo, billPaymentModel)
+//                            cardViewModel.startTransaction(this, paymenMo, accountType, terminalInfo)
                         }
                     }
                     dialog.dismiss()
@@ -176,31 +170,31 @@ class CardActivity : BaseActivity() {
                 // extract info
                 val response = transactionResponse.value.first
                 val emvData = transactionResponse.value.second
-                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
-
-                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
-                val pinStatus = when {
-                    pinOk || response.responseCode == IsoUtils.OK -> "PIN Verified"
-                    else -> "PIN Unverified"
-                }
-
-                val now = Date()
-                transactionResult = TransactionResult(
-                    paymentType = PaymentType.Card,
-                    dateTime = DisplayUtils.getIsoString(now),
-                    amount = DisplayUtils.getAmountString(paymentInfo),
-                    type = TransactionType.Purchase,
-                    authorizationCode = response.authCode,
-                    responseMessage = responseMsg,
-                    responseCode = response.responseCode,
-                    cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
-                    stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
-                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.iccString,
-
-                        src = txnInfo.src,
-                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
-                    originalTransmissionDateTime = response.transmissionDateTime
-                )
+//                val txnInfo = TransactionInfo.fromEmv(emvData, paymentInfo, PurchaseType.Card, accountType)
+//
+//                val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+//                val pinStatus = when {
+//                    pinOk || response.responseCode == IsoUtils.OK -> "PIN Verified"
+//                    else -> "PIN Unverified"
+//                }
+//
+//                val now = Date()
+//                transactionResult = TransactionResult(
+//                    paymentType = PaymentType.Card,
+//                    dateTime = DisplayUtils.getIsoString(now),
+//                    amount = DisplayUtils.getAmountString(paymentInfo),
+//                    type = TransactionType.Purchase,
+//                    authorizationCode = response.authCode,
+//                    responseMessage = responseMsg,
+//                    responseCode = response.responseCode,
+//                    cardPan = txnInfo.cardPAN, cardExpiry = txnInfo.cardExpiry, cardType = cardType,
+//                    stan = response.stan, pinStatus = pinStatus, AID = emvData.AID, code = "",
+//                    telephone = iswPos.config.merchantTelephone, icc = txnInfo.iccString,
+//
+//                        src = txnInfo.src,
+//                    csn = txnInfo.csn, cardPin = txnInfo.cardPIN, cardTrack2 = txnInfo.cardTrack2,
+//                    originalTransmissionDateTime = response.transmissionDateTime
+//                )
 
                 // show transaction result screen
                 showTransactionResult(Transaction.default())

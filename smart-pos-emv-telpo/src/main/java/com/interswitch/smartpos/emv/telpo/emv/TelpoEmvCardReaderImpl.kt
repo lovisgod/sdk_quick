@@ -25,7 +25,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
     private lateinit var channel: Channel<EmvMessage>
     private lateinit var channelScope: CoroutineScope
 
-    private var amount: Double = 0.00
+    private var amount: Int = 0
 
     private lateinit var terminalInfo: TerminalInfo
 
@@ -97,7 +97,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
     override fun getPan(): String? = telpoEmvImplementation.cardPan
 
-    override suspend fun setupTransaction(amount: Double, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
+    override suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
         this.amount = amount
         this.terminalInfo = terminalInfo
         telpoEmvImplementation.setAmount(amount)
@@ -187,7 +187,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
             val aid = telpoEmvImplementation.getTLVString(0x9F06)!!
             // get the card sequence number
-            val csnStr = telpoEmvImplementation.getTLV(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!
+            val csnStr = telpoEmvImplementation.getTLVString(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!
             val csn = "0$csnStr"
 
             EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = cardPin, cardTrack2 = track2data,  icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = "")

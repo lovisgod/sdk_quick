@@ -5,6 +5,7 @@ import com.igweze.ebi.simplecalladapter.SimpleCallAdapterFactory
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
@@ -17,9 +18,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
+import retrofit2.SimpleXmlConverterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import retrofit2.SimpleXmlConverterFactory
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
@@ -83,7 +84,7 @@ internal val networkModule = module {
 
 
         val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
 
 //        val kimonoServiceUrl = "https://qa.interswitchng.com/"
 
@@ -121,7 +122,8 @@ internal val networkModule = module {
 
     // retrofit isw payment
     single(RETROFIT_PAYMENT) {
-        val iswBaseUrl = androidContext().getString(R.string.ISW_USSD_QR_BASE_URL)
+        val iswBaseUrl = Constants.ISW_USSD_QR_BASE_URL
+        // androidContext().getString(R.string.ISW_USSD_QR_BASE_URL)
         val builder = Retrofit.Builder()
                 .baseUrl(iswBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -167,7 +169,7 @@ internal val networkModule = module {
 
     // create Auth service with retrofit
     single {
-        val iswBaseUrl = androidContext().getString(R.string.ISW_TOKEN_BASE_URL)
+        val iswBaseUrl = Constants.ISW_TOKEN_BASE_URL
         val builder = Retrofit.Builder()
                 .baseUrl(iswBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())

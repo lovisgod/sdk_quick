@@ -77,7 +77,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 //    }
 
 
-    override fun downloadKey(terminalId: String, ip: String, port: Int): Boolean {
+    override fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
 
         // load test keys
         val tik = Constants.ISW_DUKPT_IPEK
@@ -160,7 +160,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             }
 
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
+            //logger.log(e.localizedMessage)
             e.printStackTrace()
           //  initiateReversal(request, request.stan) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")

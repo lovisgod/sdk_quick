@@ -77,10 +77,15 @@ internal object DisplayUtils: KoinComponent {
     }
 
 
-    fun getAmountString(paymentInfo: PaymentInfo): String {
-        val amount = paymentInfo.amount  / 100f
-        return getAmountString(amount)
+    fun getAmountString(amount: Int): String {
+        val amountAsDouble: Double = amount / 100.0
+        return getAmountString(amountAsDouble)
     }
+
+    fun getAmountString(paymentInfo: PaymentInfo): String {
+        return getAmountString(paymentInfo.amount)
+    }
+
 
     fun hideKeyboard(activity: Activity) {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -108,6 +113,7 @@ internal object DisplayUtils: KoinComponent {
             }
         }
         Logger.with("Display Utils").logErr( amount)
-        return "$currency $amount"
+        var formattedAmount = getAmountString(amount.toInt())
+        return "$currency $formattedAmount"
     }
 }

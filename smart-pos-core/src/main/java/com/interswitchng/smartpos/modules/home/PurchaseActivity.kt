@@ -22,7 +22,7 @@ class PurchaseActivity : AppCompatActivity(), Keyboard.KeyBoardListener {
     private lateinit var keyboard: Keyboard
     private val defaultAmount = "0.00"
     private var current = ""
-    private var currentAmount: Double = 0.00
+    private var currentAmount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class PurchaseActivity : AppCompatActivity(), Keyboard.KeyBoardListener {
             Logger.with("PurchaseActivity").logErr(formatted.toString())
 
             amount.text = formatted
-            currentAmount = cleanString.toDouble()
+            currentAmount = cleanString.toInt()
             Logger.with("PurchaseActivity").logErr(currentAmount.toString())
             current = cleanString
             keyboard.setText(cleanString)
@@ -75,7 +75,7 @@ class PurchaseActivity : AppCompatActivity(), Keyboard.KeyBoardListener {
         }
     }
 
-    private fun makePayment(amount: Double, type: PaymentType?) {
+    private fun makePayment(amount: Int, type: PaymentType?) {
         try {
             // trigger payment
             IswPos.getInstance().initiatePayment(this, amount, type)
