@@ -6,22 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".modules.menu.report.ReportActivity">
 
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/iswColorPrimary"
-        android:theme="@style/ISW.AppBarOverlay"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ISW.PopupOverlay" />
+    <!--
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/iswColorPrimary"
+            android:theme="@style/ISW.AppBarOverlay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ISW.PopupOverlay" />-->
 
     <LinearLayout
         android:id="@+id/btnSelectDate"
-        android:layout_width="235dp"
-        android:layout_height="70dp"
-        android:layout_margin="@dimen/isw_content_margin"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
         android:background="?attr/selectableItemBackground"
@@ -32,7 +31,7 @@
         android:padding="8dp"
         app:layout_constraintEnd_toStartOf="@+id/isw_button_eod"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,14 +48,6 @@
             android:src="@drawable/isw_ic_calendar"
             android:tint="@color/iswTextColorSuccessDark" />
 
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/isw_content_margin"
-            android:layout_marginEnd="@dimen/isw_content_margin"
-            tools:text="30 Jun, 2019" />
-
     </LinearLayout>
 
     <Button
@@ -67,8 +58,20 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="End Of Day"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnSelectDate" />
+
+
+    <Spinner
+        android:id="@+id/spinnerTransactionTypes"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_margin="@dimen/isw_content_small_margin"
+        android:entries="@array/isw_transaction_types"
+        android:spinnerMode="dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSelectDate" />
 
     <ProgressBar
         android:id="@+id/initialProgress"
@@ -101,6 +104,6 @@
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSelectDate" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerTransactionTypes" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

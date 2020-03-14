@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.menu.report
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.DatePicker
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -10,6 +11,7 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.dialogs.EndOfDayPrintDialog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.adapters.TransactionLogAdapter
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
@@ -19,13 +21,22 @@ import kotlinx.android.synthetic.main.isw_activity_report.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class ReportFragment : BaseFragment("Report Fragment"), DatePickerDialog.OnDateSetListener {
+class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener {
+
+    // setup spinner layout
+    // attach listener to update global variable
+    // on item, update the recycler view
 
     private val reportViewModel: ReportViewModel by viewModel()
 
     private lateinit var adapter: TransactionLogAdapter
 
     private lateinit var reportLiveData: LiveData<PagedList<TransactionLog>>
+
+    private lateinit var endOfDayPrintDialog: EndOfDayPrintDialog
+
+    private lateinit var transactionType: String
+
 
     // initialize date as today
     private var selectedDate = Date()
@@ -40,6 +51,8 @@ class ReportFragment : BaseFragment("Report Fragment"), DatePickerDialog.OnDateS
         // create paging adapter
         adapter = TransactionLogAdapter()
 
+        val transactionTypes = resources.getStringArray(R.array.isw_transaction_types)
+        setUpSpinner(transactionTypes)
         // setup recycler view
         rvTransactions.adapter = adapter
         rvTransactions.layoutManager = LinearLayoutManager(requireContext())
@@ -56,14 +69,15 @@ class ReportFragment : BaseFragment("Report Fragment"), DatePickerDialog.OnDateS
         showReportFor(selectedDate)
 
         isw_button_eod.setOnClickListener {
-            val transactions = reportViewModel.getEndOfDay(selectedDate)
+            /*val transactions = reportViewModel.getEndOfDay(selectedDate)
 
             // observe the live data
             transactions.observe(this, Observer {
                 it ?: return@Observer
 
                 reportViewModel.printEndOfDay(selectedDate, it)
-            })
+            })*/
+
         }
 
         // observe view model
@@ -85,13 +99,30 @@ class ReportFragment : BaseFragment("Report Fragment"), DatePickerDialog.OnDateS
 
     }
 
+    private fun setUpSpinner(transactionTypes: Array<String>) {
+        if (spinnerTransactionTypes != null) {
+            spinnerTransactionTypes.onItemSelectedListener = object :
+                    AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>,
+                                            view: View, position: Int, id: Long) {
+                    transactionType = transactionTypes[position]
+                    toast(transactionType)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // write code to perform some action
+                }
+            }
+        }
+    }
+
 
     private fun showReportFor(day: Date) {
         // set selected date
         selectedDate = day
 
         // set the date string
-        tvDate.text = DateUtils.shortDateFormat.format(day)
+        //tvDate.text = DateUtils.shortDateFormat.format(day)
 
         // show loader and hide recycler view
         initialProgress.visibility = View.VISIBLE
@@ -152,4 +183,8 @@ class ReportFragment : BaseFragment("Report Fragment"), DatePickerDialog.OnDateS
         showReportFor(calendar.time)
     }
 
+
+    companion object {
+        const val TAG = "Report Fragment"
+    }
 }

@@ -258,6 +258,19 @@
     <string name="isw_receipt_amount">%1$s</string>
     <string name="isw_card_type">Card Type</string>
     <string name="isw_bill_payment_details">Bill Payment Details</string>
+    <string name="isw_print_purchase">Print Purchase</string>
+    <string name="isw_select_transaction_type_to_print">Select Transaction Type To Print</string>
+    <string name="isw_print_pre_auth">Print Pre-Auth</string>
+    <string name="isw_print_completion">Print Completion</string>
+    <string name="isw_print_all_transactions">Print all transactions</string>
 
+    <string-array name="isw_transaction_types">
+        <item>Purchase</item>
+        <item>Pre Authorization</item>
+        <item>Completion</item>
+        <item>Reversal</item>
+        <item>Refund</item>
+        <item>Bill Payment</item>
+    </string-array>
 
 </resources>

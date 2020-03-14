@@ -33,7 +33,7 @@ class ReportActivity : MenuActivity(), DatePickerDialog.OnDateSetListener {
         setContentView(R.layout.isw_activity_report)
 
         // setup toolbar
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -61,7 +61,7 @@ class ReportActivity : MenuActivity(), DatePickerDialog.OnDateSetListener {
         selectedDate = day
 
         // set the date string
-        tvDate.text = DateUtils.shortDateFormat.format(day)
+        //tvDate.text = DateUtils.shortDateFormat.format(day)
 
         // show loader and hide recycler view
         initialProgress.visibility = View.VISIBLE
