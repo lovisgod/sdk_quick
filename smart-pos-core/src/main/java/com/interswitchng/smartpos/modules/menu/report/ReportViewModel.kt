@@ -15,6 +15,7 @@ import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -202,7 +203,7 @@ internal class ReportViewModel(
     private fun TransactionLog.toSlipItem(): PrintObject {
         val date = Date(this.time)
         val dateStr = DateUtils.hourMinuteFormat.format(date)
-        val amount = formatAmount(this.amount)
+        val amount = formatAmount(DisplayUtils.getAmountString(this.amount.toInt()))
         val code = this.responseCode
         val card = "0000"
         val status = if (code == IsoUtils.OK) "PASS" else "FAIL"

@@ -7,7 +7,23 @@
 
     <fragment
         android:id="@+id/isw_report"
+        android:name="com.interswitchng.smartpos.modules.setup.fragments.MerchantCardDialogFragment">
+
+        <action
+            android:id="@+id/isw_action_goto_report_fragment"
+            app:destination="@id/isw_report_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/isw_transaction" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/isw_report_fragment"
         android:name="com.interswitchng.smartpos.modules.menu.report.ReportFragment" />
+
     <fragment
         android:id="@+id/isw_transaction"
         android:name="com.interswitchng.smartpos.modules.main.fragments.TransactionFragment">
