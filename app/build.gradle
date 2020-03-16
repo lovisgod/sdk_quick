@@ -40,13 +40,33 @@ android {
             applicationIdSuffix '.v2.debug'
         }
     }
+
+    flavorDimensions "terminal"
+    productFlavors{
+        telpo {
+            dimension "terminal"
+            applicationIdSuffix ".telpo"
+            versionNameSuffix "-telpo"
+        }
+        pax {
+            dimension "terminal"
+            applicationIdSuffix ".pax"
+            versionNameSuffix "-pax"
+        }
+    }
     compileOptions {
         targetCompatibility javaVersion
         sourceCompatibility javaVersion
     }
 
     configurations {
-        releasImplementation
+        telpoReleaseImplementation
+        telpoDebugImplementation
+
+        paxReleaseImplementation
+        paxDebugImplementation
+
+        releaseImplementation
         debugImplementation
     }
 
@@ -69,7 +89,7 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
 
     //releaseImplementation "com.interswitchng:smart-pos-core:$versionName"
-    //releaseImplementation "com.interswitchng:smart-pos-emv-pax:$versionName"
+    //paxDebugImplementation "com.interswitchng:smart-pos-emv-pax:$versionName"
     //releaseImplementation "com.interswitchng:smart-pos-usb:$versionName"
 
 
@@ -77,15 +97,16 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
-    implementation project(':smart-pos-core')
-    implementation project(':smart-pos-emv-pax')
-    implementation project(':smart-pos-emv-telpo')
-    implementation project(':smart-pos-usb')
+    debugImplementation project(':smart-pos-core')
+    debugImplementation project(':smart-pos-usb')
+    paxDebugImplementation project(':smart-pos-emv-pax')
+    telpoDebugImplementation project(':smart-pos-emv-telpo')
+
 
     releaseImplementation project(':smart-pos-core')
-    releaseImplementation project(':smart-pos-emv-pax')
-    releaseImplementation project(':smart-pos-emv-telpo')
     releaseImplementation project(':smart-pos-usb')
+    paxReleaseImplementation project(':smart-pos-emv-pax')
+    telpoReleaseImplementation project(':smart-pos-emv-telpo')
 
 
     testImplementation 'junit:junit:4.12'

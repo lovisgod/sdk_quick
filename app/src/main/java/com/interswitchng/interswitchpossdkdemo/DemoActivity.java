@@ -114,7 +114,6 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
             Bitmap bm = drawableToBitmap(logo);
 
         POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
-        //TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
             device = service;
 
