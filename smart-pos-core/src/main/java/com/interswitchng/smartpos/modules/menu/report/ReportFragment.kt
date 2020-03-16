@@ -95,6 +95,10 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
             printObserver = Observer {
                 it ?: return@Observer
 
+                if (it.isEmpty()) {
+                    toast("Nothing to print")
+                    return@Observer
+                }
                 reportViewModel.printEndOfDay(selectedDate, it, transactionType)
                 // remove observer once print has been triggered
                 transactions.removeObserver(printObserver)
@@ -102,6 +106,7 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
 
             // observe the live data
             transactions.observe(viewLifecycleOwner, printObserver)
+
 
         }
 
