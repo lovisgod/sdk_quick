@@ -17,6 +17,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -55,7 +56,7 @@ internal class ReportViewModel(
         return transactionLogService.getTransactionFor(day, transactionType, config)
     }
 
-    fun printEndOfDay(date: Date, transactions: List<TransactionLog>, transactionType: TransactionType?) {
+    fun printEndOfDay(date: Date, transactions: List<TransactionLog>, transactionType: TransactionType) {
 
         uiScope.launch {
             // get printer status on IO thread
@@ -68,30 +69,68 @@ internal class ReportViewModel(
                     _printerMessage.value = printStatus.message
                 }
                 else -> {
-                    // get name of transaction type
-                    val typeName = transactionType?.name ?: "All"
-                    // get slip for current date
-                    val slipItems = transactions.toSlipItems(date, typeName)
-
-                    // print code in IO thread
-                    val status = withContext(ioScope) {
-                        posDevice.printer.printSlip(
-                                slipItems,
-                                UserType.Merchant
-                        )
-                    }
-
-                    // publish print message
-                    _printerMessage.value = status.message
-                    // enable print button
-                    _printButton.value = true
-
-                    // set printed flags for customer and merchant copies
-                    val printed = status !is PrintStatus.Error
+                    // print transaction for current type
+                    printTransactions(transactionType, transactions, date)
                 }
             }
         }
     }
+
+
+    fun printAll(date: Date) {
+        // get printer status on IO thread
+        uiScope.launch {
+
+            for (transactionType in TransactionType.values()) {
+
+                // get transactions for current type
+                val transactions = withContext(ioScope) {
+                    transactionLogService.getTransactionListFor(date, transactionType)
+                }
+
+                // get print status before printing
+                val printStatus = withContext(ioScope) {
+                    posDevice.printer.canPrint()
+                }
+                when (printStatus) {
+                    is PrintStatus.Error -> {
+                        _printerMessage.value = printStatus.message
+                    }
+                    else -> {
+                        // print transaction for current type
+                        printTransactions(transactionType, transactions, date)
+
+                        // delay for 2 secs before printing again
+                        delay(2000)
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun printTransactions(transactionType: TransactionType, transactions: List<TransactionLog>, date: Date) {
+        if (transactions.isEmpty()) return
+
+        // get name of transaction type
+        val typeName = transactionType.name
+        // get slip for current date
+        val slipItems = transactions.toSlipItems(date, typeName)
+
+        // print code in IO thread
+        val status = withContext(ioScope) {
+            posDevice.printer.printSlip(
+                    slipItems,
+                    UserType.Merchant
+            )
+        }
+
+        // publish print message
+        _printerMessage.value = status.message
+        val printed = status !is PrintStatus.Error
+        // enable print button
+        _printButton.value = printed
+    }
+
 
     fun getEndOfDay(date: Date): LiveData<List<TransactionLog>> {
         // disable print button
@@ -173,7 +212,7 @@ internal class ReportViewModel(
             //add successful transactions
             if (it.responseCode == IsoUtils.OK) {
                 transactionApproved += 1
-                transactionApprovedAmount += it.amount.toDouble()
+                transactionApprovedAmount += DisplayUtils.getAmountString(it.amount.toInt()).toDouble()
             }
         }
         // add line

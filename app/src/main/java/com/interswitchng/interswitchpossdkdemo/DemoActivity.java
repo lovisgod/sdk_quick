@@ -19,17 +19,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.interswitchng.smartpos.IswPos;
-import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException;
-import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
-import com.interswitchng.smartpos.shared.models.core.Environment;
-import com.interswitchng.smartpos.shared.models.core.POSConfig;
 import com.interswitchng.smartpos.shared.models.core.PurchaseResult;
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType;
-import com.interswitchng.smartpos.usb.UsbConfig;
 import com.interswitchng.smartpos.usb.interfaces.MessageListener;
 
 import java.text.NumberFormat;
@@ -50,100 +44,9 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
 
         setSupportActionBar(findViewById(R.id.homeToolbar));
 
-        configureTerminal();
         setupUI();
     }
 
-    private void configureTerminal() {
-        POSDevice device;
-//
-//        if (BuildConfig.MOCK) {
-//            device = new POSDevice() {
-//                @Override
-//                public DevicePrinter getPrinter() {
-//                    return new DevicePrinter() {
-//                        @Override
-//                        public PrintStatus printSlip(List<? extends PrintObject> slip, UserType user) {
-//                            return new PrintStatus.Error("No DevicePrinterImpl installed");
-//                        }
-//
-//                        @Override
-//                        public PrintStatus canPrint() {
-//                            return new PrintStatus.Error("No DevicePrinterImpl installed");
-//                        }
-//                    };
-//                }
-//
-//
-//                @Override
-//                public EmvCardReader getEmvCardReader() {
-//                    return new EmvCardReader() {
-//
-//
-//                        @Override
-//                        public Object setupTransaction(int amount, TerminalInfo terminalInfo,  kotlinx.coroutines.channels.Channel<EmvMessage> channel, kotlinx.coroutines.CoroutineScope scope,  kotlin.coroutines.Continuation<? super kotlin.Unit> o) {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public EmvResult completeTransaction(TransactionResponse response) {
-//                            return EmvResult.OFFLINE_APPROVED;
-//                        }
-//
-//                        @Override
-//                        public EmvResult startTransaction() {
-//                            return EmvResult.OFFLINE_APPROVED;
-//                        }
-//
-//
-//                        @Override
-//                        public void cancelTransaction() {
-//                        }
-//
-//                        @Override
-//                        public EmvData getTransactionInfo() {
-//                            return null;
-//                        }
-//                    };
-//                }
-//            };
-//        } else {
-
-
-            Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
-            Bitmap bm = drawableToBitmap(logo);
-
-        POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
-            service.setCompanyLogo(bm);
-            device = service;
-
-
-//        }
-
-        String clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D";
-        String clientSecret = "t1ll73stS3cr3t";
-        String alias = "000001";
-        String merchantCode = "MX1065";
-
-        if (BuildConfig.DEBUG && BuildConfig.MOCK) {
-            alias = "000007";
-            clientId = "IKIAB23A4E2756605C1ABC33CE3C287E27267F660D61";
-            clientSecret = "secret";
-            merchantCode = "MX5882";
-        }
-
-        boolean enableUsb = getIntent().getBooleanExtra(KEY_ENABLE_USB, false);
-        POSConfig config = new POSConfig(alias, clientId, clientSecret, merchantCode,"", Environment.Test );
-
-        if (enableUsb) {
-            UsbConfig usbConfig = new UsbConfig();
-            usbConfig.setMessageListener(this);
-            config.with(usbConfig);
-        }
-
-        // setup terminal
-        IswPos.setupTerminal(getApplication(), device, null, config,false, false);
-    }
 
     private void setupUI() {
         amount = findViewById(R.id.amount);

@@ -109,6 +109,20 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
         }
     }
 
+    override fun getTransactionListFor(date: Date, transactionType: TransactionType): List<TransactionLog> {
+        // get the date range for current date as morning and midnight
+        val (morning, midnight) = getDateRange(date)
+
+        // query for stream of transaction logs for specified day by retrieving livedata list
+        return monarchy.fetchAllCopiedSync { realm ->
+            realm.where<TransactionLog>()
+                    .equalTo("transactionType", transactionType.ordinal)
+                    .greaterThan("time", morning)
+                    .lessThan("time", midnight)
+                    .sort("time", Sort.DESCENDING)
+        }
+    }
+
     private fun getDateRange(date: Date): DayTime {
         // calendar to generate first hour of day
         val morningCalendar = Calendar.getInstance()

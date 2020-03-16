@@ -58,7 +58,7 @@ open class TransactionLog(
             else -> CardType.None
         }
 
-        val type = TransactionType.Purchase
+        val type = TransactionType.values().first { it.ordinal == this.transactionType }
 
         return TransactionResult(
                 paymentType,

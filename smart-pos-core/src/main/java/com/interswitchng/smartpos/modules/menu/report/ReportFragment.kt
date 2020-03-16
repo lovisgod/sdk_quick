@@ -58,6 +58,7 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
                 transactionTypes
         )
 
+        spinnerAdapter.setDropDownViewResource(R.layout.isw_list_item_transaction_type)
         spinnerTransactionTypes.adapter = spinnerAdapter
         spinnerTransactionTypes.onItemSelectedListener = this
 
@@ -99,7 +100,12 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
                     toast("Nothing to print")
                     return@Observer
                 }
-                reportViewModel.printEndOfDay(selectedDate, it, transactionType)
+
+                // print transaction based on transactionType else print all
+                when (val transactionType = transactionType) {
+                    null -> reportViewModel.printAll(selectedDate)
+                    else -> reportViewModel.printEndOfDay(selectedDate, it, transactionType)
+                }
                 // remove observer once print has been triggered
                 transactions.removeObserver(printObserver)
             }
