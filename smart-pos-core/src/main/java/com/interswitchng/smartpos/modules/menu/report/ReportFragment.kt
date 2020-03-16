@@ -81,18 +81,27 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
         showReportFor(selectedDate, transactionType)
 
         isw_button_eod.setOnClickListener {
-            val transactions = when (transactionType) {
+            val transactions = when (val transactionType = transactionType) {
                 null -> reportViewModel.getEndOfDay(selectedDate)
-                else -> reportViewModel.getEndOfDay(selectedDate, transactionType!!)
+                else -> reportViewModel.getEndOfDay(selectedDate, transactionType)
             }
 
 
-            // observe the live data
-            transactions.observe(viewLifecycleOwner, Observer {
+            // observer to print transactions
+            lateinit var printObserver: Observer<List<TransactionLog>>
+
+            // create observer to print and remove itself as an observer
+            // to simulate one-time observation
+            printObserver = Observer {
                 it ?: return@Observer
 
                 reportViewModel.printEndOfDay(selectedDate, it, transactionType)
-            })
+                // remove observer once print has been triggered
+                transactions.removeObserver(printObserver)
+            }
+
+            // observe the live data
+            transactions.observe(viewLifecycleOwner, printObserver)
 
         }
 
