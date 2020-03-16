@@ -96,7 +96,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         when (paymentModel.type) {
             PaymentModel.TransactionType.PRE_AUTHORIZATION -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.PRE_AUTHORIZATION)
-                transactionType = TransactionType.Pre_Authorization
+                transactionType = TransactionType.PreAuth
             }
 
             PaymentModel.TransactionType.CARD_PURCHASE -> {

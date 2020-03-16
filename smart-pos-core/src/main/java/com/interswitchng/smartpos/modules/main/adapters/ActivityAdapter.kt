@@ -28,7 +28,7 @@ class ActivityAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder
         val item = getItem(position)
         val transactionType = when(item?.transactionType) {
             TransactionType.Purchase.ordinal -> holder.itemView.context.getString(R.string.isw_purchase)
-            TransactionType.Pre_Authorization.ordinal -> holder.itemView.context.getString(R.string.isw_pre_authorization)
+            TransactionType.PreAuth.ordinal -> holder.itemView.context.getString(R.string.isw_pre_authorization)
             TransactionType.Completion.ordinal -> holder.itemView.context.getString(R.string.isw_completion)
             TransactionType.Refund.ordinal -> holder.itemView.context.getString(R.string.isw_refund)
             TransactionType.Reversal.ordinal -> holder.itemView.context.getString(R.string.isw_reversal)

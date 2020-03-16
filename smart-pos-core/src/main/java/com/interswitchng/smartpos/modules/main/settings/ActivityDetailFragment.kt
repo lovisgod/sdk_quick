@@ -43,7 +43,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
 
         transactionType = when(transactionLog.transactionType) {
             TransactionType.Purchase.ordinal -> getString(R.string.isw_purchase)
-            TransactionType.Pre_Authorization.ordinal -> getString(R.string.isw_pre_authorization)
+            TransactionType.PreAuth.ordinal -> getString(R.string.isw_pre_authorization)
             TransactionType.Completion.ordinal -> getString(R.string.isw_completion)
             TransactionType.Refund.ordinal -> getString(R.string.isw_refund)
             TransactionType.Reversal.ordinal -> getString(R.string.isw_reversal)

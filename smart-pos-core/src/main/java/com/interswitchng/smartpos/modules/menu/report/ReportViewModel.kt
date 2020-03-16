@@ -244,7 +244,7 @@ internal class ReportViewModel(
         val dateStr = DateUtils.hourMinuteFormat.format(date)
         val amount = formatAmount(DisplayUtils.getAmountString(this.amount.toInt()))
         val code = this.responseCode
-        val card = "0000"
+        val card = this.cardPan.takeLast(4)
         val status = if (code == IsoUtils.OK) "PASS" else "FAIL"
 
         val config = PrintStringConfiguration(displayCenter = true)

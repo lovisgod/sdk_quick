@@ -103,6 +103,7 @@ open class TransactionLog(
                 cardExpiry = result.cardExpiry,
                 authorizationCode = result.authorizationCode,
                 pinStatus = result.pinStatus,
+                cardPan = result.cardPan,
                 responseMessage = result.responseMessage,
                 responseCode = result.responseCode,
                 AID = result.AID,
