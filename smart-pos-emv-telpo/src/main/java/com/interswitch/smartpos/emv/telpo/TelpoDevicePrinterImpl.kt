@@ -25,7 +25,7 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
             setAlgin(UsbThermalPrinter.ALGIN_LEFT)
         }
 
-        printer.walkPaper(30)
+        printer.walkPaper(20)
 
         //Print the company's logo
         printCompanyLogo()
@@ -43,7 +43,7 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
         return try {
             printer.printString()
             // set step distance
-            printer.walkPaper(30)
+            printer.walkPaper(20)
             PrintStatus.Ok("Printed")
         } catch (exception: TelpoException) {
             PrintStatus.Ok("Failed to print: ${exception.localizedMessage}")
@@ -65,6 +65,8 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
             is PrintObject.Line -> printer.addString(line)
             is PrintObject.BitMap -> printer.printLogo(item.bitmap, true)
             is PrintObject.Data -> {
+                // strip all new lines
+                val dataValue = item.value.trim()
                 // get string print config
                 val printConfig = item.config
 
@@ -82,10 +84,10 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
                 // print string
                 if (printConfig.displayCenter) {
                     printer.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE)
-                    printer.addString(item.value)
+                    printer.addString(dataValue)
                 } else {
                     printer.setAlgin(UsbThermalPrinter.ALGIN_LEFT)
-                    printer.addString(item.value)
+                    printer.addString(dataValue)
                 }
             }
 
@@ -177,7 +179,7 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
     }
 
     companion object {
-        private const val SCREEN_LARGE_LENGTH = 24
+        private const val SCREEN_LARGE_LENGTH = 24 + 3
         private const val SCREEN_NORMAL_LENGTH = 32
     }
 }

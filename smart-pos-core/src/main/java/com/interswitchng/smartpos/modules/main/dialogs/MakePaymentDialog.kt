@@ -24,7 +24,7 @@ class MakePaymentDialog constructor(
             dismiss()
         }
         isw_completion.setOnClickListener {
-            optionClickListener.invoke(2)
+            optionClickListener.invoke(3)
             dismiss()
         }
         isw_bill_payment.setOnClickListener {

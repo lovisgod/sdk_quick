@@ -226,14 +226,17 @@ internal class ReportViewModel(
         // total number of transactions
         val transactionSum = this.size
 
-        val transactionFailed = transactionSum - transactionApproved
+        val transactionApprovedAmountWithCurrency = DisplayUtils.getAmountWithCurrency(transactionApprovedAmount.toString())
+
 
 
 
         list.add(PrintObject.Data("Total Transactions: $transactionSum\n", PrintStringConfiguration(isBold = true)))
+
+        val transactionFailed = transactionSum - transactionApproved
         list.add(PrintObject.Data("Total Passed Transaction: $transactionApproved\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Data("Total Failed Transaction: $transactionFailed\n", PrintStringConfiguration(isBold = true)))
-        list.add(PrintObject.Data("Total Approved Amount: $transactionApprovedAmount\n", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Approved Amount: $transactionApprovedAmountWithCurrency\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Line)
 
         return list
