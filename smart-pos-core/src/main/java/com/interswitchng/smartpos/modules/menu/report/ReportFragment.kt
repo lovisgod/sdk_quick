@@ -98,6 +98,8 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
 
                 if (it.isEmpty()) {
                     toast("Nothing to print")
+                    isw_button_eod.isEnabled = true
+                    isw_button_eod.isClickable = true
                     return@Observer
                 }
 
