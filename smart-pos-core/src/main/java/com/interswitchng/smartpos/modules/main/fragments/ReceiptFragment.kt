@@ -255,12 +255,12 @@ class ReceiptFragment : BaseFragment(TAG) {
                 if (!hasPrintedCustomerCopy) {
                     resultViewModel.printSlip(UserType.Customer, it)
                     hasPrintedCustomerCopy = true
-                } else if (hasPrintedMerchantCopy) {
+                } else if (hasPrintedMerchantCopy or hasPrintedCustomerCopy) {
                     resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
                 } else {
                     // if has not printed merchant copy
                     // print merchant copy
-                    resultViewModel.printSlip(UserType.Merchant, it)
+                    resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
                     // change print text to re-print
                     isw_print_receipt.text = getString(R.string.isw_title_re_print_receipt)
                     hasPrintedMerchantCopy = true
