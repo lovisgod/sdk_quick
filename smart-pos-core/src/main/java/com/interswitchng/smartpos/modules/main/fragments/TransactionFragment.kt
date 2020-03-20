@@ -113,6 +113,39 @@ class TransactionFragment: BaseFragment(TAG) {
                         }
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
+                    5 -> {
+                        val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
+                            if (isValidated) {
+                                val payment = payment {
+                                    type = PaymentModel.TransactionType.REFUND
+                                }
+                                navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
+                            } else {
+                                toast("Fingerprint Verification Failed!!")
+                                navigateUp()
+                            }
+                        }
+                        val dialog = MerchantCardDialog { type ->
+                            when (type) {
+                                MerchantCardDialog.AUTHORIZED -> {
+                                    val payment = payment {
+                                        this.type = PaymentModel.TransactionType.REFUND
+                                    }
+                                    navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
+                                }
+                                MerchantCardDialog.FAILED -> {
+                                    toast("Merchant Card Verification Failed!!")
+                                    navigateUp()
+                                }
+                                MerchantCardDialog.USE_FINGERPRINT -> {
+                                    fingerprintDialog.show(childFragmentManager, FingerprintBottomDialog.TAG)
+                                }
+                            }
+                        }
+                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
+
+                    }
+
                 }
             }
             sheet.show(childFragmentManager, MakePaymentDialog.TAG)

@@ -149,6 +149,8 @@ class ReceiptFragment : BaseFragment(TAG) {
 
                 if (hasClickedReversal.not()) {
                     val txnInfo = TransactionInfo.fromTxnResult(result!!)
+                    Logger.with("txnResult from recieptFragment").log(result.toString())
+                    Logger.with("txnInfo reciept Fragment").log(txnInfo.toString())
                     resultViewModel.initiateReversal(terminalInfo, txnInfo)
                     hasClickedReversal = true
                     it.isClickable = false
@@ -228,7 +230,7 @@ class ReceiptFragment : BaseFragment(TAG) {
             when(type) {
                 PaymentModel.TransactionType.CARD_PURCHASE -> {
                     isw_reversal.visibility = View.VISIBLE
-                    isw_refund.visibility = View.VISIBLE
+                    isw_refund.visibility = View.GONE
                 }
                 else -> {}
             }

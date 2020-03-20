@@ -506,6 +506,11 @@ internal class IsoServiceImpl(
             val originalDataElement = "0200" + stan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
             val replacementAmount = amount + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
+            Logger.with("originalDataElement").log(originalDataElement)
+            Logger.with("stan").log(stan)
+            Logger.with("originalTransmissionDate").log(originalTransactionInfoData?.originalTransmissionDateAndTime.toString())
+            Logger.with("acquringInstitutionId").log(acquiringInstitutionId)
+            Logger.with("fowardingInstitutionId").log(forwardingInstitutionId)
 
             message
                 .setValue(2, transaction.cardPAN)
