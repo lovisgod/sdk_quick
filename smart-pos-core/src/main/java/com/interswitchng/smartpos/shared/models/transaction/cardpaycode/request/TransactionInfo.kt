@@ -52,8 +52,8 @@ internal data class TransactionInfo(
                         paymentInfo.stan,
                         "",
                         paymentInfo.authorizationId,
-                        ""
-                ),
+                        "",
+                        time = -1L),
                 pinKsn = emv.pinKsn
         )
 
@@ -89,5 +89,5 @@ internal data class OriginalTransactionInfoData(
         var originalAuthorizationId: String? = Constants.EMPTY_STRING,
         var originalAmount: String? = Constants.EMPTY_STRING,
         var month: String = Constants.EMPTY_STRING,
-        var time: String = Constants.EMPTY_STRING
+        var time: Long
 )

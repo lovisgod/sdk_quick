@@ -7,6 +7,8 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
@@ -18,6 +20,7 @@ import java.util.*
 class ActivityAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder>(diffCallback) {
 
     lateinit var itemClickListener: ActivityItemClickListener
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.isw_activity_home_list_item, parent, false)
@@ -56,12 +59,24 @@ class ActivityAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder
 
         override fun onClick(v: View?) {
             val item = getItem(adapterPosition)
-            itemClickListener.navigateToActivityDetailFragment(item!!)
+            itemClickListener.navigateToActivityDetailFragment(item!!,
+                    TransactionResponseModel(
+                            transactionResult = item.toResult(),
+                            transactionType = when (item.transactionType) {
+                                0 -> PaymentModel.TransactionType.CARD_PURCHASE
+                                1 -> PaymentModel.TransactionType.PRE_AUTHORIZATION
+                                2 -> PaymentModel.TransactionType.COMPLETION
+                                3 -> PaymentModel.TransactionType.REFUND
+                                4 -> PaymentModel.TransactionType.REVERSAL
+                                5 -> PaymentModel.TransactionType.CARD_NOT_PRESENT
+                                else -> PaymentModel.TransactionType.BILL_PAYMENT
+                            }
+                    ))
         }
     }
 
     interface ActivityItemClickListener {
-        fun navigateToActivityDetailFragment(item: TransactionLog)
+        fun navigateToActivityDetailFragment(item: TransactionLog, transactionResponseModel: TransactionResponseModel)
     }
 
     companion object {

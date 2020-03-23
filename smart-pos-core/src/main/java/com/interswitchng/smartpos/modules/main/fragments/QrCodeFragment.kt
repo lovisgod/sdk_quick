@@ -58,7 +58,7 @@ class QrCodeFragment : BaseFragment(TAG) {
         get() = R.layout.isw_fragment_qr_code
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-       setupUI()
+        setupUI()
     }
 
     override fun onDestroy() {
@@ -96,16 +96,16 @@ class QrCodeFragment : BaseFragment(TAG) {
                     // setup payment slip
                     if (it is PaymentStatus.Timeout) {
                         val transaction = Transaction(
-                            -1, paymentInfo.amount,
-                            "",
-                            "0X0X",
-                            terminalInfo.currencyCode,
-                            true,
-                            null,
-                            0,
-                            "Pending")
+                                -1, paymentInfo.amount,
+                                "",
+                                "0X0X",
+                                terminalInfo.currencyCode,
+                                true,
+                                null,
+                                0,
+                                "Pending")
 
-                         val result = getTransactionResult(transaction)
+                        val result = getTransactionResult(transaction)
                         printSlip = result?.getSlip(terminalInfo)?.getSlipItems() ?: printSlip
                     }
 
@@ -136,7 +136,7 @@ class QrCodeFragment : BaseFragment(TAG) {
 
             // create and request code
             val request = CodeRequest.from(iswPos.config.alias, terminalInfo,
-                paymentInfo, CodeRequest.TRANSACTION_QR, CodeRequest.QR_FORMAT_RAW
+                    paymentInfo, CodeRequest.TRANSACTION_QR, CodeRequest.QR_FORMAT_RAW
             )
 
             qrViewModel.getQrCode(request, context!!)
@@ -149,7 +149,8 @@ class QrCodeFragment : BaseFragment(TAG) {
         change_payment_method.setOnClickListener {
             paymentTypeDialog = PaymentTypeDialog(PaymentModel.PaymentType.CARD) {
                 when (it) {
-                    PaymentModel.PaymentType.QR_CODE -> {}
+                    PaymentModel.PaymentType.QR_CODE -> {
+                    }
                     PaymentModel.PaymentType.PAY_CODE -> {
                         val direction = CardTransactionsFragmentDirections.iswActionGotoFragmentPayCode(paymentModel)
                         navigate(direction)
@@ -203,30 +204,30 @@ class QrCodeFragment : BaseFragment(TAG) {
 
     private fun handleError() {
         alert?.setPositiveButton(R.string.isw_title_try_again) { dialog, _ -> dialog.dismiss(); getQrCode() }
-            ?.setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
-            ?.show()
+                ?.setNegativeButton(R.string.isw_title_cancel) { dialog, _ -> dialog.dismiss() }
+                ?.show()
     }
-
 
 
     private fun getTransactionResult(transaction: Transaction): TransactionResult? {
         val now = Date()
         val responseMsg = IsoUtils.getIsoResultMsg(transaction.responseCode)
-            ?: transaction.responseDescription
-            ?: "Error"
+                ?: transaction.responseDescription
+                ?: "Error"
 
         return TransactionResult(
-            paymentType = PaymentType.QR,
-            dateTime = DisplayUtils.getIsoString(now),
-            amount = DisplayUtils.getAmountString(paymentInfo),
-            type = TransactionType.Purchase,
-            authorizationCode = transaction.responseCode,
-            responseMessage = responseMsg,
-            responseCode = transaction.responseCode,
-            cardPan = "", cardExpiry = "", cardType = CardType.None,
-            stan = paymentInfo.getStan(), pinStatus = "", AID = "",
-            code = qrData!!, telephone = iswPos.config.merchantTelephone, csn = "", icc = "", cardTrack2 = "", cardPin = "",
-            src = ""
+                paymentType = PaymentType.QR,
+                dateTime = DisplayUtils.getIsoString(now),
+                amount = DisplayUtils.getAmountString(paymentInfo),
+                type = TransactionType.Purchase,
+                authorizationCode = transaction.responseCode,
+                responseMessage = responseMsg,
+                responseCode = transaction.responseCode,
+                cardPan = "", cardExpiry = "", cardType = CardType.None,
+                stan = paymentInfo.getStan(), pinStatus = "", AID = "",
+                code = qrData!!, telephone = iswPos.config.merchantTelephone, csn = "", icc = "", cardTrack2 = "", cardPin = "",
+                src = "",
+                time = -1L
         )
     }
 

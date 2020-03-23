@@ -16,7 +16,8 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 internal class PayCodeViewModel(private val isoService: IsoService, private val iswPos: IswPos) : RootViewModel() {
@@ -52,7 +53,7 @@ internal class PayCodeViewModel(private val isoService: IsoService, private val 
                                 stan = response.stan, pinStatus = "", AID = "", code = "",
                                 cardPan = "", cardExpiry = "", cardType = CardType.None,
                                 telephone = iswPos.config.merchantTelephone, cardTrack2 = "",
-                                cardPin = "", icc = "", csn = "", src = ""))
+                                cardPin = "", icc = "", csn = "", src = "", time = -1L))
                     }
                 }
             }

@@ -489,8 +489,10 @@ internal class IsoServiceImpl(
         try {
             val now = Date()
             val originalTransactionInfoData = transaction.originalTransactionInfoData
-            val month = originalTransactionInfoData?.month
-            val time = originalTransactionInfoData?.time
+            val txnDate = Date(originalTransactionInfoData!!.time)
+            val month = monthFormatter.format(now)
+            val time = timeFormatter.format(now)
+            val timeAndDate = timeAndDateFormatter.format(txnDate)
             val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
             val message = NibssIsoMessage(messageFactory.newMessage(0x420))
             val processCode = "00" + transaction.accountType.value + "00"
@@ -503,23 +505,18 @@ internal class IsoServiceImpl(
             val actualSettlementAmount = amount
             val actualSettlementFee= "C00000000"
             val actualTransactionFee= "C00000000"
-            val originalDataElement = "0200" + stan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
-            val replacementAmount = amount + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
-            Logger.with("originalDataElement").log(originalDataElement)
-            Logger.with("stan").log(stan)
-            Logger.with("originalTransmissionDate").log(originalTransactionInfoData?.originalTransmissionDateAndTime.toString())
-            Logger.with("acquringInstitutionId").log(acquiringInstitutionId)
-            Logger.with("fowardingInstitutionId").log(forwardingInstitutionId)
+            val originalDataElement = "0200$stan$timeAndDate$acquiringInstitutionId$forwardingInstitutionId"
+            val replacementAmount = amount + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
                 .setValue(2, transaction.cardPAN)
                 .setValue(3, processCode)
                 .setValue(4, amount)
-                .setValue(7, timeAndDateFormatter.format(now))
+                    .setValue(7, timeAndDateFormatter.format(txnDate))
                 .setValue(11, stan)
-                .setValue(12, time!!)
-                .setValue(13, month!!)
+                    .setValue(12, time)
+                    .setValue(13, month)
                 .setValue(14, transaction.cardExpiry)
                 .setValue(18, terminalInfo.merchantCategoryCode)
                 .setValue(22, "051")

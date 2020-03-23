@@ -149,8 +149,6 @@ class ReceiptFragment : BaseFragment(TAG) {
 
                 if (hasClickedReversal.not()) {
                     val txnInfo = TransactionInfo.fromTxnResult(result!!)
-                    Logger.with("txnResult from recieptFragment").log(result.toString())
-                    Logger.with("txnInfo reciept Fragment").log(txnInfo.toString())
                     resultViewModel.initiateReversal(terminalInfo, txnInfo)
                     hasClickedReversal = true
                     it.isClickable = false

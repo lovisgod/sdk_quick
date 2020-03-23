@@ -5,7 +5,6 @@ import android.view.View
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
-import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.models.payment
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.activities.BaseFragment
@@ -21,6 +20,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
 
     private val activityDetailFragmentArgs by navArgs<ActivityDetailFragmentArgs>()
     private val transactionLog by lazy { activityDetailFragmentArgs.TransactionLog }
+    private val transactionResponseModel by lazy { activityDetailFragmentArgs.TransactionResponseModel }
     lateinit var  transactionType: String
     lateinit var paymentType: PaymentType
 
@@ -76,10 +76,6 @@ class ActivityDetailFragment : BaseFragment(TAG) {
                     else -> PaymentModel.TransactionType.CARD_PURCHASE
                 }
             }
-
-            val transactionResult = transactionLog.toResult()
-            val transactionResponseModel = TransactionResponseModel(transactionResult = transactionResult,
-                transactionType = payment.type!! )
 
             val direction = ActivityDetailFragmentDirections.iswActionGotoFragmentReceipt(PaymentModel = payment,
                 TransactionResponseModel = transactionResponseModel, IsFromActivityDetail = true)

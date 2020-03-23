@@ -21,6 +21,7 @@ open class TransactionLog(
         var amount: String = "",
         var transactionType: Int = TransactionType.Purchase.ordinal,
         var cardPan: String = "",
+        var cardTrack2: String = "",
         var cardType: Int = CardType.None.ordinal,
         var cardExpiry: String = "",
         var authorizationCode: String = "",
@@ -30,6 +31,10 @@ open class TransactionLog(
         var AID: String = "",
         var code: String = "",
         var telephone: String = "",
+        var csn: String = "",
+        var icc: String = "",
+        var src: String = "",
+        var cardPin: String = "",
         var time: Long = Date().time) : RealmObject(), Parcelable {
 
 
@@ -76,11 +81,12 @@ open class TransactionLog(
                 AID,
                 code,
                 telephone,
-                "",
-                "",
-                "",
-                "",
-                ""
+                icc,
+                src,
+                csn,
+                cardPin,
+                cardTrack2,
+                time
         )
     }
 
@@ -108,7 +114,13 @@ open class TransactionLog(
                 responseCode = result.responseCode,
                 AID = result.AID,
                 code = result.code,
-                telephone = result.telephone)
+                telephone = result.telephone,
+                csn = result.csn,
+                icc = result.icc,
+                src = result.src,
+                cardPin = result.cardPin,
+                cardTrack2 = result.cardTrack2
+        )
 
 
     }

@@ -2,11 +2,11 @@ package com.interswitchng.smartpos.modules.ussdqr.activities
 
 import android.graphics.Typeface
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import androidx.core.content.ContextCompat
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
@@ -300,7 +300,7 @@ class UssdActivity : BaseActivity() {
                 responseCode = transaction.responseCode,
                 cardPan = "", cardExpiry = "", cardType = CardType.None,
                 stan = paymentInfo.getStan(), pinStatus = "", AID = "", code = ussdCode!!,
-                telephone = iswPos.config.merchantTelephone, src = "", icc ="", cardPin = "", cardTrack2 = "", csn = ""
+                telephone = iswPos.config.merchantTelephone, src = "", icc = "", cardPin = "", cardTrack2 = "", csn = "", time = -1L
         )
     }
 

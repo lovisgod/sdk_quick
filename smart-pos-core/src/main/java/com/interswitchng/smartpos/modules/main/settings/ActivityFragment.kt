@@ -1,7 +1,6 @@
 package com.interswitchng.smartpos.modules.main.settings
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,9 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.adapters.ActivityAdapter
+import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.adapters.TransactionLogAdapter
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import kotlinx.android.synthetic.main.isw_activity_home_new.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -68,8 +67,8 @@ class ActivityFragment : BaseFragment(TAG), ActivityAdapter.ActivityItemClickLis
         }
     }
 
-    override fun navigateToActivityDetailFragment(item: TransactionLog) {
-        val direction = ActivityFragmentDirections.iswGotoActivityDetailFragmentAction(item)
+    override fun navigateToActivityDetailFragment(item: TransactionLog, transactionResponseModel: TransactionResponseModel) {
+        val direction = ActivityFragmentDirections.iswGotoActivityDetailFragmentAction(item, transactionResponseModel)
         navigate(direction)
     }
 

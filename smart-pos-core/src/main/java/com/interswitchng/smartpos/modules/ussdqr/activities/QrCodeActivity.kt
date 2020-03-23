@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Some
-import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.QrViewModel
+import com.interswitchng.smartpos.shared.activities.BaseActivity
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -216,7 +216,7 @@ class QrCodeActivity : BaseActivity() {
                 cardPan = "", cardExpiry = "", cardType = CardType.None,
                 stan = paymentInfo.getStan(), pinStatus = "", AID = "",
                 code = qrData!!, telephone = iswPos.config.merchantTelephone,
-                cardTrack2 = "", csn = "", cardPin = "", icc = "", src = ""
+                cardTrack2 = "", csn = "", cardPin = "", icc = "", src = "", time = -1L
         )
     }
 

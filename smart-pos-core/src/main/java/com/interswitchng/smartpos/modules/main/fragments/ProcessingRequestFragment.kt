@@ -204,7 +204,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                         cardPin = txnInfo.cardPIN,
                         cardTrack2 = txnInfo.cardTrack2,
                         month = response.month,
-                        time = response.time,
+                        time = now.time,
                         originalTransmissionDateTime = response.transmissionDateTime
                 )
 

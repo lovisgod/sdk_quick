@@ -57,7 +57,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
             paymentModel.originalStan?.let {
                 stan ->
                 OriginalTransactionInfoData(originalStan = stan,
-                    originalTransmissionDateAndTime = timeDate)
+                        originalTransmissionDateAndTime = timeDate, time = -1L)
             }
         }
     }

@@ -444,6 +444,9 @@
         <argument
             android:name="TransactionLog"
             app:argType="com.interswitchng.smartpos.shared.models.transaction.TransactionLog" />
+        <argument
+            android:name="TransactionResponseModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.TransactionResponseModel" />
     </fragment>
 
     <fragment

@@ -2,7 +2,6 @@ package com.interswitchng.smartpos.shared.models.transaction
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.interswitchng.smartpos.modules.main.models.TransactionResultModel
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
@@ -12,7 +11,6 @@ import com.interswitchng.smartpos.shared.models.printer.slips.CardSlip
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.printer.slips.UssdQrSlip
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 
 
 /**
@@ -41,8 +39,8 @@ data class TransactionResult(
         val csn: String,
         val cardPin: String,
         val cardTrack2: String,
+        var time: Long,
         var month: String = EMPTY_STRING,
-        var time: String = EMPTY_STRING,
         var originalTransmissionDateTime: String = EMPTY_STRING) : Parcelable {
 
 
@@ -67,7 +65,7 @@ data class TransactionResult(
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
-            parcel.readString()!!,
+            parcel.readLong(),
             parcel.readString()!!,
             parcel.readString()!!)
 
@@ -129,7 +127,7 @@ data class TransactionResult(
         parcel.writeString(cardPin)
         parcel.writeString(cardTrack2)
         parcel.writeString(month)
-        parcel.writeString(time)
+        parcel.writeLong(time)
         parcel.writeString(originalTransmissionDateTime)
     }
 
