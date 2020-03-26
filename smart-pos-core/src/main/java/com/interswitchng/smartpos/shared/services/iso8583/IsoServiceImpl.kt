@@ -45,7 +45,7 @@ internal class IsoServiceImpl(
 
     override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
         //TODO implememnt call home functionality
-        return  false
+        return false
     }
 
     private val logger by lazy { Logger.with("IsoServiceImpl") }
@@ -110,7 +110,7 @@ internal class IsoServiceImpl(
             logger.logErr(e.localizedMessage)
         } catch (e: ParseException) {
             logger.logErr(e.localizedMessage)
-        }catch (e: java.lang.Exception) {
+        } catch (e: java.lang.Exception) {
             logger.logErr(e.localizedMessage)
         }
 
@@ -247,7 +247,7 @@ internal class IsoServiceImpl(
             message.setValue(64, hashValue)
             message.dump(System.out, "parameter request ---- ")
 
-             //set server Ip and port
+            //set server Ip and port
             socket.setIpAndPort(ip, port)
             // open socket connection
             socket.open()
@@ -269,16 +269,15 @@ internal class IsoServiceImpl(
             //TODO
 
 
-
-           // var merchantId="2ISW00000000001"
+            // var merchantId="2ISW00000000001"
 
             // parse and save terminal info
             val terminalData = TerminalInfoParser.parse(terminalId, ip, port, terminalDataString, store)?.also { it.persist(store) }
 
             // parse and save terminal info
-           // val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also {
-               // it.merchantId="2ISW00000000001"
-           //     it.persist(store) }
+            // val terminalData = TerminalInfoParser.parse(terminalId, terminalDataString,store)?.also {
+            // it.merchantId="2ISW00000000001"
+            //     it.persist(store) }
             logger.log("Terminal Data => $terminalData")
             logger.logErr(terminalData.toString())
 
@@ -295,7 +294,7 @@ internal class IsoServiceImpl(
         try {
             val now = Date()
             val month = monthFormatter.format(now)
-            val time =  timeFormatter.format(now)
+            val time = timeFormatter.format(now)
             val message = NibssIsoMessage(messageFactory.newMessage(0x200))
             val processCode = "00" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
@@ -333,7 +332,7 @@ internal class IsoServiceImpl(
 
                 val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
                 message.setValue(52, pinData)
-                    .setValue(123, "510101511344101")
+                        .setValue(123, "510101511344101")
 
                 // remove unset fields
                 message.message.removeFields(32, 59)
@@ -370,9 +369,8 @@ internal class IsoServiceImpl(
             socket.close()
 
 
-
             val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
-             responseMsg.dump(System.out, "")
+            responseMsg.dump(System.out, "")
 
             //transaction.originalTransactionInfoData = OriginalTransactionInfoData(originalStan = stan, originalTransmissionDateAndTime = timeDateNow)
 
@@ -382,9 +380,9 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 //val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan,
-                    transmissionDateTime = timeDateNow,
-                    month = month, time = time)
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan,
+                        transmissionDateTime = timeDateNow,
+                        month = month, time = time)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
@@ -404,28 +402,28 @@ internal class IsoServiceImpl(
             val timeDateNow = timeAndDateFormatter.format(now)
 
             message
-                .setValue(2, transaction.cardPAN)
-                .setValue(3, processCode)
+                    .setValue(2, transaction.cardPAN)
+                    .setValue(3, processCode)
                     .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
-                .setValue(7, timeDateNow)
-                .setValue(11, stan)
-                .setValue(12, timeFormatter.format(now))
-                .setValue(13, monthFormatter.format(now))
-                .setValue(14, transaction.cardExpiry)
-                .setValue(18, terminalInfo.merchantCategoryCode)
-                .setValue(22, "051")
-                .setValue(23, transaction.csn)
-                .setValue(25, "00")
-                .setValue(26, "06")
-                .setValue(28, "C00000000")
-                .setValue(35, transaction.cardTrack2)
-                .setValue(37, randomReference)
-                .setValue(40, transaction.src)
-                .setValue(41, terminalInfo.terminalId)
-                .setValue(42, terminalInfo.merchantId)
-                .setValue(43, terminalInfo.merchantNameAndLocation)
-                .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.iccString)
+                    .setValue(7, timeDateNow)
+                    .setValue(11, stan)
+                    .setValue(12, timeFormatter.format(now))
+                    .setValue(13, monthFormatter.format(now))
+                    .setValue(14, transaction.cardExpiry)
+                    .setValue(18, terminalInfo.merchantCategoryCode)
+                    .setValue(22, "051")
+                    .setValue(23, transaction.csn)
+                    .setValue(25, "00")
+                    .setValue(26, "06")
+                    .setValue(28, "C00000000")
+                    .setValue(35, transaction.cardTrack2)
+                    .setValue(37, randomReference)
+                    .setValue(40, transaction.src)
+                    .setValue(41, terminalInfo.terminalId)
+                    .setValue(42, terminalInfo.merchantId)
+                    .setValue(43, terminalInfo.merchantNameAndLocation)
+                    .setValue(49, terminalInfo.currencyCode)
+                    .setValue(55, transaction.iccString)
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
@@ -433,7 +431,7 @@ internal class IsoServiceImpl(
 
                 val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
                 message.setValue(52, pinData)
-                    .setValue(123, "510101511344101")
+                        .setValue(123, "510101511344101")
 
                 // remove unset fields
                 message.message.removeFields(32, 59)
@@ -477,7 +475,7 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, transmissionDateTime = timeDateNow)
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, transmissionDateTime = timeDateNow)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -489,10 +487,9 @@ internal class IsoServiceImpl(
         try {
             val now = Date()
             val originalTransactionInfoData = transaction.originalTransactionInfoData
-            val txnDate = Date(originalTransactionInfoData!!.time)
+            val txnDate = originalTransactionInfoData?.month
             val month = monthFormatter.format(now)
-            val time = timeFormatter.format(now)
-            val timeAndDate = timeAndDateFormatter.format(txnDate)
+            val time = txnDate?.takeLast(6)
             val amount = String.format(Locale.getDefault(), "%012d", transaction.amount)
             val message = NibssIsoMessage(messageFactory.newMessage(0x420))
             val processCode = "00" + transaction.accountType.value + "00"
@@ -503,38 +500,38 @@ internal class IsoServiceImpl(
             val acquiringInstitutionId = "00000111129"
             val forwardingInstitutionId = "00000111129"
             val actualSettlementAmount = amount
-            val actualSettlementFee= "C00000000"
-            val actualTransactionFee= "C00000000"
+            val actualSettlementFee = "C00000000"
+            val actualTransactionFee = "C00000000"
 
-            val originalDataElement = "0200$stan$timeAndDate$acquiringInstitutionId$forwardingInstitutionId"
+            val originalDataElement = "0200$stan$txnDate$acquiringInstitutionId$forwardingInstitutionId"
             val replacementAmount = amount + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
-                .setValue(2, transaction.cardPAN)
-                .setValue(3, processCode)
-                .setValue(4, amount)
-                    .setValue(7, timeAndDateFormatter.format(txnDate))
-                .setValue(11, stan)
-                    .setValue(12, time)
+                    .setValue(2, transaction.cardPAN)
+                    .setValue(3, processCode)
+                    .setValue(4, amount)
+                    .setValue(7, txnDate.toString())
+                    .setValue(11, stan)
+                    .setValue(12, time.toString())
                     .setValue(13, month)
-                .setValue(14, transaction.cardExpiry)
-                .setValue(18, terminalInfo.merchantCategoryCode)
-                .setValue(22, "051")
-                .setValue(23, transaction.csn)
-                .setValue(25, "00")
-                .setValue(26, "06")
-                .setValue(28, "C00000000")
-                .setValue(35, transaction.cardTrack2)
-                .setValue(37, randomReference)
-                .setValue(40, transaction.src)
-                .setValue(41, terminalInfo.terminalId)
-                .setValue(42, terminalInfo.merchantId)
-                .setValue(43, terminalInfo.merchantNameAndLocation)
-                .setValue(49, terminalInfo.currencyCode)
-                .setValue(56, messageReasonCode)
-                .setValue(90, originalDataElement)
-                .setValue(95, replacementAmount)
-                .setValue(123, "510101511344101" )
+                    .setValue(14, transaction.cardExpiry)
+                    .setValue(18, terminalInfo.merchantCategoryCode)
+                    .setValue(22, "051")
+                    .setValue(23, transaction.csn)
+                    .setValue(25, "00")
+                    .setValue(26, "06")
+                    .setValue(28, "C00000000")
+                    .setValue(35, transaction.cardTrack2)
+                    .setValue(37, randomReference)
+                    .setValue(40, transaction.src)
+                    .setValue(41, terminalInfo.terminalId)
+                    .setValue(42, terminalInfo.merchantId)
+                    .setValue(43, terminalInfo.merchantNameAndLocation)
+                    .setValue(49, terminalInfo.currencyCode)
+                    .setValue(56, messageReasonCode)
+                    .setValue(90, originalDataElement)
+                    .setValue(95, replacementAmount)
+                    .setValue(123, "510101511344101")
 
             // set message hash
             val bytes = message.message.writeData()
@@ -570,7 +567,7 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 //val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = "")
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = "")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -606,7 +603,7 @@ internal class IsoServiceImpl(
             val authorizedAmountTLV = String.format("9F02%02d%s", amount.length / 2, amount)
             val transactionDateTLV = String.format("9A%02d%s", date.length / 2, date)
             val iccData = "9F260831BDCBC7CFF6253B9F2701809F10120110A50003020000000000000000000000FF9F3704F435D8A29F3602052795050880000000" +
-            "${transactionDateTLV}9C0100${authorizedAmountTLV}5F2A020566820238009F1A0205669F34034103029F3303E0F8C89F3501229F0306000000000000"
+                    "${transactionDateTLV}9C0100${authorizedAmountTLV}5F2A020566820238009F1A0205669F34034103029F3303E0F8C89F3501229F0306000000000000"
 
             message
                     .setValue(2, pan)
@@ -634,8 +631,7 @@ internal class IsoServiceImpl(
                     .setValue(59, "00") //""90")
                     .setValue(123, "510101561344101")
 
-            message.message.removeFields( 32,  52)
-
+            message.message.removeFields(32, 52)
 
 
             // set message hash
@@ -679,8 +675,8 @@ internal class IsoServiceImpl(
     }
 
     override fun initiatePreAuthorization(
-        terminalInfo: TerminalInfo,
-        transaction: TransactionInfo
+            terminalInfo: TerminalInfo,
+            transaction: TransactionInfo
     ): TransactionResponse? {
         val now = Date()
         val transmissionDateTime = timeAndDateFormatter.format(now)
@@ -694,28 +690,28 @@ internal class IsoServiceImpl(
             Logger.with("IsoServiceImpl").log(transaction.amount.toString())
 
             message
-                .setValue(2, transaction.cardPAN)
-                .setValue(3, processCode)
+                    .setValue(2, transaction.cardPAN)
+                    .setValue(3, processCode)
                     .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
-                .setValue(7, transmissionDateTime)
-                .setValue(11, stan)
-                .setValue(12, timeFormatter.format(now))
-                .setValue(13, monthFormatter.format(now))
-                .setValue(14, transaction.cardExpiry)
-                .setValue(18, terminalInfo.merchantCategoryCode)
-                .setValue(22, "051")
-                .setValue(23, transaction.csn)
-                .setValue(25, "00")
-                .setValue(26, "06")
-                .setValue(28, "C00000000")
-                .setValue(35, transaction.cardTrack2)
-                .setValue(37, randomReference)
-                .setValue(40, transaction.src)
-                .setValue(41, terminalInfo.terminalId)
-                .setValue(42, terminalInfo.merchantId)
-                .setValue(43, terminalInfo.merchantNameAndLocation)
-                .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.iccString)
+                    .setValue(7, transmissionDateTime)
+                    .setValue(11, stan)
+                    .setValue(12, timeFormatter.format(now))
+                    .setValue(13, monthFormatter.format(now))
+                    .setValue(14, transaction.cardExpiry)
+                    .setValue(18, terminalInfo.merchantCategoryCode)
+                    .setValue(22, "051")
+                    .setValue(23, transaction.csn)
+                    .setValue(25, "00")
+                    .setValue(26, "06")
+                    .setValue(28, "C00000000")
+                    .setValue(35, transaction.cardTrack2)
+                    .setValue(37, randomReference)
+                    .setValue(40, transaction.src)
+                    .setValue(41, terminalInfo.terminalId)
+                    .setValue(42, terminalInfo.merchantId)
+                    .setValue(43, terminalInfo.merchantNameAndLocation)
+                    .setValue(49, terminalInfo.currencyCode)
+                    .setValue(55, transaction.iccString)
 
             message.setValue(123, "510101511344101")
 
@@ -755,7 +751,7 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan, scripts = scripts, transmissionDateTime = transmissionDateTime)
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = scripts, transmissionDateTime = transmissionDateTime)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
@@ -778,37 +774,37 @@ internal class IsoServiceImpl(
             val originalTransactionInfoData = transaction.originalTransactionInfoData
             val randomReference = "000000$stan"
             val actualSettlementAmount = "000000000000"
-            val actualSettlementFee= "C00000000"
-            val actualTransactionFee= "C00000000"
+            val actualSettlementFee = "C00000000"
+            val actualTransactionFee = "C00000000"
             val originalDataElement = "0100" + originalStan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
             val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
-                .setValue(2, transaction.cardPAN)
-                .setValue(3, processCode)
+                    .setValue(2, transaction.cardPAN)
+                    .setValue(3, processCode)
                     .setValue(4, String.format(Locale.getDefault(), "%012d", transaction.amount))
-                .setValue(7, timeAndDateFormatter.format(now))
-                .setValue(11, stan)
-                .setValue(12, timeFormatter.format(now))
-                .setValue(13, monthFormatter.format(now))
-                .setValue(14, transaction.cardExpiry)
-                .setValue(18, terminalInfo.merchantCategoryCode)
-                .setValue(22, "051")
-                .setValue(23, transaction.csn)
-                .setValue(25, "00")
-                .setValue(26, "06")
-                .setValue(28, "C00000000")
-                .setValue(35, transaction.cardTrack2)
-                .setValue(37, randomReference)
-                .setValue(40, transaction.src)
-                .setValue(41, terminalInfo.terminalId)
-                .setValue(42, terminalInfo.merchantId)
-                .setValue(43, terminalInfo.merchantNameAndLocation)
-                .setValue(49, terminalInfo.currencyCode)
-                .setValue(55, transaction.iccString)
-                .setValue(90, originalDataElement)
-                .setValue(95, replacementAmount)
-                .setValue(123, "510101511344101")
+                    .setValue(7, timeAndDateFormatter.format(now))
+                    .setValue(11, stan)
+                    .setValue(12, timeFormatter.format(now))
+                    .setValue(13, monthFormatter.format(now))
+                    .setValue(14, transaction.cardExpiry)
+                    .setValue(18, terminalInfo.merchantCategoryCode)
+                    .setValue(22, "051")
+                    .setValue(23, transaction.csn)
+                    .setValue(25, "00")
+                    .setValue(26, "06")
+                    .setValue(28, "C00000000")
+                    .setValue(35, transaction.cardTrack2)
+                    .setValue(37, randomReference)
+                    .setValue(40, transaction.src)
+                    .setValue(41, terminalInfo.terminalId)
+                    .setValue(42, terminalInfo.merchantId)
+                    .setValue(43, terminalInfo.merchantNameAndLocation)
+                    .setValue(49, terminalInfo.currencyCode)
+                    .setValue(55, transaction.iccString)
+                    .setValue(90, originalDataElement)
+                    .setValue(95, replacementAmount)
+                    .setValue(123, "510101511344101")
 
             // set message hash
             val bytes = message.message.writeData()
@@ -843,7 +839,7 @@ internal class IsoServiceImpl(
             // close connection
             socket.close()
 
-            logger.log("RESPONSE HEX --->" +IsoUtils.bytesToHex(response!!))
+            logger.log("RESPONSE HEX --->" + IsoUtils.bytesToHex(response!!))
 
             val responseHex = IsoUtils.bytesToHex(response).replaceRange(0, 8, "30323330")
 
@@ -859,7 +855,7 @@ internal class IsoServiceImpl(
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
-                return@let TransactionResponse(responseCode = code, authCode =  authCode, stan = stan)
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
@@ -923,15 +919,15 @@ internal class IsoServiceImpl(
             val replacementAmount = txnAmount + settlement + txnFee + settlementFee
 
             message
-                .copyFieldsFrom(txnMessage)
+                    .copyFieldsFrom(txnMessage)
 //                    .setValue(32)
-                .setValue(11, stan)
-                .setValue(37, randomReference)
-                .setValue(56, "4021") // timeout waiting for response
-                .setValue(90, originalDataElements)
-                .setValue(95, replacementAmount)
-                // remove unused fields
-                .message.removeFields(28, 32, 53, 55, 59, 62)
+                    .setValue(11, stan)
+                    .setValue(37, randomReference)
+                    .setValue(56, "4021") // timeout waiting for response
+                    .setValue(90, originalDataElements)
+                    .setValue(95, replacementAmount)
+                    // remove unused fields
+                    .message.removeFields(28, 32, 53, 55, 59, 62)
 
             // set or remove pin field
             if (pinData != null) message.setValue(52, pinData.toString())

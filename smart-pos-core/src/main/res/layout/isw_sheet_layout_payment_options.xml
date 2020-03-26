@@ -134,7 +134,6 @@
         app:cornerRadius="8dp"
         app:elevation="10dp"
         app:icon="@drawable/isw_ic_payment"
-        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
