@@ -35,6 +35,7 @@ class ActivityAdapter : PagedListAdapter<TransactionLog, RecyclerView.ViewHolder
             TransactionType.Completion.ordinal -> holder.itemView.context.getString(R.string.isw_completion)
             TransactionType.Refund.ordinal -> holder.itemView.context.getString(R.string.isw_refund)
             TransactionType.Reversal.ordinal -> holder.itemView.context.getString(R.string.isw_reversal)
+            TransactionType.BillPayment.ordinal -> holder.itemView.context.getString(R.string.isw_bill_payment)
             else -> EMPTY_STRING
         }
 
