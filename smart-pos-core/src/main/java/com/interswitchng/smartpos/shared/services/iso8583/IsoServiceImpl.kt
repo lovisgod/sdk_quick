@@ -198,7 +198,8 @@ internal class IsoServiceImpl(
             // getResult pin key & save
             val isPinSaved = makeKeyCall(terminalId, ip, port, "9G0000", masterKey)?.let { pinKey ->
                 store.saveString(KEY_PIN_KEY, pinKey)
-
+                logger.log("pinKey $pinKey")
+                //val encryptedPinKey = TripleDES.harden(masterKey, pinKey)
                 // load pin key into pos device
                 posDevice.loadPinKey(pinKey)
                 true
@@ -326,11 +327,17 @@ internal class IsoServiceImpl(
                     .setValue(49, terminalInfo.currencyCode)
                     .setValue(55, transaction.iccString)
 
+            val pinKey = store.getString(KEY_PIN_KEY, "")
+            logger.log("Pin key: $pinKey")
+            logger.log("transacvtionCardPin: ${transaction.cardPIN}")
+
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
-                if (pinKey.isEmpty()) return null
+                //if (pinKey.isEmpty()) return null
+                logger.log("Pin key: $pinKey")
+                logger.log("transacvtionCardPin: ${transaction.cardPIN}")
 
-                val pinData = TripleDES.harden(pinKey, transaction.cardPIN)
+                val pinData = transaction.cardPIN // TripleDES.harden(pinKey, transaction.cardPIN)
                 message.setValue(52, pinData)
                         .setValue(123, "510101511344101")
 

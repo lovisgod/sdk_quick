@@ -243,14 +243,21 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             }
 
         } else {
+            val end = panBlock.length - 2
+            val start = end - 11
+            // get the 12 right shift of th pan (excluding the check digit)
+            val panShifted = panBlock.substring(start..end)
+            // add padding to get new pan
+            val newPan = "0000$panShifted"
             // get pin block from the terminal using the terminal pin key
-            val pinBlock = ped.getPinBlock(INDEX_TPK, "4,5", panBlock.toByteArray(), EPinBlockMode.ISO9564_0, emvImpl.timeout.toInt())
+            val pinBlock = ped.getPinBlock(INDEX_TPK, "4,5", newPan.toByteArray(), EPinBlockMode.ISO9564_0, emvImpl.timeout.toInt())
 
             // extract pin result
             if (pinBlock == null) pinResult = RetCode.EMV_NO_PASSWORD
             else {
                 pinResult = RetCode.EMV_OK
                 pinData = EmvUtils.bcd2Str(pinBlock)
+                logger.log("Pindata $pinData")
             }
         }
     }
