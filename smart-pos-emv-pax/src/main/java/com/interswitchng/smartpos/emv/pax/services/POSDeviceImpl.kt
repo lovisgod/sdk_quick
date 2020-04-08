@@ -57,7 +57,7 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter,
     override fun loadPinKey(pinKey: String) {
         val checkMode = ECheckMode.KCV_NONE
         val key = EmvUtils.str2Bcd(pinKey)
-        ped.writeKey(EPedKeyType.TMK, 0.toByte(), EPedKeyType.TPK, INDEX_TPK, key, checkMode, null)
+        ped.writeKey(EPedKeyType.TMK, INDEX_TMK, EPedKeyType.TPK, INDEX_TPK, key, checkMode, null)
 
     }
 

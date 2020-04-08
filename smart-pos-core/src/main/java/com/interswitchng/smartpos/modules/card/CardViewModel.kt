@@ -347,8 +347,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 
         uiScope.launch {
 
-            val emvData = emv.getTransactionInfo()
-            if (emvData != null) {
+            val emvData = emv.getTransactionInfo() //For CardNotPresent,there is no emvData
+            if (emvData != null) {//so remove this condition
                 val response = withContext(ioScope) {
 
                     emvData.cardExpiry = expiryDate

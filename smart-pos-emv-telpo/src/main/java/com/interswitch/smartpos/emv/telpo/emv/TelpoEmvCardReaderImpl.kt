@@ -79,18 +79,44 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 CardNo = telpoEmvImplementation.cardPan
             }
             PinpadService.Open(context)
+
+            val panString = getPan()
+            //read pin in clear
+            PinpadService.TP_PinpadGetPlainPin(pinParameter, 0, 0, 100)
+            val pinString = pinParameter.Pin_Block.toString(Charsets.UTF_8)
+            //get pinBlockString from pin and pan
+            val pinBlockString = pinBlockEncryption(panString!!, pinString)
+
             cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {
                 PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
                 PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
                 PinpadService.PIN_OK -> {
-                    pinData = StringUtil.toHexString(pinParameter.Pin_Block)
+                    logger.log("pinData Charsets" + pinParameter.Pin_Block.toString(Charsets.UTF_8))
+                    pinData = pinBlockString
+                    logger.log("PinData $pinData")
                     if (pinData!!.contains("00000000")) {
                         EmvService.ERR_NOPIN
                     } else EmvService.EMV_TRUE
                 }
                 else -> EmvService.EMV_FALSE
             }
+            PinpadService.Close()
+            pinData = pinBlockString
+            StoreData.pinBlock = pinBlockString
         }
+    }
+
+    private fun pinBlockEncryption(panString: String, pinString: String): String {
+        val panString = "0000" + panString.substring(0, panString.count() - 1).substring(panString.count() - 13)
+        val pinString = "0" + pinString.count() + pinString + "FFFFFFFFFF"
+        val pinBlock = StringBuilder()
+        for (i in 0 until panString.count()) {
+            val nPin: Int = if (pinString.get(i) == 'F') 15 else pinString.get(i).toString().toInt()
+            val nPan: Int = panString.get(i).toString().toInt()
+            val xorResult: Int = (nPin xor nPan)
+            pinBlock.append(xorResult.toString(16))
+        }
+        return pinBlock.toString().toUpperCase()
     }
 
     override suspend fun showPinOk() = channel.send(EmvMessage.PinOk)
@@ -170,9 +196,16 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
     }
 
     override fun getTransactionInfo(): EmvData? {
+
+        logger.log("cardPin-pinData from getTransactionInfo outside the let " + StoreData.pinBlock)
+
         return telpoEmvImplementation.getTrack2()?.let {
             // get pinData (only for online PIN)
-            val cardPin = pinData ?: ""
+            val cardPin = StoreData.pinBlock ?: ""
+            logger.log("cardPin from getTransactionInfo $cardPin")
+            logger.log("cardPin-pinData from getTransactionInfo $pinData")
+
+
 
             // get track 2 string
             val track2data = StringUtil.toHexString(it)
@@ -191,6 +224,12 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             val csn = "0$csnStr"
 
             EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = cardPin, cardTrack2 = track2data,  icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = "")
+        }
+    }
+
+    class StoreData {
+        companion object {
+            var pinBlock: String? = null
         }
     }
 }
