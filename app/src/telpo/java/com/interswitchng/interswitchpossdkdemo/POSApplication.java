@@ -140,7 +140,7 @@ public class POSApplication extends Application {
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
-            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(getApplicationContext());
+            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(this);
             service.setCompanyLogo(bm);
             device = service;
             fingerprint = new TelpoPOSFingerprintImpl();

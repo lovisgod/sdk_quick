@@ -44,7 +44,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
 
 
     private var pinResult: Int = RetCode.EMV_OK
-    private var pinData: String? = null
+    //private var pinData: String? = null
     private var ksnData: String? = null
     private var hasEnteredPin: Boolean = false
     private var isKimono: Boolean = false
@@ -116,7 +116,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         // get track2 data
         return emvImpl.getTrack2()?.let {
             // get pinData (only for online PIN)
-            val carPin = pinData ?: ""
+            val carPin = StoreData.pinBlock ?: ""
             // get the ksn for dukpt pin
             val pinKsn = ksnData ?: ""
 
@@ -238,7 +238,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             if (pinBlock == null) pinResult = RetCode.EMV_NO_PASSWORD
             else {
                 pinResult = RetCode.EMV_OK
-                pinData = EmvUtils.bcd2Str(pinBlock.result)
+                StoreData.pinBlock = EmvUtils.bcd2Str(pinBlock.result)
                 ksnData = EmvUtils.bcd2Str(pinBlock.ksn)
             }
 
@@ -256,8 +256,8 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             if (pinBlock == null) pinResult = RetCode.EMV_NO_PASSWORD
             else {
                 pinResult = RetCode.EMV_OK
-                pinData = EmvUtils.bcd2Str(pinBlock)
-                logger.log("Pindata $pinData")
+                StoreData.pinBlock = EmvUtils.bcd2Str(pinBlock)
+                //logger.log("Pindata $pinData")
             }
         }
     }
@@ -309,6 +309,12 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
         if (!isCancelled) {
             channel.send(EmvMessage.TransactionCancelled(code, reason))
             cancelTransaction()
+        }
+    }
+
+    class StoreData {
+        companion object {
+            var pinBlock: String? = null
         }
     }
 }

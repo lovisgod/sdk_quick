@@ -9,12 +9,14 @@ import com.interswitch.smartpos.emv.telpo.emv.TelpoEmvCardReaderImpl
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
+import com.telpo.emv.EmvService
 import com.telpo.pinpad.PinpadService
 import com.telpo.tps550.api.util.StringUtil
 
 class TelpoPOSDeviceImpl constructor(
-    override val printer: DevicePrinter,
-    private val factory: () -> EmvCardReader
+        override val printer: DevicePrinter,
+        private val factory: () -> EmvCardReader,
+        private val context: Context
 ): POSDevice {
 
     override fun getEmvCardReader(): EmvCardReader = factory()
@@ -31,13 +33,34 @@ class TelpoPOSDeviceImpl constructor(
     }
 
     override fun loadMasterKey(masterKey: String) {
+
+        EmvService.Open(this.context)
+        EmvService.deviceOpen()
+        PinpadService.Open(this.context)
+
         val key = StringUtil.toBytes(masterKey)
-        PinpadService.TP_WriteMasterKey(0, key, PinpadService.KEY_WRITE_DIRECT)
+        val result = PinpadService.TP_WriteMasterKey(INDEX_TMK, key, PinpadService.KEY_WRITE_DIRECT)
+        print(result)
+
+
+        // PinpadService.Close()
+        // EmvService.Device_Close()
+
     }
 
     override fun loadPinKey(pinKey: String) {
+
+        /*  EmvService.Open(this.context)
+          EmvService.deviceOpen()
+          PinpadService.Open(this.context)*/
+
         val key = StringUtil.toBytes(pinKey)
-        PinpadService.TP_WritePinKey(1, key, PinpadService.KEY_WRITE_DECRYPT, 0)
+        val result = PinpadService.TP_WritePinKey(INDEX_TPK, key, PinpadService.KEY_WRITE_DIRECT, INDEX_TMK)
+        print(result)
+
+        PinpadService.Close()
+        EmvService.Device_Close()
+
     }
 
     fun setCompanyLogo(bitmap: Bitmap) {
@@ -48,9 +71,9 @@ class TelpoPOSDeviceImpl constructor(
 
     companion object {
 
-        internal const val INDEX_TIK: Byte = 0x01
-        internal const val INDEX_TMK: Byte = 0x01
-        internal const val INDEX_TPK: Byte = 0x03
+        internal const val INDEX_TIK = 0x01
+        internal const val INDEX_TMK = 0x01
+        internal const val INDEX_TPK = 0x03
         internal const val DEVICE_NAME: String = "TELPO"
 
         internal lateinit var companyLogo: Bitmap private set
@@ -73,7 +96,7 @@ class TelpoPOSDeviceImpl constructor(
                 }
             }
 
-            return TelpoPOSDeviceImpl(printer, factory)
+            return TelpoPOSDeviceImpl(printer, factory, context)
         }
 
 

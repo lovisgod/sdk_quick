@@ -1,6 +1,7 @@
 package com.interswitch.smartpos.emv.telpo.emv
 
 import android.content.Context
+import com.interswitch.smartpos.emv.telpo.TelpoPOSDeviceImpl.Companion.INDEX_TPK
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -33,7 +34,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
     private var cardPinResult: Int = EmvService.EMV_TRUE
 
-    private var pinData: String? = null
+    //private var pinData: String? = null
     private var hasEnteredPin: Boolean = false
 
     override suspend fun showInsertCard() {
@@ -70,7 +71,8 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         } else {
             val pinParameter = PinParam(context)
             pinParameter.apply {
-                KeyIndex = 1
+                PinBlockFormat = 0
+                KeyIndex = INDEX_TPK
                 WaitSec = 100
                 MaxPinLen = 6
                 MinPinLen= 4
@@ -80,29 +82,24 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             }
             PinpadService.Open(context)
 
-            val panString = getPan()
-            //read pin in clear
-            PinpadService.TP_PinpadGetPlainPin(pinParameter, 0, 0, 100)
-            val pinString = pinParameter.Pin_Block.toString(Charsets.UTF_8)
-            //get pinBlockString from pin and pan
-            val pinBlockString = pinBlockEncryption(panString!!, pinString)
+            /*  val panString = getPan()
+              //read pin in clear
+              PinpadService.TP_PinpadGetPlainPin(pinParameter, 0, 0, 100)
+              val pinString = pinParameter.Pin_Block.toString(Charsets.UTF_8)
+              //get pinBlockString from pin and pan
+              val pinBlockString = pinBlockEncryption(panString!!, pinString)*/
 
             cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {
                 PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
                 PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
                 PinpadService.PIN_OK -> {
-                    logger.log("pinData Charsets" + pinParameter.Pin_Block.toString(Charsets.UTF_8))
-                    pinData = pinBlockString
-                    logger.log("PinData $pinData")
-                    if (pinData!!.contains("00000000")) {
+                    StoreData.pinBlock = StringUtil.toHexString(pinParameter.Pin_Block)
+                    if (StoreData.pinBlock!!.contains("00000000")) {
                         EmvService.ERR_NOPIN
                     } else EmvService.EMV_TRUE
                 }
                 else -> EmvService.EMV_FALSE
             }
-            PinpadService.Close()
-            pinData = pinBlockString
-            StoreData.pinBlock = pinBlockString
         }
     }
 
@@ -203,7 +200,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             // get pinData (only for online PIN)
             val cardPin = StoreData.pinBlock ?: ""
             logger.log("cardPin from getTransactionInfo $cardPin")
-            logger.log("cardPin-pinData from getTransactionInfo $pinData")
+            //logger.log("cardPin-pinData from getTransactionInfo $pinData")
 
 
 

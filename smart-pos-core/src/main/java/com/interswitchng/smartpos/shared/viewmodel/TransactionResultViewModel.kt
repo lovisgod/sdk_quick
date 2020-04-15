@@ -19,11 +19,10 @@ import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.core.Koin.Companion.logger
-import org.koin.standalone.KoinComponent
 
 internal class TransactionResultViewModel(private val posDevice: POSDevice,
                                           private val emailService: EmailService,
@@ -49,6 +48,10 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
 
     private val _emailDialog = MutableLiveData<Boolean>()
     val emailDialog: LiveData<Boolean> = _emailDialog
+
+    private val _transactionResponse = MutableLiveData<TransactionResponse>()
+    val transactionResponse: LiveData<TransactionResponse> get() = _transactionResponse
+
 
     private val emv by lazy { posDevice.getEmvCardReader() }
 
@@ -139,9 +142,10 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
         logger.log("Called reversal inside vm")
         CoroutineScope(ioScope).launch {
             logger.log("Called reversal inside vm ioscope")
-           val result = isoService.initiateReversal(terminalInfo, transactionInfo)
-           logger.log(result?.responseCode!!)
-            println("Called reversal response code --->${result?.responseCode}")
+            val response = isoService.initiateReversal(terminalInfo, transactionInfo)
+            _transactionResponse.postValue(response)
+            logger.log(response?.responseCode!!)
+            println("Called reversal response code --->${response.responseCode}")
         }
     }
 }

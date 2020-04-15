@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
@@ -12,9 +13,13 @@ import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.core.UserType
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
+import com.interswitchng.smartpos.shared.models.transaction.PaymentType
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
@@ -22,6 +27,7 @@ import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 class ReceiptFragment : BaseFragment(TAG) {
 
@@ -38,6 +44,8 @@ class ReceiptFragment : BaseFragment(TAG) {
     private var hasPrintedMerchantCopy = false
     private var hasPrintedCustomerCopy = false
     private var hasClickedReversal = false
+
+    private lateinit var reversalResult: TransactionResult
 
 
     override val layoutId: Int
@@ -148,11 +156,42 @@ class ReceiptFragment : BaseFragment(TAG) {
             authorizeAndPerformAction {
 
                 if (hasClickedReversal.not()) {
+                    val now = Date()
                     val txnInfo = TransactionInfo.fromTxnResult(result!!)
                     resultViewModel.initiateReversal(terminalInfo, txnInfo)
+                    resultViewModel.transactionResponse.observe(viewLifecycleOwner, Observer<TransactionResponse> {
+                        reversalResult = TransactionResult(
+                                paymentType = PaymentType.Card,
+                                dateTime = DisplayUtils.getIsoString(now),
+                                amount = result!!.amount,
+                                type = TransactionType.Reversal,
+                                authorizationCode = it.authCode,
+                                responseMessage = IsoUtils.getIsoResultMsg(it.responseCode)!!,
+                                responseCode = it.responseCode,
+                                cardPan = txnInfo.cardPAN,
+                                cardExpiry = txnInfo.cardExpiry,
+                                cardType = result!!.cardType,
+                                stan = it.stan,
+                                pinStatus = result!!.pinStatus,
+                                AID = result!!.AID,
+                                code = "",
+                                telephone = iswPos.config.merchantTelephone,
+                                icc = txnInfo.iccString,
+                                src = txnInfo.src,
+                                csn = txnInfo.csn,
+                                cardPin = txnInfo.cardPIN,
+                                cardTrack2 = txnInfo.cardTrack2,
+                                month = it.month,
+                                time = now.time,
+                                originalTransmissionDateTime = it.transmissionDateTime
+                        )
+                        resultViewModel.logTransaction(reversalResult)
+                        Toast.makeText(context, reversalResult.responseMessage, Toast.LENGTH_SHORT).show()
+                    })
+
                     hasClickedReversal = true
                     it.isClickable = false
-                    Toast.makeText(context, "You have initiated a reversal", Toast.LENGTH_SHORT).show()
+
                 }
             }
         }

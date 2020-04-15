@@ -2,13 +2,11 @@ package com.interswitchng.smartpos
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.IsoServiceImpl
 import com.interswitchng.smartpos.shared.services.iso8583.tcp.IsoSocketImpl
-import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.NibssIsoMessage

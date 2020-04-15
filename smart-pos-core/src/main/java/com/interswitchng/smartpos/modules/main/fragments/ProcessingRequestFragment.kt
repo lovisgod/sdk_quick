@@ -171,10 +171,10 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 val txnInfo =
                         TransactionInfo.fromEmv(emvData, paymentModel, PurchaseType.Card, accountType)
                 var responseMsg: String
-                if (transactionType == TransactionType.BillPayment) {
-                    responseMsg = response.responseDescription ?: "UnknownError"
+                responseMsg = if (transactionType == TransactionType.BillPayment) {
+                    response.responseDescription ?: "UnknownError"
                 } else {
-                    responseMsg = IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
+                    IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
                 }
                 val pinStatus = when {
                     response.responseCode == IsoUtils.OK -> "PIN Verified"
