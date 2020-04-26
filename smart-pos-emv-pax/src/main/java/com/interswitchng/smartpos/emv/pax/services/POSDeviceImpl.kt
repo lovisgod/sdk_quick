@@ -43,18 +43,18 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter,
 
     override fun getEmvCardReader(): EmvCardReader = factory()
 
-    override fun loadInitialKey(context: Context, initialKey: String, ksn: String) {
+    override fun loadInitialKey(initialKey: String, ksn: String) {
         val keyValue = EmvUtils.str2Bcd(initialKey)
         val ksnValue = EmvUtils.str2Bcd(ksn)
         ped.writeTIK(INDEX_TIK, 0.toByte(), keyValue, ksnValue, ECheckMode.KCV_NONE, null)
     }
 
-    override fun loadMasterKey(context: Context, masterKey: String) {
+    override fun loadMasterKey(masterKey: String) {
         val masterKeyValue = EmvUtils.str2Bcd(masterKey)
         ped.writeKey(EPedKeyType.TLK, 0.toByte(), EPedKeyType.TMK, INDEX_TMK, masterKeyValue, ECheckMode.KCV_NONE, null)
     }
 
-    override fun loadPinKey(context: Context, pinKey: String) {
+    override fun loadPinKey(pinKey: String) {
         val checkMode = ECheckMode.KCV_NONE
         val key = EmvUtils.str2Bcd(pinKey)
         ped.writeKey(EPedKeyType.TMK, 0.toByte(), EPedKeyType.TPK, INDEX_TPK, key, checkMode, null)

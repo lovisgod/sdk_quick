@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.shared.services.iso8583
 
 import android.content.Context
 import com.interswitchng.smartpos.IswPos.Companion.getNextStan
+import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
 import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
@@ -434,10 +435,10 @@ internal class IsoServiceImpl(
 
             if (hasPin) {
                 val pinKey = store.getString(KEY_PIN_KEY, "")
-                if (pinKey.isEmpty()) return null
+                //if (pinKey.isEmpty()) return null
 
-                val pinData = TripleDES.harden(pinKey, transaction.cardPIN).take(16)
-                message.setValue(52, pinData)
+                //val pinData = TripleDES.harden(pinKey, transaction.cardPIN).take(16)
+                message.setValue(52, transaction.cardPIN)
                         .setValue(123, "510101511344101")
 
                 // remove unset fields
@@ -540,6 +541,19 @@ internal class IsoServiceImpl(
                     .setValue(95, replacementAmount)
                     .setValue(123, "510101511344101")
 
+            if (hasPin) {
+                val pinKey = store.getString(KEY_PIN_KEY, "")
+                //if (pinKey.isEmpty()) return null
+
+                //val pinData = TripleDES.harden(pinKey, transaction.cardPIN).take(16)
+                message.setValue(52, transaction.cardPIN)
+                logger.log("transaction pin ${transaction.cardPIN}")
+                // remove unset fields
+                message.message.removeFields(32, 59)
+            } else {
+                // remove unset fields
+                message.message.removeFields(32, 52, 59)
+            }
             // set message hash
             val bytes = message.message.writeData()
             val length = bytes.size
@@ -723,8 +737,23 @@ internal class IsoServiceImpl(
             message.setValue(123, "510101511344101")
 
             // remove unset fields
-            message.message.removeFields(32, 52, 53, 54, 56, 59, 60, 62, 64, 124)
+            // message.message.removeFields(32, 52, 53, 54, 56, 59, 60, 62, 64, 124)
 
+            if (hasPin) {
+                val pinKey = store.getString(KEY_PIN_KEY, "")
+                //if (pinKey.isEmpty()) return null
+
+                //val pinData = TripleDES.harden(pinKey, transaction.cardPIN).take(16)
+                message.setValue(52, transaction.cardPIN)
+                //.setValue(123, "510101511344101")
+                logger.log("transaction pin ${transaction.cardPIN}")
+                // remove unset fields
+                message.message.removeFields(32, 53, 54, 56, 59, 60, 62, 64, 124)
+            } else {
+                //message.setValue(123, "511101511344101")
+                // remove unset fields
+                message.message.removeFields(32, 52, 53, 54, 56, 59, 60, 62, 64, 124)
+            }
             // set message hash
             val bytes = message.message.writeData()
             val length = bytes.size
@@ -736,14 +765,16 @@ internal class IsoServiceImpl(
             val sessionKey = store.getString(KEY_SESSION_KEY, "")
             val hashValue = IsoUtils.getMac(sessionKey, temp) //SHA256
             message.setValue(128, hashValue)
-            message.dump(System.out, "request -- ")
+            message.dump(System.out, "preAuth request -- ")
 
             // open connection
             val isConnected = socket.open()
             if (!isConnected) return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "", transmissionDateTime = transmissionDateTime)
 
             val request = message.message.writeData()
+            logger.log("PreAuth Request HEX ---> ${IsoUtils.bytesToHex(request)}")
             val response = socket.sendReceive(request)
+            logger.log("PreAuth Response HEX ---> ${IsoUtils.bytesToHex(response!!)}")
             // close connection
             socket.close()
 
@@ -775,7 +806,7 @@ internal class IsoServiceImpl(
             val processCode = "61" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
-            val originalStan = transaction.originalTransactionInfoData?.originalStan
+            val originalStan = CardTransactionsFragment.CompletionData.stan
             val acquiringInstitutionId = "00000111129"
             val forwardingInstitutionId = "00000111129"
             val originalTransactionInfoData = transaction.originalTransactionInfoData
@@ -783,7 +814,7 @@ internal class IsoServiceImpl(
             val actualSettlementAmount = "000000000000"
             val actualSettlementFee = "C00000000"
             val actualTransactionFee = "C00000000"
-            val originalDataElement = "0100" + originalStan + originalTransactionInfoData?.originalTransmissionDateAndTime + acquiringInstitutionId + forwardingInstitutionId
+            val originalDataElement = "0100" + originalStan + CardTransactionsFragment.CompletionData.dateTime + acquiringInstitutionId + forwardingInstitutionId
             val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message
@@ -812,7 +843,19 @@ internal class IsoServiceImpl(
                     .setValue(90, originalDataElement)
                     .setValue(95, replacementAmount)
                     .setValue(123, "510101511344101")
+            if (hasPin) {
+                val pinKey = store.getString(KEY_PIN_KEY, "")
+                //if (pinKey.isEmpty()) return null
 
+                //val pinData = TripleDES.harden(pinKey, transaction.cardPIN).take(16)
+                message.setValue(52, transaction.cardPIN)
+                logger.log("transaction pin ${transaction.cardPIN}")
+                // remove unset fields
+                message.message.removeFields(9, 29, 30, 31, 32, 33, 50, 53, 54, 56, 58, 59, 60, 62, 64, 67, 98, 100, 102, 103, 124)
+            } else {
+                // remove unset fields
+                message.message.removeFields(9, 29, 30, 31, 32, 33, 50, 52, 53, 54, 56, 58, 59, 60, 62, 64, 67, 98, 100, 102, 103, 124)
+            }
             // set message hash
             val bytes = message.message.writeData()
             val length = bytes.size
@@ -827,7 +870,7 @@ internal class IsoServiceImpl(
             logger.log("hash value for field 128 is : $hashValue")
             message.setValue(128, hashValue)
             // remove unset fields
-            message.message.removeFields(9, 29, 30, 31, 32, 33, 50, 52, 53, 54, 56, 58, 59, 60, 62, 64, 67, 98, 100, 102, 103, 124)
+            //message.message.removeFields(9, 29, 30, 31, 32, 33, 50, 52, 53, 54, 56, 58, 59, 60, 62, 64, 67, 98, 100, 102, 103, 124)
             message.dump(System.out, "request -- ")
 
             logger.log("Called ---->Completion message packed")
@@ -853,7 +896,7 @@ internal class IsoServiceImpl(
             logger.log("MODIFIED RESPONSE HEX ---> $responseHex")
             val modifiedResponse = IsoUtils.hexToBytes(responseHex)
 
-            val responseMsg = NibssIsoMessage(messageFactory.parseMessage(modifiedResponse, 0))
+            val responseMsg = NibssIsoMessage(messageFactory.parseMessage(response, 0))
             responseMsg.dump(System.out, "")
 
 
@@ -865,7 +908,7 @@ internal class IsoServiceImpl(
                 return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan)
             }
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
+            //logger.log(e.localizedMessage)
             e.printStackTrace()
             return TransactionResponse(TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }

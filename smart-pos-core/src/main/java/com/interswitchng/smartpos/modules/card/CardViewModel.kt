@@ -204,7 +204,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                                     PurchaseType.Card,
                                     accountType
                             )
-                    initiateTransaction(transactionType, terminalInfo, txnInfo)
+                    initiateTransaction(paymentModel.type!!, terminalInfo, txnInfo)
                 }
 
                 when (response) {
@@ -364,7 +364,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                             accountType
                     )
 
-                    initiateCNPTransaction(transactionType, terminalInfo, txnInfo)
+                    initiateCNPTransaction(paymentModel.type!!, terminalInfo, txnInfo)
                     //Logger.with("response CardViewModel").logErr(response.toString())
 
                 }
@@ -420,7 +420,9 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
             )
             TransactionType.REFUND -> isoService.initiateRefund(terminalInfo, txnInfo)
             TransactionType.COMPLETION -> {
-                txnInfo.originalTransactionInfoData = originalTxnData
+                if (::originalTxnData.isInitialized) {
+                    txnInfo.originalTransactionInfoData = originalTxnData
+                }
                 isoService.initiateCompletion(terminalInfo, txnInfo)
             }
             else -> null
@@ -473,4 +475,6 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     fun setOriginalTxnInfo(originalTxnInfo: OriginalTransactionInfoData) {
         this.originalTxnData = originalTxnInfo
     }
+
+
 }

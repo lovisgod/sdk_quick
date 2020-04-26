@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.di
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
@@ -63,14 +64,15 @@ internal val serviceModule = module() //override = true
     }
     factory<IsoSocket> {
         val resource = androidContext().resources
-        val serverIp = resource.getString(R.string.isw_nibss_ip)
-        val port = resource.getInteger(R.integer.iswNibssPort)
+
         // try getting terminal info
         val store: KeyValueStore = get()
         val terminalInfo = TerminalInfo.get(store)
         // getResult timeout based on terminal info
         val timeout = terminalInfo?.serverTimeoutInSec ?: resource.getInteger(R.integer.iswTimeout)
 
+        val serverIp = terminalInfo?.serverIp ?: Constants.ISW_TERMINAL_IP
+        val port = terminalInfo?.serverPort ?: BuildConfig.ISW_TERMINAL_PORT
         return@factory IsoSocketImpl(serverIp, port, timeout * 1000)
     }
 }

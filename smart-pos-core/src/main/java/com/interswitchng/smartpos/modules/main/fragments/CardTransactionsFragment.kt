@@ -107,6 +107,8 @@ class CardTransactionsFragment : BaseFragment(TAG) {
             PaymentModel.TransactionType.COMPLETION -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.COMPLETION)
                 cardViewModel.setOriginalTxnInfo(originalTxnData!!)
+                CompletionData.dateTime = originalTxnData!!.originalTransmissionDateAndTime
+                CompletionData.stan = originalTxnData!!.originalStan
                 transactionType = TransactionType.Completion
             }
 
@@ -444,5 +446,12 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
     companion object {
         const val TAG = "Card Transaction"
+    }
+
+    class CompletionData {
+        companion object {
+            var dateTime: String? = null
+            var stan: String? = null
+        }
     }
 }

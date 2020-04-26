@@ -8,13 +8,14 @@ class NibssIsoMessage(val message: IsoMessage)  {
 
     fun setValue(fieldId: Int, value: String): NibssIsoMessage {
         val field = message.getField<Any>(fieldId)
+                ?: throw Exception("field $fieldId doesn't exist")
         message.setValue(fieldId, value, field.type, field.length)
         return this
     }
 
     fun dump(p: PrintStream, indent: String = "") {
 
-        val type = message.type.toByte()
+        val type = Integer.toHexString(message.type)
         p.println("$indent<isomsg mti=\"$type\">")
 
         for (i in 0 until 129) {

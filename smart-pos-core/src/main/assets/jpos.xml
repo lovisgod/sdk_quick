@@ -89,7 +89,7 @@
         <field num="42" type="ALPHA" length="15" />
         <field num="43" type="ALPHA" length="40" />
         <field num="49" type="NUMERIC" length="3" />
-        <field num="52" type="ALPHA" length="16"/>
+        <field length="8" num="52" type="BINARY" />
         <field num="55" type="LLLVAR" />
         <field num="59" type="LLLVAR" length="255"/>
         <field num="123" type="LLLVAR" />
@@ -125,6 +125,7 @@
         <field num="42" type="ALPHA" length="15" />
         <field num="43" type="ALPHA" length="40" />
         <field num="49" type="NUMERIC" length="3" />
+        <field length="8" num="52" type="BINARY" />
         <field num="55" type="LLLVAR" />
         <field num="90" type="NUMERIC" length="42" />
         <field num="95" type="ALPHA" length="42" />
@@ -138,7 +139,7 @@
     <template type="0420" extends="0200">
         <field num="30" type="exclude"  />
         <field num="32" type="exclude"  />
-        <field num="52" type="exclude"  />
+        <!-- <field num="52" type="exclude"  />-->
         <field num="53" type="exclude"/>
         <field num="55" type="exclude"/>
         <field num="56" type="LLLVAR" length="4"/>
@@ -240,10 +241,49 @@
         <field num="90" type="NUMERIC" length="42" />
     </parse>
 
-
     <parse type="0210" extends="0110">
+        <field num="2" type="LLVAR" />
+        <field length="6" num="3" type="NUMERIC" />
+        <field length="12" num="4" type="NUMERIC" />
+        <field length="10" num="7" type="NUMERIC" />
+        <field length="6" num="11" type="NUMERIC" />
+        <field length="6" num="12" type="NUMERIC" />
+        <field length="4" num="13" type="NUMERIC" />
+        <field length="4" num="14" type="NUMERIC" />
+        <field length="4" num="15" type="NUMERIC" />
+        <field length="4" num="18" type="NUMERIC" />
+        <field length="3" num="22" type="NUMERIC" />
+        <field length="3" num="23" type="NUMERIC" />
+        <field length="2" num="25" type="NUMERIC" />
+        <field length="2" num="26" type="NUMERIC" />
+        <field length="9" num="28" type="ALPHA" />
+        <field length="9" num="30" type="ALPHA" />
+        <field num="32" type="LLVAR" />
+        <field num="33" type="LLVAR" />
+        <field num="35" type="LLVAR" />
+        <field length="12" num="37" type="ALPHA" />
+        <field length="6" num="38" type="ALPHA" />
+        <field length="2" num="39" type="ALPHA" />
+        <field length="3" num="40" type="NUMERIC" />
+        <field length="8" num="41" type="ALPHA" />
+        <field length="15" num="42" type="ALPHA" />
+        <field length="40" num="43" type="ALPHA" />
+        <field length="3" num="49" type="NUMERIC" />
+        <field num="54" type="LLLVAR" />
+        <field num="55" type="LLLVAR" />
         <field num="56" type="LLLVAR" />
+        <field length="255" num="59" type="LLLVAR" />
+        <field length="999" num="60" type="LLLVAR" />
+        <field length="64" num="64" type="ALPHA" />
+        <field length="42" num="90" type="NUMERIC" />
+        <field length="42" num="95" type="ALPHA" />
+        <field num="102" type="LLVAR" />
+        <field num="103" type="LLVAR" />
+        <field num="123" type="LLLVAR" />
+        <field length="9999" num="124" type="LLLLVAR" />
+        <field length="64" num="128" type="ALPHA" />
     </parse>
+
 
     <parse type="0230">
         <field num="2" type="LLVAR" />
@@ -259,13 +299,12 @@
         <field num="22" type="NUMERIC" length="3"/>
         <field num="23" type="NUMERIC" length="3"/>
         <field num="25" type="NUMERIC" length="2"/>
+        <field length="2" num="26" type="NUMERIC" />
         <field num="28" type="ALPHA" length="9"/>
-        <field num="30" type="ALPHA" length="9" />
         <field num="32" type="LLVAR" />
         <field num="33" type="LLVAR" />
         <field num="35" type="LLVAR" />
         <field num="37" type="ALPHA" length="12" />
-        <field num="38" type="ALPHA" length="6" />
         <field num="39" type="ALPHA" length="2" />
         <field num="40" type="NUMERIC" length="3" />
         <field num="41" type="ALPHA" length="8" />
@@ -273,11 +312,11 @@
         <field num="43" type="ALPHA" length="40" />
         <field num="49" type="NUMERIC" length="3" />
         <field num="54" type="LLLVAR" />
-        <field num="90" type="NUMERIC" length="42" />
-        <field num="95" type="ALPHA" length="42" />
+        <field num="55" type="LLLVAR" />
         <field num="123" type="LLLVAR" />
         <field num="128" type="ALPHA"  length="64"/>
     </parse>
+
 
     <parse type="0430">
         <field num="2" type="LLVAR" />
