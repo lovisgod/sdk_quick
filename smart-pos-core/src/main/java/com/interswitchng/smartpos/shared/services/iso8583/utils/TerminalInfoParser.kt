@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.shared.services.iso8583.utils
 
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import java.util.ArrayList
+import java.util.*
 
 internal object TerminalInfoParser {
 
@@ -29,7 +29,9 @@ internal object TerminalInfoParser {
                 merchantCategoryCode = merchantCategoryCode,
                 merchantNameAndLocation = merchantNameAndLocation,
                 capabilities = "E0F8C8",
-                isKimono = true
+                isKimono = true,
+                agentId = "",
+                agentEmail = ""
         )
 
         if (terminalInfo.countryCode.length >= 4) {
@@ -101,7 +103,9 @@ internal object TerminalInfoParser {
                         serverIp = ip,
                         serverPort = port,
                         capabilities = TerminalInfo.get(store)?.capabilities,
-                        isKimono = false
+                        isKimono = false,
+                        agentId = "",
+                        agentEmail = ""
 
                 )
 

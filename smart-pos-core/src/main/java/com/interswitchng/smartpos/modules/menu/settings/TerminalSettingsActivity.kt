@@ -257,6 +257,15 @@ class TerminalSettingsActivity : MenuActivity() {
             // set the terminal-info download container based on kimono flag
             terminalInfoDownloadContainer.visibility =
                     if (button.isChecked) View.GONE else View.VISIBLE
+
+            // set the agentId container based on kimono flag
+            agentId.visibility =
+                    if (button.isChecked) View.VISIBLE else View.GONE
+
+            // set the agentEmail container based on kimono flag
+            agentEmail.visibility =
+                    if (button.isChecked) View.VISIBLE else View.GONE
+
         }
 
 
@@ -311,6 +320,8 @@ class TerminalSettingsActivity : MenuActivity() {
             etCallHomeTime.setText(callHomeTimeInMin.toString())
             etServerTimeout.setText(serverTimeoutInSec.toString())
             etCapabilities.setText(capabilities)
+            etAgentId.setText(agentId)
+            etAgentEmail.setText(agentEmail)
 
             switchKimono.isChecked = isKimono
         }
@@ -323,6 +334,7 @@ class TerminalSettingsActivity : MenuActivity() {
         etServerIP.setText(serverIp)
         etServerPort.setText(serverPort.toString())
         etServerUrl.setText(serverUrl)
+
     }
 
 
@@ -421,6 +433,9 @@ class TerminalSettingsActivity : MenuActivity() {
             serverPort = etServerPort.getString()
             serverUrl = etServerUrl.getString()
             isKimono = switchKimono.isChecked
+            agentId = etAgentId.getString()
+            agentEmail = etAgentEmail.getString()
+
 
             // only set capabilities if it was provided
             etCapabilities.getString().apply {
@@ -445,6 +460,8 @@ class TerminalSettingsActivity : MenuActivity() {
             if (capabilities?.isNotEmpty() == true) tiCapabilities.error = capabilities
             if (serverPort.isNotEmpty()) tiServerPort.error = serverPort
             if (serverUrl.isNotEmpty()) tiServerUrl.error = serverUrl
+            if (agentId.isNotEmpty()) tiAgentId.error = agentId
+            if (agentEmail.isNotEmpty()) tiAgentEmail.error = agentEmail
         }
 
         alert.show()

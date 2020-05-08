@@ -6,6 +6,7 @@ import com.interswitchng.smartpos.shared.utilities.KeysUtils
 
 object Constants {
 
+    internal const val PAYMENT_CODE = "04358001"
     // URL END POINTS
     internal const val CODE_END_POINT = "till.json"
     internal const val TRANSACTION_STATUS_QR = "transactions/qr"

@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
-import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel.TransactionType
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -261,7 +260,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
                                     PurchaseType.Card,
                                     accountType
                             )
-                    initiateTransactionBillPayment(transactionType, terminalInfo, txnInfo, paymentModel.billPayment!!)
+                    initiateTransactionBillPayment(transactionType, terminalInfo, txnInfo)
                 }
 
                 when (response) {
@@ -429,9 +428,9 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
-    private fun initiateTransactionBillPayment(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo, billPaymentModel: BillPaymentModel): TransactionResponse? {
+    private fun initiateTransactionBillPayment(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
 
-        return isoService.initiateBillPayment(terminalInfo, txnInfo, billPaymentModel)
+        return isoService.initiateBillPayment(terminalInfo, txnInfo)
     }
 
     private fun initiateCNPTransaction(

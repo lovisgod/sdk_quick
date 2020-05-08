@@ -3,9 +3,7 @@ package com.interswitchng.smartpos.modules.main.fragments
 import android.os.Bundle
 import android.view.View
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MakePaymentDialog
-import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.payment
 import com.interswitchng.smartpos.shared.activities.BaseFragment
@@ -31,7 +29,7 @@ class TransactionFragment: BaseFragment(TAG) {
                         }
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
-                    1 -> {
+                    1 -> {/*
                         val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
                             if (isValidated) {
                                 val payment = payment {
@@ -60,14 +58,14 @@ class TransactionFragment: BaseFragment(TAG) {
                                 }
                             }
                         }
-                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
+                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)*/
 
-                        /* val payment = payment {
+                        val payment = payment {
                              type = PaymentModel.TransactionType.PRE_AUTHORIZATION
                          }
 
                          val direction = TransactionFragmentDirections.iswActionGotoFragmentAmount(payment)
-                         navigate(direction)*/
+                        navigate(direction)
                     }
 //                    2 -> {
 //                        val payment = payment {
@@ -113,7 +111,7 @@ class TransactionFragment: BaseFragment(TAG) {
                         }
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
-                    5 -> {
+                    5 -> {/*
                         val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
                             if (isValidated) {
                                 val payment = payment {
@@ -142,8 +140,12 @@ class TransactionFragment: BaseFragment(TAG) {
                                 }
                             }
                         }
-                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)
+                        dialog.show(childFragmentManager, MerchantCardDialog.TAG)*/
 
+                        val payment = payment {
+                            this.type = PaymentModel.TransactionType.REFUND
+                        }
+                        navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }
 
                 }

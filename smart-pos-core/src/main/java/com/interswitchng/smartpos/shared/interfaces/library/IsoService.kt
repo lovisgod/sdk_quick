@@ -1,6 +1,5 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
-import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
@@ -134,5 +133,5 @@ internal interface IsoService {
      * @return   response status indicating transaction success or failure
      */
 
-    fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, billPaymentModel: BillPaymentModel): TransactionResponse?
+    fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse?
 }

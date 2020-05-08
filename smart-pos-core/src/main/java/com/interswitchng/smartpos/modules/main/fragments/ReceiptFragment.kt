@@ -151,9 +151,9 @@ class ReceiptFragment : BaseFragment(TAG) {
             startActivity(Intent.createChooser(shareIntent, "Select Application"))
         }
 
-        isw_reversal.setOnClickListener {
+        isw_reversal.setOnClickListener { view ->
 
-            authorizeAndPerformAction {
+            // authorizeAndPerformAction {
 
                 if (hasClickedReversal.not()) {
                     val now = Date()
@@ -190,10 +190,10 @@ class ReceiptFragment : BaseFragment(TAG) {
                     })
 
                     hasClickedReversal = true
-                    it.isClickable = false
+                    view.isClickable = false
 
                 }
-            }
+            //}
         }
 
         isw_refund.setOnClickListener {

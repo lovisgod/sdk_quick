@@ -3,7 +3,6 @@ package com.interswitchng.smartpos.shared.services.kimono
 import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
-import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
@@ -207,8 +206,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
         }
     }
 
-    override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, billPaymentModel: BillPaymentModel): TransactionResponse? {
-        val requestBody: String = PurchaseRequest.toBillPaymentString(device, terminalInfo, txnInfo, billPaymentModel)
+    override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
+        val requestBody: String = PurchaseRequest.toBillPaymentString(device, terminalInfo, txnInfo)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {

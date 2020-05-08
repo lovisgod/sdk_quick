@@ -2,7 +2,7 @@ package com.interswitchng.smartpos.shared.services.kimono.models
 
 //import com.interswitchng.smartpos.shared.services.DateUtils
 import com.interswitchng.smartpos.IswPos
-import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.models.core.Environment
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -20,15 +20,15 @@ internal class PurchaseRequest
 {
     companion object {
 
-        fun toBillPaymentString(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo, billPaymentModel: BillPaymentModel): String {
+        fun toBillPaymentString(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
 
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData = ""
-            var customerId = billPaymentModel.customerId
-            var phoneNumber = billPaymentModel.phoneNumber
-            var bankCbnCode = billPaymentModel.bankCbnCode
-            var customerEmail = billPaymentModel.customerEmail
-            var paymentCode = billPaymentModel.paymentCode
+            var customerId = terminalInfo.agentId
+            var phoneNumber = terminalInfo.agentId
+            var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
+            var customerEmail = terminalInfo.agentEmail
+            var paymentCode = Constants.PAYMENT_CODE
             var transactionAmount = transaction.amount
 
             var rrfNumber = transaction.stan.padStart(12, '0')
@@ -397,6 +397,10 @@ internal class TerminalInformation {
     var serverPort: String = ""
     @field:Element(name = "serverUrl", required = false)
     var serverUrl: String = ""
+    @field:Element(name = "agentId", required = false)
+    var agentId: String = ""
+    @field:Element(name = "agentEmail", required = false)
+    var agentEmail: String = ""
 
 
     lateinit var error: TerminalInformation
@@ -408,7 +412,7 @@ internal class TerminalInformation {
 
             val properties = listOf(error.terminalId, error.merchantId, error.serverIp, error.capabilities,
                     error.merchantNameAndLocation, error.merchantCategoryCode, error.serverPort, error.serverUrl,
-                    error.countryCode, error.currencyCode, error.callHomeTimeInMin, error.serverTimeoutInSec)
+                    error.countryCode, error.currencyCode, error.callHomeTimeInMin, error.serverTimeoutInSec, error.agentId, error.agentEmail)
 
 
             // validate that all error properties are empty
@@ -430,7 +434,11 @@ internal class TerminalInformation {
                     capabilities = capabilities,
                     serverIp = serverIp,
                     serverUrl = serverUrl,
-                    serverPort = serverPort.toIntOrNull() ?: -1)
+                    serverPort = serverPort.toIntOrNull() ?: -1,
+                    agentId = agentId,
+                    agentEmail = agentEmail
+
+            )
         }
 
     private fun validateInfo() {
@@ -496,6 +504,18 @@ internal class TerminalInformation {
                 .isNotEmpty()
         // assign error message for field if is kimono
         if (isKimono && serverUrl.hasError) error.serverUrl = serverUrl.message
+
+        // validate agentId value
+        val agentId = InputValidator(agentId).isNotEmpty().isNumber()
+
+        //assign error message for field
+        if (agentId.hasError) error.agentId = agentId.message
+
+        // validate agentEmail value
+        val agentEmail = InputValidator(agentEmail).isNotEmpty().isAlphaNumeric()
+
+        //assign error message for field
+        if (agentId.hasError) error.agentEmail = agentEmail.message
 
 
         // validate terminal capabilities value

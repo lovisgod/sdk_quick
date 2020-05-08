@@ -95,7 +95,7 @@ class XmlPullParserHandlerBP {
                     XmlPullParser.END_TAG -> if (contains(tagname)) {
                         // add employee object to list
                         return billPaymentResponse
-                    } else if (tagname.equals("stan", ignoreCase = true)) {
+                    } else if (tagname.equals("authId", ignoreCase = true)) {
                         billPaymentResponse.stan = text.toString()
                     } else if (tagname.equals("responseCode", ignoreCase = true)) {
                         billPaymentResponse.responseCode = text.toString()
@@ -103,6 +103,18 @@ class XmlPullParserHandlerBP {
                         billPaymentResponse.description = text.toString()
                     } else if (tagname.equals("transactionId", ignoreCase = true)) {
                         billPaymentResponse.transactionId = text.toString()
+                    } else if (tagname.equals("transactionRef", ignoreCase = true)) {
+                        billPaymentResponse.transactionRef = text.toString()
+                    } else if (tagname.equals("retrievalRefNumber", ignoreCase = true)) {
+                        billPaymentResponse.retrievalRefNumber = text.toString()
+                    } else if (tagname.equals("biller", ignoreCase = true)) {
+                        billPaymentResponse.biller = text.toString()
+                    } else if (tagname.equals("customerDescription", ignoreCase = true)) {
+                        billPaymentResponse.customerDescription = text.toString()
+                    } else if (tagname.equals("itemDescription", ignoreCase = true)) {
+                        billPaymentResponse.itemDescription = text.toString()
+                    } else if (tagname.equals("authId", ignoreCase = true)) {
+                        billPaymentResponse.authId = text.toString()
                     }
                     else -> {
                     }

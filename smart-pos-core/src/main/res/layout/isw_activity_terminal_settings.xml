@@ -601,6 +601,91 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/agentId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/isw_content_margin"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/isw_content_margin"
+                    android:layout_marginEnd="@dimen/isw_content_margin"
+                    android:text="Agent's ID"
+                    android:textColor="@color/iswTextColorDark"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tiAgentId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/isw_content_margin"
+                    android:layout_marginEnd="@dimen/isw_content_margin"
+                    android:textColor="@color/iswTextColorDark"
+                    app:hintEnabled="false">
+
+
+                    <EditText
+                        android:id="@+id/etAgentId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="12345678"
+                        android:inputType="number"
+                        android:maxLength="13"
+                        android:textSize="18sp"
+                        tools:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/agentEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/isw_content_margin"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/isw_content_margin"
+                    android:layout_marginEnd="@dimen/isw_content_margin"
+                    android:text="Agent's Email"
+                    android:textColor="@color/iswTextColorDark"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tiAgentEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/isw_content_margin"
+                    android:layout_marginEnd="@dimen/isw_content_margin"
+                    android:textColor="@color/iswTextColorDark"
+                    app:hintEnabled="false">
+
+
+                    <EditText
+                        android:id="@+id/etAgentEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="abc@gmail.com"
+                        android:inputType="textEmailAddress"
+                        android:textSize="18sp"
+                        tools:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
 
             <!-- Server config -->
 
