@@ -6,8 +6,11 @@ package com.interswitchng.smartpos.shared.models.printer.info
  * purchase transaction and represents it for printout
  */
 data class TransactionStatus (
-    val responseMessage: String,
-    val responseCode: String,
-    val AID: String,
-    val telephone: String
+        val responseMessage: String,
+        val responseCode: String,
+        val AID: String,
+        val telephone: String,
+        val name: String,
+        val ref: String,
+        val rrn: String
 )

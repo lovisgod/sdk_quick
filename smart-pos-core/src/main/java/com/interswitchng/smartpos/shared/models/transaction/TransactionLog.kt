@@ -36,7 +36,10 @@ open class TransactionLog(
         var src: String = "",
         var cardPin: String = "",
         var time: Long = Date().time,
-        var originalTransmissionDate: String = "") : RealmObject(), Parcelable {
+        var originalTransmissionDate: String = "",
+        var name: String = "",
+        var ref: String = "",
+        var rrn: String = "") : RealmObject(), Parcelable {
 
 
 
@@ -88,7 +91,10 @@ open class TransactionLog(
                 cardPin,
                 cardTrack2,
                 time,
-                originalTransmissionDate
+                originalTransmissionDate,
+                name,
+                ref,
+                rrn
 
         )
     }
@@ -123,7 +129,10 @@ open class TransactionLog(
                 src = result.src,
                 cardPin = result.cardPin,
                 cardTrack2 = result.cardTrack2,
-                originalTransmissionDate = result.originalTransmissionDateTime
+                originalTransmissionDate = result.originalTransmissionDateTime,
+                name = result.name,
+                ref = result.ref,
+                rrn = result.rrn
         )
 
 

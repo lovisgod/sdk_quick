@@ -87,6 +87,21 @@ abstract class TransactionSlip(private val terminal: TerminalInfo, private val s
             printList.add(responseCode)
         }
 
+        if (status.name.isNotEmpty()) {
+            val billerName = pairString("NAME", status.name)
+            printList.add(billerName)
+        }
+
+        if (status.ref.isNotEmpty()) {
+            val ref = pairString("REF", status.ref)
+            printList.add(ref)
+        }
+
+        if (status.rrn.isNotEmpty()) {
+            val rrn = pairString("RRN", status.rrn)
+            printList.add(rrn)
+        }
+
         if (status.AID.isNotEmpty()) {
             val aid = pairString("AID", status.AID)
             printList.add(aid)

@@ -230,9 +230,12 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 TransactionResponse(
                         responseCode = purchaseResponse.responseCode,//data.responseCode,
                         stan = purchaseResponse.stan,
-                        authCode = "",//purchaseResponse.authCode,// data.authCode,
+                        authCode = purchaseResponse.authId,//purchaseResponse.authCode,// data.authCode,
                         scripts = purchaseResponse.stan,
-                        responseDescription = purchaseResponse.description//data.description
+                        responseDescription = purchaseResponse.description,//data.description
+                        name = purchaseResponse.customerDescription,
+                        ref = purchaseResponse.transactionRef,
+                        rrn = purchaseResponse.retrievalRefNumber
 
                 )
             }

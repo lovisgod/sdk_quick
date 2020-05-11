@@ -41,7 +41,10 @@ data class TransactionResult(
         val cardTrack2: String,
         var time: Long,
         var month: String = EMPTY_STRING,
-        var originalTransmissionDateTime: String = EMPTY_STRING) : Parcelable {
+        var originalTransmissionDateTime: String = EMPTY_STRING,
+        var name: String = EMPTY_STRING,
+        var ref: String = EMPTY_STRING,
+        var rrn: String = EMPTY_STRING) : Parcelable {
 
 
     constructor(parcel: Parcel) : this(
@@ -66,6 +69,9 @@ data class TransactionResult(
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readLong(),
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!)
 
@@ -103,7 +109,10 @@ data class TransactionResult(
                     responseMessage,
                     responseCode,
                     AID,
-                    telephone)
+                    telephone,
+                    name,
+                    ref,
+                    rrn)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(paymentType.ordinal)
@@ -129,6 +138,9 @@ data class TransactionResult(
         parcel.writeString(month)
         parcel.writeLong(time)
         parcel.writeString(originalTransmissionDateTime)
+        parcel.writeString(name)
+        parcel.writeString(ref)
+        parcel.writeString(rrn)
     }
 
     override fun describeContents(): Int {

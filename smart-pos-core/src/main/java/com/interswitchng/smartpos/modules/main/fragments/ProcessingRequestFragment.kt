@@ -205,7 +205,10 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                         cardTrack2 = txnInfo.cardTrack2,
                         month = response.month,
                         time = now.time,
-                        originalTransmissionDateTime = response.transmissionDateTime
+                        originalTransmissionDateTime = response.transmissionDateTime,
+                        name = response.name, // biller's name for billPayment
+                        ref = response.ref,   // biller's transactionReference for billPayment
+                        rrn = response.rrn    // biller's retrieval reference number for billPayment
                 )
 
                 val direction =

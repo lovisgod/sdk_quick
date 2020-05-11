@@ -15,5 +15,8 @@ data class TransactionResponse(
         val transmissionDateTime: String = EMPTY_STRING,
         val month: String = EMPTY_STRING,
         val time: String = EMPTY_STRING,
-        val responseDescription: String? = null
+        val responseDescription: String? = null,
+        val name: String = EMPTY_STRING,
+        val ref: String = EMPTY_STRING,
+        val rrn: String = EMPTY_STRING
 )
