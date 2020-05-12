@@ -5,46 +5,75 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="50dp">
+    android:paddingTop="20dp">
+
+    <EditText
+        android:id="@+id/isw_pin_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:hint="@string/isw_sample_pin"
+        android:inputType="numberPassword"
+        android:maxLength="6"
+        android:textColor="@color/iswTextColorBlack"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/isw_button_pin_proceed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isw_pin_text" />
 
     <TextView
-        android:id="@+id/isw_pin"
+        android:id="@+id/isw_pin_text"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:text="@string/isw_enter_merchant_s_pin"
         android:textColor="@android:color/black"
-        android:textSize="30sp"
-        android:visibility="gone"
+        android:textSize="20sp"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="123345" />
+        tools:text="Enter Pin" />
 
     <TextView
         android:id="@+id/isw_enrollmentLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="@string/isw_enrol_supervisor_s_card"
+        android:text="@string/isw_authenticate_supervisor_s_card"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/isw_imageview7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/isw_pin"
+        app:layout_constraintTop_toBottomOf="@+id/isw_pin_edit_text"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <ImageView
         android:id="@+id/isw_imageview7"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/isw_insert_card" />
+
+    <Button
+        android:id="@+id/isw_button_pin_proceed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Proceed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/isw_pin_edit_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

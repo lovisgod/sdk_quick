@@ -153,7 +153,7 @@ class ReceiptFragment : BaseFragment(TAG) {
 
         isw_reversal.setOnClickListener { view ->
 
-            // authorizeAndPerformAction {
+            authorizeAndPerformAction {
 
                 if (hasClickedReversal.not()) {
                     val now = Date()
@@ -193,7 +193,7 @@ class ReceiptFragment : BaseFragment(TAG) {
                     view.isClickable = false
 
                 }
-            //}
+            }
         }
 
         isw_refund.setOnClickListener {

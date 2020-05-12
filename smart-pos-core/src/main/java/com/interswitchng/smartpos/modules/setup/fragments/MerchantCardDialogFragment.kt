@@ -18,10 +18,10 @@ class MerchantCardDialogFragment : BaseFragment(TAG) {
 
     }
 
-    fun showDialog() {
+    private fun showDialog() {
         val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
             if (isValidated) {
-                //navigate(MerchantCardDialogFragmentDirections.iswActionGotoReportFragment())
+                navigate(MerchantCardDialogFragmentDirections.iswActionGotoReportFragment())
             } else {
                 toast("Fingerprint Verification Failed!!")
                 navigateUp()
@@ -31,7 +31,7 @@ class MerchantCardDialogFragment : BaseFragment(TAG) {
             when (type) {
                 MerchantCardDialog.AUTHORIZED -> {
 
-                    //navigate(MerchantCardDialogFragmentDirections.iswActionGotoReportFragment())
+                    navigate(MerchantCardDialogFragmentDirections.iswActionGotoReportFragment())
                 }
                 MerchantCardDialog.FAILED -> {
                     toast("Merchant Card Verification Failed!!")

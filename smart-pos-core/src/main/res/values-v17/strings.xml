@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="isw_bill_payment_details">Bill Payment Details</string>
+    <string name="isw_authenticate_supervisor_s_card">Authenticate Supervisor\'s Card</string>
 </resources>

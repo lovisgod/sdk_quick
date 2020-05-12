@@ -11,6 +11,8 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.utilities.SingleArgsClickListener
+import com.interswitchng.smartpos.shared.utilities.toast
+import kotlinx.android.synthetic.main.isw_layout_insert_supervisors_card.*
 import kotlinx.android.synthetic.main.isw_sheet_layout_admin_merchant_card.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -47,6 +49,23 @@ class MerchantCardDialog constructor(
         if (isAuthorization) {
             //isw_textview17.text = getString(R.string.isw_insert_supervisor_s_card)
         }
+
+        isw_button_pin_proceed.setOnClickListener {
+            val savedPan = store.getString("M3RCHANT_PAN", "")
+            val savedPin = store.getString("MERCHANT_PIN", "")
+            val enteredPin = isw_pin_edit_text.text.toString()
+
+            if (enteredPin == "") {
+                context?.toast("Pin Field is empty. Please enter your pin")
+            } else if (savedPan == cardViewModel.getCardPAN() && savedPin == enteredPin) {
+                context?.toast("Pin OK")
+                clickListener.invoke(AUTHORIZED)
+                dismiss()
+            } else {
+                clickListener.invoke(FAILED)
+                dismiss()
+            }
+        }
     }
 
     private fun processMessage(message: EmvMessage) {
@@ -71,7 +90,9 @@ class MerchantCardDialog constructor(
             // when card has been read
             is EmvMessage.CardRead -> {
                 //Dismiss the dialog showing "Reading Card"
-                cardViewModel.startTransaction(requireContext())
+                //cardViewModel.startTransaction(requireContext())
+
+
             }
 
             // when card gets removed
@@ -91,14 +112,7 @@ class MerchantCardDialog constructor(
 
             // when pin has been validated
             is EmvMessage.PinOk -> {
-                val savedPan = store.getString("M3RCHANT_PAN", "")
-                if (savedPan == cardViewModel.getCardPAN()) {
-                    clickListener.invoke(AUTHORIZED)
-                    dismiss()
-                } else {
-                    clickListener.invoke(FAILED)
-                    dismiss()
-                }
+
             }
 
             // when the user enters an incomplete pin

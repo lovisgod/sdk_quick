@@ -13,7 +13,6 @@
         android:text="@string/isw_card_detected"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/isw_imageview7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +26,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/isw_textview22"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/isw_textview17"
         app:srcCompat="@drawable/isw_insert_card" />

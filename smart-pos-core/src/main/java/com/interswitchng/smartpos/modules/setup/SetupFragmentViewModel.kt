@@ -34,6 +34,10 @@ internal class SetupFragmentViewModel constructor(
         keyValueStore.saveString("M3RCHANT_PAN", pan)
     }
 
+    fun saveMerchantPIN(pin: String) {
+        keyValueStore.saveString("MERCHANT_PIN", pin)
+    }
+
     fun saveMerchantPhoneNumber(number: String) {
         keyValueStore.saveString("M3RCHANT_PHONE", number)
         keyValueStore.saveBoolean("SETUP", true)
