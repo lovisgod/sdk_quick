@@ -151,7 +151,7 @@ class AmountFragment : BaseFragment(TAG) {
                 val direction = AmountFragmentDirections.iswActionIswFragmentAmountToIswPinfragment(payment)
                 navigate(direction)
             }
-            PaymentModel.TransactionType.BILL_PAYMENT -> {
+            PaymentModel.TransactionType.CASH_OUT -> {
                 val direction = AmountFragmentDirections.iswActionGotoFragmentCardTransactions(payment)
                 navigate(direction)
 

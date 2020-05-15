@@ -50,6 +50,10 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                     getString(R.string.isw_processing_transaction, "Pre-Authorization")
             PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_processing_text.text =
                     getString(R.string.isw_processing_transaction, "Card-Not-Present")
+            PaymentModel.TransactionType.REFUND -> isw_processing_text.text =
+                    getString(R.string.isw_processing_transaction, "Refund")
+            PaymentModel.TransactionType.CASH_OUT -> isw_processing_text.text =
+                    getString(R.string.isw_processing_transaction, "CashOut")
             else -> isw_processing_text.text =
                     getString(R.string.isw_processing_transaction, "Completion")
         }
@@ -83,7 +87,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                         paymentModel.card!!.expiryDate!!,
                         paymentModel.card!!.cardPan!!
                 )
-            } else if (paymentModel.type == PaymentModel.TransactionType.BILL_PAYMENT) {
+            } else if (paymentModel.type == PaymentModel.TransactionType.CASH_OUT) {
                 cardViewModel.processOnlineBP(
                         paymentModel,
                         accountType,
@@ -171,7 +175,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 val txnInfo =
                         TransactionInfo.fromEmv(emvData, paymentModel, PurchaseType.Card, accountType)
                 var responseMsg: String
-                responseMsg = if (transactionType == TransactionType.BillPayment) {
+                responseMsg = if (transactionType == TransactionType.CashOut) {
                     response.responseDescription ?: "UnknownError"
                 } else {
                     IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"

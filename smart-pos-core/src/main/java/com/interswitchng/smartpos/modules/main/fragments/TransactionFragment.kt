@@ -103,7 +103,7 @@ class TransactionFragment: BaseFragment(TAG) {
                     }
                     4 -> {
                         val payment = payment {
-                            type = PaymentModel.TransactionType.BILL_PAYMENT
+                            type = PaymentModel.TransactionType.CASH_OUT
                         }
                         navigate(TransactionFragmentDirections.iswActionGotoFragmentAmount(payment))
                     }

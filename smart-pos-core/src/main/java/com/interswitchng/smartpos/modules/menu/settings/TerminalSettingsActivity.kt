@@ -247,6 +247,14 @@ class TerminalSettingsActivity : MenuActivity() {
                 // hide server url field
                 etServerUrl.isEnabled = false
 
+                //agentId not required if not kimono
+                etAgentId.error = null
+                //agentEmail not required if not kimono
+                etAgentEmail.error = null
+
+                etAgentId.isEnabled = false
+                etAgentEmail.isEnabled = false
+
                 // show server and port fields
                 etServerPort.isEnabled = true
                 etServerIP.isEnabled = true

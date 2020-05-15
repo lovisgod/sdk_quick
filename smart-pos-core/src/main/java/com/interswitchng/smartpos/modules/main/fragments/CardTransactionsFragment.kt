@@ -117,9 +117,9 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 transactionType = TransactionType.Refund
             }
 
-            PaymentModel.TransactionType.BILL_PAYMENT -> {
-                cardViewModel.setTransactionType(PaymentModel.TransactionType.BILL_PAYMENT)
-                transactionType = TransactionType.BillPayment
+            PaymentModel.TransactionType.CASH_OUT -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.CASH_OUT)
+                transactionType = TransactionType.CashOut
             }
         }
     }

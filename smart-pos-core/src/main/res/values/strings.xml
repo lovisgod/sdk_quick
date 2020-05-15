@@ -275,6 +275,7 @@
         <item>Reversal</item>
         <item>Refund</item>
         <item>Bill Payment</item>
+        <item>Cash Out</item>
     </string-array>
 
 </resources>

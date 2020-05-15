@@ -5,6 +5,7 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 
 
@@ -26,14 +27,21 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
 
 
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
+        val quickTellerConfig = PrintStringConfiguration(isBold = true, displayCenter = true)
+        var quickTellerText = pairString("", "")
+
+        if (info.type == TransactionType.CashOut) {
+            quickTellerText = pairString("", "Quickteller Paypoint", stringConfig = quickTellerConfig)
+        }
+
         val txnType = pairString("", info.type.toString(), stringConfig = typeConfig)
         val paymentType = pairString("channel", info.paymentType.toString())
-        val stan = pairString("stan", info.stan)
+        val stan = pairString("stan", info.stan.padStart(6, '0'))
         val date = pairString("date", info.dateTime)
         val dateTime = pairString("Date Time", info.originalDateTime)
         val amount = pairString("amount", DisplayUtils.getAmountWithCurrency(info.amount))
         val authCode = pairString("authentication code", info.authorizationCode)
-        val list = mutableListOf(txnType, paymentType, stan, date, dateTime, line, amount, line)
+        val list = mutableListOf(quickTellerText, txnType, paymentType, stan, date, dateTime, line, amount, line)
 
         // check if its card transaction
         if (info.cardPan.isNotEmpty()) {
@@ -52,6 +60,12 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
             val pinStatus = pairString("", info.pinStatus)
 
             list.addAll(listOf(cardPan, cardExpiry, authCode, pinStatus, line))
+
+            if (info.type == TransactionType.CashOut) {
+                list.remove(cardExpiry)
+                list.remove(authCode)
+                list.remove(pinStatus)
+            }
         }
 
 

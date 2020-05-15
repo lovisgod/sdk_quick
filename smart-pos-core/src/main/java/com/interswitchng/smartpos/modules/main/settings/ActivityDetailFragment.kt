@@ -47,7 +47,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
             TransactionType.Completion.ordinal -> getString(R.string.isw_completion)
             TransactionType.Refund.ordinal -> getString(R.string.isw_refund)
             TransactionType.Reversal.ordinal -> getString(R.string.isw_reversal)
-            TransactionType.BillPayment.ordinal -> getString(R.string.isw_bill_payment)
+            TransactionType.CashOut.ordinal -> getString(R.string.isw_cash_out)
             else -> EMPTY_STRING
         }
 
@@ -74,7 +74,7 @@ class ActivityDetailFragment : BaseFragment(TAG) {
                     "Completion" -> PaymentModel.TransactionType.COMPLETION
                     "Refund" -> PaymentModel.TransactionType.REFUND
                     "Reversal" -> PaymentModel.TransactionType.REVERSAL
-                    "Bill Payment" -> PaymentModel.TransactionType.BILL_PAYMENT
+                    "Cash Out" -> PaymentModel.TransactionType.CASH_OUT
                     else -> PaymentModel.TransactionType.CARD_PURCHASE
                 }
             }

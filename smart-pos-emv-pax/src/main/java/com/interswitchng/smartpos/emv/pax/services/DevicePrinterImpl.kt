@@ -60,7 +60,7 @@ object DevicePrinterImpl : DevicePrinter {
         for (item in slip) printItem(printer, item)
 
         // print thank you message at end of slip
-        val thankYouMsg = PrintObject.Data("Thanks for using PAX POS", PrintStringConfiguration(displayCenter = true))
+        val thankYouMsg = PrintObject.Data("Powered by InterSwitch", PrintStringConfiguration(displayCenter = true))
         printItem(printer, thankYouMsg)
 
         // print users copy

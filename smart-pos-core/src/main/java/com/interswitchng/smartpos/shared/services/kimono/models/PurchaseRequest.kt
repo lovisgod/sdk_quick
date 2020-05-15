@@ -509,13 +509,13 @@ internal class TerminalInformation {
         val agentId = InputValidator(agentId).isNotEmpty().isNumber()
 
         //assign error message for field
-        if (agentId.hasError) error.agentId = agentId.message
+        if (isKimono && agentId.hasError) error.agentId = agentId.message
 
         // validate agentEmail value
         val agentEmail = InputValidator(agentEmail).isNotEmpty().isAlphaNumeric()
 
         //assign error message for field
-        if (agentId.hasError) error.agentEmail = agentEmail.message
+        if (isKimono && agentId.hasError) error.agentEmail = agentEmail.message
 
 
         // validate terminal capabilities value
