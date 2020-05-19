@@ -13,7 +13,7 @@ enum class PaymentType {
 
     override fun toString(): String {
         val string =  when {
-            this == Card -> "Credit/Debit Card Payment"
+            this == Card -> "Card Payment"
             this == QR -> "QR Code Payment"
             this == USSD -> "USSD Payment"
             else -> super.toString()

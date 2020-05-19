@@ -386,10 +386,11 @@ internal class IsoServiceImpl(
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
+                val retrievalNumber = it.getObjectValue<String>(37) ?: ""
                 //val scripts = it.getObjectValue<String>(55)
                 return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan,
                         transmissionDateTime = timeDateNow,
-                        month = month, time = time)
+                        month = month, time = time, rrn = retrievalNumber)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
@@ -481,8 +482,9 @@ internal class IsoServiceImpl(
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
+                val retrievalNumber = it.getObjectValue<String>(37) ?: ""
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, transmissionDateTime = timeDateNow)
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, transmissionDateTime = timeDateNow, rrn = retrievalNumber)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -586,8 +588,9 @@ internal class IsoServiceImpl(
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
+                val retrievalNumber = it.getObjectValue<String>(37) ?: ""
                 //val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = "")
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = "", rrn = retrievalNumber)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -788,7 +791,8 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = scripts, transmissionDateTime = transmissionDateTime)
+                val retrievalNumber = it.getObjectValue<String>(37) ?: ""
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = scripts, transmissionDateTime = transmissionDateTime, rrn = retrievalNumber)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
@@ -904,7 +908,8 @@ internal class IsoServiceImpl(
             return responseMsg.message.let {
                 val authCode = it.getObjectValue<String?>(38) ?: ""
                 val code = it.getObjectValue<String>(39)
-                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan)
+                val retrievalNumber = it.getObjectValue<String>(37) ?: ""
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, rrn = retrievalNumber)
             }
         } catch (e: Exception) {
             //logger.log(e.localizedMessage)
@@ -1015,7 +1020,8 @@ internal class IsoServiceImpl(
                 val authCode = it.getObjectValue(38) ?: ""
                 val code = it.getObjectValue<String>(39)
                 val scripts = it.getObjectValue<String>(55)
-                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = scripts)
+                val retrievalNumber = it.getObjectValue<String>(37) ?: ""
+                return@let TransactionResponse(responseCode = code, authCode = authCode, stan = stan, scripts = scripts, rrn = retrievalNumber)
             }
         } catch (e: Exception) {
             logger.log(e.localizedMessage)

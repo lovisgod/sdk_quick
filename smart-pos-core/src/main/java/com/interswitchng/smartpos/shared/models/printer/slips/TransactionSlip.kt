@@ -67,8 +67,9 @@ abstract class TransactionSlip(private val terminal: TerminalInfo, private val s
     internal fun getTerminalInfo(): List<PrintObject> {
         val merchantName = pairString("merchant", terminal.merchantNameAndLocation)
         val terminalId = pairString("Terminal Id", terminal.terminalId)
+        val merchantId = pairString("Merchant Id", terminal.merchantId)
 
-        return listOf(merchantName, terminalId, line)
+        return listOf(merchantName, terminalId, merchantId, line)
     }
 
 
@@ -108,7 +109,8 @@ abstract class TransactionSlip(private val terminal: TerminalInfo, private val s
         }
 
         val tel = pairString("TEL", status.telephone)
-        return printList + listOf(tel, line)
+        val retainReceiptMsg = pairString("", "Please retain your receipt", stringConfig = PrintStringConfiguration(displayCenter = true))
+        return printList + listOf(tel, line, retainReceiptMsg, line)
     }
 
 

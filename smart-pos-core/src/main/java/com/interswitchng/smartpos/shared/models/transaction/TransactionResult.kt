@@ -99,7 +99,8 @@ data class TransactionResult(
                     authorizationCode,
                     pinStatus,
                     originalTransmissionDateTime,
-                    responseCode)
+                    responseCode,
+                    rrn)
 
 
     /// function to extract

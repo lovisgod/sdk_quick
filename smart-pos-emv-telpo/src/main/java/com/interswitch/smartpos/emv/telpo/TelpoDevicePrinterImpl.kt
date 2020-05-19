@@ -33,8 +33,20 @@ class TelpoDevicePrinterImpl constructor(context: Context) : DevicePrinter {
         for (item in slip) printItem(item)
 
         // print thank you message at end of slip
-        val thankYouMsg = PrintObject.Data("Thanks for using InterSwitch POS", PrintStringConfiguration(displayCenter = true))
+        val thankYouMsg = PrintObject.Data("Powered By InterSwitch", PrintStringConfiguration(displayCenter = true))
         printItem(thankYouMsg)
+
+        // print pos version at end of slip
+        val posVersion = PrintObject.Data("SmartPOS version 1.0.0", PrintStringConfiguration(displayCenter = true))
+        printItem(posVersion)
+
+        // print phone number at end of slip
+        val phoneNumber = PrintObject.Data("Tel: 016283888", PrintStringConfiguration(displayCenter = true))
+        printItem(phoneNumber)
+
+        // print email at end of slip
+        val email = PrintObject.Data("Email: support@Interswitchng.com", PrintStringConfiguration(displayCenter = true))
+        printItem(email)
 
         // print users copy
         val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))

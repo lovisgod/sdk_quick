@@ -63,6 +63,18 @@ object DevicePrinterImpl : DevicePrinter {
         val thankYouMsg = PrintObject.Data("Powered by InterSwitch", PrintStringConfiguration(displayCenter = true))
         printItem(printer, thankYouMsg)
 
+        // print pos version at end of slip
+        val posVersion = PrintObject.Data("SmartPOS version 1.0.0", PrintStringConfiguration(displayCenter = true))
+        printItem(printer, posVersion)
+
+        // print phone number at end of slip
+        val phoneNumber = PrintObject.Data("Tel: 016283888", PrintStringConfiguration(displayCenter = true))
+        printItem(printer, phoneNumber)
+
+        // print email at end of slip
+        val email = PrintObject.Data("Email: support@Interswitchng.com", PrintStringConfiguration(displayCenter = true))
+        printItem(printer, email)
+
         // print users copy
         val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
         printItem(printer, userCopy)

@@ -154,7 +154,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         stan = purchaseResponse.stan,
                         authCode =  purchaseResponse.authCode,// data.authCode,
                         scripts =  purchaseResponse.stan,
-                        responseDescription = purchaseResponse.description//data.description
+                        responseDescription = purchaseResponse.description,//data.description
+                        rrn = purchaseResponse.referenceNumber
                 )
             }
 
@@ -193,7 +194,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         stan = purchaseResponse.stan,
                         authCode = purchaseResponse.authCode,// data.authCode,
                         scripts = purchaseResponse.stan,
-                        responseDescription = purchaseResponse.description//data.description
+                        responseDescription = purchaseResponse.description,//data.description
+                        rrn = purchaseResponse.referenceNumber
 
                 )
             }
@@ -286,7 +288,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         stan = purchaseResponse.stan,
                         authCode =  purchaseResponse.authCode,// data.authCode,
                         scripts =  purchaseResponse.stan,
-                        responseDescription = purchaseResponse.description//data.description
+                        responseDescription = purchaseResponse.description,//data.description
+                        rrn = purchaseResponse.referenceNumber
                 )
             }
 
@@ -370,7 +373,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         stan = purchaseResponse.stan,
                         authCode =  purchaseResponse.authCode,// data.authCode,
                         scripts =  purchaseResponse.stan,
-                        responseDescription = purchaseResponse.description//data.description
+                        responseDescription = purchaseResponse.description,//data.description
+                        rrn = purchaseResponse.referenceNumber
                 )
             }
 
@@ -419,7 +423,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         stan = purchaseResponse.stan,
                         authCode =  purchaseResponse.authCode,// data.authCode,
                         scripts =  purchaseResponse.stan,
-                        responseDescription = purchaseResponse.description//data.description
+                        responseDescription = purchaseResponse.description,//data.description
+                        rrn = purchaseResponse.referenceNumber
                 )
             }
 
@@ -461,7 +466,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                             stan = purchaseResponse.stan,
                             authCode =  purchaseResponse.authCode,// data.authCode,
                             scripts =  purchaseResponse.stan,
-                            responseDescription = purchaseResponse.description//data.description
+                            responseDescription = purchaseResponse.description,//data.description
+                            rrn = purchaseResponse.referenceNumber
                     )
                 }
 
@@ -506,7 +512,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         stan = purchaseResponse.stan,
                         authCode =  purchaseResponse.authCode,// data.authCode,
                         scripts =  purchaseResponse.stan,
-                        responseDescription = purchaseResponse.description//data.description
+                        responseDescription = purchaseResponse.description,//data.description
+                        rrn = purchaseResponse.referenceNumber
                 )
             }
 
