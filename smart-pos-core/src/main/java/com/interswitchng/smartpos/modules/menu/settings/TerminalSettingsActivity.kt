@@ -338,7 +338,7 @@ class TerminalSettingsActivity : MenuActivity() {
         }
         val serverIp = terminalInfo?.serverIp ?: Constants.ISW_TERMINAL_IP
         val serverPort = terminalInfo?.serverPort ?: BuildConfig.ISW_TERMINAL_PORT
-        val serverUrl = terminalInfo?.serverUrl ?: Constants.ISW_KIMONO_URL
+        val serverUrl = terminalInfo?.serverUrl ?: Constants.ISW_KIMONO_BASE_URL
 
 
         // server config

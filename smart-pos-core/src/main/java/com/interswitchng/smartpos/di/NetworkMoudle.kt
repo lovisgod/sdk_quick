@@ -6,11 +6,13 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.utilities.ToStringConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -88,7 +90,10 @@ internal val networkModule = module {
 
 //        val kimonoServiceUrl = "https://qa.interswitchng.com/"
 
-        val kimonoServiceUrl = "https://kimono.interswitchng.com/"
+        //val kimonoServiceUrl = "https://kimono.interswitchng.com/"
+        val store: KeyValueStore = get()
+        val terminalInfo = TerminalInfo.get(store)
+        val kimonoServiceUrl = terminalInfo?.serverUrl ?: Constants.ISW_KIMONO_BASE_URL
         val builder = Retrofit.Builder()
                 .addConverterFactory(SimpleXmlConverterFactory.create())
               .addConverterFactory(ToStringConverterFactory())
