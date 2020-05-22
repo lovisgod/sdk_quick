@@ -155,7 +155,7 @@ class TransactionFragment: BaseFragment(TAG) {
 
         isw_cash_out_card.setOnClickListener {
             val payment = PaymentModel()
-            payment.type = PaymentModel.TransactionType.CARD_PURCHASE
+            payment.type = PaymentModel.TransactionType.CASH_OUT
             val direction = TransactionFragmentDirections.iswActionGotoFragmentAmount(payment)
             navigate(direction)
         }

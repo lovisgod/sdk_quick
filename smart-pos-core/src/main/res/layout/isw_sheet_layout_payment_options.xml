@@ -141,6 +141,7 @@
         app:rippleColor="@android:color/darker_gray"
         app:strokeColor="@color/iswColorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/isw_refund"
+        android:visibility="gone"
         app:strokeWidth="1dp" />
 
     <com.google.android.material.button.MaterialButton
