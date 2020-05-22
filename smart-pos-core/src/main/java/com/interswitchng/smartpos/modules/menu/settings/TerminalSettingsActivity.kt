@@ -237,6 +237,9 @@ class TerminalSettingsActivity : MenuActivity() {
                 etServerPort.isEnabled = false
                 etServerIP.isEnabled = false
 
+                etAgentId.isEnabled = true
+                etAgentEmail.isEnabled = true
+
                 // show server url field
                 etServerUrl.isEnabled = true
 
