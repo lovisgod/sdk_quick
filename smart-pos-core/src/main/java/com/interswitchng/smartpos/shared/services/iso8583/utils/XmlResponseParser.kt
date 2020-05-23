@@ -73,7 +73,7 @@ class XmlPullParserHandlerBP {
     private var text: String? = null
 
     fun contains(tagname: String): Boolean {
-        return tagname.equals("reversalResponseWithoutOriginalDate", ignoreCase = true) || tagname.equals("reversalResponse", ignoreCase = true) || tagname.equals("completionResponse", ignoreCase = true) || tagname.equals("reservationResponse", ignoreCase = true) || tagname.equals("purchaseResponse", ignoreCase = true) || tagname.equals("channelResponse", ignoreCase = true) || tagname.equals("ifisBillPaymentCashoutResponse", ignoreCase = true)
+        return tagname.equals("reversalResponseWithoutOriginalDate", ignoreCase = true) || tagname.equals("reversalResponse", ignoreCase = true) || tagname.equals("completionResponse", ignoreCase = true) || tagname.equals("reservationResponse", ignoreCase = true) || tagname.equals("purchaseResponse", ignoreCase = true) || tagname.equals("channelResponse", ignoreCase = true) || tagname.equals("BillPaymentResponse", ignoreCase = true)
     }
 
     fun parse(inputStream: InputStream): BillPaymentResponse {
@@ -96,26 +96,23 @@ class XmlPullParserHandlerBP {
                         // add employee object to list
                         return billPaymentResponse
                     } else if (tagname.equals("authId", ignoreCase = true)) {
+                        billPaymentResponse.authId = text.toString()
+                    } else if (tagname.equals("stan", ignoreCase = true)) {
                         billPaymentResponse.stan = text.toString()
-                    } else if (tagname.equals("responseCode", ignoreCase = true)) {
+                    } else if (tagname.equals("field39", ignoreCase = true)) {
                         billPaymentResponse.responseCode = text.toString()
-                    } else if (tagname.equals("responseMessage", ignoreCase = true)) {
+                    } else if (tagname.equals("description", ignoreCase = true)) {
                         billPaymentResponse.description = text.toString()
                     } else if (tagname.equals("transactionId", ignoreCase = true)) {
                         billPaymentResponse.transactionId = text.toString()
+                    } else if (tagname.equals("uuid", ignoreCase = true)) {
+                        billPaymentResponse.uuid = text.toString()
                     } else if (tagname.equals("transactionRef", ignoreCase = true)) {
                         billPaymentResponse.transactionRef = text.toString()
                     } else if (tagname.equals("retrievalRefNumber", ignoreCase = true)) {
                         billPaymentResponse.retrievalRefNumber = text.toString()
-                    } else if (tagname.equals("biller", ignoreCase = true)) {
-                        billPaymentResponse.biller = text.toString()
-                    } else if (tagname.equals("customerDescription", ignoreCase = true)) {
-                        billPaymentResponse.customerDescription = text.toString()
-                    } else if (tagname.equals("itemDescription", ignoreCase = true)) {
-                        billPaymentResponse.itemDescription = text.toString()
-                    } else if (tagname.equals("authId", ignoreCase = true)) {
-                        billPaymentResponse.authId = text.toString()
                     }
+
                     else -> {
                     }
                 }

@@ -19,6 +19,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandlerBP
+import com.interswitchng.smartpos.shared.services.kimono.models.BillPaymentResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.utilities.Logger
@@ -209,11 +210,46 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     }
 
     override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
-        val requestBody: String = PurchaseRequest.toBillPaymentString(device, terminalInfo, txnInfo)
+        val requestCashOutBody: String = PurchaseRequest.toCashOutRequest(device, terminalInfo, txnInfo)
+        val bodyCashOut = RequestBody.create(MediaType.parse("text/xml"), requestCashOutBody)
+
+        try {
+            val responseBody = httpService.makeCashOutInquiry(bodyCashOut).run()
+            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
+
+
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse = XmlPullParserHandlerBP().parse(inputStream)
+
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = responseBody.message()
+                )
+            } else {
+                cashOutRequest(purchaseResponse, terminalInfo, txnInfo)
+            }
+
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+            //  initiateReversal(request, request.stan) // TODO change stan to authId
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+        }
+
+    }
+
+    private fun cashOutRequest(response: BillPaymentResponse, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
+
+
+        val requestBody: String = PurchaseRequest.toBillPaymentString(response, terminalInfo, txnInfo)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {
-            val responseBody = httpService.makePurchase(body).run()
+            val responseBody = httpService.makeCashOutPayment(body).run()
             var responseXml = responseBody.body()?.bytes()?.let { String(it) }
 
 

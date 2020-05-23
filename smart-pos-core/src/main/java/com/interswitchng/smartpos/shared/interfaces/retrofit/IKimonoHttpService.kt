@@ -40,7 +40,13 @@ internal interface IKimonoHttpService {
     fun makePurchase(@Body purchaseRequest: RequestBody): Simple<ResponseBody>
 //    fun makePurchase(@Body purchaseRequest: PurchaseRequest): Simple<ResponseBody>
 
+    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
+    @POST(Constants.KIMONO_CASH_OUT_ENDPOINT_INQUIRY)
+    fun makeCashOutInquiry(@Body purchaseRequest: RequestBody): Simple<ResponseBody>
 
+    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
+    @POST(Constants.KIMONO_CASH_OUT_ENDPOINT_PAY)
+    fun makeCashOutPayment(@Body purchaseRequest: RequestBody): Simple<ResponseBody>
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)

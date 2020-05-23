@@ -16,8 +16,13 @@ object Constants {
     internal const val KIMONO_KEY_END_POINT = "/kmw/keydownloadservice"
 
 
-//    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
-internal const val KIMONO_END_POINT = "kmw/kimonoservice"
+    //    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
+    internal const val KIMONO_END_POINT = "kmw/kimonoservice"
+
+    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "kimonotms/paybills/inquire"
+
+    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "kimonotms/paybills/pay"
+
     // EMAIL
     internal const val EMAIL_END_POINT = "mail/send"
     internal const val EMAIL_TEMPLATE_ID = "d-c33c9a651cea40dd9b0ee4615593dcb4"
@@ -122,7 +127,7 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
         const val ISW_TOKEN_BASE_URL = "https://passport.interswitchng.com/passport/"
         const val ISW_IMAGE_BASE_URL = "https://mufasa.interswitchng.com/p/paymentgateway/"
         const val ISW_KIMONO_URL = "https://kimono.interswitchng.com/kmw/v2/kimonoservice"
-        const val ISW_KIMONO_BASE_URL = "https://kimono.interswitchng.com/"
+        const val ISW_KIMONO_BASE_URL = "https://webpay.interswitchng.com/"
         const val ISW_TERMINAL_IP = "196.6.103.73"
         const val ISW_KEY_DOWNLOAD_URL = "http://kimono.interswitchng.com/kmw/keydownloadservice"
     }
@@ -132,7 +137,7 @@ internal const val KIMONO_END_POINT = "kmw/kimonoservice"
         const val ISW_TOKEN_BASE_URL = "https://passport.interswitchng.com/passport/"
         const val ISW_IMAGE_BASE_URL = "https://mufasa.interswitchng.com/p/paymentgateway/"
         const val ISW_KIMONO_URL = "https://qa.interswitchng.com/kmw/v2/kimonoservice"
-        const val ISW_KIMONO_BASE_URL = "https://qa.interswitchng.com/"
+        const val ISW_KIMONO_BASE_URL = "https://webpay.interswitchng.com/"
         const val ISW_TERMINAL_IP = "196.6.103.72"
 
     }
