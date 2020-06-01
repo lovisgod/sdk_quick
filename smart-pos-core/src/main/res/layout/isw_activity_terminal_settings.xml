@@ -127,6 +127,41 @@
 
 
                 <TextView
+                    android:id="@+id/tvIsKimono3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/isw_content_small_margin"
+                    android:layout_weight="3"
+                    android:gravity="bottom"
+                    android:text="Switch To Kimono 3"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Switch
+                    android:id="@+id/switchToKimono3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:padding="@dimen/isw_content_small_margin"
+                    android:textSize="16sp"
+                    android:theme="@style/ISW.Switch"
+                    tools:checked="true" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_margin"
+                android:layout_marginTop="@dimen/isw_content_margin"
+                android:layout_marginEnd="@dimen/isw_content_margin"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                android:visibility="gone">
+
+
+                <TextView
                     android:id="@+id/tvIsNibbsTest"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -601,13 +636,75 @@
 
             </LinearLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/customerIdDownloadContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/isw_content_padding"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="@dimen/isw_content_padding"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tvAgentId"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="Download Agent Id"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/btnDownloadAgentId"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvAgentIdDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvAgentId" />
+
+                <ImageView
+                    android:id="@+id/btnDownloadAgentId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="15dp"
+                    android:src="@drawable/isw_ic_download"
+                    android:tint="@color/iswColorPrimaryDark"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/progressAgentIdDownload"
+                    style="@style/ISW.Progress"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="15dp"
+                    android:layout_marginStart="@dimen/isw_content_padding"
+                    android:layout_marginEnd="@dimen/isw_content_padding"
+                    android:indeterminateOnly="true"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/iswColorSecondaryIcon"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             <LinearLayout
                 android:id="@+id/agentId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/isw_content_margin"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -650,7 +747,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/isw_content_margin"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -670,6 +767,7 @@
                     android:layout_marginStart="@dimen/isw_content_margin"
                     android:layout_marginEnd="@dimen/isw_content_margin"
                     android:textColor="@color/iswTextColorDark"
+                    android:visibility="visible"
                     app:hintEnabled="false">
 
 

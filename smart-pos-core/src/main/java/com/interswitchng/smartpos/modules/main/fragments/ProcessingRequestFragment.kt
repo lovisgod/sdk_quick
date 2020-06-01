@@ -175,7 +175,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 val txnInfo =
                         TransactionInfo.fromEmv(emvData, paymentModel, PurchaseType.Card, accountType)
                 var responseMsg: String
-                responseMsg = if (transactionType == TransactionType.CashOut) {
+                responseMsg = if (transactionType == TransactionType.CashOutPay) {
                     response.responseDescription ?: "UnknownError"
                 } else {
                     IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
@@ -190,7 +190,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                         paymentType = PaymentType.Card,
                         dateTime = DisplayUtils.getIsoString(now),
                         amount = paymentModel.amount.toString(),
-                        type = transactionType,
+                        type = response.type,
                         authorizationCode = response.authCode,
                         responseMessage = responseMsg,
                         responseCode = response.responseCode,

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
+import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
 import kotlinx.coroutines.launch
@@ -20,6 +21,9 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
 
     private val _configDownloadSuccess = MutableLiveData<Boolean>()
     val configDownloadSuccess: LiveData<Boolean> = _configDownloadSuccess
+
+    private val _agentInfo = MutableLiveData<AgentIdResponse>()
+    val agentInfo: LiveData<AgentIdResponse> = _agentInfo
 
 
     fun downloadKeys(terminalId: String, ip: String, port: Int, isKimono: Boolean, isNibbsTest: Boolean) {
@@ -40,6 +44,16 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
             //Logger.with("Settings ViewModel").logErr(isoService.downloadTerminalParameters(terminalId,ip,port).toString())
         println("Settings ViewModel : $isSuccessful")
     }
+    }
+
+    fun downloadAgentInfoDownload(terminalId: String, isKimono: Boolean) {
+        val isoService: IsoService = get { parametersOf(isKimono) }
+        uiScope.launch {
+            val agentResponse = withContext(ioScope) { isoService.downloadAgentId(terminalId) }
+            _agentInfo.value = agentResponse
+            //Logger.with("Settings ViewModel").logErr(isoService.downloadTerminalParameters(terminalId,ip,port).toString())
+            println("Settings ViewModel : $agentResponse")
+        }
     }
 
 

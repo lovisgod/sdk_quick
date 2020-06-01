@@ -6,7 +6,11 @@ import com.interswitchng.smartpos.shared.utilities.KeysUtils
 
 object Constants {
 
-    internal const val PAYMENT_CODE = "04358001"
+    internal const val PAYMENT_CODE_1 = "04376801"
+    internal const val PAYMENT_CODE_2 = "04377102"
+    internal const val PAYMENT_CODE_3 = "04377203"
+    internal const val PAYMENT_CODE_4 = "04376904"
+
     // URL END POINTS
     internal const val CODE_END_POINT = "till.json"
     internal const val TRANSACTION_STATUS_QR = "transactions/qr"
@@ -14,14 +18,17 @@ object Constants {
     internal const val BANKS_END_POINT = "till/short-codes/1"
     internal const val AUTH_END_POINT = "oauth/token"
     internal const val KIMONO_KEY_END_POINT = "/kmw/keydownloadservice"
+    internal const val AGENT_ID = "https://pos-k8s-prod.bankly.ng/api/PosTerminal/GetAssignedUser/"
 
 
     //    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
     internal const val KIMONO_END_POINT = "kmw/kimonoservice"
 
-    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "kimonotms/paybills/inquire"
+    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://webpay.interswitchng.com/kimonotms/paybills/inquire"
 
-    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "kimonotms/paybills/pay"
+    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://webpay.interswitchng.com/kimonotms/paybills/pay"
+
+    internal const val KIMONO_3_END_POINT = "https://webpay.interswitchng.com/kmw/kimonoservice"
 
     // EMAIL
     internal const val EMAIL_END_POINT = "mail/send"

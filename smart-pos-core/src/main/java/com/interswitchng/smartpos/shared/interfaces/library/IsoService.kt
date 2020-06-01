@@ -4,6 +4,7 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
+import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 
 /**
  * This interface provides operations that target the ISO-8385 message specification,
@@ -22,6 +23,14 @@ internal interface IsoService {
     fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
         return false
     }
+
+    /**
+     * Uses the provided agentId to perform cashOut transaction
+     *
+     * @param terminalId  a string representing the configured terminal id
+     * @return     boolean expression indicating the success or failure status of the key exchange
+     */
+    fun downloadAgentId(terminalId: String): AgentIdResponse?
 
 
     /**

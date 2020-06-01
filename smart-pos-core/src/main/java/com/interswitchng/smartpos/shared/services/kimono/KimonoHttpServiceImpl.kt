@@ -3,13 +3,20 @@ package com.interswitchng.smartpos.shared.services.kimono
 import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
+import com.interswitchng.smartpos.shared.interfaces.library.TransactionLogService
+import com.interswitchng.smartpos.shared.interfaces.retrofit.IAgentService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
+import com.interswitchng.smartpos.shared.models.transaction.PaymentType
+import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
+import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.IccData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
@@ -19,9 +26,11 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandlerBP
+import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.BillPaymentResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -33,10 +42,12 @@ import kotlin.coroutines.suspendCoroutine
 internal class KimonoHttpServiceImpl(private val context: Context,
                                      private val store: KeyValueStore,
                                      private val device: POSDevice,
+                                     private val transactionLogService: TransactionLogService,
+                                     private val httpService: IKimonoHttpService,
+                                     private val agentService: IAgentService) : IsoService {
 
-                                     private val httpService: IKimonoHttpService) : IsoService{
 
-
+    private lateinit var transactionResult: TransactionResult
 //
 //    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
 //
@@ -76,6 +87,22 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 //        return true
 //    }
 
+    override fun downloadAgentId(terminalId: String): AgentIdResponse? {
+
+        try {
+            val responseBody = agentService.getAgentId(Constants.AGENT_ID + terminalId).execute()
+
+            return if (responseBody.isSuccessful) {
+                responseBody.body()
+            } else {
+                AgentIdResponse()
+            }
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+        }
+        return AgentIdResponse()
+    }
 
     override fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
 
@@ -130,11 +157,11 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
 
     override  fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-      val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)
+        val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {
-           val responseBody = httpService.makePurchase(body).run()
+            val responseBody = httpService.makePurchase(body).run()
             var responseXml= responseBody.body()?.bytes()?.let { String(it) }
 
 
@@ -163,7 +190,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
         } catch (e: Exception) {
             //logger.log(e.localizedMessage)
             e.printStackTrace()
-          //  initiateReversal(request, request.stan) // TODO change stan to authId
+            //  initiateReversal(request, request.stan) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
         }
 
@@ -214,22 +241,103 @@ internal class KimonoHttpServiceImpl(private val context: Context,
         val bodyCashOut = RequestBody.create(MediaType.parse("text/xml"), requestCashOutBody)
 
         try {
-            val responseBody = httpService.makeCashOutInquiry(bodyCashOut).run()
+            var url = Constants.KIMONO_CASH_OUT_ENDPOINT_INQUIRY
+            if (terminalInfo.isKimono3) {
+                url = Constants.KIMONO_3_END_POINT
+            }
+            val responseBody = httpService.makeCashOutInquiry(url, bodyCashOut).run()
             var responseXml = responseBody.body()?.bytes()?.let { String(it) }
 
 
             val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
             var purchaseResponse = XmlPullParserHandlerBP().parse(inputStream)
 
-            return if (!responseBody.isSuccessful || purchaseResponse == null) {
+            return if (!responseBody.isSuccessful || purchaseResponse.responseCode == null) {
                 TransactionResponse(
                         responseCode = IsoUtils.TIMEOUT_CODE,
                         authCode = "",
                         stan = "",
                         scripts = "",
-                        responseDescription = responseBody.message()
+                        responseDescription = responseBody.message(),
+                        type = TransactionType.CashOutInquiry
                 )
+            } else if (responseBody.isSuccessful && purchaseResponse.responseCode != "00") {
+
+                val now = Date()
+                val pinStatus = when {
+                    purchaseResponse.responseCode == IsoUtils.OK -> "PIN Verified"
+                    else -> "PIN Unverified"
+                }
+                transactionResult = TransactionResult(
+                        paymentType = PaymentType.Card,
+                        dateTime = DisplayUtils.getIsoString(now),
+                        amount = txnInfo.amount.toString(),
+                        type = TransactionType.CashOutInquiry,
+                        authorizationCode = purchaseResponse.authId,
+                        responseMessage = IsoUtils.getIsoResultMsg(purchaseResponse.responseCode)!!,
+                        responseCode = purchaseResponse.responseCode,
+                        cardPan = txnInfo.cardPAN,
+                        cardExpiry = txnInfo.cardExpiry,
+                        cardType = CardTransactionsFragment.CompletionData.cardType,
+                        stan = purchaseResponse.stan,
+                        pinStatus = pinStatus,
+                        AID = txnInfo.aid,
+                        code = "",
+                        telephone = purchaseResponse.customerId,
+                        icc = txnInfo.iccString,
+                        src = txnInfo.src,
+                        csn = txnInfo.csn,
+                        cardPin = txnInfo.cardPIN,
+                        cardTrack2 = txnInfo.cardTrack2,
+                        time = now.time
+                )
+                logTransaction(transactionResult)
+
+                TransactionResponse(
+                        responseCode = purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode = purchaseResponse.authId,//purchaseResponse.authCode,// data.authCode,
+                        scripts = purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description,//data.description
+                        name = purchaseResponse.customerDescription,
+                        ref = purchaseResponse.transactionRef,
+                        rrn = purchaseResponse.retrievalRefNumber,
+                        type = TransactionType.CashOutInquiry
+
+                )
+
+
             } else {
+
+                val now = Date()
+                val pinStatus = when {
+                    purchaseResponse.responseCode == IsoUtils.OK -> "PIN Verified"
+                    else -> "PIN Unverified"
+                }
+                transactionResult = TransactionResult(
+                        paymentType = PaymentType.Card,
+                        dateTime = DisplayUtils.getIsoString(now),
+                        amount = txnInfo.amount.toString(),
+                        type = TransactionType.CashOutInquiry,
+                        authorizationCode = purchaseResponse.authId,
+                        responseMessage = IsoUtils.getIsoResultMsg(purchaseResponse.responseCode)!!,
+                        responseCode = purchaseResponse.responseCode,
+                        cardPan = txnInfo.cardPAN,
+                        cardExpiry = txnInfo.cardExpiry,
+                        cardType = CardTransactionsFragment.CompletionData.cardType,
+                        stan = purchaseResponse.stan,
+                        pinStatus = pinStatus,
+                        AID = txnInfo.aid,
+                        code = "",
+                        telephone = purchaseResponse.customerId,
+                        icc = txnInfo.iccString,
+                        src = txnInfo.src,
+                        csn = txnInfo.csn,
+                        cardPin = txnInfo.cardPIN,
+                        cardTrack2 = txnInfo.cardTrack2,
+                        time = now.time
+                )
+                logTransaction(transactionResult)
                 cashOutRequest(purchaseResponse, terminalInfo, txnInfo)
             }
 
@@ -237,19 +345,23 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             logger.log(e.localizedMessage)
             e.printStackTrace()
             //  initiateReversal(request, request.stan) // TODO change stan to authId
-            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "", type = TransactionType.CashOutInquiry)
         }
 
     }
 
     private fun cashOutRequest(response: BillPaymentResponse, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
 
+        var url = Constants.KIMONO_CASH_OUT_ENDPOINT_PAY
+        if (terminalInfo.isKimono3) {
+            url = Constants.KIMONO_3_END_POINT
+        }
 
         val requestBody: String = PurchaseRequest.toBillPaymentString(response, terminalInfo, txnInfo)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {
-            val responseBody = httpService.makeCashOutPayment(body).run()
+            val responseBody = httpService.makeCashOutPayment(url, body).run()
             var responseXml = responseBody.body()?.bytes()?.let { String(it) }
 
 
@@ -262,7 +374,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         authCode = "",
                         stan = "",
                         scripts = "",
-                        responseDescription = responseBody.message()
+                        responseDescription = responseBody.message(),
+                        type = TransactionType.CashOutPay
                 )
             } else {
                 TransactionResponse(
@@ -273,7 +386,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         responseDescription = purchaseResponse.description,//data.description
                         name = purchaseResponse.customerDescription,
                         ref = purchaseResponse.transactionRef,
-                        rrn = purchaseResponse.retrievalRefNumber
+                        rrn = purchaseResponse.retrievalRefNumber,
+                        type = TransactionType.CashOutPay
 
                 )
             }
@@ -282,7 +396,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             logger.log(e.localizedMessage)
             e.printStackTrace()
             //  initiateReversal(request, request.stan) // TODO change stan to authId
-            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "")
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "", type = TransactionType.CashOutPay)
         }
     }
 
@@ -330,27 +444,23 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             }
 
 
-
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
-             initiateReversal(terminalInfo, transaction) // TODO change stan to authId
+            initiateReversal(terminalInfo, transaction) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = authCode, stan = "", scripts = "")
         }
     }
-
-
-
 
 
     override fun initiatePaycodePurchase(terminalInfo: TerminalInfo, code: String, paymentInfo: PaymentInfo): TransactionResponse? {
 
         val now = Date()
         val pan = IsoUtils.generatePan(code)
-       /// val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
+        /// val amount = String.format(Locale.getDefault(), "%012d", paymentInfo.amount)
         val stan = paymentInfo.getStan()
 //        val now = Date()
-       // val date = DateUtils.dateFormatter.format(now)
+        // val date = DateUtils.dateFormatter.format(now)
         val src = "501"
 
         // generate expiry date using current date
@@ -424,8 +534,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     }
 
 
-
-
     override fun initiateCompletion(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         try {
 
@@ -465,7 +573,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             }
 
 
-
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
@@ -481,33 +588,31 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
 
-                val responseBody = httpService.reservation(body).run()
-                var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+            val responseBody = httpService.reservation(body).run()
+            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
 
 
-                val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-                var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
 
-                return if (!responseBody.isSuccessful || purchaseResponse == null) {
-                    TransactionResponse(
-                            responseCode = IsoUtils.TIMEOUT_CODE,
-                            authCode = "",
-                            stan = "",
-                            scripts = "",
-                            responseDescription = responseBody.message()
-                    )
-                } else {
-                    TransactionResponse(
-                            responseCode =purchaseResponse.responseCode,//data.responseCode,
-                            stan = purchaseResponse.stan,
-                            authCode =  purchaseResponse.authCode,// data.authCode,
-                            scripts =  purchaseResponse.stan,
-                            responseDescription = purchaseResponse.description,//data.description
-                            rrn = purchaseResponse.referenceNumber
-                    )
-                }
-
-
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = responseBody.message()
+                )
+            } else {
+                TransactionResponse(
+                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        authCode =  purchaseResponse.authCode,// data.authCode,
+                        scripts =  purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description,//data.description
+                        rrn = purchaseResponse.referenceNumber
+                )
+            }
 
 
         } catch (e: Exception) {
@@ -526,7 +631,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
- try {
+        try {
             val responseBody = httpService.reversePurchase(body).run()
             var responseXml= responseBody.body()?.bytes()?.let { String(it) }
 
@@ -554,7 +659,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             }
 
 
-
         } catch (e: Exception) {
             logger.logErr(e.localizedMessage)
             e.printStackTrace()
@@ -565,6 +669,13 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     private fun ByteArray.base64encode(): String {
         return String(Base64.encode(this, Base64.NO_WRAP))
+    }
+
+
+    fun logTransaction(result: TransactionResult) {
+        // get and log transaction to storage
+        val resultLog = TransactionLog.fromResult(result)
+        transactionLogService.logTransactionResult(resultLog)
     }
 
     private fun generatePan(code: String): String {

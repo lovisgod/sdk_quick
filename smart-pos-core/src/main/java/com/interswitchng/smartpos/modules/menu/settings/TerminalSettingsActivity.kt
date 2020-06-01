@@ -23,6 +23,7 @@ import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
+import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.utilities.*
 import kotlinx.android.synthetic.main.isw_activity_terminal_settings.*
@@ -52,18 +53,25 @@ class TerminalSettingsActivity : MenuActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_terminal_settings)
 
+        if (store.getBoolean("SETUP")) {
+            proceedToMainActivity()
+        }
+
         setSupportActionBar(toolbar)
         if (isFromSettings) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.setDisplayShowHomeEnabled(true)
+            store.saveBoolean("SETUP", true)
         } else {
             if (TerminalInfo.get(store) != null) {
                 //That is when the enrollment should take place
 //                val intent = Intent(this, SetupActivity::class.java)
 //                startActivity(intent)
 //                finish()
+                store.saveBoolean("SETUP", true)
             } else {
                 //That is when the enrollment should take place
+                store.saveBoolean("SETUP", false)
             }
 
 
@@ -86,6 +94,10 @@ class TerminalSettingsActivity : MenuActivity() {
             // observe config download status
             configDownloadSuccess.observe(owner) {
                 it?.apply(::terminalConfigDownloaded)
+            }
+
+            agentInfo.observe(owner) {
+                it?.apply(::agentIdDownloaded)
             }
         }
     }
@@ -113,6 +125,12 @@ class TerminalSettingsActivity : MenuActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun proceedToMainActivity() {
+        IswPos.showMainActivity()
+        finish()
     }
 
     private fun setupButtons() {
@@ -210,6 +228,37 @@ class TerminalSettingsActivity : MenuActivity() {
             }
         }
 
+        btnDownloadAgentId.setOnClickListener {
+
+            // get fields
+            val terminalID: String = etTerminalId.text.toString()
+            val serverIp: String = etServerIP.text.toString()
+            val serverPort: String = etServerPort.text.toString()
+
+            // check validity
+            val isValid = isValidNibbsRequest(terminalID, serverIp, serverPort)
+
+            // validate terminal id
+            if (isValid) {
+                // disable and hide button
+                btnDownloadAgentId.isEnabled = false
+                btnDownloadAgentId.visibility = View.GONE
+
+                // set the text of terminal config
+                tvAgentId.text = getString(R.string.isw_title_downloading_agent_id)
+                // show progress bar
+                progressAgentIdDownload.visibility = View.VISIBLE
+                // hide download date
+                tvAgentIdDate.visibility = View.GONE
+
+                // trigger download terminal config
+                settingsViewModel.downloadAgentInfoDownload(
+                        terminalID,
+                        switchKimono.isChecked
+                )
+            }
+        }
+
         btnUploadConfig.setOnClickListener {
             // create intent to choose file
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
@@ -294,6 +343,7 @@ class TerminalSettingsActivity : MenuActivity() {
     private fun setupTexts(terminalInfo: TerminalInfo? = TerminalInfo.get(store)) {
         val terminalDate = store.getNumber(KEY_DATE_TERMINAL, -1)
         val keysDate = store.getNumber(KEY_DATE_KEYS, -1)
+        val agentDownloadDate = store.getNumber(AGENT_DATE_TERMINAL, -1)
 
 
         if (terminalDate != -1L) {
@@ -318,6 +368,17 @@ class TerminalSettingsActivity : MenuActivity() {
             tvKeys.text = getString(R.string.isw_title_download_keys)
         }
 
+        if (agentDownloadDate != -1L) {
+            val date = Date(agentDownloadDate)
+            val dateStr = DateUtils.timeOfDateFormat.format(date)
+            tvAgentIdDate.text = getString(R.string.isw_title_date, dateStr)
+            tvAgentId.text = getString(R.string.isw_title_agent_id_downloaded)
+        } else {
+            val message = "No Agent Id"
+            tvAgentIdDate.text = getString(R.string.isw_title_date, message)
+            tvAgentId.text = getString(R.string.isw_title_download_agent_id)
+        }
+
 
         // set up field texts with keyTerminalInfo
         terminalInfo?.apply {
@@ -335,6 +396,7 @@ class TerminalSettingsActivity : MenuActivity() {
             etAgentEmail.setText(agentEmail)
 
             switchKimono.isChecked = isKimono
+            switchToKimono3.isChecked = isKimono3
         }
         val serverIp = terminalInfo?.serverIp ?: Constants.ISW_TERMINAL_IP
         val serverPort = terminalInfo?.serverPort ?: BuildConfig.ISW_TERMINAL_PORT
@@ -429,6 +491,67 @@ class TerminalSettingsActivity : MenuActivity() {
         }
     }
 
+
+    private fun agentIdDownloaded(agentIdResponse: AgentIdResponse) {
+        // enable and show button
+        btnDownloadAgentId.isEnabled = true
+        btnDownloadAgentId.visibility = View.VISIBLE
+        // hide progress bar
+        progressAgentIdDownload.visibility = View.GONE
+        // show download date
+        tvAgentIdDate.visibility = View.VISIBLE
+
+
+        if (agentIdResponse.responseCode == "0") {
+            // get and store date
+            val date = Date()
+            store.saveNumber(AGENT_DATE_TERMINAL, date.time)
+
+            val message = agentIdResponse.responseMessage
+            tvAgentIdDate.text = getString(R.string.isw_title_date, message)
+            tvAgentId.text = getString(R.string.isw_agent_id_downloaded)
+
+            etAgentId.setText(agentIdResponse.phoneNumber.toString())
+            etMerchantNameAndLocation.setText(agentIdResponse.address.toString())
+
+            // set the drawable and color
+            btnDownloadAgentId.setImageResource(R.drawable.isw_ic_check)
+            val color = ContextCompat.getColor(this, R.color.iswTextColorSuccessDark)
+            ImageViewCompat.setImageTintList(
+                    btnDownloadAgentId,
+                    ColorStateList.valueOf(color)
+            )
+        } else if (agentIdResponse.responseCode == "1") {
+            // get and store date
+            val date = Date()
+            store.saveNumber(KEY_DATE_TERMINAL, date.time)
+
+            val message = agentIdResponse.responseMessage
+            tvAgentIdDate.text = getString(R.string.isw_title_date, message)
+            tvAgentId.text = getString(R.string.isw_title_error_downloading_agent_id)
+
+            // set the drawable and color
+            btnDownloadAgentId.setImageResource(R.drawable.isw_ic_error)
+            val color = ContextCompat.getColor(this, R.color.iswTextColorError)
+            ImageViewCompat.setImageTintList(
+                    btnDownloadAgentId,
+                    ColorStateList.valueOf(color)
+            )
+        } else {
+            val message = "No Agent Id"
+            tvAgentIdDate.text = getString(R.string.isw_title_date, message)
+            tvAgentId.text = getString(R.string.isw_title_error_downloading_agent_id)
+
+            // set the drawable and color
+            btnDownloadAgentId.setImageResource(R.drawable.isw_ic_error)
+            val color = ContextCompat.getColor(this, R.color.iswTextColorError)
+            ImageViewCompat.setImageTintList(
+                    btnDownloadAgentId,
+                    ColorStateList.valueOf(color)
+            )
+        }
+    }
+
     // function to extract terminal info form input elements
     private fun getTerminalInfo(): TerminalInformation {
         return TerminalInformation().apply {
@@ -444,6 +567,7 @@ class TerminalSettingsActivity : MenuActivity() {
             serverPort = etServerPort.getString()
             serverUrl = etServerUrl.getString()
             isKimono = switchKimono.isChecked
+            isKimono3 = switchToKimono3.isChecked
             agentId = etAgentId.getString()
             agentEmail = etAgentEmail.getString()
 
@@ -487,6 +611,7 @@ class TerminalSettingsActivity : MenuActivity() {
             // toast based on status
             if (isNew) toast("Config saved successfully!")
             else toast("Config has not changed!")
+            store.saveBoolean("SETUP", true)
         } else {
             setTerminalInfoError(terminalInfo.error)
             toast("Error: Invalid configuration loaded into terminal")
@@ -608,6 +733,7 @@ class TerminalSettingsActivity : MenuActivity() {
     companion object {
         const val KEY_DATE_TERMINAL = "key_download_terminal_date"
         const val KEY_DATE_KEYS = "key_download_key_date"
+        const val AGENT_DATE_TERMINAL = "agent_download_date"
         const val RC_FILE_READ = 49239
 
 

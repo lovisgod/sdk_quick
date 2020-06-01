@@ -6,13 +6,8 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants
-import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.UserStore
-import com.interswitchng.smartpos.shared.interfaces.retrofit.IAuthService
-import com.interswitchng.smartpos.shared.interfaces.retrofit.IEmailService
-import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
-import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.interfaces.retrofit.*
 import com.interswitchng.smartpos.shared.utilities.ToStringConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -28,6 +23,8 @@ const val AUTH_INTERCEPTOR = "auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
 const val RETROFIT_PAYMENT = "payment_retrofit"
 const val RETROFIT_KIMONO = "kimono_retrofit"
+const val RETROFIT_CUSTOMER_ID = "kimono_customer_id"
+
 
 internal val networkModule = module {
 
@@ -90,14 +87,12 @@ internal val networkModule = module {
 
 //        val kimonoServiceUrl = "https://qa.interswitchng.com/"
 
-        //val kimonoServiceUrl = "https://kimono.interswitchng.com/"
-        val store: KeyValueStore = get()
-        val terminalInfo = TerminalInfo.get(store)
-        val kimonoServiceUrl = terminalInfo?.serverUrl ?: Constants.ISW_KIMONO_BASE_URL
+        val kimonoServiceUrl = "https://webpay.interswitchng.com/"
+
         val builder = Retrofit.Builder()
                 .addConverterFactory(SimpleXmlConverterFactory.create())
               .addConverterFactory(ToStringConverterFactory())
-//                .addConverterFactory(GsonConverterFactory.create())...
+                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(kimonoServiceUrl)
                 .addCallAdapterFactory(SimpleCallAdapterFactory.create())
 
@@ -149,6 +144,38 @@ internal val networkModule = module {
         return@single builder.build()
     }
 
+    // retrofit email
+    single(RETROFIT_CUSTOMER_ID) {
+
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        val kimonoServiceUrl = "https://webpay.interswitchng.com/"
+        val builder = Retrofit.Builder()
+                .baseUrl(kimonoServiceUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+
+
+        // okhttp client for retrofit
+        val clientBuilder: OkHttpClient.Builder = get()
+        //  add auth interceptor for sendGrid
+        clientBuilder.addInterceptor(interceptor)
+                .addInterceptor { chain ->
+                    val request = chain.request().newBuilder()
+                            .addHeader("Content-type", "application/json")
+                            .build()
+
+                    chain.proceed(request)
+                }
+
+        // build and add client to retrofit
+        val client = clientBuilder.build()
+        builder.client(client)
+
+        return@single builder.build()
+    }
+
+
     // create Email service with retrofit
     single {
         val retrofit: Retrofit = get(RETROFIT_EMAIL)
@@ -167,6 +194,11 @@ internal val networkModule = module {
     single {
         val retrofit: Retrofit = get(RETROFIT_KIMONO)
         return@single retrofit.create(IKimonoHttpService::class.java)
+    }
+
+    single {
+        val retrofit: Retrofit = get(RETROFIT_CUSTOMER_ID)
+        return@single retrofit.create(IAgentService::class.java)
     }
 
 

@@ -30,7 +30,7 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
         val quickTellerConfig = PrintStringConfiguration(isBold = true, displayCenter = true)
         var quickTellerText = pairString("", "")
 
-        if (info.type == TransactionType.CashOut) {
+        if (info.type == TransactionType.CashOutPay) {
             quickTellerText = pairString("", "Quickteller Paypoint", stringConfig = quickTellerConfig)
         }
 
@@ -69,7 +69,7 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
 
             list.addAll(listOf(cardType, cardPan, cardExpiry, stan, authCode, pinStatus, line))
 
-            if (info.type == TransactionType.CashOut) {
+            if (info.type == TransactionType.CashOutPay) {
                 list.remove(cardExpiry)
                 list.remove(authCode)
                 list.remove(pinStatus)

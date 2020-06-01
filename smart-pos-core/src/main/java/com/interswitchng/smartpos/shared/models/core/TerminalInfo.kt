@@ -27,6 +27,7 @@ data class TerminalInfo(
         val callHomeTimeInMin: Int,
         val serverTimeoutInSec: Int,
         var isKimono: Boolean = false,
+        var isKimono3: Boolean = false,
         val capabilities: String? = null,
         var serverUrl: String = Constants.ISW_KIMONO_BASE_URL,
         var serverIp: String = Constants.ISW_TERMINAL_IP,

@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 
 import com.interswitchng.smartpos.shared.Constants.EMPTY_STRING
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 
 
 /**
@@ -18,5 +19,6 @@ data class TransactionResponse(
         val responseDescription: String? = null,
         val name: String = EMPTY_STRING,
         val ref: String = EMPTY_STRING,
-        val rrn: String = EMPTY_STRING
+        val rrn: String = EMPTY_STRING,
+        val type: TransactionType = TransactionType.CashOutInquiry
 )

@@ -2,8 +2,8 @@ package com.interswitchng.smartpos.shared.interfaces.retrofit
 
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
-import com.interswitchng.smartpos.shared.services.kimono.models.KimonoKeyRequest
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.http.*
@@ -41,22 +41,21 @@ internal interface IKimonoHttpService {
 //    fun makePurchase(@Body purchaseRequest: PurchaseRequest): Simple<ResponseBody>
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
-    @POST(Constants.KIMONO_CASH_OUT_ENDPOINT_INQUIRY)
-    fun makeCashOutInquiry(@Body purchaseRequest: RequestBody): Simple<ResponseBody>
+    @POST
+    fun makeCashOutInquiry(@Url url: String, @Body purchaseRequest: RequestBody): Simple<ResponseBody>
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
-    @POST(Constants.KIMONO_CASH_OUT_ENDPOINT_PAY)
-    fun makeCashOutPayment(@Body purchaseRequest: RequestBody): Simple<ResponseBody>
+    @POST
+    fun makeCashOutPayment(@Url url: String, @Body purchaseRequest: RequestBody): Simple<ResponseBody>
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
     fun refund(@Body refundRequest: RequestBody): Simple<ResponseBody>
 
 
-    @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
-    @POST("")
-    fun getPinKey(@Url endpoint: String,
-            @Body request: KimonoKeyRequest): Simple<ResponseBody>
+    @Headers("Content-Type: application/json", "Accept: application/json", "Accept-Charset: utf-8")
+    @GET
+    fun getAgentId(@Url endpoint: String): retrofit2.Response<AgentIdResponse>
 
 
     @Headers("Content-Type: application/xml")

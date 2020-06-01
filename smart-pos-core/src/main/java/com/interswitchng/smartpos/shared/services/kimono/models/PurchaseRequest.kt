@@ -28,8 +28,15 @@ internal class PurchaseRequest
             var phoneNumber = terminalInfo.agentId
             var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
             var customerEmail = terminalInfo.agentEmail
-            var paymentCode = Constants.PAYMENT_CODE
+
             var transactionAmount = transaction.amount
+            var transactionAmountInNaira = transactionAmount / 100
+            var paymentCode = when (transactionAmountInNaira) {
+                in 1..5000 -> Constants.PAYMENT_CODE_1
+                in 5001..10000 -> Constants.PAYMENT_CODE_2
+                in 10001..20000 -> Constants.PAYMENT_CODE_3
+                else -> Constants.PAYMENT_CODE_4
+            }
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -91,8 +98,15 @@ internal class PurchaseRequest
             var phoneNumber = terminalInfo.agentId
             var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
             var customerEmail = terminalInfo.agentEmail
-            var paymentCode = Constants.PAYMENT_CODE
+
             var transactionAmount = transaction.amount
+            var transactionAmountInNaira = transactionAmount / 100
+            var paymentCode = when (transactionAmountInNaira) {
+                in 1..5000 -> Constants.PAYMENT_CODE_1
+                in 5001..10000 -> Constants.PAYMENT_CODE_2
+                in 10001..20000 -> Constants.PAYMENT_CODE_3
+                else -> Constants.PAYMENT_CODE_4
+            }
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -454,6 +468,8 @@ internal class TerminalInformation {
     var serverIp: String = ""
     @field:Element(name = "kimono", required = false)
     var isKimono: Boolean = false
+    @field:Element(name = "kimono3", required = false)
+    var isKimono3: Boolean = false
     @field:Element(name = "capabilities", required = false)
     var capabilities: String? = null
     @field:Element(name = "serverPort", required = false)
@@ -494,6 +510,7 @@ internal class TerminalInformation {
                     callHomeTimeInMin = callHomeTimeInMin.toIntOrNull() ?: -1,
                     serverTimeoutInSec = serverTimeoutInSec.toIntOrNull() ?: -1,
                     isKimono = isKimono,
+                    isKimono3 = isKimono3,
                     capabilities = capabilities,
                     serverIp = serverIp,
                     serverUrl = serverUrl,
@@ -522,7 +539,7 @@ internal class TerminalInformation {
 
 
         // validate merchant name and location
-        val merchantNameAndLocation = InputValidator(merchantNameAndLocation).isNotEmpty().isExactLength(40)
+        val merchantNameAndLocation = InputValidator(merchantNameAndLocation).isNotEmpty()
         // assign error message for field
         if (merchantNameAndLocation.hasError) error.merchantNameAndLocation = merchantNameAndLocation.message
 

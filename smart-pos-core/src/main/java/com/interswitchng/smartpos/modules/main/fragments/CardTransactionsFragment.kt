@@ -119,7 +119,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
             PaymentModel.TransactionType.CASH_OUT -> {
                 cardViewModel.setTransactionType(PaymentModel.TransactionType.CASH_OUT)
-                transactionType = TransactionType.CashOut
+                transactionType = TransactionType.CashOutPay
             }
         }
     }
@@ -235,12 +235,16 @@ class CardTransactionsFragment : BaseFragment(TAG) {
                 dialog.dismiss()
 
                 cardType = message.cardType
+                CompletionData.cardType = message.cardType
 
                 //Show Card detected view
                 showCardDetectedView()
             }
 
-            is EmvMessage.CardDetails -> cardType = message.cardType
+            is EmvMessage.CardDetails -> {
+                cardType = message.cardType
+                CompletionData.cardType = message.cardType
+            }
 
             // when card gets removed
             is EmvMessage.CardRemoved -> {
@@ -452,6 +456,7 @@ class CardTransactionsFragment : BaseFragment(TAG) {
         companion object {
             var dateTime: String? = null
             var stan: String? = null
+            var cardType = CardType.None
         }
     }
 }

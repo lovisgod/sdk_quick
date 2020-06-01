@@ -22,6 +22,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeAn
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.timeFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils.yearAndMonthFormatter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils.TIMEOUT_CODE
+import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.solab.iso8583.parse.ConfigParser
 import java.io.StringReader
@@ -34,6 +35,11 @@ internal class IsoServiceImpl(
         private val posDevice: POSDevice,
         private val store: KeyValueStore,
         private val socket: IsoSocket) : IsoService {
+
+    override fun downloadAgentId(terminalId: String): AgentIdResponse? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

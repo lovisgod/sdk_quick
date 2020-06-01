@@ -9,13 +9,17 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
 import kotlinx.android.synthetic.main.isw_settings_home.*
+import org.koin.android.ext.android.inject
 
 class SettingsHomeFragment : BaseFragment(TAG) {
 
     override val layoutId: Int
         get() = R.layout.isw_settings_home
+
+    private val store: KeyValueStore by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +30,8 @@ class SettingsHomeFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //isw_settings_page_switch.isChecked = store.getBoolean("SETTINGS_PAGE")
+        store.saveBoolean("SETUP", false)
         handleClicks()
     }
 
@@ -39,11 +45,23 @@ class SettingsHomeFragment : BaseFragment(TAG) {
         }
 
         isw_download_settings_btn.setOnClickListener {
-              authorizeAndPerformAction { iswPos.goToSettingsUpdatePage() }
-             //iswPos.goToSettingsUpdatePage()
+            authorizeAndPerformAction { iswPos.goToSettingsUpdatePage() }
+            //iswPos.goToSettingsUpdatePage()
         }
-    }
 
+        /*   isw_settings_page_switch.setOnCheckedChangeListener { button, _ ->
+
+               if (button.isChecked) {
+                   store.saveBoolean("SETUP",false)
+               }
+               else{
+                   store.saveBoolean("SETUP",true)
+               }
+
+               store.saveBoolean("SETTINGS_PAGE", button.isChecked)
+           }*/
+
+    }
 
     private lateinit var dialog: MerchantCardDialog
     private  fun performOperation(){
