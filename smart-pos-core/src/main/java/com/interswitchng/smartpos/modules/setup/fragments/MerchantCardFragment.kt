@@ -29,9 +29,9 @@ class MerchantCardFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (store.getBoolean("SETUP")) {
+        /*if (store.getBoolean("SETUP")) {
             proceedToMainActivity()
-        }
+        }*/
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })

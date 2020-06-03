@@ -10,7 +10,7 @@ import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
  */
 data class TransactionResponse(
         val responseCode: String, // response code
-        val authCode: String, // authorization code
+        val authCode: String = EMPTY_STRING, // authorization code
         val stan: String,
         val scripts: String = EMPTY_STRING,
         val transmissionDateTime: String = EMPTY_STRING,

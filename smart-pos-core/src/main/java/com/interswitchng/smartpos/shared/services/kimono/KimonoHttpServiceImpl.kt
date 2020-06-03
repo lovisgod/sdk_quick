@@ -273,8 +273,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         dateTime = DisplayUtils.getIsoString(now),
                         amount = txnInfo.amount.toString(),
                         type = TransactionType.CashOutInquiry,
-                        authorizationCode = purchaseResponse.authId,
-                        responseMessage = IsoUtils.getIsoResultMsg(purchaseResponse.responseCode)!!,
+                        responseMessage = IsoUtils.getIsoResultMsg(purchaseResponse.responseCode)
+                                ?: purchaseResponse.description,
                         responseCode = purchaseResponse.responseCode,
                         cardPan = txnInfo.cardPAN,
                         cardExpiry = txnInfo.cardExpiry,
@@ -296,19 +296,12 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 TransactionResponse(
                         responseCode = purchaseResponse.responseCode,//data.responseCode,
                         stan = purchaseResponse.stan,
-                        authCode = purchaseResponse.authId,//purchaseResponse.authCode,// data.authCode,
-                        scripts = purchaseResponse.stan,
                         responseDescription = purchaseResponse.description,//data.description
-                        name = purchaseResponse.customerDescription,
-                        ref = purchaseResponse.transactionRef,
-                        rrn = purchaseResponse.retrievalRefNumber,
                         type = TransactionType.CashOutInquiry
-
                 )
 
 
             } else {
-
                 val now = Date()
                 val pinStatus = when {
                     purchaseResponse.responseCode == IsoUtils.OK -> "PIN Verified"
@@ -342,7 +335,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             }
 
         } catch (e: Exception) {
-            logger.log(e.localizedMessage)
+            //logger.log(e.localizedMessage)
             e.printStackTrace()
             //  initiateReversal(request, request.stan) // TODO change stan to authId
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "", type = TransactionType.CashOutInquiry)

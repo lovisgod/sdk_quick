@@ -31,7 +31,7 @@ class SettingsHomeFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //isw_settings_page_switch.isChecked = store.getBoolean("SETTINGS_PAGE")
-        store.saveBoolean("SETUP", false)
+
         handleClicks()
     }
 
@@ -75,6 +75,7 @@ class SettingsHomeFragment : BaseFragment(TAG) {
     private fun authorizeAndPerformAction(action: () -> Unit) {
         val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
             if (isValidated) {
+                store.saveBoolean("SETUP", false)
                 action.invoke()
             } else {
                 toast("Unauthorized Access!!")
@@ -93,7 +94,10 @@ class SettingsHomeFragment : BaseFragment(TAG) {
         }
          dialog = MerchantCardDialog {
             when (it) {
-                MerchantCardDialog.AUTHORIZED -> action.invoke()
+                MerchantCardDialog.AUTHORIZED -> {
+                    store.saveBoolean("SETUP", false)
+                    action.invoke()
+                }
                 MerchantCardDialog.FAILED -> toast("Unauthorized Access!!")
 //                MerchantCardDialog.NOT_ENROLLED -> { alert.setTitle("Supervisor's card not enrolled")
 //                    alert.setMessage("You have not yet enrolled a supervisor's card. Please enroll a supervisor's card on the settings page after downloading terminal configuration.")

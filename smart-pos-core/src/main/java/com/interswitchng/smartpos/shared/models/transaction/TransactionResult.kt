@@ -27,7 +27,7 @@ data class TransactionResult(
         val cardPan: String,
         val cardType: CardType,
         val cardExpiry: String,
-        val authorizationCode: String,
+        val authorizationCode: String = EMPTY_STRING,
         val pinStatus: String,
         val responseMessage: String,
         val responseCode: String,
