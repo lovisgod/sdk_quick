@@ -274,6 +274,9 @@
     <string name="isw_agent_id_downloaded">Agent Id Downloaded</string>
     <string name="isw_title_download_agent_id">Download Agent Id</string>
     <string name="isw_title_agent_id_downloaded">Agent Id Downloaded</string>
+    <string name="isw_authenticate_pin">Authenticate Pin</string>
+    <string name="isw_withdrawal">WITHDRAWAL</string>
+    <string name="isw_pin_set">Pin Set</string>
 
 
     <string-array name="isw_transaction_types">

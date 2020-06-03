@@ -51,13 +51,13 @@ class MerchantCardDialog constructor(
         }
 
         isw_button_pin_proceed.setOnClickListener {
-            val savedPan = store.getString("M3RCHANT_PAN", "")
+
             val savedPin = store.getString("MERCHANT_PIN", "")
             val enteredPin = isw_pin_edit_text.text.toString()
 
             if (enteredPin == "") {
                 context?.toast("Pin Field is empty. Please enter your pin")
-            } else if (savedPan == cardViewModel.getCardPAN() && savedPin == enteredPin) {
+            } else if (savedPin == enteredPin) {
                 context?.toast("Pin OK")
                 clickListener.invoke(AUTHORIZED)
                 dismiss()

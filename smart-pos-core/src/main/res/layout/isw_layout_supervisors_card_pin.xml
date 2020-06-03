@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="@string/isw_card_pan"
+        android:text="@string/isw_pin_set"
         android:textColor="#1AC10B"
         app:layout_constraintBottom_toTopOf="@+id/isw_skip_fingerprint"
         app:layout_constraintEnd_toEndOf="parent"

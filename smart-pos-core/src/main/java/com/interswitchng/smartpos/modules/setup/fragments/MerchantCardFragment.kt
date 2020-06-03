@@ -45,17 +45,14 @@ class MerchantCardFragment : BaseFragment(TAG) {
             isw_link_fingerprint.visibility = View.GONE
         } else {
             isw_link_fingerprint.setOnClickListener {
-                val cardPAN = cardViewModel.getCardPAN()!!
-                logger.logErr(cardPAN)
-                setupViewModel.saveMerchantPAN(cardPAN)
+
                 val direction = MerchantCardFragmentDirections.iswActionGotoFragmentPhoneNumber()
                 navigate(direction)
             }
         }
 
         isw_skip_fingerprint.setOnClickListener {
-            val cardPAN = cardViewModel.getCardPAN()!!
-            setupViewModel.saveMerchantPAN(cardPAN)
+
             store.saveBoolean("SETUP", true)
             val direction = MerchantCardFragmentDirections.iswActionGotoFragmentSetupComplete()
             navigate(direction)
@@ -64,13 +61,11 @@ class MerchantCardFragment : BaseFragment(TAG) {
         isw_button_pin_proceed.setOnClickListener {
 
             val enteredPin = isw_pin_edit_text.text.toString()
-            val cardPAN = cardViewModel.getCardPAN()!!
 
             if (enteredPin == "") {
                 context?.toast("Pin Field is empty. Please enter your pin")
             } else {
                 setupViewModel.saveMerchantPIN(enteredPin)
-                setupViewModel.saveMerchantPAN(cardPAN)
                 isw_imageview.visibility = View.INVISIBLE
                 isw_insert_card_layout.visibility = View.GONE
                 isw_card_detected_layout.visibility = View.GONE

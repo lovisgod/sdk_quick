@@ -303,7 +303,7 @@
                 android:id="@+id/isw_cash_out_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/isw_cash_out"
+                android:text="@string/isw_withdrawal"
                 android:textColor="@android:color/black"
                 android:textSize="13sp"
                 android:textStyle="bold"
