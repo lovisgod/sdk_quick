@@ -84,7 +84,7 @@ class TelpoPOSDeviceImpl constructor(
             setupDevice()
 
             // setup logo
-            val drawable = ContextCompat.getDrawable(context, R.drawable.isw_telpo_app_logo)!!
+            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_bankly_logo)!!
             companyLogo = run {
                 return@run when(drawable) {
                     is BitmapDrawable -> drawable.bitmap
