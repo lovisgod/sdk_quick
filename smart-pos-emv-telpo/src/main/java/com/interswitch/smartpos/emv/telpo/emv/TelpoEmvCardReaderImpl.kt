@@ -10,13 +10,13 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResul
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.telpo.emv.EmvPinData
 import com.telpo.emv.EmvService
 import com.telpo.pinpad.PinParam
 import com.telpo.pinpad.PinpadService
 import com.telpo.tps550.api.util.StringUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.sendBlocking
 import kotlin.coroutines.coroutineContext
 
 class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, TelpoPinCallback {
@@ -59,16 +59,14 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
     override val pinResult: Int = cardPinResult
 
     override suspend fun enterPin(
-        isOnline: Boolean,
-        triesCount: Int,
-        offlineTriesLeft: Int,
-        panBlock: String
+            isOnline: Boolean,
+            triesCount: Int,
+            offlineTriesLeft: Int,
+            panBlock: String,
+            pinData: EmvPinData?
     ) {
         channel.send(EmvMessage.EnterPin)
 
-        if (triesCount > 0) {
-            channel.sendBlocking(EmvMessage.PinError(offlineTriesLeft))
-        } else {
             val pinParameter = PinParam(context)
             pinParameter.apply {
                 PinBlockFormat = 0
@@ -82,12 +80,17 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             }
             PinpadService.Open(context)
 
-            /*  val panString = getPan()
-              //read pin in clear
-              PinpadService.TP_PinpadGetPlainPin(pinParameter, 0, 0, 100)
-              val pinString = pinParameter.Pin_Block.toString(Charsets.UTF_8)
-              //get pinBlockString from pin and pan
-              val pinBlockString = pinBlockEncryption(panString!!, pinString)*/
+        if (!isOnline) {
+            cardPinResult = when (PinpadService.TP_PinpadGetPlainPin(pinParameter, 0, 0, 0)) {
+                PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
+                PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
+                PinpadService.PIN_OK -> {
+                    pinData?.Pin = pinParameter.Pin_Block
+                    EmvService.EMV_TRUE
+                }
+                else -> EmvService.EMV_FALSE
+            }
+        } else {
 
             cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {
                 PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL

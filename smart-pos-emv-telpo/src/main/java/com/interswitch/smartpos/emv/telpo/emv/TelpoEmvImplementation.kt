@@ -3,6 +3,7 @@ package com.interswitch.smartpos.emv.telpo.emv
 import android.content.Context
 import com.interswitch.smartpos.emv.telpo.TelpoPinCallback
 import com.interswitch.smartpos.emv.telpo.models.getAllCapks
+import com.interswitch.smartpos.emv.telpo.utils.DefaultAPPCAPK
 import com.interswitch.smartpos.emv.telpo.utils.TelpoEmvUtils
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.EmvAIDs
@@ -84,6 +85,42 @@ internal class TelpoEmvImplementation (
         }
     }
 
+    private fun getSelectedRid(capks: List<EmvCAPK>) {
+        var ret: Int
+        var tlv = EmvTLV(0x4F)
+
+        ret = emvService.Emv_GetTLV(tlv)
+        if (ret != EmvService.EMV_TRUE) {
+            tlv = EmvTLV(0x84)
+            ret = emvService.Emv_GetTLV(tlv)
+        }
+
+        if (ret == EmvService.EMV_TRUE) {
+            val rid = ByteArray(5)
+            System.arraycopy(tlv.Value, 0, rid, 0, 5)
+
+            tlv = EmvTLV(0x8F)
+            ret = emvService.Emv_GetTLV(tlv)
+
+            if (ret == EmvService.EMV_TRUE) {
+                val keyId = tlv.Value[0]
+                logger.log("KeyID ===== $keyId")
+
+                capks.forEach { capk ->
+                    val capkRID = StringUtil.bytesToHexString(capk.RID)
+                    val ridString = StringUtil.bytesToHexString(rid)
+                    if (capkRID == ridString) {
+                        if (keyId.toInt() != -1 || capk.KeyID == keyId) {
+                            selectedRID = StringUtil.bytesToHexString(capk.RID)
+                            logger.log("Add CAPK result == $ret")
+                            logger.log("Selected RID == $selectedRID")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     suspend fun setupContactEmvTransaction(terminalInfo: TerminalInfo): Int {
         // initialize config if not initialized
         if (!::config.isInitialized)
@@ -134,19 +171,26 @@ internal class TelpoEmvImplementation (
 
         emvService.Emv_SetParam(emvParameter)
         EmvService.Emv_RemoveAllApp()
-        val appList = TelpoEmvUtils.createAppList(config.first, config.second)
+        /*val appList = TelpoEmvUtils.createAppList(config.first, config.second)
         appList.forEach { app ->
             val result = EmvService.Emv_AddApp(app)
             if (result == EmvService.EMV_TRUE) logger.logErr("Add app success : AID = ${StringUtil.bytesToHexString(app.AID)}")
             else return result.also { logger.logErr("Add app failed : RET = $result, AID = ${StringUtil.bytesToHexString(app.AID)}") }
-        }
+        }*/
+        DefaultAPPCAPK.Add_All_APP()
 
+        logger.logErr("emvlog_start")
+        EmvService.Emv_SetDebugOn(1)
+        emvService.Emv_SetOfflinePinCBenable(EmvService.EMV_TRUE)
         ret = emvService.Emv_StartApp(EmvService.EMV_FALSE)
         logger.logErr("Start App: RET CODE ==== $ret")
 
         EmvService.Emv_RemoveAllCapk()
+        DefaultAPPCAPK.Add_All_CAPK()
         val capks = config.second.getAllCapks()
-        addCAPKIntoEmvLib(capks)
+        getSelectedRid(capks)
+
+
 
         return ret
     }
@@ -304,7 +348,8 @@ internal class TelpoEmvImplementation (
                     pinData?.type == EmvService.ONLIEN_ENCIPHER_PIN,
                     tries,
                     pinData?.RemainCount?.toInt() ?: 0,
-                    getPan() ?: ""
+                        getPan() ?: "",
+                        pinData
                 )
             }
             tries++
