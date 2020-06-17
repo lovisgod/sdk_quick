@@ -118,7 +118,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             // get pinData (only for online PIN)
             val carPin = StoreData.pinBlock ?: ""
             // get the ksn for dukpt pin
-            val pinKsn = ksnData ?: ""
+            val pinKsn = StoreData.ksnData?.removeRange(0, 4) ?: ""
 
 
             // get track 2 string
@@ -239,7 +239,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
             else {
                 pinResult = RetCode.EMV_OK
                 StoreData.pinBlock = EmvUtils.bcd2Str(pinBlock.result)
-                ksnData = EmvUtils.bcd2Str(pinBlock.ksn)
+                StoreData.ksnData = EmvUtils.bcd2Str(pinBlock.ksn)
             }
 
         } else {
@@ -315,6 +315,7 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
     class StoreData {
         companion object {
             var pinBlock: String? = null
+            var ksnData: String? = null
         }
     }
 }
