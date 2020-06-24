@@ -11,7 +11,6 @@ import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.EmvData
@@ -174,12 +173,9 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
                 val emvData = transactionResponse.value.second
                 val txnInfo =
                         TransactionInfo.fromEmv(emvData, paymentModel, PurchaseType.Card, accountType)
-                var responseMsg: String
-                responseMsg = if (transactionType == TransactionType.CashOutPay) {
-                    response.responseDescription ?: "UnknownError"
-                } else {
-                    IsoUtils.getIsoResultMsg(response.responseCode) ?: "Unknown Error"
-                }
+                val responseMsg: String = IsoUtils.getIsoResultMsg(response.responseCode)
+                        ?: "Unknown Error"
+
                 val pinStatus = when {
                     response.responseCode == IsoUtils.OK -> "PIN Verified"
                     else -> "PIN Unverified"

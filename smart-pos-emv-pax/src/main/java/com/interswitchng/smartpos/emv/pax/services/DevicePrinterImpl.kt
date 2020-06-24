@@ -1,10 +1,14 @@
 package com.interswitchng.smartpos.emv.pax.services
 
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
+import androidx.core.content.ContextCompat
+import com.interswitchng.smartpos.emv.pax.R
 import com.interswitchng.smartpos.emv.pax.utilities.StringUtils
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
 import com.interswitchng.smartpos.shared.models.core.UserType
@@ -17,17 +21,13 @@ import com.pax.dal.entity.EFontTypeExtCode
 /**
  * This class serves as the implementation to [DevicePrinter] providing printing functionality
  */
-object DevicePrinterImpl : DevicePrinter {
-
-    // screen caharacter length
-    private const val SCREEN_LARGE_LENGTH = 24
-    private const val SCREEN_NORMAL_LENGTH = 32
+class DevicePrinterImpl constructor(private val context: Context) : DevicePrinter {
 
     // font sizes
     private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_16_24, EFontTypeExtCode.FONT_16_16)
     private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_16_32)
 
-    private val line: String = "-".repeat(SCREEN_NORMAL_LENGTH)
+    private val line: String = "-".repeat(Companion.SCREEN_NORMAL_LENGTH)
 
     override fun canPrint(): PrintStatus {
         val result = PaxPrinter.getInstance().status
@@ -114,8 +114,8 @@ object DevicePrinterImpl : DevicePrinter {
                 // print string
                 if (printConfig.displayCenter) {
                     val screenLength = when (fontSize) {
-                        LARGE_FONT -> SCREEN_LARGE_LENGTH
-                        else -> SCREEN_NORMAL_LENGTH
+                        LARGE_FONT -> Companion.SCREEN_LARGE_LENGTH
+                        else -> Companion.SCREEN_NORMAL_LENGTH
                     }
 
                     val formattedString = StringUtils.center(item.value, screenLength, newLine = true)
@@ -131,13 +131,24 @@ object DevicePrinterImpl : DevicePrinter {
 
 
     fun printCompanyLogo(printer: PaxPrinter) {
-        POSDeviceImpl.companyLogo.also { logo ->
+        val drawable = ContextCompat.getDrawable(context, R.drawable.ic_bankly_logo)!!
+        val companyLogo: Bitmap = run {
+            return@run when (drawable) {
+                is BitmapDrawable -> drawable.bitmap
+                else -> Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888).also { bitmap ->
+                    val canvas = Canvas(bitmap)
+                    drawable.setBounds(0, 0, canvas.width, canvas.height)
+                    drawable.draw(canvas)
+                }
+            }
+        }
+        companyLogo.also { logo ->
             // copy out bitmap
             val it = logo.copy(logo.config, logo.isMutable)
             val smallScale =
                     if (it.width == it.height) getScaledDownBitmap(it)
                     else getScaledDownBitmap(it, threshold = 200)
-            val paddingLeft = ((SCREEN_NORMAL_LENGTH * 12.5) - smallScale.width) / 2 // 1 dot in print is 12.5px
+            val paddingLeft = ((Companion.SCREEN_NORMAL_LENGTH * 12.5) - smallScale.width) / 2 // 1 dot in print is 12.5px
 
             // add padding to bitmap
             val outputBitmap = Bitmap.createBitmap(smallScale.width + paddingLeft.toInt(), smallScale.height, Bitmap.Config.ARGB_8888)
@@ -212,5 +223,11 @@ object DevicePrinterImpl : DevicePrinter {
             bm.recycle()
         }
         return resizedBitmap
+    }
+
+    companion object {
+        // screen caharacter length
+        private const val SCREEN_LARGE_LENGTH = 24
+        private const val SCREEN_NORMAL_LENGTH = 32
     }
 }
