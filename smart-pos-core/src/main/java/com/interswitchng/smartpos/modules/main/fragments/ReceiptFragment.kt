@@ -266,7 +266,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         if (isFromActivityDetail) {
             when(type) {
                 PaymentModel.TransactionType.CARD_PURCHASE -> {
-                    isw_reversal.visibility = View.VISIBLE
+                    isw_reversal.visibility = View.GONE
                     isw_refund.visibility = View.GONE
                 }
                 else -> {}
