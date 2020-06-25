@@ -237,7 +237,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     }
 
     override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
-        val requestCashOutBody: String = PurchaseRequest.toCashOutRequest(device, terminalInfo, txnInfo)
+        val requestCashOutBody: String = PurchaseRequest.toCashOutInquiry(device, terminalInfo, txnInfo)
         val bodyCashOut = RequestBody.create(MediaType.parse("text/xml"), requestCashOutBody)
 
         try {
@@ -291,7 +291,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         cardTrack2 = txnInfo.cardTrack2,
                         time = now.time
                 )
-                logTransaction(transactionResult)
+                //logTransaction(transactionResult)
 
                 TransactionResponse(
                         responseCode = purchaseResponse.responseCode,//data.responseCode,
@@ -331,7 +331,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         time = now.time
                 )
                 logTransaction(transactionResult)
-                cashOutRequest(purchaseResponse, terminalInfo, txnInfo)
+                cashOutPay(purchaseResponse, terminalInfo, txnInfo)
             }
 
         } catch (e: Exception) {
@@ -343,14 +343,14 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     }
 
-    private fun cashOutRequest(response: BillPaymentResponse, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
+    private fun cashOutPay(response: BillPaymentResponse, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
 
         var url = Constants.KIMONO_CASH_OUT_ENDPOINT_PAY
         if (terminalInfo.isKimono3) {
             url = Constants.KIMONO_3_END_POINT
         }
 
-        val requestBody: String = PurchaseRequest.toBillPaymentString(response, terminalInfo, txnInfo)
+        val requestBody: String = PurchaseRequest.toCashOutPayString(response, terminalInfo, txnInfo)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {

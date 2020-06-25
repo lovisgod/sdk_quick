@@ -20,7 +20,7 @@ internal class PurchaseRequest
 {
     companion object {
 
-        fun toCashOutRequest(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
+        fun toCashOutInquiry(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
 
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData = ""
@@ -91,7 +91,7 @@ internal class PurchaseRequest
 
         }
 
-        fun toBillPaymentString(response: BillPaymentResponse, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
+        fun toCashOutPayString(response: BillPaymentResponse, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData = ""
             var customerId = terminalInfo.agentId

@@ -24,7 +24,6 @@ class AmountFragment : BaseFragment(TAG) {
 
     private var amount = EMPTY_STRING
 
-    private var thresholdAmountForBankly = "1.00"
 
     override val layoutId: Int
         get() = R.layout.isw_fragment_amount
@@ -51,7 +50,7 @@ class AmountFragment : BaseFragment(TAG) {
 
     private fun handleProceedToolbarClicks() {
         isw_proceed.setOnClickListener {
-            if (amount == EMPTY_STRING || amount == DEFAULT_AMOUNT || amount.toDouble() < thresholdAmountForBankly.toDouble()) {
+            if (amount == EMPTY_STRING || amount == DEFAULT_AMOUNT) {
                 displayInvalidAmountToast()
             } else {
                 proceedWithPayment()

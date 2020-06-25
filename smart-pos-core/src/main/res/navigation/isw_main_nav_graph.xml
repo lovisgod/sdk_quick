@@ -259,7 +259,8 @@
             android:id="@+id/isw_action_isw_fragment_processing_transaction_to_isw_receipt_fragment"
             app:destination="@id/isw_fragment_receipt"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@+id/isw_transaction" />
         <action
             android:id="@+id/isw_action_isw_fragment_processing_transaction_to_isw_transactionfailurefragment"
             app:destination="@id/isw_transactionfailurefragment" />
@@ -295,7 +296,8 @@
             android:id="@+id/isw_action_isw_receiptfragment_to_isw_transaction"
             app:destination="@id/isw_transaction"
             app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_in_right" />
+            app:exitAnim="@anim/slide_in_right"
+            app:popUpToInclusive="false" />
 
         <action
             android:id="@+id/isw_action_goto_fragment_amount"
