@@ -90,6 +90,8 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 }
                 else -> EmvService.EMV_FALSE
             }
+            //clear pinBlock if offline
+            StoreData.pinBlock = null
         } else {
 
             cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {

@@ -34,7 +34,7 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
             quickTellerText = pairString("", "Quickteller Paypoint", stringConfig = quickTellerConfig)
         }
 
-        val txnType = pairString("", info.type.toString(), stringConfig = typeConfig)
+        val txnType = pairString("", "Withdrawal", stringConfig = typeConfig)
         val paymentType = pairString("channel", info.paymentType.toString())
         val stan = pairString("stan", info.stan.padStart(6, '0'))
         val date = pairString("date", info.dateTime.take(10))

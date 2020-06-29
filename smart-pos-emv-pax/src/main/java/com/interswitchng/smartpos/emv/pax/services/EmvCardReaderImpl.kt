@@ -215,8 +215,15 @@ class EmvCardReaderImpl(context: Context) : EmvCardReader, PinCallback, IPed.IPe
                 }
 
                 // trigger pin input based flag
-                if (isOnline) getOnlinePin(panBlock)
-                else getOfflinePin()
+                if (isOnline) {
+                    getOnlinePin(panBlock)
+                } else {
+                    //clear pinBlock if offline
+                    StoreData.ksnData = null
+                    StoreData.pinBlock = null
+
+                    getOfflinePin()
+                }
             }
         } catch (e: PedDevException) {
             logger.logErr("Error occurred verifying pin: isOnline - $isOnline, code - ${e.errCode}, msg - ${e.errMsg}")

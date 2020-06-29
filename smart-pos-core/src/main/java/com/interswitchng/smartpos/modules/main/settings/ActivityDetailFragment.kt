@@ -47,8 +47,8 @@ class ActivityDetailFragment : BaseFragment(TAG) {
             TransactionType.Completion.ordinal -> getString(R.string.isw_completion)
             TransactionType.Refund.ordinal -> getString(R.string.isw_refund)
             TransactionType.Reversal.ordinal -> getString(R.string.isw_reversal)
-            TransactionType.CashOutInquiry.ordinal -> getString(R.string.isw_cash_out_inquiry)
-            TransactionType.CashOutPay.ordinal -> getString(R.string.isw_cash_out_pay)
+            TransactionType.CashOutInquiry.ordinal -> getString(R.string.isw_inquiry)
+            TransactionType.CashOutPay.ordinal -> getString(R.string.isw_completion)
             else -> EMPTY_STRING
         }
 

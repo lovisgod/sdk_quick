@@ -277,6 +277,7 @@
     <string name="isw_authenticate_pin">Authenticate Pin</string>
     <string name="isw_withdrawal">WITHDRAWAL</string>
     <string name="isw_pin_set">Pin Set</string>
+    <string name="isw_inquiry">Inquiry</string>
 
 
     <string-array name="isw_transaction_types">

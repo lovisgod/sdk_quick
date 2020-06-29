@@ -11,6 +11,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
@@ -98,7 +99,12 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
         fun bind(txn: TransactionLog?) {
             txn?.toResult()?.apply {
                 tvAmount.text = tvAmount.context.getString(R.string.isw_currency_amount, DisplayUtils.getAmountString(amount.toInt()))
-                tvTxnType.text = type.name
+
+                val txnTypeString = when {
+                    type.name == TransactionType.CashOutPay.name -> "Completion"
+                    else -> "Inquiry"
+                }
+                tvTxnType.text = txnTypeString
                 tvPaymentType.text = paymentType.name
 
                 val date = Date(txn.time)

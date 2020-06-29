@@ -150,8 +150,13 @@ internal class ReportViewModel(
 
     private fun List<TransactionLog>.toSlipItems(date: Date, transactionType: String): MutableList<PrintObject> {
 
+        val transactionTypeString = when (transactionType) {
+            "CashOutPay" -> "Completion"
+            else -> "Inquiry"
+        }
+
         // create the title for printout
-        val title = PrintObject.Data(transactionType, PrintStringConfiguration(isTitle = true, displayCenter = true))
+        val title = PrintObject.Data(transactionTypeString, PrintStringConfiguration(isTitle = true, displayCenter = true))
 
         // initialize list with the title and a line under
         val newLine = PrintObject.Data("\n")
