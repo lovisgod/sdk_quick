@@ -106,35 +106,35 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     override fun downloadKey(terminalId: String, ip: String, port: Int, isNibbsTest: Boolean): Boolean {
 
-        // load test keys
-        val tik = Constants.ISW_DUKPT_IPEK
-        val ksn = Constants.ISW_DUKPT_KSN
 
-        // load keys
-        device.loadInitialKey(tik, ksn)
-        return true
+        try {
+            val responseBody = httpService.getKimonoKey(cmd = "key", terminalId = terminalId, pkmod = Constants.PKMOD, pkex = Constants.PKEX, pkv = "1", keyset_id = "000002", der_en = "1").run()
+            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
 
+            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
+            var keyResponse = XmlPullParserHandler().parse(inputStream)
 
-//        try {
-//            val responseBody = httpService.getKimonoKey(cmd = "key", terminalId = terminalId, pkmod = Constants.PKMOD, pkex = Constants.PKEX, pkv = "1", keyset_id = "000002", der_en = "1").run()
-//            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
-//
-//            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-//            var keyResponse = XmlPullParserHandler().parse(inputStream)
-//
-//            if (!responseBody.isSuccessful || keyResponse == null) {
-//                Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
-//                return false
-//            } else {
-//                //store.saveString(Constants.KIMONO_KEY, responseBody.body().toString())
-//                Logger.with("KeyResponseMessage").log(responseBody.body().toString())
-//                return true
-//            }
-//        } catch (e: Exception) {
-//            logger.log(e.localizedMessage)
-//            e.printStackTrace()
-//        }
-//        return false
+            return if (!responseBody.isSuccessful || keyResponse == null) {
+                Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
+                false
+            } else {
+                //store.saveString(Constants.KIMONO_KEY, responseBody.body().toString())
+
+                // load test keys
+                val tik = Constants.ISW_DUKPT_IPEK
+                val ksn = Constants.ISW_DUKPT_KSN
+
+                // load keys
+                device.loadInitialKey(tik, ksn)
+
+                Logger.with("KeyResponseMessage").log(responseBody.body().toString())
+                true
+            }
+        } catch (e: Exception) {
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+        }
+        return false
 
 
     }
