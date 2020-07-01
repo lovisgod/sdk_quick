@@ -58,15 +58,4 @@ internal interface IKimonoHttpService {
     fun getAgentId(@Url endpoint: String): retrofit2.Response<AgentIdResponse>
 
 
-    @Headers("Content-Type: application/xml")
-    @GET(Constants.KIMONO_KEY_END_POINT)
-    fun getKimonoKey(@Query("cmd") cmd: String,
-                     @Query("terminal_id") terminalId: String,
-                     @Query("pkmod") pkmod: String,
-                     @Query("pkex") pkex: String,
-                     @Query("pkv") pkv: String,
-                     @Query("keyset_id") keyset_id: String,
-                     @Query("der_en") der_en: String): Simple<ResponseBody>
-
-
 }

@@ -17,6 +17,7 @@ import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.SimpleXmlConverterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
@@ -154,6 +155,7 @@ internal val networkModule = module {
         val builder = Retrofit.Builder()
                 .baseUrl(kimonoServiceUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
 
 
         // okhttp client for retrofit

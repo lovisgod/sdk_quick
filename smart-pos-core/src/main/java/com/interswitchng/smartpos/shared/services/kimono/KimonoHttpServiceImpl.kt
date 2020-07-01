@@ -108,13 +108,10 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
 
         try {
-            val responseBody = httpService.getKimonoKey(cmd = "key", terminalId = terminalId, pkmod = Constants.PKMOD, pkex = Constants.PKEX, pkv = "1", keyset_id = "000002", der_en = "1").run()
-            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
+            val responseBody = agentService.getKimonoKey(url = Constants.ISW_KIMONO_KEY_URL, cmd = "key", terminalId = terminalId, pkmod = Constants.PKMOD, pkex = Constants.PKEX, pkv = "1", keyset_id = "000002", der_en = "1").execute()
 
-            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-            var keyResponse = XmlPullParserHandler().parse(inputStream)
 
-            return if (!responseBody.isSuccessful || keyResponse == null) {
+            return if (!responseBody.isSuccessful) {
                 Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
                 false
             } else {
@@ -127,7 +124,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 // load keys
                 device.loadInitialKey(tik, ksn)
 
-                Logger.with("KeyResponseMessage").log(responseBody.body().toString())
+                Logger.with("KeyResponseMessage").log(responseBody.body()?.string()
+                        ?: "no response")
                 true
             }
         } catch (e: Exception) {
