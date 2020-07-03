@@ -27,12 +27,12 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
 
 
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
-        val quickTellerConfig = PrintStringConfiguration(isBold = true, displayCenter = true)
-        var quickTellerText = pairString("", "")
+        /*  val quickTellerConfig = PrintStringConfiguration(isBold = true, displayCenter = true)
+          var quickTellerText = pairString("", "")
 
-        if (info.type == TransactionType.CashOutPay) {
-            quickTellerText = pairString("", "Quickteller Paypoint", stringConfig = quickTellerConfig)
-        }
+          if (info.type == TransactionType.CashOutPay) {
+              quickTellerText = pairString("", "Quickteller Paypoint", stringConfig = quickTellerConfig)
+          }*/
 
         val txnType = pairString("", "Withdrawal", stringConfig = typeConfig)
         val paymentType = pairString("channel", info.paymentType.toString())
@@ -49,7 +49,7 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
 
         val amount = pairString("amount", DisplayUtils.getAmountWithCurrency(info.amount))
         val authCode = pairString("authentication code", info.authorizationCode)
-        val list = mutableListOf(quickTellerText, txnType, paymentType, date, time, dateTime, line, amount, line)
+        val list = mutableListOf(txnType, paymentType, date, time, dateTime, line, amount, line)
 
         // check if its card transaction
         if (info.cardPan.isNotEmpty()) {

@@ -34,7 +34,7 @@ class MerchantCardDialogFragment : BaseFragment(TAG) {
                     navigate(MerchantCardDialogFragmentDirections.iswActionGotoReportFragment())
                 }
                 MerchantCardDialog.FAILED -> {
-                    toast("Merchant Card Verification Failed!!")
+                    toast("Unauthorized Access!!")
                     navigateUp()
                 }
                 MerchantCardDialog.USE_FINGERPRINT -> {

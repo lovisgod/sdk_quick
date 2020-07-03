@@ -111,17 +111,26 @@ class TerminalSettingsActivity : MenuActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         // set back click to go back
         if (item?.itemId == android.R.id.home) {
-            finish()
-            return true
+            if (supervisorCardIsEnrolled) {
+                finish()
+                return true
+            } else {
+                toast("Scroll to Bottom and Enroll Merchant's Pin")
+            }
+
         } else if (item?.itemId == R.id.saveConfig) {
             saveConfig()
             if (!isFromSettings) {
 //                val intent = Intent(this, SetupActivity::class.java)
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+                if (supervisorCardIsEnrolled) {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    return true
+                } else {
+                    toast("Scroll to Bottom and Enroll Merchant's Pin")
+                }
             }
-            return true
         }
 
         return super.onOptionsItemSelected(item)

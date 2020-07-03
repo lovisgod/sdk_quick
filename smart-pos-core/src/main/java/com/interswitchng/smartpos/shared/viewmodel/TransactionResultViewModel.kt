@@ -110,7 +110,8 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
 
                     // add re-print flag
                     if (reprint) {
-                        val rePrintFlag = PrintObject.Data("*** Re-Print ***", PrintStringConfiguration(displayCenter = true, isBold = true))
+                        val rePrintFlag = PrintObject.Data("*** Re-Print ***", PrintStringConfiguration(displayCenter = true, isBold = true, isTitle = true))
+                        slipItems.add(0, rePrintFlag)
                         slipItems += rePrintFlag
                     }
 

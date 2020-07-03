@@ -64,18 +64,11 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
     private val cancelDialog by lazy {
         DialogUtils.getAlertDialog(context!!)
-            .setMessage("Would you like to change payment method, or try again?")
+                .setMessage("Remove card")
             .setCancelable(false)
-            .setNegativeButton(R.string.isw_title_cancel) { dialog, _ ->
+                .setPositiveButton(R.string.isw_title_cancel) { dialog, _ ->
                 dialog.dismiss()
-            }
-            .setPositiveButton(R.string.isw_action_change) { dialog, _ ->
-                dialog.dismiss()
-                showPaymentOptions()
-            }
-            .setNeutralButton(R.string.isw_title_try_again) { dialog, _ ->
-                dialog.dismiss()
-                resetTransaction()
+                    goBackToPreviousFragment()
             }.create()
     }
 
@@ -440,6 +433,10 @@ class CardTransactionsFragment : BaseFragment(TAG) {
 
     private fun resetTransaction() {
         fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
+    }
+
+    private fun goBackToPreviousFragment() {
+        fragmentManager?.popBackStack()
     }
 
     private fun showLoader(title: String = "Processing", message: String) {
