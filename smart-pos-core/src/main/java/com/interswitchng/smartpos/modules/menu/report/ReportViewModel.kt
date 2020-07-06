@@ -208,6 +208,7 @@ internal class ReportViewModel(
 
         var transactionApproved = 0
         var transactionApprovedAmount = 0.0
+        var transactionFailedAmount = 0.0
 
         // add each item into the end of day list
         this.forEach {
@@ -218,6 +219,8 @@ internal class ReportViewModel(
             if (it.responseCode == IsoUtils.OK) {
                 transactionApproved += 1
                 transactionApprovedAmount += DisplayUtils.getAmountString(it.amount.toInt()).toDouble()
+            } else {
+                transactionFailedAmount += DisplayUtils.getAmountString(it.amount.toInt()).toDouble()
             }
         }
         // add line
@@ -238,6 +241,7 @@ internal class ReportViewModel(
         list.add(PrintObject.Data("Total Passed Transaction: $transactionApproved\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Data("Total Failed Transaction: $transactionFailed\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Data("Total Approved Amount: $transactionApprovedAmount\n", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Approved Amount: $transactionFailedAmount\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Line)
 
         return list
