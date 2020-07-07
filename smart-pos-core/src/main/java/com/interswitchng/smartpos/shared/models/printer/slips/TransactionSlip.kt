@@ -4,7 +4,6 @@ import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
-import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 
 
 /**
@@ -65,11 +64,11 @@ abstract class TransactionSlip(private val terminal: TerminalInfo, private val s
      * @return  a list of configured printable objects representing the terminal info
      */
     internal fun getTerminalInfo(): List<PrintObject> {
-        val merchantName = pairString("merchant", terminal.merchantNameAndLocation)
+        val merchantName = pairString("Agent", terminal.merchantNameAndLocation)
         val terminalId = pairString("Terminal Id", terminal.terminalId)
-        val merchantId = pairString("Merchant Id", terminal.merchantId)
+        val tel = pairString("TEL", terminal.agentId)
 
-        return listOf(merchantName, terminalId, merchantId, line)
+        return listOf(merchantName, terminalId, tel, line)
     }
 
 
@@ -79,14 +78,10 @@ abstract class TransactionSlip(private val terminal: TerminalInfo, private val s
      *
      * @return   a list of printable objects representing the transaction response
      */
-    internal fun getTransactionStatus(): List<PrintObject> {
+    private fun getTransactionStatus(): List<PrintObject> {
         val responseMsg = pairString("", status.responseMessage, stringConfig = PrintStringConfiguration(isTitle = true, displayCenter = true))
         val printList = mutableListOf(responseMsg)
 
-        if (status.responseCode.isNotEmpty() && status.responseCode != IsoUtils.TIMEOUT_CODE) {
-            val responseCode = pairString("response code", status.responseCode)
-            printList.add(responseCode)
-        }
 
         if (status.name.isNotEmpty()) {
             val billerName = pairString("NAME", status.name)
@@ -108,9 +103,8 @@ abstract class TransactionSlip(private val terminal: TerminalInfo, private val s
             printList.add(aid)
         }
 
-        val tel = pairString("TEL", status.telephone)
-        val retainReceiptMsg = pairString("", "Please retain your receipt", stringConfig = PrintStringConfiguration(displayCenter = true))
-        return printList + listOf(tel, line, retainReceiptMsg, line)
+
+        return printList + listOf(line)
     }
 
 

@@ -70,11 +70,11 @@ class ReceiptFragment : BaseFragment(TAG) {
                 isw_transaction_msg.text = "Your transaction was successful"
                 when (transactionResponseModel.transactionType) {
                     PaymentModel.TransactionType.CARD_PURCHASE -> isw_receipt_text.text =
-                        getString(R.string.isw_thank_you)
+                            getString(R.string.isw_thank_you)
                     PaymentModel.TransactionType.PRE_AUTHORIZATION -> isw_receipt_text.text =
-                        getString(R.string.isw_pre_authorization_completed)
+                            getString(R.string.isw_pre_authorization_completed)
                     PaymentModel.TransactionType.CARD_NOT_PRESENT -> isw_receipt_text.text =
-                        getString(R.string.isw_card_not_present_completed)
+                            getString(R.string.isw_card_not_present_completed)
                 }
             }
 
@@ -82,7 +82,7 @@ class ReceiptFragment : BaseFragment(TAG) {
                 transactionResponseIcon.setImageResource(R.drawable.isw_failure)
                 isw_receipt_text.text = "Failed!"
                 isw_transaction_msg.text =
-                    result?.responseMessage//"Your transaction was unsuccessful"
+                        result?.responseMessage//"Your transaction was unsuccessful"
             }
         }
     }
@@ -94,7 +94,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         //Logger.with("Recipet fragment amount").logErr(result!!.amount)
         isw_amount_paid.text = getString(R.string.isw_receipt_amount, amountWithCurrency)
 
-        isw_stan.text = result?.stan?.padStart(6,'0')
+        isw_stan.text = result?.stan?.padStart(6, '0')
 
         val cardTypeName = when (result?.cardType) {
             CardType.MASTER -> "Master Card"
@@ -125,17 +125,17 @@ class ReceiptFragment : BaseFragment(TAG) {
 //                    .build()
 //                navigate(direction,navOptions)
 //            }
-        }catch (Ex:Exception){
+        } catch (Ex: Exception) {
 
         }
         try {
             transactionResponseIcon.setOnClickListener {
                 val direction =
-                    ReceiptFragmentDirections.iswActionGotoFragmentTransaction()
+                        ReceiptFragmentDirections.iswActionGotoFragmentTransaction()
                 val navOptions = NavOptions.Builder()
-                    .setPopUpTo(R.id.isw_transaction, true)
-                    .setLaunchSingleTop(true)
-                    .build()
+                        .setPopUpTo(R.id.isw_transaction, true)
+                        .setLaunchSingleTop(true)
+                        .build()
                 navigate(direction, navOptions)
             }
         } catch (e: Exception) {
@@ -210,14 +210,10 @@ class ReceiptFragment : BaseFragment(TAG) {
     }
 
 
-
-
-
-
     private lateinit var dialog: MerchantCardDialog
     //authorizeAndPerformAction { it.findNavController().navigate(R.id.isw_goto_account_fragment_action) }
     private fun authorizeAndPerformAction(action: () -> Unit) {
-        val fingerprintDialog = FingerprintBottomDialog (isAuthorization = true) { isValidated ->
+        val fingerprintDialog = FingerprintBottomDialog(isAuthorization = true) { isValidated ->
             if (isValidated) {
                 action.invoke()
             } else {
@@ -264,12 +260,13 @@ class ReceiptFragment : BaseFragment(TAG) {
 
     private fun displayButtons() {
         if (isFromActivityDetail) {
-            when(type) {
+            when (type) {
                 PaymentModel.TransactionType.CARD_PURCHASE -> {
                     isw_reversal.visibility = View.GONE
                     isw_refund.visibility = View.GONE
                 }
-                else -> {}
+                else -> {
+                }
             }
 
             isw_print_receipt.apply {

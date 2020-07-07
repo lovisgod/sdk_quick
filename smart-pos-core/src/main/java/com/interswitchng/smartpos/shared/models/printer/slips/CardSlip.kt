@@ -5,7 +5,6 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
-import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 
 
@@ -27,29 +26,18 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
 
 
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
-        /*  val quickTellerConfig = PrintStringConfiguration(isBold = true, displayCenter = true)
-          var quickTellerText = pairString("", "")
-
-          if (info.type == TransactionType.CashOutPay) {
-              quickTellerText = pairString("", "Quickteller Paypoint", stringConfig = quickTellerConfig)
-          }*/
 
         val txnType = pairString("", "Withdrawal", stringConfig = typeConfig)
+
         val paymentType = pairString("channel", info.paymentType.toString())
         val stan = pairString("stan", info.stan.padStart(6, '0'))
         val date = pairString("date", info.dateTime.take(10))
         val time = pairString("time", info.dateTime.substring(11, 19))
 
-        var dateTime = pairString("", "")
-
-        if (info.originalDateTime.isNotEmpty() && info.type == TransactionType.PreAuth) {
-            dateTime = pairString("Date Time", info.originalDateTime)
-        }
-
 
         val amount = pairString("amount", DisplayUtils.getAmountWithCurrency(info.amount))
-        val authCode = pairString("authentication code", info.authorizationCode)
-        val list = mutableListOf(txnType, paymentType, date, time, dateTime, line, amount, line)
+
+        val list = mutableListOf(txnType, paymentType, date, time, line, amount, line)
 
         // check if its card transaction
         if (info.cardPan.isNotEmpty()) {
@@ -65,15 +53,9 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
             val cardType = pairString("card type", info.cardType + "card")
             val cardPan = pairString("card pan", pan, stringConfig = panConfig)
             val cardExpiry = pairString("expiry date", info.cardExpiry)
-            val pinStatus = pairString("", info.pinStatus)
 
-            list.addAll(listOf(cardType, cardPan, cardExpiry, stan, authCode, pinStatus, line))
+            list.addAll(listOf(cardType, cardPan, cardExpiry, stan, line))
 
-            if (info.type == TransactionType.CashOutPay) {
-                list.remove(cardExpiry)
-                list.remove(authCode)
-                list.remove(pinStatus)
-            }
         }
 
 

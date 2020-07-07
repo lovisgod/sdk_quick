@@ -114,6 +114,6 @@ internal object DisplayUtils: KoinComponent {
         }
         Logger.with("Display Utils").logErr( amount)
         var formattedAmount = getAmountString(amount.toInt())
-        return "$currency $formattedAmount"
+        return "$formattedAmount $currency"
     }
 }
