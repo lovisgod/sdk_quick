@@ -71,6 +71,10 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         val retainReceipt = PrintObject.Data("Please Retain Your Receipt", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(printer, retainReceipt)
 
+        // print website at end of slip
+        val website = PrintObject.Data("www.bankly.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
+        printItem(printer, website)
+
 
         // print users copy
         val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
