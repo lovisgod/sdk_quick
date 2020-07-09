@@ -34,6 +34,10 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
 
         for (item in slip) printItem(item)
 
+        // print website at end of slip
+        val website = PrintObject.Data("www.bankly.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
+        printItem(website)
+
         // print thank you message at end of slip
         val thankYouMsg = PrintObject.Data("Powered By InterSwitch", PrintStringConfiguration(displayCenter = true))
         printItem(thankYouMsg)
@@ -42,13 +46,11 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         val posVersion = PrintObject.Data("SmartPOS version 1.0.0", PrintStringConfiguration(displayCenter = true))
         printItem(posVersion)
 
-        // print retain receipt at end of slip
-        val retainReceipt = PrintObject.Data("Please Retain Your Receipt", PrintStringConfiguration(displayCenter = true, isBold = true))
-        printItem(retainReceipt)
+        // print quickteller website at end of slip
+        val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
+        printItem(quicktellerWebsite)
 
-        // print website at end of slip
-        val website = PrintObject.Data("www.bankly.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
-        printItem(website)
+
 
         // print users copy
         val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))

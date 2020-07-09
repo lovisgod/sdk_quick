@@ -52,7 +52,7 @@ class ProcessingRequestFragment : BaseFragment(TAG) {
             PaymentModel.TransactionType.REFUND -> isw_processing_text.text =
                     getString(R.string.isw_processing_transaction, "Refund")
             PaymentModel.TransactionType.CASH_OUT -> isw_processing_text.text =
-                    getString(R.string.isw_processing_transaction, "CashOut")
+                    getString(R.string.isw_processing_transaction, "Withdrawal")
             else -> isw_processing_text.text =
                     getString(R.string.isw_processing_transaction, "Completion")
         }
