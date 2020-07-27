@@ -30,6 +30,8 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
     private lateinit var terminalInfo: TerminalInfo
 
+    private var isKimono: Boolean = false
+
     private var isCancelled = false
 
     private var cardPinResult: Int = EmvService.EMV_TRUE
@@ -76,8 +78,9 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 MinPinLen= 4
                 IsShowCardNo = 0
                 Amount = "$amount"
-                CardNo = telpoEmvImplementation.cardPan
+                CardNo = panBlock
             }
+
             PinpadService.Open(context)
 
         if (!isOnline) {
@@ -90,20 +93,42 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 }
                 else -> EmvService.EMV_FALSE
             }
-            //clear pinBlock if offline
+            //clear pinBlock and ksnData for offline pin
             StoreData.pinBlock = null
+            StoreData.ksnData = null
         } else {
 
-            cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {
-                PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
-                PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
-                PinpadService.PIN_OK -> {
-                    StoreData.pinBlock = StringUtil.toHexString(pinParameter.Pin_Block)
-                    if (StoreData.pinBlock!!.contains("00000000")) {
-                        EmvService.ERR_NOPIN
-                    } else EmvService.EMV_TRUE
+            if (isKimono) {
+
+                PinpadService.TP_PinpadDukptSessionStart(0)
+
+                cardPinResult = when (PinpadService.TP_PinpadDukptGetPin(pinParameter)) {
+                    PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
+                    PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
+                    PinpadService.PIN_OK -> {
+                        StoreData.pinBlock = StringUtil.toHexString(pinParameter.Pin_Block)
+                        StoreData.ksnData = StringUtil.toHexString(pinParameter.Curr_KSN)
+                        if (StoreData.pinBlock!!.contains("00000000")) {
+                            EmvService.ERR_NOPIN
+                        } else EmvService.EMV_TRUE
+                    }
+                    else -> EmvService.EMV_FALSE
                 }
-                else -> EmvService.EMV_FALSE
+
+                PinpadService.TP_PinpadDukptSessionEnd()
+
+            } else {
+                cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {
+                    PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
+                    PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
+                    PinpadService.PIN_OK -> {
+                        StoreData.pinBlock = StringUtil.toHexString(pinParameter.Pin_Block)
+                        if (StoreData.pinBlock!!.contains("00000000")) {
+                            EmvService.ERR_NOPIN
+                        } else EmvService.EMV_TRUE
+                    }
+                    else -> EmvService.EMV_FALSE
+                }
             }
         }
     }
@@ -128,6 +153,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
     override suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, channel: Channel<EmvMessage>, scope: CoroutineScope) {
         this.amount = amount
         this.terminalInfo = terminalInfo
+        this.isKimono = terminalInfo.isKimono
         telpoEmvImplementation.setAmount(amount)
 
         this.channel = channel
@@ -204,10 +230,10 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         return telpoEmvImplementation.getTrack2()?.let {
             // get pinData (only for online PIN)
             val cardPin = StoreData.pinBlock ?: ""
+
+            val pinKsn = StoreData.ksnData?.removeRange(0, 4) ?: ""
             logger.log("cardPin from getTransactionInfo $cardPin")
             //logger.log("cardPin-pinData from getTransactionInfo $pinData")
-
-
 
             // get track 2 string
             val track2data = StringUtil.toHexString(it)
@@ -225,13 +251,14 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             val csnStr = telpoEmvImplementation.getTLVString(ICCData.APP_PAN_SEQUENCE_NUMBER.tag)!!
             val csn = "0$csnStr"
 
-            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = cardPin, cardTrack2 = track2data,  icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = "")
+            EmvData(cardPAN = pan, cardExpiry = expiry, cardPIN = cardPin, cardTrack2 = track2data, icc = iccFull, AID = aid, src = src, csn = csn, pinKsn = pinKsn)
         }
     }
 
     class StoreData {
         companion object {
             var pinBlock: String? = null
+            var ksnData: String? = null
         }
     }
 }

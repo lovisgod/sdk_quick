@@ -27,9 +27,13 @@ class TelpoPOSDeviceImpl constructor(
     override val hasFingerPrintReader: Boolean get() = true
 
     override fun loadInitialKey(initialKey: String, ksn: String) {
+        EmvService.Open(this.context)
+        EmvService.Device_Open(this.context)
         val keyValue = StringUtil.toBytes(initialKey)
         val ksnValue = StringUtil.toBytes(ksn)
 //        PinpadService.TP_PinpadWriteDukptIPEK(keyValue)
+        PinpadService.Open(this.context)
+        PinpadService.TP_PinpadWriteDukptIPEK(keyValue, ksnValue, 0, 0, 0)
     }
 
     override fun loadMasterKey(masterKey: String) {
@@ -75,6 +79,7 @@ class TelpoPOSDeviceImpl constructor(
         internal const val INDEX_TMK = 0x01
         internal const val INDEX_TPK = 0x03
         internal const val DEVICE_NAME: String = "TELPO"
+
 
         internal lateinit var companyLogo: Bitmap private set
 

@@ -460,6 +460,10 @@ internal class EmvImplementation(private val context: Context, private val pinCa
             val str = tlv?.let { bcd2Str(it) }
             logger.log("tag: ${tag.name}, hex: $str")
         }
+
+        val datalist = com.pax.jemv.clcommon.ByteArray(5)
+        EMVCallback.EMVGetTLVData(0x9B, datalist)
+        logger.log("TLV - TVR 0x9B for Afiz: ${bcd2Str(datalist.data, 2)}")
         logger.log("---------------------------------------------")
     }
 
