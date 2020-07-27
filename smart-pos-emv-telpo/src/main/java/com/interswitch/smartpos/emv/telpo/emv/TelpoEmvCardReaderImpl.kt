@@ -77,7 +77,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 MaxPinLen = 6
                 MinPinLen= 4
                 IsShowCardNo = 0
-                Amount = "$amount"
+                Amount = (amount / 100).toString()
                 CardNo = panBlock
             }
 
@@ -163,7 +163,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
         logger.logErr("Result: $result")
 
         val resultMsg = when (result) {
-            EmvService.ERR_ICCCMD, EmvService.ERR_NOAPP,
+            EmvService.ERR_ICCCMD, EmvService.ERR_NOAPP, EmvService.ERR_USERCANCEL,
             EmvService.ERR_NOPIN, EmvService.ERR_TIMEOUT, EmvService.ERR_NODATA -> 1
             else -> null
         }
