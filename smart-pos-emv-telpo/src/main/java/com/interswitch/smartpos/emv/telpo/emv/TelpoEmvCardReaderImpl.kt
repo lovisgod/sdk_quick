@@ -85,7 +85,10 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
         if (!isOnline) {
             cardPinResult = when (PinpadService.TP_PinpadGetPlainPin(pinParameter, 0, 0, 0)) {
-                PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
+                PinpadService.PIN_ERROR_CANCEL -> {
+                    callTransactionCancelled(EmvService.ERR_USERCANCEL, "User cancelled PIN input")
+                    EmvService.ERR_USERCANCEL
+                }
                 PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
                 PinpadService.PIN_OK -> {
                     pinData?.Pin = pinParameter.Pin_Block
@@ -103,7 +106,10 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 PinpadService.TP_PinpadDukptSessionStart(0)
 
                 cardPinResult = when (PinpadService.TP_PinpadDukptGetPin(pinParameter)) {
-                    PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
+                    PinpadService.PIN_ERROR_CANCEL -> {
+                        callTransactionCancelled(EmvService.ERR_USERCANCEL, "User cancelled PIN input")
+                        EmvService.ERR_USERCANCEL
+                    }
                     PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
                     PinpadService.PIN_OK -> {
                         StoreData.pinBlock = StringUtil.toHexString(pinParameter.Pin_Block)
@@ -119,7 +125,10 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
             } else {
                 cardPinResult = when (PinpadService.TP_PinpadGetPin(pinParameter)) {
-                    PinpadService.PIN_ERROR_CANCEL -> EmvService.ERR_USERCANCEL
+                    PinpadService.PIN_ERROR_CANCEL -> {
+                        callTransactionCancelled(EmvService.ERR_USERCANCEL, "User cancelled PIN input")
+                        EmvService.ERR_USERCANCEL
+                    }
                     PinpadService.PIN_ERROR_TIMEOUT -> EmvService.ERR_TIMEOUT
                     PinpadService.PIN_OK -> {
                         StoreData.pinBlock = StringUtil.toHexString(pinParameter.Pin_Block)
@@ -131,19 +140,6 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 }
             }
         }
-    }
-
-    private fun pinBlockEncryption(panString: String, pinString: String): String {
-        val panString = "0000" + panString.substring(0, panString.count() - 1).substring(panString.count() - 13)
-        val pinString = "0" + pinString.count() + pinString + "FFFFFFFFFF"
-        val pinBlock = StringBuilder()
-        for (i in 0 until panString.count()) {
-            val nPin: Int = if (pinString.get(i) == 'F') 15 else pinString.get(i).toString().toInt()
-            val nPan: Int = panString.get(i).toString().toInt()
-            val xorResult: Int = (nPin xor nPan)
-            pinBlock.append(xorResult.toString(16))
-        }
-        return pinBlock.toString().toUpperCase()
     }
 
     override suspend fun showPinOk() = channel.send(EmvMessage.PinOk)
