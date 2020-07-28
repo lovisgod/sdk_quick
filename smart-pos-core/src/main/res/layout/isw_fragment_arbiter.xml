@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:background="@color/iswColorPrimary">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/iswColorPrimary">
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/isw_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.25"/>
+        android:id="@+id/isw_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/isw_guideline2"
+        android:id="@+id/isw_guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -79,9 +78,9 @@
         <EditText
                 android:id="@+id/isw_transaction_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@drawable/bgd_selector_editext"
-                android:hint="@string/isw_transaction_id"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@drawable/isw_bgd_selector_editext"
+            android:hint="@string/isw_transaction_id"
                 android:inputType="text"
                 android:maxLength="11"
                 android:layout_marginTop="40dp"
@@ -92,9 +91,9 @@
         <EditText
                 android:id="@+id/isw_amount"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@drawable/bgd_selector_editext"
-                android:hint="@string/isw_amount_hint"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@drawable/isw_bgd_selector_editext"
+            android:hint="@string/isw_amount_hint"
                 android:inputType="number"
                 android:maxLength="11"
                 android:layout_marginTop="20dp"
@@ -105,9 +104,9 @@
         <EditText
                 android:id="@+id/isw_reference_date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@drawable/bgd_selector_editext"
-                android:hint="@string/isw_date_hint"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@drawable/isw_bgd_selector_editext"
+            android:hint="@string/isw_date_hint"
                 android:inputType="number"
                 android:maxLength="11"
                 android:layout_marginTop="20dp"

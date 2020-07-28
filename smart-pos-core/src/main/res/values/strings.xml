@@ -191,7 +191,7 @@
     <string name="isw_phone_number">Phone Number</string>
     <string name="isw_card_pan">Card PAN</string>
     <string name="isw_place_fingerprint_on_the_scanner_or_use_card_to_proceed">Place fingerprint on the scanner\nor use card to proceed…</string>
-    <string name="next">NEXT</string>
+    <string name="isw_next">NEXT</string>
     <string name="isw_continue">CONTINUE</string>
     <string name="isw_merchant_authorization_setup_successful">Merchant Authorization\nSetup Successful</string>
     <string name="isw_capture">Capture</string>
@@ -201,8 +201,8 @@
     <string name="isw_finish">FINISH</string>
     <string name="isw_use_fingerprint">USE FINGERPRINT</string>
     <string name="isw_bills">Bills Payment</string>
-    <string name="search">Search</string>
-    <string name="reference_number">Reference Number</string>
+    <string name="isw_search">Search</string>
+    <string name="isw_reference_number">Reference Number</string>
     <string name="isw_fund_your_ecash">Receive payment from E-Cash wallet</string>
     <string name="isw_eChange_text">Give digital change in E-Cash wallet</string>
     <string name="isw_more">More</string>
@@ -213,29 +213,28 @@
     <string name="isw_transfer_to_account">Transfer to Account</string>
     <string name="isw_transfer_to_account_info">Send money to bank accounts</string>
     <string name="isw_amount_hint">Amount</string>
-    <string name="done">Done</string>
-    <string name="sent">Sent</string>
+    <string name="isw_done">Done</string>
+    <string name="isw_sent_str">Sent</string>
     <string name="isw_account_number">Account Number</string>
     <string name="isw_remarks">Remarks</string>
     <string name="isw_arbiter_status_request">Arbiter Status</string>
     <string name="isw_arbiter_hint">Transaction ID or Customer name</string>
-    <string name="filter_by_date">Filter by Date</string>
+    <string name="isw_filter_by_date">Filter by Date</string>
     <string name="isw_arbiter_status">Arbiter Status</string>
     <string name="isw_arbiter_status_info">Check the status of arbiter transactions</string>
-    <string name="transaction_sent_info">Your transaction has been sent and is being processed, you will receive a
+    <string name="isw_transaction_sent_info">Your transaction has been sent and is being processed, you will receive a
         confirmation sms shortly.
     </string>
-    <string name="isw_sent">Sent</string>
     <string name="isw_customer_info">Customer Info</string>
     <string name="isw_raise_dispute">Raise a Dispute</string>
     <string name="isw_dispute_status">Dispute Transaction Status</string>
     <string name="isw_get_reward">Get Reward</string>
     <string name="isw_get_reward_info"> Earn and redeem customer loyalty rewards</string>
-    <string name="customer_name">Customer Name</string>
+    <string name="isw_customer_name">Customer Name</string>
     <string name="isw_transaction_id">Transaction ID</string>
-    <string name="issue_type">Issue Type</string>
-    <string name="resolution_status">Resolution Status</string>
-    <string name="not_found">Not Found</string>
+    <string name="isw_issue_type">Issue Type</string>
+    <string name="isw_resolution_status">Resolution Status</string>
+    <string name="isw_not_found">Not Found</string>
     <string name="isw_date_hint">Date</string>
     <string name="isw_raise">Raise</string>
     <string name="isw_check_dispute_status">Check Dispute Status</string>

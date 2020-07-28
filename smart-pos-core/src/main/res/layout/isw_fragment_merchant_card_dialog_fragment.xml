@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Authenticate Merchant Pin"
-        android:textSize="@dimen/font16"
+        android:textSize="@dimen/isw_font16"
         android:textColor="@color/iswTextColorBlack"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

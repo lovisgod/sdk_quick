@@ -13,5 +13,5 @@
     <dimen name="design_navigation_padding_top_default" tools:override="true" tools:ignore="ResourceName">25dp</dimen>
     <dimen name="design_navigation_padding_bottom" tools:override="true" tools:ignore="ResourceName">25dp</dimen>
     <dimen name="design_navigation_item_horizontal_padding" tools:override="true" tools:ignore="ResourceName">25dp</dimen>
-    <dimen name="font16">16sp</dimen>
+    <dimen name="isw_font16">16sp</dimen>
 </resources>

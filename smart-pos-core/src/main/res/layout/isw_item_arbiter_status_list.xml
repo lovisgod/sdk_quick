@@ -23,16 +23,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="@string/customer_name"
-                    android:textColor="@color/iswColorLightBlue"/>
+                android:text="@string/isw_customer_name"
+                android:textColor="@color/iswColorLightBlue"/>
 
             <TextView
                     android:id="@+id/isw_customer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textSize="@dimen/font16"
-                    android:text="Njoku Davies"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/isw_font16"
+                android:text="Njoku Davies"
                     android:textColor="@color/iswTextColorBlack"/>
 
             <TextView
@@ -47,27 +47,27 @@
                     android:id="@+id/isw_transaction_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textSize="@dimen/font16"
-                    android:text="ISW49593949"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/isw_font16"
+                android:text="ISW49593949"
                     android:textColor="@color/iswTextColorBlack"/>
 
             <TextView
                     android:id="@+id/isw_textview74"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/issue_type"
-                    android:textColor="@color/iswColorLightBlue"/>
+                android:layout_marginTop="10dp"
+                android:text="@string/isw_issue_type"
+                android:textColor="@color/iswColorLightBlue"/>
 
 
             <TextView
                     android:id="@+id/isw_issue_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textSize="@dimen/font16"
-                    android:text="TransactionTimeout"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/isw_font16"
+                android:text="TransactionTimeout"
                     android:textColor="@color/iswTextColorBlack"/>
 
 
@@ -75,17 +75,17 @@
                     android:id="@+id/isw_textview78"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/resolution_status"
-                    android:textColor="@color/iswColorLightBlue"/>
+                android:layout_marginTop="10dp"
+                android:text="@string/isw_resolution_status"
+                android:textColor="@color/iswColorLightBlue"/>
 
             <TextView
                     android:id="@+id/isw_resolution_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:textSize="@dimen/font16"
-                    android:text="Resolved"
+                android:layout_marginTop="5dp"
+                android:textSize="@dimen/isw_font16"
+                android:text="Resolved"
                     android:textColor="@color/iswTextColorBlack"/>
 
 
