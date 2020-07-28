@@ -241,7 +241,7 @@ internal class ReportViewModel(
         list.add(PrintObject.Data("Total Passed Transaction: $transactionApproved\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Data("Total Failed Transaction: $transactionFailed\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Data("Total Approved Amount: $transactionApprovedAmount\n", PrintStringConfiguration(isBold = true)))
-        list.add(PrintObject.Data("Total Approved Amount: $transactionFailedAmount\n", PrintStringConfiguration(isBold = true)))
+        list.add(PrintObject.Data("Total Failed Amount: $transactionFailedAmount\n", PrintStringConfiguration(isBold = true)))
         list.add(PrintObject.Line)
 
         return list
