@@ -74,4 +74,14 @@ interface TransactionLogService {
     fun getTransactionListFor(date: Date, transactionType: TransactionType): List<TransactionLog>
 
 
+   /** This function is responsible for synchronously clearing a list transaction for a
+     * specific day with the specified range of start to end of day
+     *
+     * @param date  the day for transactions to be retrieved
+     * @param transactionType  the type of the transactions to be retrieved
+     * @return  a paged list of transactions for that day
+     */
+    fun clearEndOFDay(date: Date)
+
+
 }

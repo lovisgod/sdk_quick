@@ -52,6 +52,10 @@ internal class ReportViewModel(
         return transactionLogService.getTransactionFor(day, config)
     }
 
+    fun clearEod(day: Date){
+        return transactionLogService.clearEndOFDay(day)
+    }
+
     fun getReport(day: Date, transactionType: TransactionType): LiveData<PagedList<TransactionLog>> {
         return transactionLogService.getTransactionFor(day, transactionType, config)
     }
@@ -218,9 +222,9 @@ internal class ReportViewModel(
             //add successful transactions
             if (it.responseCode == IsoUtils.OK) {
                 transactionApproved += 1
-                transactionApprovedAmount += DisplayUtils.getAmountString(it.amount.toInt()).toDouble()
+                transactionApprovedAmount += DisplayUtils.getAmountString(it.amount)
             } else {
-                transactionFailedAmount += DisplayUtils.getAmountString(it.amount.toInt()).toDouble()
+                transactionFailedAmount += DisplayUtils.getAmountString(it.amount)
             }
         }
         // add line

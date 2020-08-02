@@ -77,7 +77,7 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
                 MaxPinLen = 6
                 MinPinLen= 4
                 IsShowCardNo = 0
-                Amount = (amount / 100).toString()
+                Amount = (amount / 100.0).toString()
                 CardNo = panBlock
             }
 

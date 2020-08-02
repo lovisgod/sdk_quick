@@ -37,7 +37,7 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
 
     private lateinit var endOfDayPrintDialog: EndOfDayPrintDialog
 
-    private val transactionTypes = arrayOf("All", "CashOutInquiry", "CashOutPay")
+    private val transactionTypes = arrayOf("All", "Inquiry", "Completion")
     private var transactionType: TransactionType? = null
 
 
@@ -76,6 +76,11 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
             val dialog = DialogUtils.createDateDialog(requireContext(), this, selectedDate)
             dialog.datePicker.maxDate = System.currentTimeMillis()
             dialog.show()
+        }
+
+        isw_btn_clear_eod.setOnClickListener{
+            reportViewModel.clearEod(selectedDate)
+            toast("Data Cleared")
         }
 
         // select today's reports
@@ -140,11 +145,22 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         // get the neame of the transaction type
         val transactionTypeName = transactionTypes[position]
+        transactionType = when (transactionTypeName) {
+            "Inquiry" -> {
+                TransactionType.CashOutInquiry
+            }
+            "Completion" -> {
+                TransactionType.CashOutPay
+            }
+            else -> {
+                null
+            }
+        }
 
-        // get the enum value based on the name
+       /* // get the enum value based on the name
         transactionType =
                 if (position == 0) null
-                else TransactionType.valueOf(transactionTypeName)
+                else TransactionType.valueOf(transactionTypeName)*/
         toast(transactionTypeName)
 
         // update recycler viw

@@ -76,6 +76,11 @@ internal object DisplayUtils: KoinComponent {
         return numberFormat.format(amount)
     }
 
+    fun getAmountString(amount: String): Double {
+        val cleanString = amount.replace("[$,.]".toRegex(), "")
+        val parsed = java.lang.Double.parseDouble(cleanString)
+        return parsed/100
+    }
 
     fun getAmountString(amount: Int): String {
         val amountAsDouble: Double = amount / 100.0

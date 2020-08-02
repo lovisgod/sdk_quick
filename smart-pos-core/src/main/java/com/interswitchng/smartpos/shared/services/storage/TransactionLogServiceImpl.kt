@@ -7,6 +7,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.TransactionLogServic
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionLog
 import com.zhuinden.monarchy.Monarchy
+import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.where
 import java.util.*
@@ -120,6 +121,19 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
                     .greaterThan("time", morning)
                     .lessThan("time", midnight)
                     .sort("time", Sort.DESCENDING)
+        }
+    }
+    override fun clearEndOFDay(date: Date) {
+        // get the date range for current date as morning and midnight
+        val (morning, midnight) = getDateRange(date)
+
+        // query for stream of transaction logs for specified day by retrieving livedata list
+        monarchy.writeAsync{ realm ->
+            realm.where<TransactionLog>()
+                    .greaterThan("time", morning)
+                    .lessThan("time", midnight)
+                    .findAll()
+                    .deleteAllFromRealm()
         }
     }
 
