@@ -5,6 +5,7 @@ import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.posconfig.PrintStringConfiguration
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionStatus
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 
 
@@ -27,7 +28,13 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
 
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
 
-        val txnType = pairString("", "Withdrawal", stringConfig = typeConfig)
+        var withdrawalTag = "Withdrawal"
+
+        if(info.type == TransactionType.CashOutInquiry){
+            withdrawalTag = "Inquiry"
+        }
+
+        val txnType = pairString("", withdrawalTag , stringConfig = typeConfig)
 
         val paymentType = pairString("channel", info.paymentType.toString())
         val stan = pairString("stan", info.stan.padStart(6, '0'))
