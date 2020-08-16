@@ -8,7 +8,7 @@ interface TelpoPinCallback {
 
     val pinResult: Int
 
-    suspend fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String, pinData: EmvPinData?)
+    suspend fun enterPin(isOnline: Boolean, triesCount: Int, offlineTriesLeft: Int, panBlock: String, pinData: EmvPinData?): Int
 
     suspend fun showPinOk()
 }

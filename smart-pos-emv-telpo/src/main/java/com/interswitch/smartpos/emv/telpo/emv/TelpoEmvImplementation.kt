@@ -299,9 +299,9 @@ internal class TelpoEmvImplementation (
                 TERMINAL_CAPABILITIES = ICCData.TERMINAL_CAPABILITIES.getTlv() ?: "",
                 TRANSACTION_DATE = ICCData.TRANSACTION_DATE.getTlv() ?: "",
                 TRANSACTION_TYPE = ICCData.TRANSACTION_TYPE.getTlv() ?: "",
-                UNPREDICTABLE_NUMBER = ICCData.UNPREDICTABLE_NUMBER.getTlv() ?: ""
+                UNPREDICTABLE_NUMBER = ICCData.UNPREDICTABLE_NUMBER.getTlv() ?: "",
                 //,Segun check this
-//                DEDICATED_FILE_NAME = ICCData.DEDICATED_FILE_NAME.getTlv() ?: ""
+                DEDICATED_FILE_NAME = ICCData.DEDICATED_FILE_NAME.getTlv() ?: ""
 
         ).apply {
 
@@ -343,18 +343,42 @@ internal class TelpoEmvImplementation (
         }
 
         override fun onInputPin(pinData: EmvPinData?): Int {
-            runBlocking {
-                pinCallback.enterPin(
+
+            val isOnline = pinData?.type == EmvService.ONLIEN_ENCIPHER_PIN
+
+            val pan: String = getPan()!!.let {
+                if (terminalInfo.isKimono && isOnline) {
+                    // pan manipulation required for kimono
+                    var modifiedPan = "0".repeat(16)
+                    val startIndex = it.length - 13
+                    val endIndex = startIndex + 12
+                    val subPan = it.substring(startIndex, endIndex)
+
+                    modifiedPan = modifiedPan.replaceRange(4 until modifiedPan.length, subPan)
+                    modifiedPan += "0"
+                    return@let modifiedPan
+                } else return@let it
+            }
+
+            val pinResult: Int = runBlocking {
+                 pinCallback.enterPin(
                     pinData?.type == EmvService.ONLIEN_ENCIPHER_PIN,
                     tries,
                     pinData?.RemainCount?.toInt() ?: 0,
-                        getPan() ?: "",
+                        pan,
                         pinData
                 )
             }
             tries++
 
-            return pinCallback.pinResult
+            return pinResult
+            /*if(pinCallback.pinResult != EmvService.EMV_TRUE){
+                logger.log("me: cardPinResultOnInputPin -----> ${pinCallback.pinResult}")
+                return pinCallback.pinResult
+            }
+
+            logger.log("me: cardPinResultOnInputPin -----> ${pinCallback.pinResult}")
+            return pinCallback.pinResult*/
         }
 
         override fun onOnlineProcess(p0: EmvOnlineData?): Int = runBlocking {

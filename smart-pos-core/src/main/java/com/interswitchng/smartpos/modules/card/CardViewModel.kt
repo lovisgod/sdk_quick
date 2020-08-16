@@ -457,6 +457,10 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         super.onCleared()
 
         // cancel any ongoing transaction
+        cancelTransaction()
+    }
+
+    fun cancelTransaction() {
         emv.cancelTransaction()
     }
 
