@@ -138,6 +138,12 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
         transactionLogService.logTransactionResult(resultLog)
     }
 
+    fun updateTransaction(result: TransactionResult) {
+        // get and log transaction to storage
+        val resultLog = TransactionLog.fromResult(result)
+        transactionLogService.updateTransactionResult(resultLog)
+    }
+
     fun initiateReversal(terminalInfo: TerminalInfo, transactionInfo: TransactionInfo) {
         println("Called me the chairman of reversal")
         logger.log("Called reversal inside vm")

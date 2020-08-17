@@ -288,10 +288,11 @@ class ReceiptFragment : BaseFragment(TAG) {
         isw_print_receipt.setOnClickListener {
             // print slip
             printSlip?.let {
-                if (!hasPrintedCustomerCopy) {
+                if (result?.hasPrintedCustomerCopy == 0) {
                     resultViewModel.printSlip(UserType.Customer, it)
-                    hasPrintedCustomerCopy = true
-                } else if (hasPrintedMerchantCopy) {
+                    result?.hasPrintedCustomerCopy = 1
+                    resultViewModel.updateTransaction(result!!)
+                } else if (result?.hasPrintedMerchantCopy == 1) {
                     resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
                 } else {
                     // if has not printed merchant copy
@@ -299,7 +300,8 @@ class ReceiptFragment : BaseFragment(TAG) {
                     resultViewModel.printSlip(UserType.Merchant, it)
                     // change print text to re-print
                     isw_print_receipt.text = getString(R.string.isw_title_re_print_receipt)
-                    hasPrintedMerchantCopy = true
+                    result?.hasPrintedMerchantCopy = 1
+                    resultViewModel.updateTransaction(result!!)
                 }
             }
         }

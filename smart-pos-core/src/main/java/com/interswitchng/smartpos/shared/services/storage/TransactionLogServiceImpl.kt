@@ -27,6 +27,10 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
         realm.copyToRealm(result)
     }
 
+    override fun updateTransactionResult(result: TransactionLog) = monarchy.writeAsync{ realm ->
+        realm.copyToRealmOrUpdate(result)
+    }
+
     override fun getTransactions(pagedListConfig: PagedList.Config): LiveData<PagedList<TransactionLog>> {
 
         // query for stream of transaction logs by creating dataSource factory

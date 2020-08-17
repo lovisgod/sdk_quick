@@ -17,6 +17,14 @@ interface TransactionLogService {
      */
     fun logTransactionResult(result: TransactionLog)
 
+    /**
+     * This function is responsible for updating transaction
+     * logs to the proposed storage implementation
+     *
+     * @param result  The transaction result to be logged
+     */
+    fun updateTransactionResult(result: TransactionLog)
+
 
     /**
      * This function is responsible for retrieving all logged

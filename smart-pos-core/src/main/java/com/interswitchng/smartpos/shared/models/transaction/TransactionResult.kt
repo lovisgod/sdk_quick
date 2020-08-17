@@ -44,7 +44,10 @@ data class TransactionResult(
         var originalTransmissionDateTime: String = EMPTY_STRING,
         var name: String = EMPTY_STRING,
         var ref: String = EMPTY_STRING,
-        var rrn: String = EMPTY_STRING) : Parcelable {
+        var rrn: String = EMPTY_STRING,
+        var hasPrintedCustomerCopy: Int = 0,
+        var hasPrintedMerchantCopy: Int = 0
+) : Parcelable {
 
 
     constructor(parcel: Parcel) : this(
@@ -73,7 +76,9 @@ data class TransactionResult(
             parcel.readString()!!,
             parcel.readString()!!,
             parcel.readString()!!,
-            parcel.readString()!!)
+            parcel.readString()!!,
+            parcel.readInt(),
+            parcel.readInt())
 
 
     fun getSlip(terminal: TerminalInfo): TransactionSlip {
@@ -142,6 +147,8 @@ data class TransactionResult(
         parcel.writeString(name)
         parcel.writeString(ref)
         parcel.writeString(rrn)
+        parcel.writeInt(hasPrintedCustomerCopy)
+        parcel.writeInt(hasPrintedMerchantCopy)
     }
 
     override fun describeContents(): Int {
