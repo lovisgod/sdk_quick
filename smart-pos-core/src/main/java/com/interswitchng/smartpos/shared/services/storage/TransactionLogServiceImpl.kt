@@ -35,7 +35,9 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
 
         // query for stream of transaction logs by creating dataSource factory
         val logDataSourceFactory = monarchy.createDataSourceFactory { realm ->
-            realm.where<TransactionLog>().sort("time", Sort.DESCENDING)
+            realm.where<TransactionLog>()
+                    .equalTo("transactionType", TransactionType.CashOutPay.ordinal)
+                    .sort("time", Sort.DESCENDING)
         }
 
         // create paged list builder for datasource factory
