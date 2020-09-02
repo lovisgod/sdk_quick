@@ -268,7 +268,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 }
                 transactionResult = TransactionResult(
                         paymentType = PaymentType.Card,
-                        dateTime = DisplayUtils.getIsoString(now),
+                        dateTime = DateUtils.universalDateFormat.format(now),
                         amount = txnInfo.amount.toString(),
                         type = TransactionType.CashOutInquiry,
                         responseMessage = IsoUtils.getIsoResultMsg(purchaseResponse.responseCode)
@@ -307,7 +307,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 }
                 transactionResult = TransactionResult(
                         paymentType = PaymentType.Card,
-                        dateTime = DisplayUtils.getIsoString(now),
+                        dateTime = DateUtils.universalDateFormat.format(now),
                         amount = txnInfo.amount.toString(),
                         type = TransactionType.CashOutInquiry,
                         authorizationCode = purchaseResponse.authId,
