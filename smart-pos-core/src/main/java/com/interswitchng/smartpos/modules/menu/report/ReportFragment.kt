@@ -214,8 +214,9 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
 
         // show recycler view based on results
         if (hasNoContent) {
-            // hide recycler view and show no result
+            // hide recycler view,hide spinner and show no result
             rvTransactions.visibility = View.GONE
+            spinnerTransactionTypes.visibility = View.GONE
             tvResultHint.visibility = View.VISIBLE
             // format text for no result
             val date = DateUtils.shortDateFormat.format(day)
@@ -223,8 +224,9 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
         } else {
             // submit paged list to adapter
             adapter.submitList(list)
-            // hide no report hint, and show recycler view
+            // hide no report hint, show spinner, and show recycler view
             rvTransactions.visibility = View.VISIBLE
+            spinnerTransactionTypes.visibility = View.VISIBLE
             tvResultHint.visibility = View.GONE
         }
     }
