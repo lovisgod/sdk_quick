@@ -80,6 +80,7 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
 
         isw_btn_clear_eod.setOnClickListener{
             reportViewModel.clearEod(selectedDate)
+            spinnerTransactionTypes.visibility = View.GONE
             toast("Data Cleared")
         }
 
