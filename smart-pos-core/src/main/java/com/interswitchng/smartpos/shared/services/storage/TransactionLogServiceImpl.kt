@@ -29,7 +29,7 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
 
     override fun updateTransactionResult(result: TransactionLog) = monarchy.writeAsync{ realm ->
         val transactionLog: TransactionLog = realm.where(TransactionLog::class.java)
-                .equalTo("stan", result.stan)
+                .equalTo("time", result.time)
                 .findFirst() ?: TransactionLog()
         result.id = transactionLog.id
 
