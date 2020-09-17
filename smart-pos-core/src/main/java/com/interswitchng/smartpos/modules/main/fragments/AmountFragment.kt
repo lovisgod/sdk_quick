@@ -14,7 +14,7 @@ import com.interswitchng.smartpos.shared.utilities.Logger
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
 import java.text.NumberFormat
 
-const val AMOUNT_LIMIT = 10000000
+const val AMOUNT_LIMIT = 20000000
 class AmountFragment : BaseFragment(TAG) {
 
     private val amountFragmentArgs by navArgs<AmountFragmentArgs>()
@@ -52,10 +52,16 @@ class AmountFragment : BaseFragment(TAG) {
         isw_proceed.setOnClickListener {
             if (amount == EMPTY_STRING || amount == DEFAULT_AMOUNT) {
                 displayInvalidAmountToast()
+            } else if(isAmountLimit()){
+                displayLimitAmountToast()
             } else {
                 proceedWithPayment()
             }
         }
+    }
+
+    private fun displayLimitAmountToast() {
+        toast("Limit Amount is $AMOUNT_LIMIT")
     }
 
     private fun proceedWithPayment() {

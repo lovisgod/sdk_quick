@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchpossdkdemo;
+package com.interswitchng.interswitchposbanklyv2;
 
 
 import android.content.Intent;

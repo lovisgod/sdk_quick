@@ -8,7 +8,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion targetSdk
     defaultConfig {
-        applicationId "com.interswitchng.interswitchpossdkdemo"
+        applicationId "com.interswitchng.interswitchposbanklyv2"
         minSdkVersion minSdk
         targetSdkVersion targetSdk
         multiDexEnabled true
