@@ -181,7 +181,7 @@ internal class ReportViewModel(
 
 
         //add terminalIdTitle
-        val terminalIdTitle = PrintObject.Data("TerminalId\n", PrintStringConfiguration(isBold = true))
+        val terminalIdTitle = PrintObject.Data("TerminalID\n", PrintStringConfiguration(isBold = true))
         //add terminalIdTitle
         list.add(terminalIdTitle)
         //create the terminalId for printout
@@ -205,8 +205,8 @@ internal class ReportViewModel(
 
 
         // table title
-        val amountTitle = formatAmount("Amt")
-        val tableTitle = PrintObject.Data("Time  $amountTitle Card Status", PrintStringConfiguration(displayCenter = true))
+        val amountTitle = "Amt".padEnd(15,'-')
+        val tableTitle = PrintObject.Data("Time---$amountTitle Card--Status\n")
         list.add(tableTitle)
         list.add(PrintObject.Line)
 
@@ -255,19 +255,18 @@ internal class ReportViewModel(
 
     private fun TransactionLog.toSlipItem(): PrintObject {
         val date = Date(this.time)
-        val dateStr = DateUtils.hourMinuteFormat.format(date)
-        val amount = formatAmount(DisplayUtils.getAmountString(this.amount.toInt()))
+        val dateStr = DateUtils.hourMinuteFormat.format(date).padEnd(7,'-')
+        val amount = DisplayUtils.getAmountString(this.amount.toInt()).padEnd(15,'-')
         val code = this.responseCode
-        val card = this.cardPan.takeLast(4)
+        val card = this.cardPan.takeLast(4).padEnd(6,'-')
         val status = if (code == IsoUtils.OK) "PASS" else "FAIL"
 
-        val config = PrintStringConfiguration(displayCenter = true)
 
-        return PrintObject.Data("$dateStr $amount $card $status ", config)
+        return PrintObject.Data("$dateStr $amount $card $status\n")
     }
 
     private fun formatAmount(amount: String): String {
-        val spaceCount = 10 - amount.length
+        val spaceCount = 13 - amount.length
         val padding = " ".repeat(spaceCount)
         return amount + padding
     }

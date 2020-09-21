@@ -27,7 +27,8 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
             setAlgin(UsbThermalPrinter.ALGIN_LEFT)
         }
 
-        printer.walkPaper(10)
+        printer.setLineSpace(1)
+        printer.walkPaper(12)
 
         //Print the company's logo
         printCompanyLogo()
@@ -59,7 +60,7 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         return try {
             printer.printString()
             // set step distance
-            printer.walkPaper(10)
+            printer.walkPaper(12)
             PrintStatus.Ok("Printed")
         } catch (exception: TelpoException) {
             PrintStatus.Ok("Failed to print: ${exception.localizedMessage}")
@@ -90,10 +91,10 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
                 when {
                     printConfig.isTitle -> {
                         printer.setGray(7)
-                        printer.setTextSize(30)
+                        printer.setTextSize(25)
                     }
                     else -> {
-                        printer.setTextSize(24)
+                        printer.setTextSize(19)
                     }
                 }
 

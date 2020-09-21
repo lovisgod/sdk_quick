@@ -24,8 +24,8 @@ import com.pax.dal.entity.EFontTypeExtCode
 class DevicePrinterImpl constructor(private val context: Context) : DevicePrinter {
 
     // font sizes
-    private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_16_24, EFontTypeExtCode.FONT_16_16)
-    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_16_32)
+    private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_8_16, EFontTypeExtCode.FONT_16_16)
+    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_8_32, EFontTypeExtCode.FONT_16_32)
 
     private val line: String = "-".repeat(Companion.SCREEN_NORMAL_LENGTH)
 
@@ -155,7 +155,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
             val canvas = Canvas(outputBitmap)
             // draw logo in output bitmap
             canvas.drawColor(Color.WHITE)
-            canvas.drawBitmap(smallScale, paddingLeft.toFloat(), 0f, null)
+            canvas.drawBitmap(smallScale, paddingLeft.toFloat() - 90.toFloat(), 0f, null)
 
             // print bitmap
             printer.printBitmap(outputBitmap)
@@ -227,7 +227,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
     companion object {
         // screen caharacter length
-        private const val SCREEN_LARGE_LENGTH = 24
-        private const val SCREEN_NORMAL_LENGTH = 32
+        private const val SCREEN_LARGE_LENGTH = 40
+        private const val SCREEN_NORMAL_LENGTH = 48
     }
 }
