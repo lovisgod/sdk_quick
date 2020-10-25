@@ -267,7 +267,7 @@
     <string name="isw_print_all_transactions">Print all transactions</string>
     <string name="isw_refund_new">Refund</string>
     <string name="isw_authenticate_supervisor_s_card">Authenticate Supervisor\'s Card</string>
-    <string name="isw_enter_merchant_s_pin">Enter Merchant\'s Pin</string>
+    <string name="isw_enter_merchant_s_pin">Enter New Merchant\'s Pin</string>
     <string name="isw_sample_pin">123456</string>
     <string name="isw_cash_out">Cash Out</string>
     <string name="isw_agent_id_downloaded">Agent Id Downloaded</string>
