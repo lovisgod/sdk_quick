@@ -244,13 +244,9 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 url = Constants.KIMONO_3_END_POINT
             }
             val responseBody = httpService.makeCashOutInquiry(url, bodyCashOut).run()
-            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
+            val purchaseResponse = responseBody.body()
 
-
-            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-            var purchaseResponse = XmlPullParserHandlerBP().parse(inputStream)
-
-            return if (!responseBody.isSuccessful || purchaseResponse.responseCode == null) {
+            return if (!responseBody.isSuccessful || purchaseResponse?.responseCode == null) {
                 TransactionResponse(
                         responseCode = IsoUtils.TIMEOUT_CODE,
                         authCode = "",
@@ -353,11 +349,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
         try {
             val responseBody = httpService.makeCashOutPayment(url, body).run()
-            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
-
-
-            val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-            var purchaseResponse = XmlPullParserHandlerBP().parse(inputStream)
+            var purchaseResponse = responseBody.body()
 
             return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
