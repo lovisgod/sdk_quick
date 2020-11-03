@@ -312,7 +312,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/isw_content_padding"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="@dimen/isw_content_padding">
+                    android:layout_marginEnd="@dimen/isw_content_padding"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tvAgentId"

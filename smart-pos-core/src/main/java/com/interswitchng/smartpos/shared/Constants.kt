@@ -6,10 +6,8 @@ import com.interswitchng.smartpos.shared.utilities.KeysUtils
 
 object Constants {
 
-    internal const val PAYMENT_CODE_1 = "04376801"
-    internal const val PAYMENT_CODE_2 = "04377102"
-    internal const val PAYMENT_CODE_3 = "04377203"
-    internal const val PAYMENT_CODE_4 = "04376904"
+    internal const val PAYMENT_CODE_1 = "04385601"
+    internal const val PAYMENT_CODE_2 = "04385602"
 
     // URL END POINTS
     internal const val CODE_END_POINT = "till.json"

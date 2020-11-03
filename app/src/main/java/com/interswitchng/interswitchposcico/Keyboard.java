@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchposbanklyv2;
+package com.interswitchng.interswitchposcico;
 
 import android.app.Activity;
 import android.content.Context;

@@ -236,7 +236,7 @@ class TerminalSettingsActivity : MenuActivity() {
                 )
             }
         }
-
+/*
         btnDownloadAgentId.setOnClickListener {
 
             // get fields
@@ -266,7 +266,7 @@ class TerminalSettingsActivity : MenuActivity() {
                         switchKimono.isChecked
                 )
             }
-        }
+        }*/
 
         btnUploadConfig.setOnClickListener {
             // create intent to choose file

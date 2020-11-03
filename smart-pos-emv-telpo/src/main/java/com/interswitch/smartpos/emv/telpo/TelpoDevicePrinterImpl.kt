@@ -36,7 +36,7 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         for (item in slip) printItem(item)
 
         // print website at end of slip
-        val website = PrintObject.Data("www.bankly.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
+        val website = PrintObject.Data("www.cico.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(website)
 
         // print thank you message at end of slip
@@ -113,7 +113,7 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
 
     fun printCompanyLogo() {
         printer.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE)
-        val drawable = ContextCompat.getDrawable(context, R.drawable.isw_ic_bankly_app_logo)!!
+        val drawable = ContextCompat.getDrawable(context, R.drawable.isw_cico_logo)!!
         val companyLogo: Bitmap = run {
             return@run when (drawable) {
                 is BitmapDrawable -> drawable.bitmap

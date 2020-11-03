@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchposbanklyv2
+package com.interswitchng.interswitchposcico
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView

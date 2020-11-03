@@ -35,7 +35,7 @@ class MerchantCardFragment : BaseFragment(TAG) {
         cardViewModel.emvMessage.observe(this, Observer {
             it?.let(::processMessage)
         })
-        cardViewModel.setupTransaction(0, terminalInfo)
+        //cardViewModel.setupTransaction(0, terminalInfo)
 
 
         // ensure device supports finger  print

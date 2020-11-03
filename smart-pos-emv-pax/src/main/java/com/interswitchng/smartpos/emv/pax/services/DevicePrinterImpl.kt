@@ -60,7 +60,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         for (item in slip) printItem(printer, item)
 
         // print website at end of slip
-        val website = PrintObject.Data("www.bankly.ng -bank simply", PrintStringConfiguration(displayCenter = true, isBold = true))
+        val website = PrintObject.Data("www.cico.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(printer, website)
 
         // print thank you message at end of slip
@@ -131,7 +131,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
 
     fun printCompanyLogo(printer: PaxPrinter) {
-        val drawable = ContextCompat.getDrawable(context, R.drawable.isw_ic_bankly_app_logo)!!
+        val drawable = ContextCompat.getDrawable(context, R.drawable.isw_cico_logo)!!
         val companyLogo: Bitmap = run {
             return@run when (drawable) {
                 is BitmapDrawable -> drawable.bitmap

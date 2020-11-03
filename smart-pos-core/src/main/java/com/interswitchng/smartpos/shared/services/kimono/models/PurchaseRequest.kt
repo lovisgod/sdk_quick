@@ -30,13 +30,7 @@ internal class PurchaseRequest
             var customerEmail = terminalInfo.agentEmail
 
             var transactionAmount = transaction.amount
-            var transactionAmountInNaira = transactionAmount / 100
-            var paymentCode = when (transactionAmountInNaira) {
-                in 1..5000 -> Constants.PAYMENT_CODE_1
-                in 5001..10000 -> Constants.PAYMENT_CODE_2
-                in 10001..20000 -> Constants.PAYMENT_CODE_3
-                else -> Constants.PAYMENT_CODE_4
-            }
+            var paymentCode = Constants.PAYMENT_CODE_1
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -74,7 +68,6 @@ internal class PurchaseRequest
                 <customerMobile>$phoneNumber</customerMobile>
                 <paymentCode>$paymentCode</paymentCode>
                 <terminalId>${terminalInfo.terminalId}</terminalId>
-                <customerName></customerName>
                 <requestType>Inquiry</requestType>
                 <terminalInformation><batteryInformation>-1</batteryInformation> 
                 <currencyCode>${terminalInfo.currencyCode}</currencyCode>
@@ -100,13 +93,7 @@ internal class PurchaseRequest
             var customerEmail = terminalInfo.agentEmail
 
             var transactionAmount = transaction.amount
-            var transactionAmountInNaira = transactionAmount / 100
-            var paymentCode = when (transactionAmountInNaira) {
-                in 1..5000 -> Constants.PAYMENT_CODE_1
-                in 5001..10000 -> Constants.PAYMENT_CODE_2
-                in 10001..20000 -> Constants.PAYMENT_CODE_3
-                else -> Constants.PAYMENT_CODE_4
-            }
+            var paymentCode = Constants.PAYMENT_CODE_2
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)

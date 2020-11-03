@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchposbanklyv2;
+package com.interswitchng.interswitchposcico;
 
 import android.app.Application;
 import android.content.Context;
@@ -10,13 +10,11 @@ import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
 import androidx.multidex.MultiDex;
 
-import com.interswitch.smartpos.emv.telpo.TelpoPOSDeviceImpl;
-import com.interswitch.smartpos.emv.telpo.fingerprint.TelpoPOSFingerprintImpl;
 import com.interswitchng.smartpos.IswPos;
+import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
 import com.interswitchng.smartpos.shared.interfaces.device.EmvCardReader;
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice;
-import com.interswitchng.smartpos.shared.interfaces.device.POSFingerprint;
 import com.interswitchng.smartpos.shared.models.core.Environment;
 import com.interswitchng.smartpos.shared.models.core.IswLocal;
 import com.interswitchng.smartpos.shared.models.core.POSConfig;
@@ -42,6 +40,20 @@ import kotlinx.coroutines.channels.Channel;
 
 public class POSApplication extends Application {
 
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,10 +69,8 @@ public class POSApplication extends Application {
 
     private void configureTerminal() {
         POSDevice device;
-        POSFingerprint fingerprint;
 
         if (BuildConfig.MOCK) {
-            fingerprint = new TelpoPOSFingerprintImpl();
             device = new POSDevice() {
 
                 @Override
@@ -140,10 +150,9 @@ public class POSApplication extends Application {
             Drawable logo = ContextCompat.getDrawable(this, R.drawable.ic_app_logo);
             Bitmap bm = drawableToBitmap(logo);
 
-            TelpoPOSDeviceImpl service = TelpoPOSDeviceImpl.create(this);
+            POSDeviceImpl service = POSDeviceImpl.create(getApplicationContext());
             service.setCompanyLogo(bm);
             device = service;
-            fingerprint = new TelpoPOSFingerprintImpl();
         }
 
         String clientId = "IKIA4733CE041F41ED78E52BD3B157F3AAE8E3FE153D";
@@ -156,21 +165,6 @@ public class POSApplication extends Application {
         config.withPurchaseConfig(new PurchaseConfig(1, "tech@isw.ng", IswLocal.NIGERIA));
 
         // setup terminal
-        IswPos.setupTerminal(this, device, fingerprint, config, false, true);
-    }
-
-
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
+        IswPos.setupTerminal(this, device, null, config, false, true);
     }
 }
