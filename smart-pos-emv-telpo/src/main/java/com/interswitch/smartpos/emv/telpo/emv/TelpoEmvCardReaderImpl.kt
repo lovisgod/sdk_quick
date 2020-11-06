@@ -106,6 +106,11 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
 
                 if (isKimono) {
 
+                    //if key is deleted for some reasons, re-inject keys
+                    if(PinpadService.TP_PinpadCheckKey(PinpadService.KEY_TYPE_DUKPT,0) == -9){
+                        PinpadService.TP_PinpadWriteDukptIPEK(IPEK_VALUE, KSN_VALUE, 0, 0, 0)
+                    }
+
                     PinpadService.TP_PinpadDukptSessionStart(0)
 
                     cardPinResult = when (PinpadService.TP_PinpadDukptGetPin(pinParameter)) {
@@ -264,5 +269,10 @@ class TelpoEmvCardReaderImpl (private val context: Context) : EmvCardReader, Tel
             var pinBlock: String? = null
             var ksnData: String? = null
         }
+    }
+
+    companion object{
+        internal val KSN_VALUE = StringUtil.toBytes("FFFF000002DDDDE00001")
+        internal val IPEK_VALUE = StringUtil.toBytes("3F2216D8297BCE9C")
     }
 }
