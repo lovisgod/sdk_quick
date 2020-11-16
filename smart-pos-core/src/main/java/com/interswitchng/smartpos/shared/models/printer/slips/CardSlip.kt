@@ -23,7 +23,7 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
     /**
      * @inherit
      */
-    override fun getTransactionInfo(): List<PrintObject> {
+    override fun getTransactionInfo(reprint: Boolean): List<PrintObject> {
 
 
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
@@ -42,9 +42,12 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
         val time = pairString("time", info.dateTime.substring(11, 19))
 
 
+        val reprintConfig = PrintStringConfiguration(displayCenter = true, isBold = true, isTitle = true)
+        val rePrintFlag = pairString("","*** Re-Print ***",stringConfig = reprintConfig )
+
         val amount = pairString("amount", DisplayUtils.getAmountWithCurrency(info.amount))
 
-        val list = mutableListOf(txnType, paymentType, date, time, line, amount, line)
+        val list = mutableListOf(txnType, paymentType, date, time, line,rePrintFlag, amount,rePrintFlag,line)
 
         // check if its card transaction
         if (info.cardPan.isNotEmpty()) {
@@ -65,6 +68,9 @@ internal class CardSlip(terminal: TerminalInfo, status: TransactionStatus, priva
 
         }
 
+        if(!reprint){
+            list.removeAll(listOf(rePrintFlag))
+        }
 
         // return transaction info of slip
         return list

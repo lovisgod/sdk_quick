@@ -20,7 +20,7 @@ internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, pri
     /**
      * @inherit
      */
-    override fun getTransactionInfo(): List<PrintObject> {
+    override fun getTransactionInfo(rePrint: Boolean): List<PrintObject> {
 
         val numberFormat = NumberFormat.getInstance()
         numberFormat.minimumFractionDigits = 2
@@ -32,11 +32,21 @@ internal class UssdQrSlip(terminal: TerminalInfo, status: TransactionStatus, pri
         val date = pairString("date", info.dateTime)
         val amount = pairString("amount", info.amount)
 
+        val reprintConfig = PrintStringConfiguration(displayCenter = true, isBold = true, isTitle = true)
+        val rePrintFlag = pairString("","*** Re-Print ***",stringConfig = reprintConfig )
+
         val typeConfig = PrintStringConfiguration(isTitle = true, isBold = true, displayCenter = true)
         val txnType = pairString("", info.type.toString(), stringConfig = typeConfig)
 
+
+        val list = listOf(txnType, paymentType, stan, date, line,rePrintFlag ,amount,rePrintFlag, line)
+        //remove reprint tag if not a reprint
+        if(!rePrint) {
+            list.toMutableList().removeAll(listOf(rePrintFlag))
+        }
+
         // return transaction info of slip
-        return listOf(txnType, paymentType, stan, date, line, amount, line)
+        return list
     }
 
 }

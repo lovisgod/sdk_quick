@@ -98,7 +98,7 @@ class QrCodeActivity : BaseActivity() {
                                 "Pending")
 
                         val result = getTransactionResult(transaction)
-                        printSlip = result?.getSlip(terminalInfo)?.getSlipItems() ?: printSlip
+                        printSlip = result?.getSlip(terminalInfo)?.getSlipItems(false) ?: printSlip
                     }
 
                     handlePaymentStatus(status)

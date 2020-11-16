@@ -112,12 +112,12 @@ abstract class TransactionSlip(private val terminal: TerminalInfo, private val s
      * This method is to be implemented by a subclass to return
      * information about the current transaction
      */
-    internal abstract fun getTransactionInfo(): List<PrintObject>
+    internal abstract fun getTransactionInfo(reprint: Boolean): List<PrintObject>
 
 
     /**
      * This method generates a combined list of all
      * printable information for this transactions
      */
-    internal fun getSlipItems(): MutableList<PrintObject>  = (getTerminalInfo() + getTransactionInfo() + getTransactionStatus()).toMutableList()
+    internal fun getSlipItems(reprint: Boolean): MutableList<PrintObject>  = (getTerminalInfo() + getTransactionInfo(reprint) + getTransactionStatus()).toMutableList()
 }

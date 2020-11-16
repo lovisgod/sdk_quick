@@ -106,14 +106,7 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
                     _printButton.value = false
 
                     // get items to print
-                    val slipItems = slip.getSlipItems()
-
-                    // add re-print flag
-                    if (reprint) {
-                        val rePrintFlag = PrintObject.Data("*** Re-Print ***", PrintStringConfiguration(displayCenter = true, isBold = true, isTitle = true))
-                        slipItems.add(0, rePrintFlag)
-                        slipItems += rePrintFlag
-                    }
+                    val slipItems = slip.getSlipItems(reprint)
 
                     // print code in IO thread
                     val status = withContext(ioScope) { posDevice.printer.printSlip(slipItems, user) }
