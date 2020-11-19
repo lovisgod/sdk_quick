@@ -31,7 +31,9 @@ internal object TerminalInfoParser {
                 capabilities = "E0F8C8",
                 isKimono = true,
                 agentId = "",
-                agentEmail = ""
+                agentEmail = "",
+                fundWalletCode = "",
+                paymentNotificationCode = ""
         )
 
         if (terminalInfo.countryCode.length >= 4) {
@@ -105,8 +107,9 @@ internal object TerminalInfoParser {
                         capabilities = TerminalInfo.get(store)?.capabilities,
                         isKimono = false,
                         agentId = "",
-                        agentEmail = ""
-
+                        agentEmail = "",
+                        fundWalletCode = "",
+                        paymentNotificationCode = ""
                 )
 
                 if (terminalInfo.countryCode.length >= 4) {

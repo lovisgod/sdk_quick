@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.models.core
 
+import android.app.Notification
 import com.google.gson.Gson
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.shared.Constants
@@ -33,7 +34,9 @@ data class TerminalInfo(
         var serverIp: String = Constants.ISW_TERMINAL_IP,
         var serverPort: Int = BuildConfig.ISW_TERMINAL_PORT,
         val agentId: String,
-        val agentEmail: String) {
+        val agentEmail: String,
+        val fundWalletCode: String,
+        val paymentNotificationCode: String) {
 
 
     internal fun persist(store: KeyValueStore): Boolean {

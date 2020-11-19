@@ -30,7 +30,7 @@ internal class PurchaseRequest
             var customerEmail = terminalInfo.agentEmail
 
             var transactionAmount = transaction.amount
-            var paymentCode = Constants.PAYMENT_CODE_1
+            var paymentCode = terminalInfo.fundWalletCode
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -93,7 +93,7 @@ internal class PurchaseRequest
             var customerEmail = terminalInfo.agentEmail
 
             var transactionAmount = transaction.amount
-            var paymentCode = Constants.PAYMENT_CODE_2
+            var paymentCode = terminalInfo.paymentNotificationCode
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -467,6 +467,11 @@ internal class TerminalInformation {
     var agentId: String = ""
     @field:Element(name = "agentEmail", required = false)
     var agentEmail: String = ""
+    @field:Element(name = "fundWalletCode", required = false)
+    var fundWalletCode: String = ""
+    @field:Element(name = "paymentNotificationCode", required = false)
+    var paymentNotificationCode: String = ""
+
 
 
     lateinit var error: TerminalInformation
@@ -478,7 +483,7 @@ internal class TerminalInformation {
 
             val properties = listOf(error.terminalId, error.merchantId, error.serverIp, error.capabilities,
                     error.merchantNameAndLocation, error.merchantCategoryCode, error.serverPort, error.serverUrl,
-                    error.countryCode, error.currencyCode, error.callHomeTimeInMin, error.serverTimeoutInSec, error.agentId, error.agentEmail)
+                    error.countryCode, error.currencyCode, error.callHomeTimeInMin, error.serverTimeoutInSec, error.agentId, error.agentEmail,error.fundWalletCode,error.paymentNotificationCode)
 
 
             // validate that all error properties are empty
@@ -503,8 +508,9 @@ internal class TerminalInformation {
                     serverUrl = serverUrl,
                     serverPort = serverPort.toIntOrNull() ?: -1,
                     agentId = agentId,
-                    agentEmail = agentEmail
-
+                    agentEmail = agentEmail,
+                    fundWalletCode = fundWalletCode,
+                    paymentNotificationCode = paymentNotificationCode
             )
         }
 
@@ -571,6 +577,18 @@ internal class TerminalInformation {
                 .isNotEmpty()
         // assign error message for field if is kimono
         if (isKimono && serverUrl.hasError) error.serverUrl = serverUrl.message
+
+        // validate fundWalletCode value
+        val fundWalletCode = InputValidator(fundWalletCode).isNotEmpty().isNumber()
+
+        //assign error message for field
+        if (isKimono && fundWalletCode.hasError) error.fundWalletCode = fundWalletCode.message
+
+        // validate paymentNotificationCode value
+        val paymentNotificationCode = InputValidator(paymentNotificationCode).isNotEmpty().isNumber()
+
+        //assign error message for field
+        if (isKimono && paymentNotificationCode.hasError) error.paymentNotificationCode = paymentNotificationCode.message
 
         // validate agentId value
         val agentId = InputValidator(agentId).isNotEmpty().isNumber()
