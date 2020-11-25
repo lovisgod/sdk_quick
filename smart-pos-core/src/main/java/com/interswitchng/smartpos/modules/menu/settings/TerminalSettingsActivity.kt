@@ -263,8 +263,6 @@ class TerminalSettingsActivity : MenuActivity() {
                 etAgentId.isEnabled = true
                 etAgentEmail.isEnabled = true
 
-                etFundWalletCode.isEnabled = true
-                etPaymentNotificationCode.isEnabled = true
 
                 // show server url field
                 etServerUrl.isEnabled = true
@@ -284,8 +282,6 @@ class TerminalSettingsActivity : MenuActivity() {
                 etAgentId.isEnabled = false
                 etAgentEmail.isEnabled = false
 
-                etFundWalletCode.isEnabled = false
-                etPaymentNotificationCode.isEnabled = false
 
                 // show server and port fields
                 etServerPort.isEnabled = true
@@ -304,14 +300,6 @@ class TerminalSettingsActivity : MenuActivity() {
 
             // set the agentEmail container based on kimono flag
             agentEmail.visibility =
-                    if (button.isChecked) View.VISIBLE else View.GONE
-
-            // set the fundWalletCode container based on kimono flag
-            fundWalletCode.visibility =
-                    if (button.isChecked) View.VISIBLE else View.GONE
-
-            // set the paymentNotificationCode container based on kimono flag
-            paymentNotificationCode.visibility =
                     if (button.isChecked) View.VISIBLE else View.GONE
 
         }
@@ -386,8 +374,6 @@ class TerminalSettingsActivity : MenuActivity() {
             etCapabilities.setText(capabilities)
             etAgentId.setText(agentId)
             etAgentEmail.setText(agentEmail)
-            etFundWalletCode.setText(fundWalletCode)
-            etPaymentNotificationCode.setText(paymentNotificationCode)
 
             switchKimono.isChecked = isKimono
             switchToKimono3.isChecked = isKimono3
@@ -564,9 +550,6 @@ class TerminalSettingsActivity : MenuActivity() {
             isKimono3 = switchToKimono3.isChecked
             agentId = etAgentId.getString()
             agentEmail = etAgentEmail.getString()
-            fundWalletCode = etFundWalletCode.getString()
-            paymentNotificationCode = etPaymentNotificationCode.getString()
-
 
             // only set capabilities if it was provided
             etCapabilities.getString().apply {
@@ -593,8 +576,6 @@ class TerminalSettingsActivity : MenuActivity() {
             if (serverUrl.isNotEmpty()) tiServerUrl.error = serverUrl
             if (agentId.isNotEmpty()) tiAgentId.error = agentId
             if (agentEmail.isNotEmpty()) tiAgentEmail.error = agentEmail
-            if (fundWalletCode.isNotEmpty()) tiFundWalletCode.error = fundWalletCode
-            if (paymentNotificationCode.isNotEmpty()) tiPaymentNotificationCode.error = paymentNotificationCode
         }
 
         alert.show()
