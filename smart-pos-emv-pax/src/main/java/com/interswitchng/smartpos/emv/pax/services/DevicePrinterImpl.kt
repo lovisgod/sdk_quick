@@ -56,6 +56,10 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         printer.fontSet(NORMAL_FONT.first, NORMAL_FONT.second)
         printer.printStr("\n", null)
 
+        // print users copy
+        val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
+        printItem(printer, userCopy)
+
         // extract slip items and print it
         for (item in slip) printItem(printer, item)
 
@@ -75,9 +79,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(printer, quicktellerWebsite)
 
-        // print users copy
-        val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
-        printItem(printer, userCopy)
+
 
         // set step distance
         printer.step(80)

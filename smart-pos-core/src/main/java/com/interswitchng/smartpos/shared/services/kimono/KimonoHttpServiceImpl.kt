@@ -30,6 +30,7 @@ import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.BillPaymentResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
+import com.interswitchng.smartpos.shared.utilities.DeviceUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import okhttp3.MediaType

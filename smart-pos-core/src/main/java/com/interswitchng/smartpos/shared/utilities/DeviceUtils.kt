@@ -1,10 +1,13 @@
 package com.interswitchng.smartpos.shared.utilities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import android.os.Build
 import android.telephony.TelephonyManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.lang.reflect.Method
 
 
 object DeviceUtils {
@@ -43,4 +46,25 @@ object DeviceUtils {
     }
 
     fun isConnectedToInternet(context: Context) = checkNetwork(context).also { networkConnectionState.postValue(it) }
+
+    @SuppressLint("PrivateApi")
+    fun getSerialNumber(): String? {
+        var serialNumber: String?
+        try {
+            val c = Class.forName("android.os.SystemProperties")
+            val get: Method = c.getMethod("get", String::class.java)
+            serialNumber = get.invoke(c, "gsm.sn1").toString()
+            if (serialNumber == "") serialNumber = get.invoke(c, "ril.serialnumber").toString()
+            if (serialNumber == "") serialNumber = get.invoke(c, "ro.serialno").toString()
+            if (serialNumber == "") serialNumber = get.invoke(c, "sys.serialnumber").toString()
+            if (serialNumber == "") serialNumber = Build.SERIAL
+
+            // If none of the methods above worked
+            if (serialNumber == "") serialNumber = null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            serialNumber = null
+        }
+        return serialNumber
+    }
 }

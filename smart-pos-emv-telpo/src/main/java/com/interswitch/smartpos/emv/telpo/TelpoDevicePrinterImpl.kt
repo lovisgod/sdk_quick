@@ -33,6 +33,10 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         //Print the company's logo
         printCompanyLogo()
 
+        // print users copy
+        val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
+        printItem(userCopy)
+
         for (item in slip) printItem(item)
 
         // print website at end of slip
@@ -52,10 +56,6 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         printItem(quicktellerWebsite)
 
 
-
-        // print users copy
-        val userCopy = PrintObject.Data("*** $user copy ***".toUpperCase(), PrintStringConfiguration(displayCenter = true))
-        printItem(userCopy)
 
         return try {
             printer.printString()
