@@ -68,7 +68,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         printItem(printer, website)
 
         // print thank you message at end of slip
-        val thankYouMsg = PrintObject.Data("Powered by InterSwitch", PrintStringConfiguration(displayCenter = true))
+        val thankYouMsg = PrintObject.Data("Powered by Interswitch", PrintStringConfiguration(displayCenter = true))
         printItem(printer, thankYouMsg)
 
         // print pos version at end of slip

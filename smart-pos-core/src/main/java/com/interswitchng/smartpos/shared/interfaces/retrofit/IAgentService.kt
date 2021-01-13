@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.shared.interfaces.retrofit
 
 import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
+import com.interswitchng.smartpos.shared.services.kimono.models.AllTerminalInfo
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -24,4 +25,6 @@ interface IAgentService {
                      @Query("pkv") pkv: String,
                      @Query("keyset_id") keyset_id: String,
                      @Query("der_en") der_en: String): Call<ResponseBody>
+    @GET
+    fun downloadTerminalParameters(@Url url: String): Call<AllTerminalInfo>
 }

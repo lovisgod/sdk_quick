@@ -26,8 +26,7 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandlerBP
-import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
-import com.interswitchng.smartpos.shared.services.kimono.models.BillPaymentResponse
+import com.interswitchng.smartpos.shared.services.kimono.models.*
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.utilities.DeviceUtils
@@ -135,6 +134,24 @@ internal class KimonoHttpServiceImpl(private val context: Context,
         }
         return false
 
+
+    }
+
+    override fun downloadTerminalParametersForKimono(serialNumber: String): AllTerminalInfo? {
+        try {
+            val url = Constants.ISW_TERMINAL_CONFIG_URL+serialNumber
+            val responseBody = agentService.downloadTerminalParameters(url).execute()
+            if (responseBody.isSuccessful){
+                return responseBody.body()
+            } else{
+                AllTerminalInfo()
+            }
+        } catch (e: Exception){
+            logger.log(e.localizedMessage)
+            e.printStackTrace()
+        }
+
+        return AllTerminalInfo()
 
     }
 

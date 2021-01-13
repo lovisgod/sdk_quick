@@ -23,7 +23,9 @@ import com.interswitchng.smartpos.shared.activities.MenuActivity
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
+import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
+import com.interswitchng.smartpos.shared.services.kimono.models.AllTerminalInfo
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
 import com.interswitchng.smartpos.shared.utilities.*
 import kotlinx.android.synthetic.main.isw_activity_terminal_settings.*
@@ -98,6 +100,9 @@ class TerminalSettingsActivity : MenuActivity() {
 
             agentInfo.observe(owner) {
                 it?.apply(::agentIdDownloaded)
+            }
+            terminalConfigResponse.observe(owner) {
+                it?.apply(::terminalConfigKimonoDownloaded)
             }
         }
     }
@@ -237,14 +242,22 @@ class TerminalSettingsActivity : MenuActivity() {
             }
         }
 
-        btnUploadConfig.setOnClickListener {
-            // create intent to choose file
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "text/xml"
-            }
 
-            // choose config file
-            startActivityForResult(intent, RC_FILE_READ)
+        btnDownloadConfigKimono.setOnClickListener {
+            // disable and hide button
+            btnDownloadConfigKimono.isEnabled = false
+            btnDownloadConfigKimono.visibility = View.GONE
+
+            // set the text of terminal config
+            tvConfigKimono.text = getString(R.string.isw_title_downloading_terminal_config)
+            // show progress bar
+            progressConfigKimonoDownload.visibility = View.VISIBLE
+            // hide download date
+            tvConfigKimonoDate.visibility = View.GONE
+
+            // trigger download terminal config
+            val serialNumber = DeviceUtils.getSerialNumber() ?: ""
+            settingsViewModel.downloadTerminalParameters(serialNumber,isKimono = true)
         }
 
 
@@ -302,6 +315,9 @@ class TerminalSettingsActivity : MenuActivity() {
             agentEmail.visibility =
                     if (button.isChecked) View.VISIBLE else View.GONE
 
+            terminalDownloadConfigKimonoContainer.visibility =
+                    if (button.isChecked) View.VISIBLE else View.GONE
+
         }
 
 
@@ -324,6 +340,7 @@ class TerminalSettingsActivity : MenuActivity() {
         val terminalDate = store.getNumber(KEY_DATE_TERMINAL, -1)
         val keysDate = store.getNumber(KEY_DATE_KEYS, -1)
         val agentDownloadDate = store.getNumber(AGENT_DATE_TERMINAL, -1)
+        val terminalConfigKimono = store.getNumber(KEY_DATE_TERMINAL_KIMONO, -1)
 
 
         if (terminalDate != -1L) {
@@ -357,6 +374,17 @@ class TerminalSettingsActivity : MenuActivity() {
             val message = "No Agent Id"
             tvAgentIdDate.text = getString(R.string.isw_title_date, message)
             tvAgentId.text = getString(R.string.isw_title_download_agent_id)
+        }
+
+        if (terminalConfigKimono != -1L) {
+            val date = Date(terminalConfigKimono)
+            val dateStr = DateUtils.timeOfDateFormat.format(date)
+            tvConfigKimonoDate.text = getString(R.string.isw_title_date, dateStr)
+            tvConfigKimono.text = getString(R.string.isw_title_terminal_config_downloaded)
+        } else {
+            val message = "No Terminal Configuration"
+            tvConfigKimonoDate.text = getString(R.string.isw_title_date, message)
+            tvConfigKimono.text = getString(R.string.isw_title_download_terminal_configuration)
         }
 
 
@@ -529,6 +557,69 @@ class TerminalSettingsActivity : MenuActivity() {
                     btnDownloadAgentId,
                     ColorStateList.valueOf(color)
             )
+        }
+    }
+    private fun terminalConfigKimonoDownloaded(allTerminalInfo: AllTerminalInfo) {
+        // enable and show button
+        btnDownloadConfigKimono.isEnabled = true
+        btnDownloadConfigKimono.visibility = View.VISIBLE
+        // hide progress bar
+        progressConfigKimonoDownload.visibility = View.GONE
+        // show download date
+        tvConfigKimonoDate.visibility = View.VISIBLE
+
+
+        when {
+            allTerminalInfo.responseCode == IsoUtils.OK -> {
+                // get and store date
+                val date = Date()
+                store.saveNumber(KEY_DATE_TERMINAL_KIMONO, date.time)
+
+                val message = allTerminalInfo.responseMessage
+                tvConfigKimonoDate.text = getString(R.string.isw_title_date, message)
+                tvConfigKimono.text = getString(R.string.isw_title_terminal_config_downloaded)
+
+                val terminalInfo = settingsViewModel.getTerminalInfoFromResponse(allTerminalInfo)
+                setupTexts(terminalInfo)
+
+                // set the drawable and color
+                btnDownloadConfigKimono.setImageResource(R.drawable.isw_ic_check)
+                val color = ContextCompat.getColor(this, R.color.iswTextColorSuccessDark)
+                ImageViewCompat.setImageTintList(
+                        btnDownloadConfigKimono,
+                        ColorStateList.valueOf(color)
+                )
+            }
+            allTerminalInfo.responseCode != IsoUtils.OK -> {
+                // get and store date
+                val date = Date()
+                store.saveNumber(KEY_DATE_TERMINAL, date.time)
+
+                val message = allTerminalInfo.responseMessage
+                tvConfigKimonoDate.text = getString(R.string.isw_title_date, message)
+                tvConfigKimono.text = getString(R.string.isw_title_error_downloading_terminal_config)
+
+                // set the drawable and color
+                btnDownloadConfigKimono.setImageResource(R.drawable.isw_ic_error)
+                val color = ContextCompat.getColor(this, R.color.iswTextColorError)
+                ImageViewCompat.setImageTintList(
+                        btnDownloadConfigKimono,
+                        ColorStateList.valueOf(color)
+                )
+            }
+            else -> {
+                val message = "No Terminal Configuration"
+                tvConfigKimonoDate.text = getString(R.string.isw_title_date, message)
+                tvConfigKimono.text = getString(R.string.isw_title_error_downloading_terminal_config)
+
+                // set the drawable and color
+                btnDownloadConfigKimono.setImageResource(R.drawable.isw_ic_error)
+                val color = ContextCompat.getColor(this, R.color.iswTextColorError)
+                ImageViewCompat.setImageTintList(
+                        btnDownloadConfigKimono,
+                        ColorStateList.valueOf(color)
+                )
+            }
         }
     }
 
@@ -713,6 +804,7 @@ class TerminalSettingsActivity : MenuActivity() {
         const val KEY_DATE_TERMINAL = "key_download_terminal_date"
         const val KEY_DATE_KEYS = "key_download_key_date"
         const val AGENT_DATE_TERMINAL = "agent_download_date"
+        const val KEY_DATE_TERMINAL_KIMONO = "key_download_terminal_date_kimono"
         const val RC_FILE_READ = 49239
 
 

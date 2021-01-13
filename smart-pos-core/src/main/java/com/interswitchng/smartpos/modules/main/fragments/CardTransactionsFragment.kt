@@ -120,29 +120,19 @@ class CardTransactionsFragment : BaseFragment(TAG) {
     }
 
     private fun showAccountTypeDialog() {
-        when (paymentModel.type) {
-            PaymentModel.TransactionType.CARD_PURCHASE -> {
-                accountTypeDialog = AccountTypeDialog {
-                    accountType = when (it) {
-                        0 -> AccountType.Default
-                        1 -> AccountType.Savings
-                        2 -> AccountType.Current
-                        else -> AccountType.Default
-                    }
-
-                    runWithInternet {
-                        cardViewModel.startTransaction(requireContext())
-                    }
-                }
-                accountTypeDialog.show(childFragmentManager, TAG)
+        accountTypeDialog = AccountTypeDialog {
+            accountType = when (it) {
+                0 -> AccountType.Default
+                1 -> AccountType.Savings
+                2 -> AccountType.Current
+                else -> AccountType.Default
             }
 
-            else -> {
-                runWithInternet {
-                    cardViewModel.startTransaction(requireContext())
-                }
+            runWithInternet {
+                cardViewModel.startTransaction(requireContext())
             }
         }
+        accountTypeDialog.show(childFragmentManager, TAG)
     }
 
     private fun showPaymentOptions() {

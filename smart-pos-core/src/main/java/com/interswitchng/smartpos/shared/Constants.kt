@@ -125,6 +125,23 @@ object Constants {
         get() {
             return Production.ISW_KEY_DOWNLOAD_URL
         }
+    val ISW_TERMINAL_CONFIG_URL: String
+        get() {
+            return Production.ISW_TERMINAL_CONFIG_DOWNLOAD_URL
+        }
+
+
+    val ISW_EPMS_PORT = "5043"
+    val ISW_CTMS_PORT = "5008"
+    val ISW_TERMINAL_IP_EPMS = "196.6.103.73"
+    val ISW_TERMINAL_IP_CTMS = "196.6.103.18"
+    val ISW_TERMINAL_CAPABILITIES = "E0F0C8"
+    val ISW_SERVER_TIMEOUT_IN_SEC = "60"
+    val ISW_CALL_HOME_TIME_IN_MIN ="60"
+    val ISW_COUNTRY_CODE = "566"
+    val ISW_CURRENCY_CODE = "566"
+    val ISW_MERCHANT_CODE = "MX1065"
+    val ISW_MERCHANT_ALIAS = "000001"
 
     private object Production {
 
@@ -135,6 +152,7 @@ object Constants {
         const val ISW_KIMONO_BASE_URL = "https://webpay.interswitchng.com/"
         const val ISW_TERMINAL_IP = "196.6.103.73"
         const val ISW_KEY_DOWNLOAD_URL = "http://kimono.interswitchng.com/kmw/keydownloadservice"
+        const val ISW_TERMINAL_CONFIG_DOWNLOAD_URL = "http://kimono.interswitchng.com/kmw/serialid/"
     }
 
     private object Test {

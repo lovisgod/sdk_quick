@@ -5,6 +5,7 @@ import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
+import com.interswitchng.smartpos.shared.services.kimono.models.AllTerminalInfo
 
 /**
  * This interface provides operations that target the ISO-8385 message specification,
@@ -45,6 +46,15 @@ internal interface IsoService {
     fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
         return false
     }
+
+    /**
+     * Uses the provided terminalId to download the terminal information, like name and location.
+     *
+     * @param serialNumber  a string representing the device serial number
+     * @return  allterminalInfo
+     * @see TerminalInfo
+     */
+    fun downloadTerminalParametersForKimono(serialNumber: String): AllTerminalInfo?
 
 
 
