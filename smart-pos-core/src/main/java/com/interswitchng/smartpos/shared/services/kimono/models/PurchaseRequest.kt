@@ -21,7 +21,7 @@ internal class PurchaseRequest
 {
     companion object {
 
-        val serialId by lazy { DeviceUtils.getSerialNumber()}
+        private val serialId by lazy { DeviceUtils.getSerialNumber()}
 
         fun toCashOutInquiry(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
 
