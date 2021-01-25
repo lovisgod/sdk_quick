@@ -1,5 +1,5 @@
 <resources>
-    <string name="isw_app_name">Smart POS</string>
+    <string name="isw_app_name">Cico</string>
     <string name="isw_title_activity_ussd">UssdActivity</string>
     <string name="isw_title_choose_payment">Choose a payment option</string>
     <string name="isw_title_card">Card</string>
