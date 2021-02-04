@@ -6,8 +6,15 @@ import com.interswitchng.smartpos.shared.utilities.KeysUtils
 
 object Constants {
 
-    internal const val PAYMENT_CODE_1 = "04385601"
-    internal const val PAYMENT_CODE_2 = "04385602"
+    /*internal const val PAYMENT_CODE_1 = "04385601"
+    internal const val PAYMENT_CODE_2 = "04385602"*/
+
+    internal const val PAYMENT_CODE_1 = "04386203" //fund wallet code for transaction amount between 1 and 3000
+    internal const val PAYMENT_CODE_2 = "04386204" //payment notification code amount between 1 and 3000
+    internal const val PAYMENT_CODE_3 = "04386205" //fund wallet between 3001 and 8000
+    internal const val PAYMENT_CODE_4 = "04386206" //payment notification code between 3001 and 8000
+    internal const val PAYMENT_CODE_5 = "04385603" //fund wallet greater than 8000
+    internal const val PAYMENT_CODE_6 = "04385604" //payment notification code greater than 8000
 
     // URL END POINTS
     internal const val CODE_END_POINT = "till.json"
@@ -55,8 +62,6 @@ object Constants {
 //
 //
 //
-
-
 
     val ISW_USSD_QR_BASE_URL: String get() {
         val iswPos = IswPos.getInstance()

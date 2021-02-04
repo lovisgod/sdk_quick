@@ -32,8 +32,19 @@ internal class PurchaseRequest
             var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
             var customerEmail = terminalInfo.agentEmail
 
-            var transactionAmount = transaction.amount
-            var paymentCode = Constants.PAYMENT_CODE_1
+            var transactionAmount: Int = transaction.amount
+            println("*******The new transaction amount now is $transactionAmount");
+            Logger.with("The new transaction amount is ").logErr(transactionAmount.toString())
+            var paymentCode = when(transactionAmount){
+                in 100..300000 -> Constants.PAYMENT_CODE_1
+                in 300001..800000 -> Constants.PAYMENT_CODE_3
+                //in 8001..Int.MAX_VALUE -> Constants.PAYMENT_CODE_5
+                else -> {
+                    Constants.PAYMENT_CODE_5
+                }
+            }
+
+            //var paymentCode = Constants.PAYMENT_CODE_1
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
@@ -96,7 +107,14 @@ internal class PurchaseRequest
             var customerEmail = terminalInfo.agentEmail
 
             var transactionAmount = transaction.amount
-            var paymentCode = Constants.PAYMENT_CODE_2
+            var paymentCode = when(transactionAmount){
+                in 100..300000 -> Constants.PAYMENT_CODE_2
+                in 300001..800000 -> Constants.PAYMENT_CODE_4
+                else -> {
+                    Constants.PAYMENT_CODE_6
+                }
+            }
+            //var paymentCode = Constants.PAYMENT_CODE_2
 
             var rrfNumber = transaction.stan.padStart(12, '0')
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
