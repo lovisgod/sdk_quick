@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/iswColorPrimary">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.10" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/isw_guideline" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/isw_guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/isw_guideline" />
+
+
+
+    <View
+        android:id="@+id/isw_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/isw_card_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/isw_guideline" />
+
+
+    <TextView
+        android:id="@+id/isw_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/isw_smartpos"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/isw_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/iswColorPrimary"
+        android:textSize="12sp"
+        app:layout_constraintTop_toTopOf="@+id/isw_view"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        tools:text="Sunday, July 2019" />
+
+    <TextView
+        android:id="@+id/isw_merchant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/iswColorPrimary"
+        android:textSize="20sp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/isw_date"
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
+        tools:text="Smartware Solutions" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/isw_cash_out_card"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_margin="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="10dp"
+        android:outlineAmbientShadowColor="@color/iswColorPrimary"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/isw_guideline2"
+        app:layout_constraintTop_toTopOf="@+id/isw_view"
+        app:rippleColor="@android:color/darker_gray"
+        app:strokeColor="@color/iswSelectedTypeColor"
+        app:strokeWidth="0.2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/isw_cash_out_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/isw_transfer"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/isw_make_a_cash_withdrawal_from_this_terminal"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/isw_cash_out_text" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                app:srcCompat="@drawable/isw_ic_payment"
+                android:tint="#F7C137"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

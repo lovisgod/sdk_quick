@@ -275,6 +275,7 @@
     <string name="isw_title_agent_id_downloaded">Agent Id Downloaded</string>
     <string name="isw_authenticate_pin">Authenticate Pin</string>
     <string name="isw_withdrawal">WITHDRAWAL</string>
+    <string name="isw_transfer">TRANSFER</string>
     <string name="isw_pin_set">Pin Set</string>
     <string name="isw_inquiry">Inquiry</string>
 
@@ -284,5 +285,7 @@
         <item>Cash Out Pay</item>
         <item>Cash Out Inquiry</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

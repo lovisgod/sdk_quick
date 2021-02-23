@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/isw_transfer_nav_graph"
+    app:startDestination="@id/isw_transferlandingfragment">
+
+    <fragment
+        android:id="@+id/isw_transferlandingfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.TransferLandingFragment"
+        android:label="fragment_transfer_landing"
+        tools:layout="@layout/isw_fragment_transfer_landing" />
+</navigation>
