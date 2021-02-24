@@ -1,10 +1,7 @@
-package com.interswitchng.smartpos.modules.main.transfer
+package com.interswitchng.smartpos.modules.main.transfer.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 

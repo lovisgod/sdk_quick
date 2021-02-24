@@ -17,6 +17,7 @@ import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.MainActivity
 import com.interswitchng.smartpos.modules.main.dialogs.FingerprintBottomDialog
 import com.interswitchng.smartpos.modules.main.dialogs.MerchantCardDialog
+import com.interswitchng.smartpos.modules.main.transfer.TransferActivity
 import com.interswitchng.smartpos.modules.setup.SetupActivity
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.MenuActivity
@@ -128,7 +129,7 @@ class TerminalSettingsActivity : MenuActivity() {
             if (!isFromSettings) {
 //                val intent = Intent(this, SetupActivity::class.java)
                 if (supervisorCardIsEnrolled) {
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, TransferActivity::class.java)
                     startActivity(intent)
                     finish()
                     return true

@@ -105,7 +105,6 @@ internal val networkModule = module {
                 .addInterceptor { chain ->
             val request = chain.request().newBuilder()
                     .addHeader("Content-type", "application/xml")
-
                     .build()
 
             chain.proceed(request)

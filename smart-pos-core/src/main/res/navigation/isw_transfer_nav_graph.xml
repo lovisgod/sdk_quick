@@ -7,7 +7,52 @@
 
     <fragment
         android:id="@+id/isw_transferlandingfragment"
-        android:name="com.interswitchng.smartpos.modules.main.transfer.TransferLandingFragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransferLandingFragment"
         android:label="fragment_transfer_landing"
-        tools:layout="@layout/isw_fragment_transfer_landing" />
+        tools:layout="@layout/isw_fragment_transfer_landing" >
+        <action
+            android:id="@+id/isw_action_isw_transferlandingfragment_to_isw_transferinputfragment"
+            app:destination="@id/isw_transferinputfragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_transferinputfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransferInputFragment"
+        android:label="isw_fragment_transfer_input"
+        tools:layout="@layout/isw_fragment_transfer_input" >
+        <action
+            android:id="@+id/isw_action_isw_transferinputfragment_to_isw_amountfragment"
+            app:destination="@id/isw_amountfragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_transfercardtransactionfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransferCardTransactionFragment"
+        android:label="isw_fragment_transfer_card_transaction"
+        tools:layout="@layout/isw_fragment_transfer_card_transaction" >
+        <action
+            android:id="@+id/isw_action_isw_transfercardtransactionfragment_to_isw_transfertransactionpreocessingfragment"
+            app:destination="@id/isw_transfertransactionpreocessingfragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_amountfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.AmountFragment"
+        android:label="isw_transfer_fragment_amount"
+        tools:layout="@layout/isw_transfer_fragment_amount" >
+        <action
+            android:id="@+id/isw_action_isw_amountfragment_to_isw_transfercardtransactionfragment"
+            app:destination="@id/isw_transfercardtransactionfragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_transferstatusfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransferStatusFragment"
+        android:label="isw_fragment_transfer_status"
+        tools:layout="@layout/isw_fragment_transfer_status" />
+    <fragment
+        android:id="@+id/isw_transfertransactionpreocessingfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransfertransactionPreocessingFragment"
+        android:label="isw_fragment_transfertransaction_preocessing"
+        tools:layout="@layout/isw_fragment_transfertransaction_preocessing" >
+        <action
+            android:id="@+id/isw_action_isw_transfertransactionpreocessingfragment_to_isw_transferstatusfragment"
+            app:destination="@id/isw_transferstatusfragment" />
+    </fragment>
 </navigation>

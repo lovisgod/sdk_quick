@@ -9,6 +9,7 @@ import com.interswitchng.smartpos.di.viewModels
 import com.interswitchng.smartpos.modules.card.CardActivity
 import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.main.MainActivity
+import com.interswitchng.smartpos.modules.main.transfer.TransferActivity
 import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
 import com.interswitchng.smartpos.modules.menu.report.ReportActivity
 import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
@@ -185,6 +186,11 @@ class IswPos private constructor(private val app: Application, internal val devi
 
         @JvmStatic
         fun showMainActivity() = showScreen(MainActivity::class.java)
+
+
+
+        @JvmStatic
+        fun showTransferActivity() = showScreen(TransferActivity::class.java)
 
 
         /**
