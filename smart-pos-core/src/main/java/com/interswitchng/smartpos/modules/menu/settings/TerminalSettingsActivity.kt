@@ -57,7 +57,8 @@ class TerminalSettingsActivity : MenuActivity() {
         setContentView(R.layout.isw_activity_terminal_settings)
 
         if (store.getBoolean("SETUP")) {
-            proceedToMainActivity()
+//            proceedToMainActivity()
+            proceedToTransferActivity()
         }
 
         setSupportActionBar(toolbar)
@@ -129,6 +130,7 @@ class TerminalSettingsActivity : MenuActivity() {
             if (!isFromSettings) {
 //                val intent = Intent(this, SetupActivity::class.java)
                 if (supervisorCardIsEnrolled) {
+//                    val intent = Intent(this, MainActivity::class.java)
                     val intent = Intent(this, TransferActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -145,6 +147,12 @@ class TerminalSettingsActivity : MenuActivity() {
 
     private fun proceedToMainActivity() {
         IswPos.showMainActivity()
+        finish()
+    }
+
+    // navigate to the transfer page
+    private fun proceedToTransferActivity() {
+        IswPos.showTransferActivity()
         finish()
     }
 

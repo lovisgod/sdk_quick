@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    tools:background="@color/iswWhite">
+
+    <TextView
+        android:id="@+id/isw_detection_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/isw_card_detected"
+        android:textColor="@color/iswColorPrimary"
+        android:textSize="30sp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <ImageView
+        android:id="@+id/isw_imageview2"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:srcCompat="@drawable/isw_ic_payment"
+        app:layout_constraintEnd_toEndOf="@+id/isw_detection_text"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="@+id/isw_detection_text"
+        app:layout_constraintTop_toTopOf="@+id/isw_imageview3" />
+
+    <ImageView
+        android:id="@+id/isw_imageview3"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/isw_round_green_background"
+        android:padding="8dp"
+        app:srcCompat="@drawable/isw_ic_done"
+        app:layout_constraintEnd_toEndOf="@+id/isw_detection_text"
+        app:layout_constraintTop_toBottomOf="@+id/isw_detection_text" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_card_found_continue"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginStart="@dimen/isw_guideline"
+        android:layout_marginEnd="@dimen/isw_guideline"
+        android:layout_marginTop="70dp"
+        android:text="@string/isw_continue"
+        android:textColor="@color/iswColorPrimary"
+        app:backgroundTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/isw_imageview2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="@color/iswColorPrimary" />
+
+    <include
+        layout="@layout/isw_powered_by_reuseable"
+        android:id="@+id/isw_logo"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

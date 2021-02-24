@@ -101,4 +101,9 @@
 
     </LinearLayout>
 
+    <include
+        android:id="@+id/isw_logo"
+        layout="@layout/isw_powered_by_reuseable"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

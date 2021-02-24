@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    tools:background="@color/iswColorPrimary">
+    tools:background="@color/iswWhite">
 
     <TextView
         android:id="@+id/isw_textview4"
@@ -13,14 +14,14 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Please insert or\nswipe card"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@+id/isw_imageview2"
+        android:textColor="@color/iswColorPrimary"
+        android:textStyle="normal"
+        android:fontFamily="@font/roboto_medium"
+        android:textSize="25sp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="70dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ImageView
         android:id="@+id/isw_imageview2"
@@ -28,12 +29,9 @@
         android:layout_height="150dp"
         android:layout_marginTop="16dp"
         app:srcCompat="@drawable/isw_ic_payment"
-        android:tint="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/isw_textview5"
-        app:layout_constraintEnd_toEndOf="@+id/isw_textview4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/isw_textview4"
-        app:layout_constraintTop_toBottomOf="@+id/isw_textview4" />
+        app:layout_constraintTop_toBottomOf="@+id/isw_textview4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/isw_textview5"
@@ -41,12 +39,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:text="Waiting for card"
-        android:textColor="@android:color/white"
+        android:textColor="@color/iswColorPrimary"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/isw_imageview2"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/isw_imageview2"
         app:layout_constraintTop_toBottomOf="@+id/isw_imageview2" />
+
+   <include
+       layout="@layout/isw_powered_by_reuseable"
+       android:id="@+id/isw_logo"
+       app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

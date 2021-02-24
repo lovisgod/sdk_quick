@@ -26,6 +26,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         RootViewModel() {
 
     // communication channel with cardreader
+    // this uses coroutine channels to update messages
     private val channel = Channel<EmvMessage>()
 
     // card removed flag

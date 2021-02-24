@@ -9,7 +9,7 @@ class TransferInputFragment : BaseFragment(TAG) {
 
 
     override val layoutId: Int
-        get() = R.layout.isw_fragment_transaction_sent
+        get() = R.layout.isw_fragment_transfer_input
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
