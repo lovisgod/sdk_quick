@@ -13,6 +13,14 @@ fun EditText.getTextValue(): String {
     return this.text.toString()
 }
 
+fun View.reveal() {
+     this.visibility = View.VISIBLE
+}
+
+fun View.hide() {
+    this.visibility = View.GONE
+}
+
 fun Dialog.showDialog(message: String) {
     this.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
     this.show()

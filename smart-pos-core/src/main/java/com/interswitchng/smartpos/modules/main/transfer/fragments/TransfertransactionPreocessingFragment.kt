@@ -201,12 +201,12 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                 )
 
                 val direction =
-                        ProcessingRequestFragmentDirections.iswActionIswFragmentProcessingTransactionToIswReceiptFragment(
+                       TransfertransactionPreocessingFragmentDirections.iswActionIswTransfertransactionpreocessingfragmentToIswTransferstatusfragment(
                                 paymentModel,
                                 TransactionResponseModel(
                                         transactionResult = transactionResult,
                                         transactionType = PaymentModel.TransactionType.CARD_PURCHASE
-                                ), false
+                                )
                         )
                 navigate(direction)
             }
