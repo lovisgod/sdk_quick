@@ -3,7 +3,10 @@ package com.interswitchng.smartpos.modules.main.transfer.fragments
 import android.os.Bundle
 import android.view.View
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.main.transfer.TransferViewModel
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TransferInputFragment : BaseFragment(TAG) {
 

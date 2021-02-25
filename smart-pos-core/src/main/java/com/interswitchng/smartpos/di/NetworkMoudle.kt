@@ -21,6 +21,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 
 const val AUTH_INTERCEPTOR = "auth_interceptor"
+const val NEW_AUTH_INTERCEPTOR = "new_auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
 const val RETROFIT_PAYMENT = "payment_retrofit"
 const val RETROFIT_KIMONO = "kimono_retrofit"
@@ -43,6 +44,20 @@ internal val networkModule = module {
             return@Interceptor userManager.getToken {
                 val request = chain.request().newBuilder()
                         .addHeader("Content-type", "application/json")
+                        .addHeader("Authorization", "Bearer $it")
+                        .build()
+
+                return@getToken chain.proceed(request)
+            }
+        }
+    }
+
+    // retrofit interceptor for authentication
+    single(NEW_AUTH_INTERCEPTOR) {
+        val userManager: UserStore = get()
+        return@single Interceptor { chain ->
+            return@Interceptor userManager.getToken {
+                val request = chain.request().newBuilder()
                         .addHeader("Authorization", "Bearer $it")
                         .build()
 
@@ -99,9 +114,13 @@ internal val networkModule = module {
 
 
         val clientBuilder: OkHttpClient.Builder = get()
-        //  add auth interceptor for sendGrid
+
+        // getResult auth interceptor for client
+        val authInterceptor: Interceptor = get(NEW_AUTH_INTERCEPTOR)
+        //  add auth interceptor
         clientBuilder
                 .addInterceptor(interceptor)
+                .addInterceptor(authInterceptor)
                 .addInterceptor { chain ->
             val request = chain.request().newBuilder()
                     .addHeader("Content-type", "application/xml")
