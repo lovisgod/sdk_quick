@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import androidx.fragment.app.FragmentManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.transfer.adapters.BankAutoCompleteAdapter
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
+import com.interswitchng.smartpos.modules.main.transfer.utils.LoadingDialog
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_fragment_transfer_input.*
@@ -57,9 +59,14 @@ class TransferInputFragment : BaseFragment(TAG) {
     }
 
     fun validateInput() {
-
         submitButton.isEnabled = false
         submitButton.isClickable = false
+    }
+
+    fun submitForm() {
+        val dialog = LoadingDialog()
+        dialog.isCancelable = false
+        fragmentManager?.let { dialog.show(it, "show Dialog") }
     }
 
 

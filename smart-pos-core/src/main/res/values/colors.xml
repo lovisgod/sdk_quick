@@ -22,4 +22,5 @@
     <color name="iswColorLightGrey">#B3FFFFFF</color>
     <color name="iswTextColorBlack">#4E5053</color>
     <color name="iswColorLightBlue">#8097B1</color>
+    <color name="iswWhite">#FFFFFF</color>
 </resources>
