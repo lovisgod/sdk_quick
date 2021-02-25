@@ -7,6 +7,14 @@ import com.interswitchng.smartpos.shared.utilities.KeysUtils
 
 object Constants {
 
+
+
+    /**
+     * payment code for surcharge**/
+    internal const val SURHARGE_CODE_1 = "1075" //transfer between 1 and 5000
+    internal const val SURHARGE_CODE_2 = "2688" //transfer between 5001 and 50,000
+    internal const val SURHARGE_CODE_3 = "5375" //transfer between 50,001 and above
+
     /*internal const val PAYMENT_CODE_1 = "04385601"
     internal const val PAYMENT_CODE_2 = "04385602"*/
 

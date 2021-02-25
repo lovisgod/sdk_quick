@@ -20,10 +20,10 @@ internal class QrViewModel(paymentService: HttpService): BaseViewModel(paymentSe
     fun getQrCode(request: CodeRequest, context: Context) {
         // retrieve the qr code
         uiScope.launch {
-            // get qr code in IO thread
+            // get qrrequest code in IO thread
             val response = withContext(ioScope) {
                 // get the code
-                val code = paymentService.initiateQrPayment(request)
+                val code = paymentService.initiateQrPayment()
 
                 // if code was returned, generate the image in IO thread
                 if (code is Some) code.value.setBitmap(context)

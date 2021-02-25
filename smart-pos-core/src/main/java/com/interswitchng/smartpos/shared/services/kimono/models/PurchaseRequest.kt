@@ -23,6 +23,134 @@ internal class PurchaseRequest
 
         private val serialId by lazy { DeviceUtils.getSerialNumber()}
 
+
+
+
+        /**
+         * this functions takes in objects as parameters and retrurn xml for the request body**/
+
+        fun toTransferString(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo, destinationAccountNumber: String, receivingInstitutionId: String): String {
+
+            val hasPin = transaction.cardPIN.isNotEmpty()
+            var pinData = ""
+            var customerId = terminalInfo.agentId
+            var phoneNumber = terminalInfo.agentId
+            var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
+            var customerEmail = terminalInfo.agentEmail
+
+            var transactionAmount: Int = transaction.amount
+            println("*******The new transaction amount now is $transactionAmount");
+            Logger.with("The new transaction amount is ").logErr(transactionAmount.toString())
+            var paymentCode = when(transactionAmount){
+                in 100..300000 -> Constants.PAYMENT_CODE_1
+                in 300001..800000 -> Constants.PAYMENT_CODE_3
+                //in 8001..Int.MAX_VALUE -> Constants.PAYMENT_CODE_5
+                else -> {
+                    Constants.PAYMENT_CODE_5
+                }
+            }
+
+            var surchargeCode = when(transactionAmount){
+                in 100..500000 -> Constants.SURHARGE_CODE_1
+                in 500001..5000000 -> Constants.SURHARGE_CODE_2
+                //in 8001..Int.MAX_VALUE -> Constants.PAYMENT_CODE_5
+                else -> {
+                    Constants.SURHARGE_CODE_3
+                }
+            }
+
+            //var paymentCode = Constants.PAYMENT_CODE_1
+
+            var rrfNumber = transaction.stan.padStart(12, '0')
+            val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
+            Logger.with("purchaserequest").logErr(amount)
+            val now = Date()
+            val date = DateUtils.dateFormatter.format(now)
+            var icc = getIcc(terminalInfo, amount, date, transaction)
+
+            val iswConfig = IswPos.getInstance().config
+            var keyLabel = if (iswConfig.environment == Environment.Test) "000006" else "000002"
+
+            var dedicatedFileTag = "<DedicatedFileName>${icc.DEDICATED_FILE_NAME}</DedicatedFileName>"
+
+            var track2 = let {
+                val neededLength = transaction.cardTrack2.length - 2
+                val isVisa = transaction.cardTrack2.startsWith('4')
+                val hasCharacter = transaction.cardTrack2.last().isLetter()
+
+                // remove character suffix for visa
+                if (isVisa && hasCharacter) transaction.cardTrack2.substring(0..neededLength)
+                else transaction.cardTrack2
+            }
+
+            if (hasPin)
+
+                pinData = """<pinData><ksnd>605</ksnd><pinType>Dukpt</pinType><ksn>${transaction.pinKsn}</ksn><pinBlock>${transaction.cardPIN}</pinBlock></pinData>"""
+
+
+            val requestBody = """<transferRequest>
+                                <terminalInformation>
+                                     <batteryInformation>-1</batteryInformation>
+                                     <currencyCode>${terminalInfo.currencyCode}</currencyCode>
+                                     <languageInfo>EN</languageInfo>
+                                     <merchantId>${terminalInfo.merchantId}</merchantId>
+                                     <merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation>
+                                     <posConditionCode>00</posConditionCode>
+                                     <posDataCode>510101511344101</posDataCode>
+                                     <posEntryMode>051</posEntryMode>
+                                     <posGeoCode>00234000000000566</posGeoCode>
+                                     <printerStatus>1</printerStatus>
+                                     <terminalId>${terminalInfo.terminalId}</terminalId>
+                                     <terminalType>${icc.TERMINAL_TYPE}</terminalType>
+                                     <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate>
+                                     <uniqueId>$serialId</uniqueId>
+                                </terminalInformation>
+                                <cardData>
+                                    <cardSequenceNumber>${transaction.csn}</cardSequenceNumber>
+                                    <emvData>
+                                        <AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized>
+                                        <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther>
+                                        <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile>
+                                        <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc>
+                                        <Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram>
+                                        <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData>
+                                        <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults>
+                                        <iad>${icc.ISSUER_APP_DATA}</iad>
+                                        <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode>
+                                        <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult>
+                                        <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode>
+                                        <TerminalType>${icc.TERMINAL_TYPE}</TerminalType>
+                                        <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities>
+                                        <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate>
+                                        <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType>
+                                        <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber>
+                                        <DedicatedFileName>${dedicatedFileTag}</DedicatedFileName>
+                                    </emvData>
+                                    <track2>
+                                        <pan>${transaction.cardPAN}</pan>
+                                        <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth>
+                                        <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear>
+                                        <track2>${track2}</track2>
+                                    </track2>
+                                </cardData>
+                                <originalTransmissionDateTime>2020-09-18T10:52:26</originalTransmissionDateTime>
+                                <stan>${transaction.stan}</stan>
+                                <fromAccount>${transaction.accountType.name}</fromAccount>
+                                <toAccount></toAccount>
+                                <minorAmount>${transactionAmount}</minorAmount>
+                                <receivingInstitutionId>${receivingInstitutionId}</receivingInstitutionId>
+                                <surcharge>1075</surcharge>
+                                $pinData
+                                <keyLabel>${keyLabel}</keyLabel>
+                                <destinationAccountNumber>${destinationAccountNumber}</destinationAccountNumber>
+                                 <extendedTransactionType>6101</extendedTransactionType>
+</transferRequest>"""
+            Logger.with("Purchase Request body").logErr(requestBody)
+
+            return requestBody
+
+        }
+
         fun toCashOutInquiry(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
 
             val hasPin = transaction.cardPIN.isNotEmpty()
@@ -742,4 +870,7 @@ data class PinData @JvmOverloads constructor(
 //        }
 //
 //    }
+
+
+
 }
