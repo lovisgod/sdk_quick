@@ -52,10 +52,10 @@ internal class PurchaseRequest
 
             var surchargeCode = when(transactionAmount){
                 in 100..500000 -> Constants.SURHARGE_CODE_1
-                in 300001..800000 -> Constants.PAYMENT_CODE_3
+                in 500001..5000000 -> Constants.SURHARGE_CODE_2
                 //in 8001..Int.MAX_VALUE -> Constants.PAYMENT_CODE_5
                 else -> {
-                    Constants.PAYMENT_CODE_5
+                    Constants.SURHARGE_CODE_3
                 }
             }
 
