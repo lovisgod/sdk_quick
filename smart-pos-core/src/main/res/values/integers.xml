@@ -5,4 +5,5 @@
     <integer name="iswNibssPort">5008</integer>
     <integer name="iswTimeout">60</integer>
     <integer name="isw_animation_duration">700</integer>
+    <integer name="isw_max_account_number_value">11</integer>
 </resources>
