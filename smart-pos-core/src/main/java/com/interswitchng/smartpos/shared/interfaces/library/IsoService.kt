@@ -153,4 +153,16 @@ internal interface IsoService {
      */
 
     fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse?
+
+
+    /**
+     * Initiates a transfer transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+
+    fun initiateTransfer(terminalInfo: TerminalInfo, txnInfo: TransactionInfo,  destinationAccountNumber: String, receivingInstitutionId: String): TransactionResponse?
 }

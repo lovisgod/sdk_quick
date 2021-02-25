@@ -22,6 +22,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
+import com.interswitchng.smartpos.shared.models.utils.XmlStringConverter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
@@ -353,6 +354,48 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "", type = TransactionType.CashOutInquiry)
         }
 
+    }
+
+    override fun initiateTransfer(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, destinationAccountNumber: String, receivingInstitutionId: String): TransactionResponse? {
+        val xmlString: String = PurchaseRequest.toTransferString(device, terminalInfo, txnInfo, destinationAccountNumber, receivingInstitutionId)
+        val bodyCashOut = XmlStringConverter().toBody(xmlString)
+
+        try {
+            var url = Constants.KIMONO_TRANSFER_END_POINT
+            val responseBody = httpService.makeCashOutInquiry(url, bodyCashOut).run()
+            val purchaseResponse = responseBody.body()
+
+            return if (!responseBody.isSuccessful || purchaseResponse?.responseCode == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = responseBody.message(),
+                        type = TransactionType.Transfer
+                )
+            } else{
+
+                val now = Date()
+                val pinStatus = when {
+                    purchaseResponse.responseCode == IsoUtils.OK -> "PIN Verified"
+                    else -> "PIN Unverified"
+                }
+                TransactionResponse(
+                        responseCode = purchaseResponse.responseCode,//data.responseCode,
+                        stan = purchaseResponse.stan,
+                        responseDescription = purchaseResponse.description,//data.description
+                        type = TransactionType.Transfer
+                )
+
+
+            }
+
+        } catch (e: Exception) {
+            //logger.log(e.localizedMessage)
+            e.printStackTrace()
+            return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "", type = TransactionType.Transfer)
+        }
     }
 
     private fun cashOutPay(response: BillPaymentResponse, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {

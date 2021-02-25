@@ -33,35 +33,39 @@ internal class PurchaseRequest
 
             val hasPin = transaction.cardPIN.isNotEmpty()
             var pinData = ""
-            var customerId = terminalInfo.agentId
-            var phoneNumber = terminalInfo.agentId
-            var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
-            var customerEmail = terminalInfo.agentEmail
+//            var customerId = terminalInfo.agentId
+//            var phoneNumber = terminalInfo.agentId
+//            var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
+//            var customerEmail = terminalInfo.agentEmail
 
             var transactionAmount: Int = transaction.amount
             println("*******The new transaction amount now is $transactionAmount");
             Logger.with("The new transaction amount is ").logErr(transactionAmount.toString())
-            var paymentCode = when(transactionAmount){
-                in 100..300000 -> Constants.PAYMENT_CODE_1
-                in 300001..800000 -> Constants.PAYMENT_CODE_3
-                //in 8001..Int.MAX_VALUE -> Constants.PAYMENT_CODE_5
-                else -> {
-                    Constants.PAYMENT_CODE_5
-                }
+//            var paymentCode = when(transactionAmount){
+//                in 100..300000 -> Constants.PAYMENT_CODE_1
+//                in 300001..800000 -> Constants.PAYMENT_CODE_3
+//                //in 8001..Int.MAX_VALUE -> Constants.PAYMENT_CODE_5
+//                else -> {
+//                    Constants.PAYMENT_CODE_5
+//                }
+//            }
+            fun greaterThan(amount: Int): Boolean {
+              return amount > 5000000
             }
 
             var surchargeCode = when(transactionAmount){
                 in 100..500000 -> Constants.SURHARGE_CODE_1
                 in 500001..5000000 -> Constants.SURHARGE_CODE_2
-                //in 8001..Int.MAX_VALUE -> Constants.PAYMENT_CODE_5
                 else -> {
+                    // this is when transfer is more that 50,000
                     Constants.SURHARGE_CODE_3
                 }
             }
 
             //var paymentCode = Constants.PAYMENT_CODE_1
 
-            var rrfNumber = transaction.stan.padStart(12, '0')
+//            var rrfNumber = transaction.stan.padStart(12, '0')
+            // format amount to use in the getICC function
             val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
             Logger.with("purchaserequest").logErr(amount)
             val now = Date()
@@ -133,13 +137,13 @@ internal class PurchaseRequest
                                         <track2>${track2}</track2>
                                     </track2>
                                 </cardData>
-                                <originalTransmissionDateTime>2020-09-18T10:52:26</originalTransmissionDateTime>
+                                <originalTransmissionDateTime>${date}</originalTransmissionDateTime>
                                 <stan>${transaction.stan}</stan>
                                 <fromAccount>${transaction.accountType.name}</fromAccount>
                                 <toAccount></toAccount>
                                 <minorAmount>${transactionAmount}</minorAmount>
                                 <receivingInstitutionId>${receivingInstitutionId}</receivingInstitutionId>
-                                <surcharge>1075</surcharge>
+                                <surcharge>${surchargeCode}</surcharge>
                                 $pinData
                                 <keyLabel>${keyLabel}</keyLabel>
                                 <destinationAccountNumber>${destinationAccountNumber}</destinationAccountNumber>

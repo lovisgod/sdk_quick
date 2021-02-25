@@ -294,6 +294,66 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+    /**
+     *initiate a transfer transaction*/
+    fun processTransferTransaction(
+            paymentModel: PaymentModel,
+            accountType: AccountType,
+            terminalInfo: TerminalInfo,
+            destinationAccountNumber: String,
+            receivingInstitutionId: String
+    ) {
+
+
+        uiScope.launch {
+            // get emv data captured by card
+            val emvData = emv.getTransactionInfo()
+
+            // return response based on data
+            if (emvData != null) {
+                // create transaction info and issue online transfer request
+                val response = withContext(ioScope) {
+                    val txnInfo =
+                            TransactionInfo.fromEmv(
+                                    emvData,
+                                    paymentModel,
+                                    PurchaseType.Card,
+                                    accountType
+                            )
+                    initiateTransfer(transactionType, terminalInfo,
+                            txnInfo, destinationAccountNumber, receivingInstitutionId)
+                }
+
+                when (response) {
+                    null -> {
+                        _onlineResult.value = OnlineProcessResult.NO_RESPONSE
+                        _transactionResponse.value = None
+                    }
+                    else -> {
+                        // complete transaction by applying scripts
+                        // only when responseCode is 'OK'
+                        if (response.responseCode == IsoUtils.OK) {
+                            // get result code of applying server response
+
+                            // react to result code
+                            when (emv.completeTransaction(response)) {
+                                EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(
+                                        OnlineProcessResult.ONLINE_APPROVED
+                                )
+                                else -> _onlineResult.value = OnlineProcessResult.ONLINE_DENIED
+                            }
+                        }
+
+                        _transactionResponse.value = Some(Pair(response, emvData))
+                    }
+                }
+            } else {
+                _onlineResult.postValue(OnlineProcessResult.NO_EMV)
+                _transactionResponse.value = None
+            }
+        }
+    }
+
     /*fun processOnlineBP(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo, billPaymentModel: BillPaymentModel): Optional<Pair<TransactionResponse, EmvData>> {
 
         // get emv data captured by card
@@ -432,6 +492,12 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     private fun initiateTransactionBillPayment(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
 
         return isoService.initiateBillPayment(terminalInfo, txnInfo)
+    }
+
+    private fun initiateTransfer(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo,
+                                 destinationAccountNumber: String, receivingInstitutionId: String): TransactionResponse? {
+
+        return isoService.initiateTransfer(terminalInfo, txnInfo, destinationAccountNumber, receivingInstitutionId)
     }
 
     private fun initiateCNPTransaction(

@@ -43,6 +43,8 @@ object Constants {
 
     internal const val KIMONO_3_END_POINT = "https://kimono.interswitchng.com/kmw/kimonoservice"
 
+    internal const val KIMONO_TRANSFER_END_POINT = "https://kimono.interswitchng.com/kmw/kimonoservice/amex"
+
     // EMAIL
     internal const val EMAIL_END_POINT = "mail/send"
     internal const val EMAIL_TEMPLATE_ID = "d-c33c9a651cea40dd9b0ee4615593dcb4"
