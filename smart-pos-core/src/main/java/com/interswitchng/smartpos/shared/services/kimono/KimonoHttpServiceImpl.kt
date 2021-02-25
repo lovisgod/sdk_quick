@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
+import com.interswitchng.smartpos.modules.main.transfer.TokenPassportResponse
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
@@ -11,6 +12,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.TransactionLogService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IAgentService
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IKimonoHttpService
+import com.interswitchng.smartpos.shared.interfaces.retrofit.TokenService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
@@ -33,6 +35,7 @@ import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
 import com.interswitchng.smartpos.shared.utilities.DeviceUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.pixplicity.easyprefs.library.Prefs
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import java.io.ByteArrayInputStream
@@ -45,7 +48,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                                      private val device: POSDevice,
                                      private val transactionLogService: TransactionLogService,
                                      private val httpService: IKimonoHttpService,
-                                     private val agentService: IAgentService) : IsoService {
+                                     private val agentService: IAgentService,
+                                     private val tokenService: TokenService) : IsoService {
 
 
     private lateinit var transactionResult: TransactionResult
@@ -140,14 +144,14 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     override fun downloadTerminalParametersForKimono(serialNumber: String): AllTerminalInfo? {
         try {
-            val url = Constants.ISW_TERMINAL_CONFIG_URL+serialNumber
+            val url = Constants.ISW_TERMINAL_CONFIG_URL + serialNumber
             val responseBody = agentService.downloadTerminalParameters(url).execute()
-            if (responseBody.isSuccessful){
+            if (responseBody.isSuccessful) {
                 return responseBody.body()
-            } else{
+            } else {
                 AllTerminalInfo()
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             logger.log(e.localizedMessage)
             e.printStackTrace()
         }
@@ -173,17 +177,17 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     }
 
 
-    override  fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-        val requestBody: String = PurchaseRequest.toCardPurchaseString(device,terminalInfo,transaction)
+    override fun initiateCardPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
+        val requestBody: String = PurchaseRequest.toCardPurchaseString(device, terminalInfo, transaction)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {
             val responseBody = httpService.makePurchase(body).run()
-            var responseXml= responseBody.body()?.bytes()?.let { String(it) }
+            var responseXml = responseBody.body()?.bytes()?.let { String(it) }
 
 
             val inputStream = ByteArrayInputStream(responseXml?.toByteArray(Charsets.UTF_8))
-            var purchaseResponse=     XmlPullParserHandler().parse( inputStream)
+            var purchaseResponse = XmlPullParserHandler().parse(inputStream)
 
             return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
@@ -195,10 +199,10 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 )
             } else {
                 TransactionResponse(
-                        responseCode =purchaseResponse.responseCode,//data.responseCode,
+                        responseCode = purchaseResponse.responseCode,//data.responseCode,
                         stan = purchaseResponse.stan,
-                        authCode =  purchaseResponse.authCode,// data.authCode,
-                        scripts =  purchaseResponse.stan,
+                        authCode = purchaseResponse.authCode,// data.authCode,
+                        scripts = purchaseResponse.stan,
                         responseDescription = purchaseResponse.description,//data.description
                         rrn = purchaseResponse.referenceNumber
                 )
@@ -214,7 +218,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     }
 
     override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
-        val requestBody: String = PurchaseRequest.toCNPPurchaseString(device,terminalInfo,transaction)
+        val requestBody: String = PurchaseRequest.toCNPPurchaseString(device, terminalInfo, transaction)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
 
         try {
@@ -362,7 +366,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
         try {
             var url = Constants.KIMONO_TRANSFER_END_POINT
-            val responseBody = httpService.makeCashOutInquiry(url, bodyCashOut).run()
+            val responseBody = httpService.makeTransfer(bodyCashOut, "Bearer ${Prefs.getString("token", "")}").run()
             val purchaseResponse = responseBody.body()
 
             return if (!responseBody.isSuccessful || purchaseResponse?.responseCode == null) {
@@ -374,7 +378,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         responseDescription = responseBody.message(),
                         type = TransactionType.Transfer
                 )
-            } else{
+            } else {
 
                 val now = Date()
                 val pinStatus = when {
@@ -396,6 +400,27 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             e.printStackTrace()
             return TransactionResponse(IsoUtils.TIMEOUT_CODE, authCode = "", stan = "", scripts = "", type = TransactionType.Transfer)
         }
+    }
+
+    override fun getToken(terminalInfo: TerminalInfo) {
+        val xmlString: String = PurchaseRequest.toTokenString(terminalInfo)
+        val bodyCashOut = XmlStringConverter().toBody(xmlString)
+
+        try {
+            var url = Constants.KIMONO_TOKEN_END_POINT
+            val responseBody = tokenService.getToken(bodyCashOut).run()
+            val response = responseBody.body()
+            println(response)
+
+             if (responseBody.isSuccessful && !response?.token.isNullOrEmpty()) {
+                Prefs.putString("token", response?.token.toString())
+            }
+        } catch (e: Exception)
+        {
+            //logger.log(e.localizedMessage)
+            e.printStackTrace()
+        }
+
     }
 
     private fun cashOutPay(response: BillPaymentResponse, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {

@@ -49,6 +49,10 @@ internal class IsoServiceImpl(
         TODO("Not yet implemented")
     }
 
+    override fun getToken(terminalInfo: TerminalInfo) {
+        TODO("Not yet implemented")
+    }
+
     override fun initiateCNPPurchase(terminalInfo: TerminalInfo, transaction: TransactionInfo): TransactionResponse? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates
     }

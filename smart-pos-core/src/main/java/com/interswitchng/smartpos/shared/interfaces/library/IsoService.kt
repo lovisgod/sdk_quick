@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
+import com.interswitchng.smartpos.modules.main.transfer.TokenPassportResponse
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
@@ -165,4 +166,15 @@ internal interface IsoService {
      */
 
     fun initiateTransfer(terminalInfo: TerminalInfo, txnInfo: TransactionInfo,  destinationAccountNumber: String, receivingInstitutionId: String): TransactionResponse?
+
+    /**
+     * Initiates a token enquiry request using the provided terminal info, and returns the
+     * Token response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @return   response status indicating request success or failure
+     */
+
+    fun getToken(terminalInfo: TerminalInfo)
+
 }

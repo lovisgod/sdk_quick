@@ -27,6 +27,35 @@ internal class PurchaseRequest
 
 
         /**
+         * this function returns the get token response**/
+
+        fun toTokenString(terminalInfo: TerminalInfo): String {
+            val requestBody = """<tokenPassportRequest>
+	                                <terminalInformation>
+		                                <batteryInformation/>
+		                                <cellStationId/>
+		                                <currencyCode/>
+		                                <languageInfo/>
+                                        <merchantId>${terminalInfo.merchantId}</merchantId>
+		                                <merhcantLocation/>
+		                                <posConditionCode/>
+		                                <posDataCode/>
+		                                <posEntryMode/>
+		                                <posGeoCode/>
+		                                <printerStatus/>
+		                                <terminalId>${terminalInfo.terminalId}</terminalId>
+		                                <terminalType/>
+		                                <transmissionDate/>
+		                                <uniqueId/>
+	                                </terminalInformation>
+</tokenPassportRequest>"""
+            Logger.with("Token Request body").logErr(requestBody)
+
+            return requestBody
+
+        }
+
+        /**
          * this functions takes in objects as parameters and retrurn xml for the request body**/
 
         fun toTransferString(device: POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo, destinationAccountNumber: String, receivingInstitutionId: String): String {

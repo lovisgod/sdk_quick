@@ -25,6 +25,7 @@ const val NEW_AUTH_INTERCEPTOR = "new_auth_interceptor"
 const val RETROFIT_EMAIL = "email_retrofit"
 const val RETROFIT_PAYMENT = "payment_retrofit"
 const val RETROFIT_KIMONO = "kimono_retrofit"
+const val TOKEN_RETROFIT = "token_retrofit"
 const val RETROFIT_CUSTOMER_ID = "kimono_customer_id"
 
 
@@ -137,6 +138,44 @@ internal val networkModule = module {
     }
 
 
+    single(TOKEN_RETROFIT) {
+
+
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+
+        val kimonoServiceUrl = "https://saturn.interswitchng.com/kimonotms/"
+
+        val builder = Retrofit.Builder()
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .addConverterFactory(ToStringConverterFactory())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(kimonoServiceUrl)
+                .addCallAdapterFactory(SimpleCallAdapterFactory.create())
+
+
+        val clientBuilder: OkHttpClient.Builder = get()
+
+        clientBuilder
+                .addInterceptor(interceptor)
+                .addInterceptor { chain ->
+                    val request = chain.request().newBuilder()
+                            .addHeader("Content-type", "application/xml")
+                            .build()
+
+                    chain.proceed(request)
+                }
+
+        // build and add client to retrofit
+        val client = clientBuilder.build()
+        builder.client(client)
+
+        return@single builder.build()
+    }
+
+
+
 
 
     // retrofit isw payment
@@ -214,6 +253,12 @@ internal val networkModule = module {
     single {
         val retrofit: Retrofit = get(RETROFIT_KIMONO)
         return@single retrofit.create(IKimonoHttpService::class.java)
+    }
+
+    //create tone Http service with retrofit
+    single {
+        val retrofit: Retrofit = get(TOKEN_RETROFIT)
+        return@single retrofit.create(TokenService::class.java)
     }
 
     single {

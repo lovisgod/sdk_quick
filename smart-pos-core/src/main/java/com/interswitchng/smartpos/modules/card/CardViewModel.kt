@@ -354,6 +354,19 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+    /**
+     *initiate get token request*/
+    fun getToken(
+            terminalInfo: TerminalInfo
+    ) {
+
+        uiScope.launch {
+            withContext(ioScope) {
+               isoService.getToken(terminalInfo)
+            }
+        }
+    }
+
     /*fun processOnlineBP(paymentInfo: PaymentInfo, accountType: AccountType, terminalInfo: TerminalInfo, billPaymentModel: BillPaymentModel): Optional<Pair<TransactionResponse, EmvData>> {
 
         // get emv data captured by card
