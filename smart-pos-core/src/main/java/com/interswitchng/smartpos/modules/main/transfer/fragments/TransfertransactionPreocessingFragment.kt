@@ -155,7 +155,7 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                     setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_done, 0, 0, 0)
                     text = "Received"
 
-                    isw_connection_progress_transfer.progress = isw_connection_progress.progress + 30
+                    isw_connection_progress_transfer.progress = isw_connection_progress_transfer.progress + 30
                 }
                 // extract info
                 val response = transactionResponse.value.first

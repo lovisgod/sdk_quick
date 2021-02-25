@@ -6,8 +6,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.*
 import android.widget.EditText
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.interswitchng.smartpos.R
+import kotlinx.android.synthetic.main.isw_fragment_transfer_status.*
 
 fun EditText.getTextValue(): String {
     return this.text.toString()
@@ -44,12 +46,16 @@ fun customdailog(context: Context?): Dialog {
     dialog.setCancelable(false)
     val layoutParams = dialog.window!!.attributes
     layoutParams.dimAmount = 0.7f
-    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-    layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+    layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
     dialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     dialog.window!!.setGravity(Gravity.CENTER)
     dialog.window!!.attributes = layoutParams
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     dialog.show()
     return dialog
+}
+
+fun showSnack(view: View, message: String) {
+    Snackbar.make(view,message, Snackbar.LENGTH_LONG).show()
 }

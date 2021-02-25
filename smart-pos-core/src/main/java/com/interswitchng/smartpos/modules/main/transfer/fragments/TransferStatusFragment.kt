@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.fragments.ReceiptFragmentArgs
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.transfer.hide
 import com.interswitchng.smartpos.modules.main.transfer.reveal
+import com.interswitchng.smartpos.modules.main.transfer.showSnack
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
@@ -46,15 +49,23 @@ class TransferStatusFragment() : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpUI()
+        listenToviewModel()
     }
 
-
+    private fun listenToviewModel() {
+        val owner = { lifecycle }
+        with(resultViewModel) {
+            printerMessage.observe(owner) {
+                showSnack(isw_amount_paid_label_transfer, it.toString())
+            }
+        }
+    }
 
 
     private fun setUpUI() {
         displayTransactionResultIconAndMessage()
         displayTransactionDetails()
-        logTransaction()
+//        logTransaction()
         displayButtons()
         handleClicks()
         handlePrint()
@@ -77,7 +88,7 @@ class TransferStatusFragment() : BaseFragment(TAG) {
                     // print merchant copy
                     resultViewModel.printSlip(UserType.Merchant, it)
                     // change print text to re-print
-                    isw_print_receipt.text = getString(R.string.isw_title_re_print_receipt)
+                    isw_print_receipt_transfer.text = getString(R.string.isw_title_re_print_receipt)
                     result?.hasPrintedMerchantCopy = 1
                     resultViewModel.updateTransaction(result!!)
                 }
@@ -102,7 +113,7 @@ class TransferStatusFragment() : BaseFragment(TAG) {
     }
 
     private fun displayButtons() {
-       isw_share_receipt_transfer.reveal()
+       isw_share_receipt_transfer.hide()
        isw_print_receipt_transfer.reveal()
     }
 
@@ -138,20 +149,20 @@ class TransferStatusFragment() : BaseFragment(TAG) {
         Logger.with("Reciept Fragment").logErr(result?.responseCode.toString())
         when (result?.responseCode) {
             IsoUtils.TIMEOUT_CODE -> {
-                transactionResponseIcon.setImageResource(R.drawable.isw_failure)
+                transactionResponseIcon_transfer.setImageResource(R.drawable.isw_failure)
                 isw_receipt_text_transfer.text = "Failed!"
                 isw_transaction_msg_transfer.text = "Your transaction was unsuccessful"
             }
 
             IsoUtils.OK -> {
-                transactionResponseIcon.setImageResource(R.drawable.isw_round_done_padded)
+                transactionResponseIcon_transfer.setImageResource(R.drawable.isw_round_done_padded)
                 isw_transaction_msg_transfer.text = "Your transaction was successful"
                 isw_receipt_text_transfer.text =
                         getString(R.string.isw_transfer_completed)
             }
 
             else -> {
-                transactionResponseIcon.setImageResource(R.drawable.isw_failure)
+                transactionResponseIcon_transfer.setImageResource(R.drawable.isw_failure)
                 isw_receipt_text_transfer.text = "Failed!"
                 isw_transaction_msg_transfer.text =
                         result?.responseMessage//"Your transaction was unsuccessful"
