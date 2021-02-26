@@ -36,6 +36,10 @@ class TransferLandingFragment : BaseFragment(TAG) {
             val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(paymentModel)
             findNavController().navigate(action)
         }
+
+        isw_settings_icon.setOnClickListener {
+            iswPos.goToSettingsUpdatePage()
+        }
     }
 
 

@@ -17,7 +17,7 @@
 
     <include
         android:id="@+id/isw_logo"
-        android:visibility="gone"
+        android:visibility="visible"
         layout="@layout/isw_powered_by_reuseable"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
