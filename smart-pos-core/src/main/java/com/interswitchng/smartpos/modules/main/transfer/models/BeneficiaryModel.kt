@@ -5,6 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class BeneficiaryModel(
-        val accountNumber: Int,
+        val accountNumber: String,
         val accountName: String
 ): Parcelable

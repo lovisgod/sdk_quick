@@ -33,4 +33,17 @@ object HashUtils {
 
         return result.toString()
     }
+
+    private fun hexgenerator():String {
+        val randomValue = Math.floor((1 + Math.random()) * 0x10000)
+        return Integer.toHexString(randomValue.toInt())
+    }
+
+    fun generateGuid(repeat: Int): String {
+        var guid = ""
+        for (i in 1..repeat) {
+            guid += hexgenerator()
+        }
+        return guid
+    }
 }

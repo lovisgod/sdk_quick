@@ -1,8 +1,10 @@
 package com.interswitchng.smartpos.shared.interfaces.retrofit
 
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.shared.Constants.BANKS_END_POINT
 import com.interswitchng.smartpos.shared.Constants.CODE_END_POINT
+import com.interswitchng.smartpos.shared.Constants.SATURN_END_POINT
 import com.interswitchng.smartpos.shared.Constants.TRANSACTION_STATUS_QR
 import com.interswitchng.smartpos.shared.Constants.TRANSACTION_STATUS_USSD
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
@@ -30,4 +32,18 @@ internal interface IHttpService {
 
     @GET(BANKS_END_POINT)
     fun getBanks(): Simple<List<Bank>?>
+
+    @GET
+    fun nameEnquiry(
+            @Url url: String,
+            @Header("Authorization") authorisation: String?,
+            @Header("clientSecret") clientSecret: String?,
+            @Header("clientId") clientId: String?,
+            @Header("Signature") signature: String?,
+            @Header("SignatureMethod") signatureMethod: String?,
+            @Header("Timestamp") timeStamp: String?,
+            @Header("Nonce") nonce: String?,
+            @Header("Host") host: String?
+    ): Simple<NameEnquiryResponse?>
+
 }

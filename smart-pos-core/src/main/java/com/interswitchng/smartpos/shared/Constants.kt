@@ -38,6 +38,9 @@ object Constants {
     //    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
     internal const val KIMONO_END_POINT = "kmw/kimonoservice"
 
+    internal const val SATURN_END_POINT = "https://saturn.interswitchng.com/api/"
+
+
     internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://webpay.interswitchng.com/kimonotms/paybills/inquire"
 
     internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://webpay.interswitchng.com/kimonotms/paybills/pay"

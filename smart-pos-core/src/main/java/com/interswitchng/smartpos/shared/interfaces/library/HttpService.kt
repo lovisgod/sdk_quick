@@ -1,6 +1,9 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
 import com.gojuno.koptional.Optional
+import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
+import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryRequestHeaderModel
+import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.CodeRequest
 import com.interswitchng.smartpos.shared.models.transaction.ussdqr.request.TransactionStatus
@@ -16,6 +19,12 @@ internal interface HttpService {
     suspend fun initiateUssdPayment(request: CodeRequest): Optional<CodeResponse>
 
     suspend fun getBanks(): Optional<List<Bank>>
+
+    suspend fun nameEnquiry(
+            parameters: NameEnquiryRequestHeaderModel,
+            bankCode: String,
+            accountNumber: String
+    ): Optional<NameEnquiryResponse>
 
     suspend fun checkPayment(type: PaymentType, status: TransactionStatus): PaymentStatus
 }
