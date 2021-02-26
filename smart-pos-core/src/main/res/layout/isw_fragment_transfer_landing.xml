@@ -50,6 +50,16 @@
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/isw_settings_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:tint="@color/iswWhite"
+        app:srcCompat = "@drawable/isw_settings_image"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/isw_date"
         android:layout_width="wrap_content"

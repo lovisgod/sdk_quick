@@ -61,7 +61,14 @@
         android:id="@+id/isw_transferstatusfragment"
         android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransferStatusFragment"
         android:label="isw_fragment_transfer_status"
-        tools:layout="@layout/isw_fragment_transfer_status" />
+        tools:layout="@layout/isw_fragment_transfer_status" >
+        <argument
+            android:name="paymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel" />
+        <argument
+            android:name="transactionResponse"
+            app:argType="com.interswitchng.smartpos.modules.main.models.TransactionResponseModel" />
+    </fragment>
     <fragment
         android:id="@+id/isw_transfertransactionpreocessingfragment"
         android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransfertransactionPreocessingFragment"
