@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.main.transfer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.gojuno.koptional.Optional
+import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryRequestHeaderModel
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.modules.ussdqr.viewModels.BaseViewModel
@@ -19,14 +20,12 @@ internal class TransferViewModel(transferService: HttpService, service: SaturnSe
     val allBanks: LiveData<Optional<List<Bank>>>
                         get() = _allBanks
 
-    private val _beneficiary = MutableLiveData<Optional<NameEnquiryResponse>>()
-    val beneficiary: LiveData<Optional<NameEnquiryResponse>>
+    private val _beneficiary = MutableLiveData<Optional<BeneficiaryModel>>()
+    val beneficiary: LiveData<Optional<BeneficiaryModel>>
                         get() = _beneficiary
 
 
     fun validateBankDetails(bankCode: String, accountNumber:String) {
-        val requestHeader =  NameEnquiryRequestHeaderModel()
-
         uiScope.launch {
             val beneficiary =  uiScope.async(Dispatchers.IO) { _service.nameEnquiry(bankCode, accountNumber)  }
             _beneficiary.value = beneficiary.await()

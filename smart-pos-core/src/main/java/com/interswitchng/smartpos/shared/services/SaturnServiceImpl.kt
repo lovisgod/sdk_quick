@@ -4,6 +4,7 @@ import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryRequestHeaderModel
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.modules.main.transfer.utils.CipherUtil
@@ -20,7 +21,7 @@ internal class SaturnServiceImpl(private val saturnService: ISaturnService): Sat
 
     override suspend fun nameEnquiry(
             bankCode: String,
-            accountNumber: String): Optional<NameEnquiryResponse> {
+            accountNumber: String): Optional<BeneficiaryModel> {
         val clientId = "IKIA9386DDAE1F2B112CE236CAA472A80A90F99B3987"
         val clientSecret = "E5jlYmDMw3nsPiNMI1Ys8fpmmHa6YRPEu675q6b6iFs="
         val valUrl = "https://saturn.interswitch.com/api/v1/nameenquiry/banks/${bankCode}/accounts/${accountNumber}"
