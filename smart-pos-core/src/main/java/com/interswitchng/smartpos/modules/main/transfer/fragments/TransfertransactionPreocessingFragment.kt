@@ -23,6 +23,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.toast
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 import kotlinx.android.synthetic.main.isw_fragment_transfertransaction_preocessing.*
 import kotlinx.coroutines.delay
@@ -80,8 +81,8 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                         paymentModel,
                         accountType,
                         terminalInfo,
-                        "2089430464",
-                        "627629"
+                        Prefs.getString("destinationAccountNumber", ""), // use this for generic transfer
+                        Prefs.getString("receivingInstitutionId", "") // use this fot generic transfer
                 )
             }
     }
@@ -209,6 +210,10 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                                 )
                         )
                 navigate(direction)
+
+                // delete the saved receivinginstitionid and destinationAccountNumber
+                Prefs.remove("receivingInstitutionId")
+                Prefs.remove("destinationAccountNumber")
             }
         }
     }

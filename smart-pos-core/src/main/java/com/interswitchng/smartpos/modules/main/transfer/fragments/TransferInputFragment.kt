@@ -24,10 +24,10 @@ import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_fragment_transfer_input.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
-    // TODO: Move all these to viewModel
     private var bankList = arrayListOf<BankModel>()
     lateinit var _selectedBank: BankModel
     lateinit var submitButton: Button
@@ -59,8 +59,16 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
         accountNumberEditor.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                Timer().schedule(object : TimerTask () {
+                    override fun run() {
+                        this@TransferInputFragment.requireActivity().runOnUiThread {
+                            validateBeneficiary()
+                        }
+                    }
+
+                }, 500)
                 accountNumber = s.toString()
-                validateBeneficiary()
+//                validateBeneficiary()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -83,7 +91,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         validateBeneficiary()
     }
 
-//TODO: Implement viemodel / databinding
 
 
     fun validateBeneficiary() {
@@ -95,7 +102,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     }
 
     fun validateInput() {
-//        TODO: write a validator function to validate the input and gray out the submit button
         submitButton.isEnabled = false
         submitButton.isClickable = false
     }
@@ -110,7 +116,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         val payment = PaymentModel()
         payment.type = PaymentModel.TransactionType.TRANSFER
 
-//      TODO: Push to the next fragment
+      // Push to the next fragment
         val action = TransferInputFragmentDirections.iswActionIswTransferinputfragmentToIswAmountfragment(paymentModel = payment, BankModel = selectedBank, BeneficiaryModel = beneficiary)
         view.findNavController().navigate(action)
 
@@ -137,11 +143,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         }
     }
 
-
-    private fun closeKeyBoard() {
-        getActivity()?.getWindow()?.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
 
     companion object {
         @JvmStatic
