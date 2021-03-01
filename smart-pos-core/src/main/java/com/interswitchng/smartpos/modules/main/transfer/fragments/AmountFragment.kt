@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_amount.*
 import kotlinx.android.synthetic.main.isw_transfer_fragment_amount.*
 import java.text.NumberFormat
@@ -16,6 +17,8 @@ class AmountFragment : BaseFragment(TAG) {
 
     private val amountFragmentArgs by navArgs<AmountFragmentArgs>()
     private val payment by lazy { amountFragmentArgs.paymentModel }
+    private val bankDetails by lazy { amountFragmentArgs.BankModel }
+    private val benefeciaryDetails by lazy { amountFragmentArgs.BeneficiaryModel }
 
     private val DEFAULT_AMOUNT = "0.00"
 
@@ -58,6 +61,9 @@ class AmountFragment : BaseFragment(TAG) {
 
         }
 
+        //cached temporarily the destination account number and receiving institution id
+        Prefs.putString("destinationAccountNumber", benefeciaryDetails.accountNumber)
+        Prefs.putString("receivingInstitutionId", bankDetails.recvInstId)
         val direction = AmountFragmentDirections.iswActionIswAmountfragmentToIswTransfercardtransactionfragment(payment)
         navigate(direction)
     }

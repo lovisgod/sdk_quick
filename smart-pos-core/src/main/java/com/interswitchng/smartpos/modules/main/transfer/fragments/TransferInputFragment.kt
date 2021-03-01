@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +15,7 @@ import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.TransferViewModel
+import com.interswitchng.smartpos.modules.main.transfer.customdailog
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
@@ -25,15 +27,16 @@ import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_fragment_transfer_input.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.*
 
 class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
-    // TODO: Move all these to viewModel
     private var bankList = arrayListOf<BankModel>()
     lateinit var _selectedBank: BankModel
     lateinit var submitButton: Button
     lateinit var _beneficiaryPayload: BeneficiaryModel
     var isValid = false
+    lateinit var dialog: Dialog
 
 
     var accountNumber: String? = ""
@@ -47,6 +50,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bankList.addAll(Constants.BANK_LIST.sortedWith(compareBy { it.bankName }))
+        dialog = Dialog(this.requireContext())
         observeViewModel()
         submitButton = isw_transfer_input_proceed
         submitButton.isEnabled = false
@@ -62,8 +66,16 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
         accountNumberEditor.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                Timer().schedule(object : TimerTask () {
+                    override fun run() {
+                        this@TransferInputFragment.requireActivity().runOnUiThread {
+                            validateBeneficiary()
+                        }
+                    }
+
+                }, 500)
                 accountNumber = s.toString()
-                validateBeneficiary()
+//                validateBeneficiary()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -86,13 +98,13 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         validateBeneficiary()
     }
 
-//TODO: Implement viemodel / databinding
 
 
     fun validateBeneficiary() {
         isValid = false
         toggleAccountNameVisibility(false)
         if(accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
+            dialog = customdailog(this.requireContext())
             transferViewModel.validateBankDetails(_selectedBank.selBankCodes!!, accountNumber!!)
         }
         else {
@@ -123,6 +135,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
             //observe the benefiary call
             beneficiary.observe(owner) {
                 it?.let { beneficiary->
+                    dialog.dismiss()
                     when (beneficiary) {
                         is Some -> {
 
@@ -143,6 +156,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     }
 
     private fun toggleAccountNameVisibility(state: Boolean) {
+        dialog.dismiss()
       if(state) {
           account_name.visibility = View.VISIBLE
           isw_transfer_input_account_name.visibility = View.VISIBLE
@@ -151,11 +165,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
           account_name.visibility = View.GONE
           isw_transfer_input_account_name.visibility = View.GONE
       }
-    }
-
-    private fun closeKeyBoard() {
-        getActivity()?.getWindow()?.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     companion object {
