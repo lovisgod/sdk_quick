@@ -196,14 +196,19 @@ object Constants {
             BankModel("639138", "070", "Fidelity Bank"),
             BankModel("628009", "214", "FCMB"),
             BankModel("627858", "039", "Stanbic IBTC"),
-            BankModel("627168", "063", "Access(Damond)"),
+            BankModel("627168", "063", "Access (Diamond)"),
             BankModel("603948", "050", "Eco Bank"),
 //        Bank("639563", "090", "Enterprice Bank"),
             BankModel("627821", "035", "Wema Bank"),
             BankModel("639249", "032", "Sterling Bank"),
             BankModel("589019", "011", "First Bank"),
             BankModel("627787", "058", "GTBank"),
-            BankModel("636088", "044", "Access Bank")
+            BankModel("636088", "044", "Access Bank"),
+            BankModel("636092", "076", "Polaris"),
+            BankModel("627480", "033", "UBA"),
+            BankModel("627629", "057", "Zenith Bank")
     )
+
+
 
 }
