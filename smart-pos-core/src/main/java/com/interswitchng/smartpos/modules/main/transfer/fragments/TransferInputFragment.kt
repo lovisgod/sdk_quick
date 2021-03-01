@@ -91,6 +91,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
     fun validateBeneficiary() {
         isValid = false
+        toggleAccountNameVisibility(false)
         if(accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
             transferViewModel.validateBankDetails(_selectedBank.selBankCodes!!, accountNumber!!)
         }
@@ -124,12 +125,15 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
                 it?.let { beneficiary->
                     when (beneficiary) {
                         is Some -> {
-                            context?.toast("Got Beneficiary ${beneficiary.value.accountName}")
+
                             _beneficiaryPayload = beneficiary.value
                             isValid = true
+                            toggleAccountNameVisibility(true)
                         }
                         is None -> {
-
+                            isValid = false
+                            toggleAccountNameVisibility(false)
+                            context?.toast("Name enquiry error")
                         }
                     }
                     validateInput()
@@ -138,6 +142,16 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         }
     }
 
+    private fun toggleAccountNameVisibility(state: Boolean) {
+      if(state) {
+          account_name.visibility = View.VISIBLE
+          isw_transfer_input_account_name.visibility = View.VISIBLE
+          isw_transfer_input_account_name.setText(_beneficiaryPayload.accountName)
+      }  else {
+          account_name.visibility = View.GONE
+          isw_transfer_input_account_name.visibility = View.GONE
+      }
+    }
 
     private fun closeKeyBoard() {
         getActivity()?.getWindow()?.setSoftInputMode(
