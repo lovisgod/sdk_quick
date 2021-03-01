@@ -190,4 +190,9 @@
         <!-- active thumb & track color -->
         <item name="colorControlActivated">@color/iswColorPrimary</item>
     </style>
+    <style name="ISW.TransferFilterDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
 </resources>

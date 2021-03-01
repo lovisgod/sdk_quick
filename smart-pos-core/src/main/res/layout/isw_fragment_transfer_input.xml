@@ -70,6 +70,7 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@id/isw_guideline2"
         app:layout_constraintEnd_toStartOf="@id/isw_guideline3"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,11 +79,28 @@
         app:layout_constraintTop_toTopOf="@+id/isw_view">
 
         <TextView
+            android:id="@+id/isw_transfer_input_bank_code_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="Bank"
+            android:textSize="20sp">
+        </TextView>
+
+        <EditText
+            android:id="@+id/isw_transfer_input_bank"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="Select a Bank"
+            />
+
+        <TextView
             android:id="@+id/account_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Account Number"
-            android:textSize="10pt">
+            android:textSize="20sp">
         </TextView>
 
         <EditText
@@ -90,33 +108,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Account Number"
+            android:maxLength="10"
             android:ems="10"
             android:inputType="number" />
-
-        <TextView
-            android:id="@+id/isw_transfer_input_bank_code_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bank"
-            android:textSize="10pt">
-        </TextView>
-
-        <AutoCompleteTextView
-            android:id="@+id/isw_bank_autocomplete_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Select a bank"
-            android:maxLength="@integer/isw_max_account_number_value" />
-
-        <Spinner
-            android:paddingVertical="15dp"
-            android:layout_marginTop="20dp"
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <View android:layout_width="match_parent"
-            android:background="@android:color/darker_gray"
-            android:layout_height="1dp"/>
 
 
         <com.google.android.material.button.MaterialButton

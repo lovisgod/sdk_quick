@@ -23,7 +23,7 @@ import org.koin.dsl.module.module
 internal val viewModels = module {
 
     /**Transfer viewmodel**/
-    viewModel { TransferViewModel(get()) }
+    viewModel { TransferViewModel(get(), get()) }
 
 
     viewModel { UssdViewModel(get()) }

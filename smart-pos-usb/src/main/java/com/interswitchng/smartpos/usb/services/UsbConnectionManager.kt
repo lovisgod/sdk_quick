@@ -15,7 +15,7 @@ typealias ResponseListener = (String?) -> Unit
 
 class UsbConnectionManager: UsbConnector {
 
-    private val logger by lazy { LoggBaseApplication er.with("UsbConnector") }
+    private val logger by lazy { Logger.with("UsbConnector") }
 
     private val serverSocketFactory = { ServerSocket(LISTENING_PORT) }
     private var serverSocket = serverSocketFactory()

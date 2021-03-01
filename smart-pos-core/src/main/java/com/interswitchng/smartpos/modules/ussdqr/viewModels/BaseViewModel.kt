@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal abstract class BaseViewModel(protected val paymentService: HttpService) : RootViewModel() {
+internal abstract class BaseViewModel(protected val paymentService: HttpService ) : RootViewModel() {
 
     private val _paymentStatus = MutableLiveData<PaymentStatus>()
     val paymentStatus: LiveData<PaymentStatus> = _paymentStatus

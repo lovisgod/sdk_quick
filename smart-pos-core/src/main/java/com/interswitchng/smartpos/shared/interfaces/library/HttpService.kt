@@ -20,11 +20,5 @@ internal interface HttpService {
 
     suspend fun getBanks(): Optional<List<Bank>>
 
-    suspend fun nameEnquiry(
-            parameters: NameEnquiryRequestHeaderModel,
-            bankCode: String,
-            accountNumber: String
-    ): Optional<NameEnquiryResponse>
-
     suspend fun checkPayment(type: PaymentType, status: TransactionStatus): PaymentStatus
 }

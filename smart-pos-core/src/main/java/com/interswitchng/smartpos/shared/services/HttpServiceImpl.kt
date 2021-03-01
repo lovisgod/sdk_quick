@@ -38,38 +38,6 @@ internal class HttpServiceImpl(private val httpService: IHttpService) : HttpServ
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun nameEnquiry(
-            parameters: NameEnquiryRequestHeaderModel,
-            bankCode: String,
-            accountNumber: String): Optional<NameEnquiryResponse> {
-        val clientId = "IKIA9386DDAE1F2B112CE236CAA472A80A90F99B3987"
-        val clientSecret = "E5jlYmDMw3nsPiNMI1Ys8fpmmHa6YRPEu675q6b6iFs"
-        val valUrl = "/api/v1/nameenquiry/banks/057/accounts/2150042682"
-        val nonce = HashUtils.generateGuid(8)
-        val plainCipher = CipherUtil.generateSignatureCipherPlain("GET",valUrl,nonce,clientId,clientSecret)
-        parameters.nonce = nonce
-        parameters.signature = CipherUtil.generateCipherHash(plainCipher)
-        parameters.signatureMethod = "SHA1"
-        parameters.host = "saturn.interswitch.com"
-
-        val nameEnquiry = httpService.nameEnquiry(
-               url = Constants.SATURN_END_POINT + "v1/nameenquiry/banks/$bankCode/accounts/$accountNumber",
-               authorisation =  parameters.authorisation,
-               clientId =  parameters.clientId,
-               clientSecret = parameters.clientSecret,
-               signature = parameters.signature,
-               signatureMethod = parameters.signatureMethod,
-               timeStamp = parameters.timeStamp,
-               nonce = parameters.nonce,
-               host = parameters.host
-        ).await()
-        val nameEnquiryResponse = nameEnquiry.first
-        return when (nameEnquiryResponse) {
-            null -> None
-            else -> Some(nameEnquiryResponse)
-        }
-    }
 
     override suspend fun initiateQrPayment(request: CodeRequest): Optional<CodeResponse> {
         val code = httpService.getQrCode(request).await()

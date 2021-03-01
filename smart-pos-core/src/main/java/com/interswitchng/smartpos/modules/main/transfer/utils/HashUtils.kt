@@ -6,11 +6,12 @@ import java.security.MessageDigest
 import java.util.*
 
 object HashUtils {
-    fun sha512(input: String) = hashString("SHA-512", input)
-
-    fun sha256(input: String) = hashString("SHA-256", input)
 
     fun sha1(input: String) = hashString("SHA-1", input)
+
+    fun getTimeStamp():Long {
+        return System.currentTimeMillis() / 1000 or 0
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun generateCipherHash(ci: String): String {

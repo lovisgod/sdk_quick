@@ -23,7 +23,7 @@ internal class QrViewModel(paymentService: HttpService): BaseViewModel(paymentSe
             // get qrrequest code in IO thread
             val response = withContext(ioScope) {
                 // get the code
-                val code = paymentService.initiateQrPayment()
+                val code = paymentService.initiateQrPayment(request)
 
                 // if code was returned, generate the image in IO thread
                 if (code is Some) code.value.setBitmap(context)
@@ -33,7 +33,7 @@ internal class QrViewModel(paymentService: HttpService): BaseViewModel(paymentSe
             }
 
             // set result in main
-            _qrCode.value = response
+//            _qrCode.value = response
         }
     }
 }

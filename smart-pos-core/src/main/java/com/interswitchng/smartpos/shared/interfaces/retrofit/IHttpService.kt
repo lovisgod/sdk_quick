@@ -33,17 +33,4 @@ internal interface IHttpService {
     @GET(BANKS_END_POINT)
     fun getBanks(): Simple<List<Bank>?>
 
-    @GET
-    fun nameEnquiry(
-            @Url url: String,
-            @Header("Authorization") authorisation: String?,
-            @Header("clientSecret") clientSecret: String?,
-            @Header("clientId") clientId: String?,
-            @Header("Signature") signature: String?,
-            @Header("SignatureMethod") signatureMethod: String?,
-            @Header("Timestamp") timeStamp: String?,
-            @Header("Nonce") nonce: String?,
-            @Header("Host") host: String?
-    ): Simple<NameEnquiryResponse?>
-
 }
