@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +15,7 @@ import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.TransferViewModel
+import com.interswitchng.smartpos.modules.main.transfer.customdailog
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
@@ -34,6 +36,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     lateinit var submitButton: Button
     lateinit var _beneficiaryPayload: BeneficiaryModel
     var isValid = false
+    lateinit var dialog: Dialog
 
 
     var accountNumber: String? = ""
@@ -47,6 +50,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bankList.addAll(Constants.BANK_LIST.sortedWith(compareBy { it.bankName }))
+        dialog = Dialog(this.requireContext())
         observeViewModel()
         submitButton = isw_transfer_input_proceed
         submitButton.isEnabled = false
@@ -100,6 +104,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         isValid = false
         toggleAccountNameVisibility(false)
         if(accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
+            dialog = customdailog(this.requireContext())
             transferViewModel.validateBankDetails(_selectedBank.selBankCodes!!, accountNumber!!)
         }
         else {
@@ -130,6 +135,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
             //observe the benefiary call
             beneficiary.observe(owner) {
                 it?.let { beneficiary->
+                    dialog.dismiss()
                     when (beneficiary) {
                         is Some -> {
 
@@ -150,6 +156,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     }
 
     private fun toggleAccountNameVisibility(state: Boolean) {
+        dialog.dismiss()
       if(state) {
           account_name.visibility = View.VISIBLE
           isw_transfer_input_account_name.visibility = View.VISIBLE

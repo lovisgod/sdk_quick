@@ -56,7 +56,7 @@ class TerminalSettingsActivity : MenuActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.isw_activity_terminal_settings)
 
-        if (store.getBoolean("SETUP")) {
+        if (store.getBoolean("SETUP") && !isFromSettings) {
 //            proceedToMainActivity()
             proceedToTransferActivity()
         }
