@@ -6,7 +6,6 @@ import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryRespon
 
 internal interface SaturnService {
     suspend fun nameEnquiry(
-            parameters: NameEnquiryRequestHeaderModel,
             bankCode: String,
             accountNumber: String
     ): Optional<NameEnquiryResponse>
