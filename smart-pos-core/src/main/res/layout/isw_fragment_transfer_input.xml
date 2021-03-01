@@ -112,6 +112,24 @@
             android:ems="10"
             android:inputType="number" />
 
+        <TextView
+            android:id="@+id/account_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Account Name"
+            android:visibility="gone"
+            android:textSize="20sp">
+        </TextView>
+
+        <EditText
+            android:id="@+id/isw_transfer_input_account_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:visibility="gone"
+            android:ems="10"
+            android:inputType="number" />
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/isw_transfer_input_proceed"

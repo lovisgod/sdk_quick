@@ -17,6 +17,7 @@ import com.interswitchng.smartpos.modules.main.transfer.TransferViewModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
+import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.modules.main.transfer.utils.BankFilterDialog
 import com.interswitchng.smartpos.modules.main.transfer.utils.LoadingDialog
 import com.interswitchng.smartpos.shared.Constants
@@ -31,6 +32,8 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     private var bankList = arrayListOf<BankModel>()
     lateinit var _selectedBank: BankModel
     lateinit var submitButton: Button
+    lateinit var _beneficiaryPayload: BeneficiaryModel
+    var isValid = false
 
 
     var accountNumber: String? = ""
@@ -48,7 +51,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         submitButton = isw_transfer_input_proceed
         submitButton.isEnabled = false
         submitButton.isClickable = false
-        submitButton.alpha = 1F
+        submitButton.alpha = if(!isValid) 0.5F else 1F
 
         val accountNumberEditor: EditText =  isw_transfer_input_account
 
@@ -94,31 +97,28 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
 
     fun validateBeneficiary() {
-
-        if(accountNumber?.length == 10 && this::_selectedBank.isInitialized) transferViewModel.validateBankDetails(_selectedBank.selBankCodes!!, accountNumber!!)
-            else {
-                    Log.d("Picker", accountNumber)
-            }
+        isValid = false
+        toggleAccountNameVisibility(false)
+        if(accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
+            transferViewModel.validateBankDetails(_selectedBank.selBankCodes!!, accountNumber!!)
+        }
+        else {
+                Log.d("Picker", accountNumber)
+        }
     }
 
     fun validateInput() {
-        submitButton.isEnabled = false
-        submitButton.isClickable = false
+        submitButton.isEnabled = isValid
+        submitButton.isClickable = isValid
     }
 
     fun submitForm(view: View) {
-        val dialog = LoadingDialog()
-        dialog.isCancelable = false
-        fragmentManager?.let { dialog.show(it, "show Dialog") }
-
-        val selectedBank = _selectedBank
-        val beneficiary = BeneficiaryModel(accountNumber!!, accountNumber!!)
-        val payment = PaymentModel()
-        payment.type = PaymentModel.TransactionType.TRANSFER
-
-      // Push to the next fragment
-        val action = TransferInputFragmentDirections.iswActionIswTransferinputfragmentToIswAmountfragment(paymentModel = payment, BankModel = selectedBank, BeneficiaryModel = beneficiary)
-        view.findNavController().navigate(action)
+        if (isValid) {
+            val payment = PaymentModel()
+            payment.type = PaymentModel.TransactionType.TRANSFER
+            val action = TransferInputFragmentDirections.iswActionIswTransferinputfragmentToIswAmountfragment(paymentModel = payment, BankModel = _selectedBank, BeneficiaryModel = _beneficiaryPayload)
+            view.findNavController().navigate(action)
+        }
 
     }
 
@@ -132,17 +132,33 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
                 it?.let { beneficiary->
                     when (beneficiary) {
                         is Some -> {
-                            context?.toast("Got Beneficiary")
+
+                            _beneficiaryPayload = beneficiary.value
+                            isValid = true
+                            toggleAccountNameVisibility(true)
                         }
                         is None -> {
-                            context?.toast("Unable to get beneficiary")
+                            isValid = false
+                            toggleAccountNameVisibility(false)
+                            context?.toast("Name enquiry error")
                         }
                     }
+                    validateInput()
                 }
             }
         }
     }
 
+    private fun toggleAccountNameVisibility(state: Boolean) {
+      if(state) {
+          account_name.visibility = View.VISIBLE
+          isw_transfer_input_account_name.visibility = View.VISIBLE
+          isw_transfer_input_account_name.setText(_beneficiaryPayload.accountName)
+      }  else {
+          account_name.visibility = View.GONE
+          isw_transfer_input_account_name.visibility = View.GONE
+      }
+    }
 
     companion object {
         @JvmStatic

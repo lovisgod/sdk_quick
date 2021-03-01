@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.shared.interfaces.retrofit
 
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.AllTerminalInfo
@@ -21,7 +22,7 @@ interface ISaturnService {
             @Header("Timestamp") timeStamp: String?,
             @Header("Nonce") nonce: String?,
             @Header("Host") host: String?
-    ): Simple<NameEnquiryResponse?>
+    ): Simple<BeneficiaryModel?>
 
 
 }

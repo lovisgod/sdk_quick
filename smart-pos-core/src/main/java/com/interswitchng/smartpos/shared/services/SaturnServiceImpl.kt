@@ -4,6 +4,7 @@ import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryRequestHeaderModel
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.modules.main.transfer.utils.CipherUtil
@@ -19,21 +20,25 @@ internal class SaturnServiceImpl(private val saturnService: ISaturnService): Sat
     val logger by lazy { Logger.with(this.javaClass.name) }
 
     override suspend fun nameEnquiry(
-            parameters: NameEnquiryRequestHeaderModel,
             bankCode: String,
-            accountNumber: String): Optional<NameEnquiryResponse> {
+            accountNumber: String): Optional<BeneficiaryModel> {
         val clientId = "IKIA9386DDAE1F2B112CE236CAA472A80A90F99B3987"
         val clientSecret = "E5jlYmDMw3nsPiNMI1Ys8fpmmHa6YRPEu675q6b6iFs="
-        val valUrl = "/api/v1/nameenquiry/banks/${bankCode}/accounts/${accountNumber}"
+        val valUrl = "https://saturn.interswitch.com/api/v1/nameenquiry/banks/${bankCode}/accounts/${accountNumber}"
         val nonce = HashUtils.generateGuid(8)
-        val plainCipher = CipherUtil.generateSignatureCipherPlain("GET",valUrl,nonce,clientId,clientSecret)
+        val plainCipher = CipherUtil.generateSignatureCipherPlain("GET", valUrl,nonce,clientId,clientSecret)
+        logger.log(plainCipher)
+        val parameters = NameEnquiryRequestHeaderModel()
+        parameters.authorisation = "InterswitchAuth SUtJQTkzODZEREFFMUYyQjExMkNFMjM2Q0FBNDcyQTgwQTkwRjk5QjM5ODc="
+        parameters.clientId = clientId
+        parameters.clientSecret = clientSecret
         parameters.nonce = nonce
         parameters.signature = CipherUtil.generateCipherHash(HashUtils.sha1(plainCipher))
         parameters.signatureMethod = "SHA1"
         parameters.host = "saturn.interswitch.com"
         parameters.timeStamp = HashUtils.getTimeStamp().toString()
 
-        logger.log(parameters.toString())
+
 
         val nameEnquiry = saturnService.nameEnquiry(
                 url =  "v1/nameenquiry/banks/$bankCode/accounts/$accountNumber",
