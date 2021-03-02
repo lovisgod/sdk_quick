@@ -27,6 +27,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
         terminalInfo?.let {
             cardViewModel.getToken(it)
         }
+
     }
 
     private fun handleClicks() {

@@ -126,19 +126,22 @@ class TerminalSettingsActivity : MenuActivity() {
             }
 
         } else if (item?.itemId == R.id.saveConfig) {
-            saveConfig()
-            if (!isFromSettings) {
+            if(getTerminalInfo().isValid) {
+                saveConfig()
+                if (!isFromSettings) {
 //                val intent = Intent(this, SetupActivity::class.java)
-                if (supervisorCardIsEnrolled) {
+                    if (supervisorCardIsEnrolled) {
 //                    val intent = Intent(this, MainActivity::class.java)
-                    val intent = Intent(this, TransferActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    return true
-                } else {
-                    toast("Scroll to Bottom and Enroll Merchant's Pin")
+                        val intent = Intent(this, TransferActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                        return true
+                    } else {
+                        toast("Scroll to Bottom and Enroll Merchant's Pin")
+                    }
                 }
             }
+
         }
 
         return super.onOptionsItemSelected(item)

@@ -2,9 +2,12 @@ package com.interswitchng.smartpos.modules.main.transfer.utils
 
 import com.interswitchng.smartpos.R
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.SearchView
 import android.widget.Toolbar
@@ -16,6 +19,7 @@ import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_transfer_bank_filter_dialog.*
+import java.util.*
 
 
 class BankFilterDialog(private val callbackListener: CallbackListener): DialogFragment() {
@@ -61,20 +65,17 @@ class BankFilterDialog(private val callbackListener: CallbackListener): DialogFr
             dismiss()
         }
 
-        val search: SearchView = isw_transfer_bank_search_bar
-        search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                search.clearFocus()
-                if (adapter != null) {
-                    adapter.filter.filter(p0)
-                }
-                return false
+        val search: EditText? = isw_transfer_bank_search_bar
+        search?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
-                TODO("Not yet implemented")
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
+            override fun afterTextChanged(s: Editable?) {
+                adapter?.filter?.filter(s.toString())
+            }
         })
 
     }

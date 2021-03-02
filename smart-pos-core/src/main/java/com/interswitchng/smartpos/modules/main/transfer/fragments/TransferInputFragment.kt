@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
@@ -25,6 +26,7 @@ import com.interswitchng.smartpos.modules.main.transfer.utils.LoadingDialog
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.toast
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_transfer_input.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
@@ -56,6 +58,8 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         submitButton.isEnabled = false
         submitButton.isClickable = false
         submitButton.alpha = if(!isValid) 0.5F else 1F
+
+
 
         val accountNumberEditor: EditText =  isw_transfer_input_account
 
@@ -119,10 +123,16 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
     fun submitForm(view: View) {
         if (isValid) {
-            val payment = PaymentModel()
-            payment.type = PaymentModel.TransactionType.TRANSFER
-            val action = TransferInputFragmentDirections.iswActionIswTransferinputfragmentToIswAmountfragment(paymentModel = payment, BankModel = _selectedBank, BeneficiaryModel = _beneficiaryPayload)
-            view.findNavController().navigate(action)
+            if (this.requireArguments().getBoolean(Constants.FOR_SETTLEMENT_ACCOUNT_SETUP, false)) {
+                Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NUMBER, accountNumber)
+                Prefs.putString(Constants.SETTLEMENT_BANK_CODE, _selectedBank.recvInstId)
+                findNavController().popBackStack(R.id.isw_transferlandingfragment, true)
+            } else {
+                val payment = PaymentModel()
+                payment.type = PaymentModel.TransactionType.TRANSFER
+                val action = TransferInputFragmentDirections.iswActionIswTransferinputfragmentToIswAmountfragment(paymentModel = payment, BankModel = _selectedBank, BeneficiaryModel = _beneficiaryPayload)
+                view.findNavController().navigate(action)
+            }
         }
 
     }

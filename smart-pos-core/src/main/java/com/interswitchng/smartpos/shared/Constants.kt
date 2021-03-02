@@ -198,7 +198,6 @@ object Constants {
             BankModel("627858", "039", "Stanbic IBTC"),
             BankModel("627168", "063", "Access (Diamond)"),
             BankModel("603948", "050", "Eco Bank"),
-//        Bank("639563", "090", "Enterprice Bank"),
             BankModel("627821", "035", "Wema Bank"),
             BankModel("639249", "032", "Sterling Bank"),
             BankModel("589019", "011", "First Bank"),
@@ -209,6 +208,9 @@ object Constants {
             BankModel("627629", "057", "Zenith Bank")
     )
 
-
+    const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"
+    const val SETTLEMENT_BANK_CODE = "SETTLEMENT_BANK_CODE"
+    const val SETTLEMENT_PIN = "090909"
+    const val FOR_SETTLEMENT_ACCOUNT_SETUP = "FOR_SETTLEMENT_ACCOUNT_SETUP"
 
 }

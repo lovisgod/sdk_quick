@@ -29,7 +29,7 @@
         android:orientation="vertical"
         >
 
-        <SearchView
+        <EditText
             android:id="@+id/isw_transfer_bank_search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,9 +39,7 @@
             android:focusableInTouchMode="true"
             android:background="@drawable/isw_custom_tranfer_search_background"
             android:layout_margin="16dp">
-            <requestFocus />
-
-        </SearchView>
+        </EditText>
 
         <ListView
             android:id="@+id/isw_transfer_bank_search"
@@ -51,7 +49,6 @@
             android:layout_marginRight="16dp"
             android:background="@drawable/isw_transfer_bank_list_background"
             />
-
     </FrameLayout>
 
 </LinearLayout>
