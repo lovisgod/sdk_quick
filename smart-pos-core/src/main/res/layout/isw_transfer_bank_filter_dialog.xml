@@ -23,20 +23,16 @@
             android:paddingLeft="6dp" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-
         <EditText
             android:id="@+id/isw_transfer_bank_search_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:focusable="true"
-            android:queryHint="Search Here"
             app:iconifiedByDefault="false"
+            android:textColor="@color/iswTextColorSecondaryDark"
+            android:hint="Search here"
             android:focusableInTouchMode="true"
+            android:paddingLeft="10dp"
             android:background="@drawable/isw_custom_tranfer_search_background"
             android:layout_margin="16dp">
         </EditText>
@@ -47,8 +43,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@drawable/isw_transfer_bank_list_background"
+
             />
-    </FrameLayout>
 
 </LinearLayout>

@@ -31,6 +31,7 @@ class BankFilterDialog(private val callbackListener: CallbackListener): DialogFr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_FRAME, theme);
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -71,10 +72,11 @@ class BankFilterDialog(private val callbackListener: CallbackListener): DialogFr
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                adapter?.filter?.filter(p0)
             }
 
             override fun afterTextChanged(s: Editable?) {
-                adapter?.filter?.filter(s.toString())
+//                adapter?.filter?.filter(s.toString())
             }
         })
 

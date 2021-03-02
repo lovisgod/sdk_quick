@@ -48,9 +48,6 @@ class BankAutoCompleteAdapter (context: Context, resource: Int, banks: ArrayList
                     if (constraint != null && constraint.isNotEmpty()) autocomplete(constraint.toString())
                     else _bankList
 
-            Log.d("Some Constriant", (constraint != null).toString())
-            Log.d("Some Constriant", query.toString())
-
             results.values = query
             results.count = query.size
 

@@ -27,7 +27,10 @@ import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.toast
 import com.pixplicity.easyprefs.library.Prefs
+import kotlinx.android.synthetic.main.isw_fragment_bills.*
+import kotlinx.android.synthetic.main.isw_fragment_qr_code.*
 import kotlinx.android.synthetic.main.isw_fragment_transfer_input.*
+import kotlinx.android.synthetic.main.isw_fragment_transfer_input.backImg
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -139,6 +142,10 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
 
     private fun observeViewModel() {
+        backImg.setOnClickListener {
+            navigateUp()
+        }
+
         val owner = { lifecycle }
 
         with(transferViewModel) {
