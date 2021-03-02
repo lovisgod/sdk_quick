@@ -90,4 +90,12 @@
             android:name="PaymentInfo"
             app:argType="com.interswitchng.smartpos.shared.models.transaction.PaymentInfo" />
     </fragment>
+    <dialog
+        android:id="@+id/isw_transfersettlementpinfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransferSettlementPinFragment"
+        android:label="TransferSettlementPinFragment" >
+        <action
+            android:id="@+id/isw_action_isw_transfersettlementpinfragment_to_isw_transferinputfragment"
+            app:destination="@id/isw_transferinputfragment" />
+    </dialog>
 </navigation>

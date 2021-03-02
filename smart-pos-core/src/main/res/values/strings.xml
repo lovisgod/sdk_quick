@@ -269,6 +269,7 @@
     <string name="isw_refund_new">Refund</string>
     <string name="isw_authenticate_supervisor_s_card">Authenticate Supervisor\'s Card</string>
     <string name="isw_enter_merchant_s_pin">Enter New Merchant\'s Pin</string>
+    <string name="isw_enter_merchant_s_settlement_pin">Enter New Merchant\'s Settlement Pin</string>
     <string name="isw_sample_pin">123456</string>
     <string name="isw_cash_out">Cash Out</string>
     <string name="isw_agent_id_downloaded">Agent Id Downloaded</string>
@@ -279,6 +280,8 @@
     <string name="isw_transfer">TRANSFER</string>
     <string name="isw_pin_set">Pin Set</string>
     <string name="isw_inquiry">Inquiry</string>
+    <string name="isw_concat">%s</string>
+
 
 
     <string-array name="isw_transaction_types">
@@ -290,5 +293,9 @@
     <string name="isw_hello_blank_fragment">Hello blank fragment</string>
     <string name="isw_powered_by">Powered by</string>
     <string name="isw_transfer_fund_to_another_account">Transfer fund to another account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="isw_configure_terminal">Configure Terminal</string>
+    <string name="isw_configure_settlement_account">Configure Settlement Account</string>
 
 </resources>

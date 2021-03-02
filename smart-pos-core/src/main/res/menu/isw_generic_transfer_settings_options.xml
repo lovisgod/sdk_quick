@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/setTerminal"
+        android:title="@string/isw_configure_terminal"
+        />
+
+    <item android:id="@+id/setSettlementAccount"
+        android:title="@string/isw_configure_settlement_account"
+        />
+
+</menu>

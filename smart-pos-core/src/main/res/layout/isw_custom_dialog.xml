@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ProgressBar
         android:id="@+id/progress_circular"
@@ -13,6 +14,38 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
     </ProgressBar>
+
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/isw_dialog_message"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="250dp"
+        tools:text = "thisis a sample message here that is very long and contain fkjkfjdjfkdfkfjkjfddkfjkjdfkjdk"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/iswWhite"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_dialog_proceed_btn"
+        app:layout_constraintTop_toBottomOf="@+id/isw_dialog_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:cornerRadius="5dp"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:text="@string/isw_proceed"
+        android:background="@color/iswColorPrimary"
+        android:textColor="@color/iswWhite"/>
 
 
     <include

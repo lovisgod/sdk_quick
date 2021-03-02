@@ -1,16 +1,18 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import android.widget.PopupMenu
 import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.di.viewModels
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.transfer.customdailog
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_transfer_landing.*
-import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -19,10 +21,14 @@ class TransferLandingFragment : BaseFragment(TAG) {
     override val layoutId: Int
         get() = R.layout.isw_fragment_transfer_landing
 
+    private lateinit var message : Dialog
+
     private val cardViewModel : CardViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // check for settlement account setup for specific transfer
+//        checkForSettlement()
         handleClicks()
         terminalInfo?.let {
             cardViewModel.getToken(it)
@@ -38,9 +44,51 @@ class TransferLandingFragment : BaseFragment(TAG) {
         }
 
         isw_settings_icon.setOnClickListener {
-            iswPos.goToSettingsUpdatePage()
+           var popup = PopupMenu(this.requireContext(), isw_settings_icon)
+            var inflater = popup.menuInflater
+            inflater.inflate(R.menu.isw_generic_transfer_settings_options, popup.menu)
+            popup.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.configSettings -> {
+                        iswPos.goToSettingsUpdatePage()
+                        return@setOnMenuItemClickListener true
+                    }
+
+                    R.id.setSettlementAccount -> {
+                        findNavController().navigate(R.id.isw_transfersettlementpinfragment)
+                        return@setOnMenuItemClickListener true
+                    }
+                    else -> {
+                        iswPos.goToSettingsUpdatePage()
+                        return@setOnMenuItemClickListener true
+
+                    }
+                }
+            }
+            popup.show()
+
         }
     }
+
+
+//    check for settlement account setup for specific transfer
+    private fun checkForSettlement() {
+        if (Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, "").isNullOrEmpty()) {
+             message = customdailog(context = this.requireContext(),
+                    message = this.requireContext().resources.getString(R.string.isw_concat,
+                            "Please setup your settlement account number") )
+            {
+                message.dismiss()
+                findNavController().navigate(R.id.isw_transfersettlementpinfragment)
+            }
+        }
+    }
+
+    // always check for settlement account setup for specific transfer
+//    override fun onResume() {
+//        super.onResume()
+//        checkForSettlement()
+//    }
 
 
     companion object {

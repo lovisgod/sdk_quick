@@ -9,7 +9,6 @@ import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
-import com.interswitchng.smartpos.modules.main.fragments.ProcessingRequestFragmentDirections
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
@@ -23,7 +22,6 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.toast
-import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 import kotlinx.android.synthetic.main.isw_fragment_transfertransaction_preocessing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
