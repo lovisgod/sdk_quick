@@ -39,8 +39,8 @@ fun View.hide() {
 }
 
 fun Dialog.showDialog(message: String) {
-    this.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
-    this.show()
+//    this.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+//    this.show()
 }
 
 fun Dialog.stop() {

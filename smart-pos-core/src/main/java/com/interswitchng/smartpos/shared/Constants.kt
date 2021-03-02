@@ -1,6 +1,7 @@
 package com.interswitchng.smartpos.shared
 
 import com.interswitchng.smartpos.IswPos
+import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.shared.models.core.Environment
 import com.interswitchng.smartpos.shared.utilities.KeysUtils
 
@@ -36,6 +37,9 @@ object Constants {
 
     //    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
     internal const val KIMONO_END_POINT = "kmw/kimonoservice"
+
+    internal const val SATURN_END_POINT = "https://saturn.interswitchng.com/api/"
+
 
     internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://webpay.interswitchng.com/kimonotms/paybills/inquire"
 
@@ -161,6 +165,8 @@ object Constants {
     val ISW_MERCHANT_CODE = "MX1065"
     val ISW_MERCHANT_ALIAS = "000001"
 
+
+
     private object Production {
 
         const val ISW_USSD_QR_BASE_URL = "https://api.interswitchng.com/paymentgateway/api/v1/"
@@ -182,6 +188,25 @@ object Constants {
         const val ISW_TERMINAL_IP = "196.6.103.72"
 
     }
+
+    val BANK_LIST = arrayListOf<BankModel>(
+            BankModel("639563", "084", "Heritage"),
+            BankModel("627955", "082", "Keys Bank"),
+            BankModel("639609", "215", "Unity"),
+            BankModel("639138", "070", "Fidelity Bank"),
+            BankModel("628009", "214", "FCMB"),
+            BankModel("627858", "039", "Stanbic IBTC"),
+            BankModel("627168", "063", "Access (Diamond)"),
+            BankModel("603948", "050", "Eco Bank"),
+            BankModel("627821", "035", "Wema Bank"),
+            BankModel("639249", "032", "Sterling Bank"),
+            BankModel("589019", "011", "First Bank"),
+            BankModel("627787", "058", "GTBank"),
+            BankModel("636088", "044", "Access Bank"),
+            BankModel("636092", "076", "Polaris"),
+            BankModel("627480", "033", "UBA"),
+            BankModel("627629", "057", "Zenith Bank")
+    )
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"
     const val SETTLEMENT_BANK_CODE = "SETTLEMENT_BANK_CODE"

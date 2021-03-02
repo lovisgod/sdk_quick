@@ -12,6 +12,7 @@ import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
@@ -22,6 +23,8 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.toast
+import com.pixplicity.easyprefs.library.Prefs
+import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 import kotlinx.android.synthetic.main.isw_fragment_transfertransaction_preocessing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -78,8 +81,8 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                         paymentModel,
                         accountType,
                         terminalInfo,
-                        "2089430464",
-                        "627629"
+                        Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, ""), // use this for specific transfer
+                        Prefs.getString(Constants.SETTLEMENT_BANK_CODE, "") // use this fot specific transfer
                 )
             }
     }
@@ -207,6 +210,10 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                                 )
                         )
                 navigate(direction)
+
+                // delete the saved receivinginstitionid and destinationAccountNumber
+                Prefs.remove("receivingInstitutionId")
+                Prefs.remove("destinationAccountNumber")
             }
         }
     }

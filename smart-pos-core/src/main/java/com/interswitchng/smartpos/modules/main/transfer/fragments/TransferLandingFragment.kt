@@ -9,6 +9,8 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
+import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
+import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.pixplicity.easyprefs.library.Prefs
@@ -28,18 +30,20 @@ class TransferLandingFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // check for settlement account setup for specific transfer
-//        checkForSettlement()
+        checkForSettlement()
         handleClicks()
         terminalInfo?.let {
             cardViewModel.getToken(it)
         }
+
     }
 
     private fun handleClicks() {
         isw_transfer_card.setOnClickListener {
             var paymentModel = PaymentModel()
             paymentModel.type = PaymentModel.TransactionType.TRANSFER
-            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(paymentModel)
+            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
+                    paymentModel = paymentModel, BankModel = BankModel("","", ""), BeneficiaryModel = BeneficiaryModel())
             findNavController().navigate(action)
         }
 

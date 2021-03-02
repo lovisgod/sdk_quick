@@ -27,6 +27,7 @@ const val RETROFIT_PAYMENT = "payment_retrofit"
 const val RETROFIT_KIMONO = "kimono_retrofit"
 const val TOKEN_RETROFIT = "token_retrofit"
 const val RETROFIT_CUSTOMER_ID = "kimono_customer_id"
+const val RETROFIT_SATURN = "saturn_name_enquiry"
 
 
 internal val networkModule = module {
@@ -93,6 +94,39 @@ internal val networkModule = module {
         return@single builder.build()
     }
 
+
+    single(RETROFIT_SATURN) {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        val iswBaseUrl = Constants.SATURN_END_POINT
+
+        val builder = Retrofit.Builder()
+                .baseUrl(iswBaseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(SimpleCallAdapterFactory.create())
+
+        // getResult the okhttp client for the retrofit
+        // okhttp client for retrofit
+        val clientBuilder: OkHttpClient.Builder = get()
+        //  add auth interceptor for sendGrid
+        clientBuilder.addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                    .addHeader("Content-type", "application/json")
+                    .addHeader("Accept", "application/json")
+                    .build()
+
+            chain.proceed(request)
+        }
+
+        // add client to retrofit builder
+        val client = clientBuilder
+                .addInterceptor(interceptor)
+                .build()
+        builder.client(client)
+
+        return@single builder.build()
+    }
 
 
 
@@ -173,9 +207,6 @@ internal val networkModule = module {
 
         return@single builder.build()
     }
-
-
-
 
 
     // retrofit isw payment
@@ -261,12 +292,17 @@ internal val networkModule = module {
         return@single retrofit.create(TokenService::class.java)
     }
 
+//    create saturn service for name enquiry purpose
     single {
         val retrofit: Retrofit = get(RETROFIT_CUSTOMER_ID)
         return@single retrofit.create(IAgentService::class.java)
     }
 
 
+    single {
+        val retrofit: Retrofit = get(RETROFIT_SATURN)
+        return@single retrofit.create(ISaturnService::class.java)
+    }
 
 
     // create Auth service with retrofit

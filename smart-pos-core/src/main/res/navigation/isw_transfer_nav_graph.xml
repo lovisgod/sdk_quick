@@ -49,6 +49,12 @@
         <argument
             android:name="paymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel" />
+        <argument
+            android:name="BankModel"
+            app:argType="com.interswitchng.smartpos.modules.main.transfer.models.BankModel" />
+        <argument
+            android:name="BeneficiaryModel"
+            app:argType="com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel" />
 
     </fragment>
     <fragment

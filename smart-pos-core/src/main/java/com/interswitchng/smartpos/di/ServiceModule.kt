@@ -8,6 +8,7 @@ import com.interswitchng.smartpos.shared.interfaces.library.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 import com.interswitchng.smartpos.shared.services.HttpServiceImpl
+import com.interswitchng.smartpos.shared.services.SaturnServiceImpl
 import com.interswitchng.smartpos.shared.services.UserStoreImpl
 import com.interswitchng.smartpos.shared.services.iso8583.IsoServiceImpl
 import com.interswitchng.smartpos.shared.services.iso8583.tcp.IsoSocketImpl
@@ -25,6 +26,8 @@ internal val serviceModule = module() //override = true
 {
     single { IswPos.getInstance() }
     single<HttpService> { HttpServiceImpl(get()) }
+
+    single<SaturnService> { SaturnServiceImpl(get()) }
 
 
     factory<IsoService> { (isKimono: Boolean) ->

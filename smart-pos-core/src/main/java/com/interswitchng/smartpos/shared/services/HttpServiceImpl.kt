@@ -1,9 +1,17 @@
 package com.interswitchng.smartpos.shared.services
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
+import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryRequestHeaderModel
+import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
+import com.interswitchng.smartpos.modules.main.transfer.utils.CipherUtil
+import com.interswitchng.smartpos.modules.main.transfer.utils.HashUtils
+import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.retrofit.IHttpService
 import com.interswitchng.smartpos.shared.interfaces.library.HttpService
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
@@ -29,6 +37,7 @@ internal class HttpServiceImpl(private val httpService: IHttpService) : HttpServ
             else ->  Some(banksResponse)
         }
     }
+
 
     override suspend fun initiateQrPayment(request: CodeRequest): Optional<CodeResponse> {
         val code = httpService.getQrCode(request).await()
