@@ -42,8 +42,9 @@ class TransferLandingFragment : BaseFragment(TAG) {
         isw_transfer_card.setOnClickListener {
             var paymentModel = PaymentModel()
             paymentModel.type = PaymentModel.TransactionType.TRANSFER
-            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
-                    paymentModel = paymentModel, BankModel = BankModel("","", ""), BeneficiaryModel = BeneficiaryModel())
+//            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
+//                    paymentModel = paymentModel, BankModel = BankModel("","", ""), BeneficiaryModel = BeneficiaryModel())
+            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
             findNavController().navigate(action)
         }
 
