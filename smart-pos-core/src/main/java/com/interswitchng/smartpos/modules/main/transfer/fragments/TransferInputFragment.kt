@@ -21,6 +21,7 @@ import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
 import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
+import com.interswitchng.smartpos.modules.main.transfer.showSuccessAlert
 import com.interswitchng.smartpos.modules.main.transfer.utils.BankFilterDialog
 import com.interswitchng.smartpos.modules.main.transfer.utils.LoadingDialog
 import com.interswitchng.smartpos.shared.Constants
@@ -77,7 +78,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
                         }
                     }
 
-                }, 500)
+                }, 300)
                 accountNumber = s.toString()
 //                validateBeneficiary()
             }
@@ -126,7 +127,8 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
             if (this.requireArguments().getBoolean(Constants.FOR_SETTLEMENT_ACCOUNT_SETUP, false)) {
                 Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NUMBER, accountNumber)
                 Prefs.putString(Constants.SETTLEMENT_BANK_CODE, _selectedBank.recvInstId)
-                findNavController().popBackStack(R.id.isw_transferlandingfragment, true)
+                showSuccessAlert("Settlement account setup completed", this.requireActivity())
+                findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
             } else {
                 val payment = PaymentModel()
                 payment.type = PaymentModel.TransactionType.TRANSFER

@@ -89,7 +89,7 @@ fun showErrorAlert(message: String, activity: Activity) {
     Alerter.create(activity)
             .setTitle("Error")
             .setText(message)
-            .setDuration(1000)
+            .setDuration(5000)
             .enableVibration(true)
             .enableSwipeToDismiss()
             .setBackgroundColorRes(R.color.iswTextColorError)
@@ -98,9 +98,9 @@ fun showErrorAlert(message: String, activity: Activity) {
 
 fun showSuccessAlert(message: String, activity: Activity) {
     Alerter.create(activity)
-            .setTitle("Error")
+            .setTitle("Success")
             .setText(message)
-            .setDuration(1000)
+            .setDuration(5000)
             .enableVibration(true)
             .enableSwipeToDismiss()
             .setBackgroundColorRes(R.color.iswColorPrimary)

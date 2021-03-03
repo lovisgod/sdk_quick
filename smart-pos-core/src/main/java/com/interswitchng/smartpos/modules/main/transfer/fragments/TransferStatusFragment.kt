@@ -1,8 +1,10 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
@@ -101,6 +103,10 @@ class TransferStatusFragment() : BaseFragment(TAG) {
            findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
        }
 
+        isw_go_to_landing.setOnClickListener {
+            findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
+        }
+
         isw_share_receipt_transfer.setOnClickListener {
             val shareIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
@@ -150,12 +156,16 @@ class TransferStatusFragment() : BaseFragment(TAG) {
         when (result?.responseCode) {
             IsoUtils.TIMEOUT_CODE -> {
                 transactionResponseIcon_transfer.setImageResource(R.drawable.isw_failure)
+                transactionstatus_image.setImageResource(R.drawable.ic_not_successful)
+                isw_go_to_landing.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.iswTextColorError))
                 isw_receipt_text_transfer.text = "Failed!"
                 isw_transaction_msg_transfer.text = "Your transaction was unsuccessful"
             }
 
             IsoUtils.OK -> {
                 transactionResponseIcon_transfer.setImageResource(R.drawable.isw_round_done_padded)
+                transactionstatus_image.setImageResource(R.drawable.ic_finished)
+                isw_go_to_landing.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.iswTextColorSuccessDark))
                 isw_transaction_msg_transfer.text = "Your transaction was successful"
                 isw_receipt_text_transfer.text =
                         getString(R.string.isw_transfer_completed)
@@ -163,6 +173,8 @@ class TransferStatusFragment() : BaseFragment(TAG) {
 
             else -> {
                 transactionResponseIcon_transfer.setImageResource(R.drawable.isw_failure)
+                transactionstatus_image.setImageResource(R.drawable.ic_not_successful)
+                isw_go_to_landing.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this.requireContext(), R.color.iswTextColorError))
                 isw_receipt_text_transfer.text = "Failed!"
                 isw_transaction_msg_transfer.text =
                         result?.responseMessage//"Your transaction was unsuccessful"

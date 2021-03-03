@@ -135,11 +135,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/isw_cash_out_text" />
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
                 android:layout_gravity="bottom"
-                app:srcCompat="@drawable/isw_ic_payment"
-                android:tint="#F7C137"
+                app:srcCompat="@drawable/ic_transfer_money"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 

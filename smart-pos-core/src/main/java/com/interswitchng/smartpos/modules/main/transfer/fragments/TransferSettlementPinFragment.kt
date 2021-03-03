@@ -16,10 +16,9 @@ import com.interswitchng.smartpos.modules.main.transfer.makeInActive
 import com.interswitchng.smartpos.modules.main.transfer.showErrorAlert
 import com.interswitchng.smartpos.modules.main.transfer.showSuccessAlert
 import com.interswitchng.smartpos.shared.Constants
-import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.pixplicity.easyprefs.library.Prefs
-import kotlinx.android.synthetic.main.isw_fragment_transfer_settlement_pin.*
 import kotlinx.android.synthetic.main.isw_layout_insert_pin_reuseable.*
+import java.util.*
+
 
 class TransferSettlementPinFragment : BottomSheetDialogFragment() {
 
@@ -47,18 +46,7 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
 
     private fun setupClickListener() {
         isw_button_pin_proceed_reuseable.setOnClickListener {
-            if (!isw_pin_edit_text_reusable.text.toString().isNullOrEmpty()) {
-                var pin = Constants.SETTLEMENT_PIN
-                if(pin !=isw_pin_edit_text_reusable.text.toString()) {
-                    showErrorAlert("Pin Does not match!!!!", this.requireActivity())
-                } else {
-                    showSuccessAlert("Pin OK!!!!", this.requireActivity())
-                    // navigate to the input page
-                    var bundle = Bundle()
-                    bundle.putBoolean(Constants.FOR_SETTLEMENT_ACCOUNT_SETUP, true)
-                    findNavController().navigate(R.id.isw_transferinputfragment, bundle)
-                }
-            }
+            performSetup()
         }
     }
 
@@ -67,6 +55,14 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
             isw_button_pin_proceed_reuseable.makeInActive()
         } else {
             isw_button_pin_proceed_reuseable.makeActive()
+            Timer().schedule(object : TimerTask() {
+                override fun run() {
+                    this@TransferSettlementPinFragment.requireActivity().runOnUiThread {
+                        performSetup()
+                    }
+                }
+
+            }, 500)
         }
     }
 
@@ -79,5 +75,20 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         findNavController().popBackStack(R.id.isw_transferlandingfragment, true)
+    }
+
+    private fun performSetup() {
+        if (!isw_pin_edit_text_reusable.text.toString().isNullOrEmpty()) {
+            var pin = Constants.SETTLEMENT_PIN
+            if(pin !=isw_pin_edit_text_reusable.text.toString()) {
+                showErrorAlert("Pin Does not match!!!!", this.requireActivity())
+            } else {
+                showSuccessAlert("Pin OK!!!!", this.requireActivity())
+                // navigate to the input page
+                var bundle = Bundle()
+                bundle.putBoolean(Constants.FOR_SETTLEMENT_ACCOUNT_SETUP, true)
+                findNavController().navigate(R.id.isw_transferinputfragment, bundle)
+            }
+        }
     }
 }

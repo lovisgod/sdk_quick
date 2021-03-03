@@ -62,6 +62,11 @@ class TransferLandingFragment : BaseFragment(TAG) {
                         findNavController().navigate(R.id.isw_transfersettlementpinfragment)
                         return@setOnMenuItemClickListener true
                     }
+
+                    R.id.viewSettlementAccount -> {
+                        findNavController().navigate(R.id.isw_transfersettlementpinfragment)
+                        return@setOnMenuItemClickListener true
+                    }
                     else -> {
                         iswPos.goToSettingsUpdatePage()
                         return@setOnMenuItemClickListener true

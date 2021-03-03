@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -12,6 +13,7 @@ import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragmentArgs
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.transfer.customdailog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.posconfig.PosType
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -46,7 +48,7 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
     private lateinit var paymentTypeDialog: PaymentTypeDialog
     private val dialog by lazy { DialogUtils.getLoadingDialog(context!!) }
     private val alert by lazy { DialogUtils.getAlertDialog(context!!).create() }
-
+    private lateinit var loading: Dialog
 
     private val cardViewModel: CardViewModel by viewModel()
 
@@ -86,9 +88,13 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loading = Dialog(this.requireContext())
         if (IswPos.isConfigured()) {
             setTransactionType()
             observeViewModel()
+            isw_card_found_continue.setOnClickListener {
+                showAccountTypeDialog()
+            }
             cardViewModel.setupTransaction(paymentInfo.amount, terminalInfo)
         } else {
             context?.toast("POS is not configured")
@@ -141,9 +147,10 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
             is EmvMessage.CardDetected -> {
                 logger.log("me: CardDetected")
                 if(deviceName == PosType.PAX.name) {
-                    showLoader("Reading Card", "Loading...")
+                    loading = customdailog(context = this.requireContext(), message = "Reading card")
+//                    showLoader("Reading Card", "Loading...")
                 } else {
-
+                    // do nothing
                 }
             }
 
@@ -156,6 +163,7 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
             is EmvMessage.CardRead -> {
                 //Dismiss the dialog showing "Reading Card"
                 dialog.dismiss()
+                loading.dismiss()
 
                 cardType = message.cardType
 //                CardTransactionsFragment.CompletionData.cardType = message.cardType
@@ -181,6 +189,7 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
             // when user should enter pin
             is EmvMessage.EnterPin -> {
                 println(message)
+                loading.dismiss()
                 iswCardPaymentViewAnimator.displayedChild = 1
                 isw_amount.text = paymentModel.formattedAmount
                 context?.toast("Enter your pin")
@@ -226,6 +235,7 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
 
             // when user cancels transaction
             is EmvMessage.TransactionCancelled -> {
+                loading.dismiss()
                 cancelTransaction(message.reason)
             }
 

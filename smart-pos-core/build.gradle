@@ -38,7 +38,6 @@ android {
         buildConfigField("int", "ISW_TERMINAL_PORT", "5043")
         buildConfigField("String", "ISW_KIMONO_KEY_URL", "\"http://172.35.15.76:7075/kmw/kimonoservice\"")
 
-
     }
 
     kotlinOptions {
@@ -161,6 +160,8 @@ dependencies {
     kaptAndroidTest "androidx.databinding:databinding-compiler:3.5.0"
 
     implementation 'com.pixplicity.easyprefs:library:1.9.0'
+    implementation 'com.airbnb.android:lottie:3.6.1'
+
 
 }
 

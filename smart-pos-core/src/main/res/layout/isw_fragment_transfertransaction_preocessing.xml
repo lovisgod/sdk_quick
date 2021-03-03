@@ -56,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="@string/isw_status"
+        android:visibility="gone"
         android:textColor="@android:color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@id/isw_guideline"
