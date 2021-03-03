@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".modules.main.transfer.fragments.ViewSettleMentAccountFragment">
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:padding="20dp">
+
+
+       <ImageView
+           android:id="@+id/top_image"
+           app:layout_constraintTop_toTopOf="parent"
+           android:layout_marginTop="10dp"
+           app:layout_constraintRight_toRightOf="parent"
+           app:layout_constraintLeft_toLeftOf="parent"
+           app:srcCompat = "@drawable/ic_transfer_money"
+           android:layout_width="150dp"
+           android:layout_height="100dp"/>
+
+       <com.google.android.material.textview.MaterialTextView
+           android:id="@+id/account_no"
+           app:layout_constraintTop_toBottomOf="@+id/top_image"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           android:layout_marginTop="25dp"
+           android:textSize="25sp"
+           android:textColor="@color/iswTextColorBlack"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           tools:text = "20987654"/>
+
+       <ImageView
+           android:id="@+id/edit_image"
+           app:layout_constraintTop_toTopOf="@id/account_no"
+           app:layout_constraintBottom_toBottomOf="@+id/account_no"
+           app:layout_constraintStart_toEndOf="@+id/account_no"
+           app:srcCompat = "@drawable/ic_baseline_edit_24"
+           android:tint="@color/iswColorPrimary"
+           android:layout_width="40dp"
+           android:layout_height="40dp"/>
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

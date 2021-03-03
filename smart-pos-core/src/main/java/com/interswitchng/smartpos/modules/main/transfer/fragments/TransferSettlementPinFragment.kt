@@ -11,10 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.PinEditText
-import com.interswitchng.smartpos.modules.main.transfer.makeActive
-import com.interswitchng.smartpos.modules.main.transfer.makeInActive
-import com.interswitchng.smartpos.modules.main.transfer.showErrorAlert
-import com.interswitchng.smartpos.modules.main.transfer.showSuccessAlert
+import com.interswitchng.smartpos.modules.main.transfer.*
 import com.interswitchng.smartpos.shared.Constants
 import kotlinx.android.synthetic.main.isw_layout_insert_pin_reuseable.*
 import java.util.*
@@ -54,6 +51,7 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
         if (pinLayout.text.toString().length < 6) {
             isw_button_pin_proceed_reuseable.makeInActive()
         } else {
+            pinLayout.hideKeyboard()
             isw_button_pin_proceed_reuseable.makeActive()
             Timer().schedule(object : TimerTask() {
                 override fun run() {
@@ -74,7 +72,7 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        findNavController().popBackStack(R.id.isw_transferlandingfragment, true)
+        findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
     }
 
     private fun performSetup() {
@@ -82,6 +80,7 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
             var pin = Constants.SETTLEMENT_PIN
             if(pin !=isw_pin_edit_text_reusable.text.toString()) {
                 showErrorAlert("Pin Does not match!!!!", this.requireActivity())
+                isw_pin_edit_text_reusable.clear()
             } else {
                 showSuccessAlert("Pin OK!!!!", this.requireActivity())
                 // navigate to the input page

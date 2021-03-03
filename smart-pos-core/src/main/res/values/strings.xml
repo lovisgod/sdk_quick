@@ -283,7 +283,6 @@
     <string name="isw_concat">%s</string>
 
 
-
     <string-array name="isw_transaction_types">
         <item>All</item>
         <item>Cash Out Pay</item>
@@ -295,9 +294,11 @@
     <string name="isw_configure_terminal">Configure Terminal</string>
     <string name="isw_configure_settlement_account">Configure Settlement Account</string>
     <string name="isw_view_settlement_account">View Settlement Account</string>
-    <string name="isw_transfer_title" >Transfer</string>
+    <string name="isw_transfer_title">Transfer</string>
     <string name="isw_transfer_account_number_hint">Enter Account Number</string>
     <string name="isw_transfer_fund_to_another_account">Transfer to another account</string>
     <string name="isw_powered_by">Powered By</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
