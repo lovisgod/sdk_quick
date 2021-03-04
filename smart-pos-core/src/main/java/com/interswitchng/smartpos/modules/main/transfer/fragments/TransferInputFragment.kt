@@ -105,7 +105,11 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
 
     private fun validateBeneficiary() {
         if (accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
-            dialog = customdailog(this.requireContext())
+            if (!this::dialog.isInitialized) {
+                dialog = customdailog(this.requireContext())
+            }else {
+                dialog.show()
+            }
             transferViewModel.validateBankDetails(_selectedBank.selBankCodes!!, accountNumber!!)
         } else {
             isValid = false
