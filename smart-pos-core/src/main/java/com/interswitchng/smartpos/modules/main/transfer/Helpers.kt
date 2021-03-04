@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -83,6 +84,7 @@ fun customdailog(context: Context?, message: String? = ",", action: (() -> Unit?
 
     if (action != null) {
         customProgressBinding.findViewById<ProgressBar>(R.id.progress_circular).hide()
+        customProgressBinding.findViewById<LottieAnimationView>(R.id.animation_view).hide()
         customProgressBinding.findViewById<MaterialTextView>(R.id.isw_dialog_message).reveal()
         customProgressBinding.findViewById<MaterialTextView>(R.id.isw_dialog_message).text = message
         customProgressBinding.findViewById<MaterialButton>(R.id.isw_dialog_proceed_btn).reveal()
