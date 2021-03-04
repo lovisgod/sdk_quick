@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragmentArgs
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
+import com.interswitchng.smartpos.modules.main.transfer.showErrorDialog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.posconfig.PosType
 import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
@@ -70,6 +71,7 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
     }
 
     private val cancelDialog by lazy {
+
         DialogUtils.getAlertDialog(context!!)
                 .setMessage("Remove card")
                 .setCancelable(false)
@@ -119,18 +121,27 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
                     when (result) {
                         CardViewModel.OnlineProcessResult.NO_EMV -> {
                             context?.toast("Unable to getResult icc")
+                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                                    , "Unable to getResult icc")
                             //finish()
                         }
                         CardViewModel.OnlineProcessResult.NO_RESPONSE -> {
                             context?.toast("Unable to process Transaction")
+                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                                    , "Unable to process Transaction")
                             //finish()
                         }
                         CardViewModel.OnlineProcessResult.ONLINE_DENIED -> {
                             context?.toast("Transaction Declined")
+                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                                    , "Transaction Declined")
+
                             //showContainer(CardTransactionState.Default)
                         }
                         CardViewModel.OnlineProcessResult.ONLINE_APPROVED -> {
                             context?.toast("Transaction Approved")
+                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                                    , "Transaction Approved")
                         }
                     }
                 }

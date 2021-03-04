@@ -1,12 +1,17 @@
 package com.interswitchng.smartpos.shared.utilities
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.text.TextUtils
 import android.util.Patterns
-import android.view.LayoutInflater
+import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
 import com.interswitchng.smartpos.R
 import java.util.*
 
@@ -26,17 +31,41 @@ internal object DialogUtils {
                 .setMessage("Unable to generate code")
     }
 
-    fun getNetworkDialog(context: Context, handler: () -> Unit): AlertDialog {
-        return AlertDialog.Builder(context)
-                .setTitle("No Internet Connection")
-                .setMessage("This device is not connected to internet, please put on the mobile data or wifi connection, and try again.")
-                .setPositiveButton("Try Again") { dialog, _ ->
-                    // execute handler
-                    handler()
-                    // dismiss dialog
-                    dialog.dismiss()
-                }
-                .create()
+//    fun getNetworkDialog(context: Context, handler: () -> Unit): AlertDialog {
+//        return AlertDialog.Builder(context)
+//                .setTitle("No Internet Connection")
+//                .setMessage("This device is not connected to internet, please put on the mobile data or wifi connection, and try again.")
+//                .setPositiveButton("Try Again") { dialog, _ ->
+//                    // execute handler
+//                    handler()
+//                    // dismiss dialog
+//                    dialog.dismiss()
+//                }
+//                .create()
+//    }
+
+    fun getNetworkDialog(context: Context, handler: () -> Unit): Dialog {
+        val dialog =Dialog(context!!, R.style.ISWCustomAlertDialog)
+        val customProgressBinding = LayoutInflater.from(context).inflate(R.layout.isw_custom_message_dialog, null, false)
+        dialog.setContentView(customProgressBinding)
+        dialog.setCanceledOnTouchOutside(true)
+        dialog.setCancelable(true)
+        val layoutParams = dialog.window!!.attributes
+        layoutParams.dimAmount = 0.7f
+        dialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        dialog.window!!.setGravity(Gravity.CENTER)
+        dialog.window!!.attributes = layoutParams
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        customProgressBinding.findViewById<MaterialTextView>(R.id.isw_dialog_message).text =
+               context.resources.getString(R.string.isw_concat,
+                       "This device is not connected to internet, please put on the mobile data or wifi connection, and try again.")
+        customProgressBinding.findViewById<MaterialButton>(R.id.isw_dialog_proceed_btn).setOnClickListener {
+            handler.invoke()
+            dialog.dismiss()
+        }
+        dialog.show()
+        return dialog
     }
 
 

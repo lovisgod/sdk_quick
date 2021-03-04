@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.main.transfer.fragments
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
@@ -209,7 +210,7 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                                         transactionType = PaymentModel.TransactionType.CARD_PURCHASE
                                 )
                         )
-                navigate(direction)
+               findNavController().navigate(direction)
 
                 // delete the saved receivinginstitionid and destinationAccountNumber
                 Prefs.remove("receivingInstitutionId")
