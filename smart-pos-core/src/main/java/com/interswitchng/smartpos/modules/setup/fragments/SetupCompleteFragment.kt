@@ -19,7 +19,8 @@ class SetupCompleteFragment : BaseFragment(TAG) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isw_finish.setOnClickListener {
-            IswPos.showMainActivity()
+//            IswPos.showMainActivity()
+            IswPos.showTransferActivity()
             requireActivity().finish()
 
         }

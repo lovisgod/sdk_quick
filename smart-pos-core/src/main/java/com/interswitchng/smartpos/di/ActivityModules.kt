@@ -25,7 +25,6 @@ internal val viewModels = module {
     /**Transfer viewmodel**/
     viewModel { TransferViewModel(get(), get()) }
 
-
     viewModel { UssdViewModel(get()) }
 
     viewModel { QrViewModel(get()) }

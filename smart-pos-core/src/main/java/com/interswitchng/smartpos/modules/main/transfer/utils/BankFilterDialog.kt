@@ -9,17 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ListView
-import android.widget.SearchView
 import android.widget.Toolbar
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import com.interswitchng.smartpos.modules.main.transfer.adapters.BankAutoCompleteAdapter
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
 import com.interswitchng.smartpos.shared.Constants
-import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_transfer_bank_filter_dialog.*
-import java.util.*
 
 
 class BankFilterDialog(private val callbackListener: CallbackListener): DialogFragment() {
@@ -31,6 +27,7 @@ class BankFilterDialog(private val callbackListener: CallbackListener): DialogFr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_FRAME, theme);
     }
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -65,16 +62,17 @@ class BankFilterDialog(private val callbackListener: CallbackListener): DialogFr
             dismiss()
         }
 
-        val search: EditText? = isw_transfer_bank_search_bar
-        search?.addTextChangedListener(object : TextWatcher {
+        val searchBar: EditText? = isw_transfer_bank_search_bar
+        searchBar?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                adapter?.filter?.filter(p0)
             }
 
             override fun afterTextChanged(s: Editable?) {
-                adapter?.filter?.filter(s.toString())
+//                adapter?.filter?.filter(s.toString())
             }
         })
 

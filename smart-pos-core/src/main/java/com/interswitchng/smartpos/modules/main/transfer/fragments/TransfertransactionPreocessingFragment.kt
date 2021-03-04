@@ -82,8 +82,8 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                         paymentModel,
                         accountType,
                         terminalInfo,
-                        Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, ""), // use this for specific transfer
-                        Prefs.getString(Constants.SETTLEMENT_BANK_CODE, "") // use this fot specific transfer
+                        Prefs.getString("destinationAccountNumber", ""), // use this for generic transfer
+                        Prefs.getString("receivingInstitutionId", "")  // use this fot specific transfer
                 )
             }
     }
