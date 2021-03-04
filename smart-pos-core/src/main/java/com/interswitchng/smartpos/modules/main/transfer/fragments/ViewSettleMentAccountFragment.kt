@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
+import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.provider.SyncStateContract
@@ -32,6 +33,10 @@ class ViewSettleMentAccountFragment : DialogFragment() {
         edit_image.setOnClickListener {
             findNavController().navigate(R.id.isw_transfersettlementpinfragment)
         }
+    }
+
+    override fun getTheme(): Int {
+        return R.style.ISWCustomAlertDialog
     }
 
     companion object {

@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
+import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
@@ -7,6 +8,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.interswitchng.smartpos.R
@@ -21,6 +23,16 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(this.requireContext()).inflate(R.layout.isw_fragment_transfer_settlement_pin, container, false)
+    }
+
+//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+//         val dialog  =super.onCreateDialog(savedInstanceState)
+//        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.ISWCustomBottomSheetDialog)
+//        return dialog
+//    }
+
+    override fun getTheme(): Int {
+        return R.style.ISWCustomBottomSheetDialog
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

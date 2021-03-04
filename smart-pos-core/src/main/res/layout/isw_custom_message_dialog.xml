@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/isw_popup_bg"
+    android:padding="15dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <ImageView
+        android:id="@+id/top_image"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat = "@drawable/ic_network"
+        android:layout_width="150dp"
+        android:layout_height="100dp"/>
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/isw_dialog_message"
+        app:layout_constraintTop_toBottomOf="@id/top_image"
+        android:layout_marginTop="15dp"
+        tools:text = ""
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/iswTextColorBlack"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible"
+        android:gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/isw_dialog_proceed_btn"
+        app:layout_constraintTop_toBottomOf="@+id/isw_dialog_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:cornerRadius="10dp"
+        android:layout_width="0dp"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:text="@string/isw_title_try_again"
+        android:background="@color/iswColorPrimary"
+        android:textColor="@color/iswWhite"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

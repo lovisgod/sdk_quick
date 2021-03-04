@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
@@ -88,6 +89,36 @@ fun customdailog(context: Context?, message: String? = ",", action: (() -> Unit?
         customProgressBinding.findViewById<MaterialButton>(R.id.isw_dialog_proceed_btn).setOnClickListener {
             action.invoke()
         }
+    }
+    dialog.show()
+    return dialog
+}
+
+fun showErrorDialog(context: Context, message: String? = ",", action: (() -> Unit?)? = null): Dialog {
+    val dialog =Dialog(context!!, R.style.ISWCustomAlertDialog)
+    val customProgressBinding = LayoutInflater.from(context).inflate(R.layout.isw_custom_message_dialog, null, false)
+    dialog.setContentView(customProgressBinding)
+    dialog.setCanceledOnTouchOutside(true)
+    dialog.setCancelable(true)
+    val layoutParams = dialog.window!!.attributes
+    layoutParams.dimAmount = 0.7f
+    dialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+    dialog.window!!.setGravity(Gravity.CENTER)
+    dialog.window!!.attributes = layoutParams
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+    customProgressBinding.findViewById<ImageView>(R.id.top_image).setImageResource(
+            R.drawable.ic_not_successful
+    )
+    customProgressBinding.findViewById<MaterialTextView>(R.id.isw_dialog_message).text = message
+    if (action  != null) {
+        customProgressBinding.findViewById<MaterialButton>(R.id.isw_dialog_proceed_btn).reveal()
+    } else {
+        customProgressBinding.findViewById<MaterialButton>(R.id.isw_dialog_proceed_btn).hide()
+    }
+    customProgressBinding.findViewById<MaterialButton>(R.id.isw_dialog_proceed_btn).setOnClickListener {
+        action?.invoke()
+        dialog.dismiss()
     }
     dialog.show()
     return dialog
