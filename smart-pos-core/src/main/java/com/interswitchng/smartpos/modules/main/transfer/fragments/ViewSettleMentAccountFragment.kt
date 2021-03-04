@@ -30,6 +30,8 @@ class ViewSettleMentAccountFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         account_no.text = Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, "")
+        account_name.text = Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NAME, "")
+        account_bank.text = Prefs.getString(Constants.SETTLEMENT_BANK_NAME, "")
         edit_image.setOnClickListener {
             findNavController().navigate(R.id.isw_transfersettlementpinfragment)
         }

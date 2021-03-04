@@ -72,7 +72,7 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
                     }
                 }
 
-            }, 500)
+            }, 200)
         }
     }
 

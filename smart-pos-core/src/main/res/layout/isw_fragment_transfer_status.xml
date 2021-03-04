@@ -28,7 +28,9 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         app:srcCompat="@drawable/ic_finished"
-        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +44,7 @@
         android:textColor="#8097B1"
         android:textSize="20sp"
         android:textAllCaps="true"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/transactionstatus_image" />
@@ -64,7 +66,6 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="0dp"
-        app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintBottom_toBottomOf="@+id/isw_stan_transfer"
@@ -72,7 +73,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/isw_transaction_msg_transfer"
-        app:strokeColor="@android:color/darker_gray"
         app:strokeWidth="1dp" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -81,6 +81,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="12sp"
+        android:visibility="gone"
         tools:text="Date: 2019-11-22 / 10:00AM"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

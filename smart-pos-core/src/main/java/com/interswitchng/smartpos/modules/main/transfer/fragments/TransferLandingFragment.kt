@@ -1,9 +1,11 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
+import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
@@ -27,6 +29,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
 
     private val cardViewModel : CardViewModel by viewModel()
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // check for settlement account setup for specific transfer
@@ -38,6 +41,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     private fun handleClicks() {
         isw_transfer_card.setOnClickListener {
             var paymentModel = PaymentModel()
@@ -49,7 +53,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
         }
 
         isw_settings_icon.setOnClickListener {
-           var popup = PopupMenu(this.requireContext(), isw_settings_icon)
+           var popup = PopupMenu(this.requireContext(), isw_settings_icon, 0, 0, R.style.IswPopupMenuStyle)
             var inflater = popup.menuInflater
             inflater.inflate(R.menu.isw_generic_transfer_settings_options, popup.menu)
             popup.setOnMenuItemClickListener {

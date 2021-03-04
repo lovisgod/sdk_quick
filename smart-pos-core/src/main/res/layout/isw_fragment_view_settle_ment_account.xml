@@ -44,6 +44,30 @@
            android:layout_width="40dp"
            android:layout_height="40dp"/>
 
+       <com.google.android.material.textview.MaterialTextView
+           android:id="@+id/account_name"
+           app:layout_constraintTop_toBottomOf="@+id/account_no"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           android:layout_marginTop="5dp"
+           android:textSize="25sp"
+           android:textColor="@color/iswTextColorBlack"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           tools:text = ""/>
+
+       <com.google.android.material.textview.MaterialTextView
+           android:id="@+id/account_bank"
+           app:layout_constraintTop_toBottomOf="@+id/account_name"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           android:layout_marginTop="5dp"
+           android:textSize="25sp"
+           android:textColor="@color/iswTextColorBlack"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           tools:text = ""/>
+
    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

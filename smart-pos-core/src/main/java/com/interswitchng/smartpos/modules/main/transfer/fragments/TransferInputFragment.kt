@@ -129,6 +129,8 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
             if (this.requireArguments().getBoolean(Constants.FOR_SETTLEMENT_ACCOUNT_SETUP, false)) {
                 Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NUMBER, accountNumber)
                 Prefs.putString(Constants.SETTLEMENT_BANK_CODE, _selectedBank.recvInstId)
+                Prefs.putString(Constants.SETTLEMENT_BANK_NAME, _selectedBank.bankName)
+                Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NAME, _beneficiaryPayload.accountName)
                 showSuccessAlert("Settlement account setup completed", this.requireActivity())
                 findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
             } else {
