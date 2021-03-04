@@ -34,18 +34,18 @@ import kotlinx.android.synthetic.main.isw_fragment_transfer_input.backImg
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
-class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
+class TransferInputFragment : BaseFragment(TAG), CallbackListener {
 
     private var bankList = arrayListOf<BankModel>()
     lateinit var _selectedBank: BankModel
     lateinit var submitButton: Button
+    lateinit var accountNumberEditor: EditText
     lateinit var _beneficiaryPayload: BeneficiaryModel
     var isValid = false
     lateinit var dialog: Dialog
 
 
     var accountNumber: String? = ""
-    var accountName: String? = ""
 
     private val transferViewModel: TransferViewModel by viewModel()
 
@@ -54,18 +54,15 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         bankList.addAll(Constants.BANK_LIST.sortedWith(compareBy { it.bankName }))
-        dialog = Dialog(this.requireContext())
-        observeViewModel()
         submitButton = isw_transfer_input_proceed
-        submitButton.isEnabled = false
-        submitButton.isClickable = false
-        submitButton.alpha = if(!isValid) 0.5F else 1F
+        accountNumberEditor = isw_transfer_input_account
 
 
 
-        val accountNumberEditor: EditText =  isw_transfer_input_account
-
+        validateInput()
+        observeViewModel()
 
         isw_transfer_input_bank.setOnClickListener {
             fragmentManager?.let { it1 -> BankFilterDialog(this).show(it1, "show-bank-filter") }
@@ -73,7 +70,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
         accountNumberEditor.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                Timer().schedule(object : TimerTask () {
+                Timer().schedule(object : TimerTask() {
                     override fun run() {
                         this@TransferInputFragment.requireActivity().runOnUiThread {
                             validateBeneficiary()
@@ -82,7 +79,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
                 }, 500)
                 accountNumber = s.toString()
-//                validateBeneficiary()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -101,30 +97,29 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
     override fun onDataReceived(data: BankModel) {
         _selectedBank = data
         val bankText: EditText = isw_transfer_input_bank
-        bankText.setText(data.bankName.toString())
+        bankText.setText(data.bankName)
         validateBeneficiary()
     }
 
 
-
-    fun validateBeneficiary() {
-        isValid = false
-        toggleAccountNameVisibility(false)
-        if(accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
+    private fun validateBeneficiary() {
+        if (accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
             dialog = customdailog(this.requireContext())
             transferViewModel.validateBankDetails(_selectedBank.selBankCodes!!, accountNumber!!)
-        }
-        else {
-                Log.d("Picker", accountNumber)
+        } else {
+            isValid = false
+            toggleAccountNameVisibility()
+            validateInput()
         }
     }
 
-    fun validateInput() {
+    private fun validateInput() {
+        submitButton.alpha = if (!isValid) 0.5F else 1F
         submitButton.isEnabled = isValid
         submitButton.isClickable = isValid
     }
 
-    fun submitForm(view: View) {
+    private fun submitForm(view: View) {
         if (isValid) {
             if (this.requireArguments().getBoolean(Constants.FOR_SETTLEMENT_ACCOUNT_SETUP, false)) {
                 Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NUMBER, accountNumber)
@@ -140,7 +135,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
 
     }
 
-
     private fun observeViewModel() {
         backImg.setOnClickListener {
             navigateUp()
@@ -151,37 +145,37 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener  {
         with(transferViewModel) {
             //observe the benefiary call
             beneficiary.observe(owner) {
-                it?.let { beneficiary->
-                    dialog.dismiss()
+                it?.let { beneficiary ->
+                    dialog.let { d->
+                        d.dismiss()
+                    }
                     when (beneficiary) {
                         is Some -> {
-
                             _beneficiaryPayload = beneficiary.value
                             isValid = true
-                            toggleAccountNameVisibility(true)
+
                         }
                         is None -> {
                             isValid = false
-                            toggleAccountNameVisibility(false)
                             context?.toast("Name enquiry error")
                         }
                     }
+                    toggleAccountNameVisibility()
                     validateInput()
                 }
             }
         }
     }
 
-    private fun toggleAccountNameVisibility(state: Boolean) {
-        dialog.dismiss()
-      if(state) {
-          account_name.visibility = View.VISIBLE
-          isw_transfer_input_account_name.visibility = View.VISIBLE
-          isw_transfer_input_account_name.setText(_beneficiaryPayload.accountName)
-      }  else {
-          account_name.visibility = View.GONE
-          isw_transfer_input_account_name.visibility = View.GONE
-      }
+    private fun toggleAccountNameVisibility() {
+        if (isValid) {
+            account_name.visibility = View.VISIBLE
+            isw_transfer_input_account_name.visibility = View.VISIBLE
+            isw_transfer_input_account_name.setText(_beneficiaryPayload.accountName)
+        } else {
+            account_name.visibility = View.GONE
+            isw_transfer_input_account_name.visibility = View.GONE
+        }
     }
 
     companion object {

@@ -7,20 +7,22 @@
     >
 
     <com.google.android.material.appbar.AppBarLayout
+        style=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/isw_bg_solid_primary"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/isw_transfer_search_dialog_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:paddingEnd="16dp"
             android:paddingStart="6dp"
-            app:contentInsetStartWithNavigation="0dp"
-            app:navigationIcon="@drawable/isw_ic_close_white"
+            android:paddingLeft="6dp"
+            android:paddingEnd="16dp"
             android:paddingRight="16dp"
-            android:paddingLeft="6dp" />
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/isw_ic_close" />
     </com.google.android.material.appbar.AppBarLayout>
 
         <EditText

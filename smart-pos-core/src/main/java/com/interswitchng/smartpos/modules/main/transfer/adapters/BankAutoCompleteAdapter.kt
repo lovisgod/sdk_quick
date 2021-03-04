@@ -17,7 +17,7 @@ class BankAutoCompleteAdapter (context: Context, resource: Int, banks: ArrayList
     var _bankList = banks
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return convertView?: createView(position, parent)
+        return   createView(position, parent)
     }
 
     private fun createView(position: Int, parent: ViewGroup?): View {
@@ -58,7 +58,7 @@ class BankAutoCompleteAdapter (context: Context, resource: Int, banks: ArrayList
             val results = arrayListOf<Bank>()
 
             for (bank in _bankList) {
-                if (bank.bankName.toLowerCase().contains(input.toLowerCase()) || input == null) results.add(bank)
+                if (bank.bankName.toLowerCase().contains(input.toLowerCase())) results.add(bank)
             }
 
             return results
