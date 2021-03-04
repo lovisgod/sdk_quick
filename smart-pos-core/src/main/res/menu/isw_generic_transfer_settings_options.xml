@@ -8,11 +8,11 @@
 
     <item android:id="@+id/setSettlementAccount"
         android:title="@string/isw_configure_settlement_account"
-        android:visible="false"
+        android:visible="true"
         />
     <item android:id="@+id/viewSettlementAccount"
         android:title="@string/isw_view_settlement_account"
-        android:visible="false"
+        android:visible="true"
         />
 
 </menu>
