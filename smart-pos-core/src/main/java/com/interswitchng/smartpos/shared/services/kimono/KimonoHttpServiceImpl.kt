@@ -53,44 +53,10 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
 
     private lateinit var transactionResult: TransactionResult
-//
-//    override fun downloadTerminalParameters(terminalId: String, ip: String, port: Int): Boolean {
-//
-//
-//
-//        try {
-//
-//
-//            val terminalData = TerminalInfoParser.parseKimono("2ISW0001",
-//                    "2ISW1234567TEST","566","566",100,10,"MX1065","1648C Oko-Awo Street, Victoria Island",
-//                    "")?.also {
-//
-//                it.persist(store) }
-//            logger.log("Terminal Data => $terminalData")
-//
-//            return true
-//        } catch (e: Exception) {
-//            logger.log(e.localizedMessage)
-//            e.printStackTrace()
-//        }
-//
-//        return false
-//    }
 
 
     val logger by lazy { Logger.with(this.javaClass.name) }
 
-//
-//    override fun downloadKey(terminalId: String): Boolean {
-//
-//        // load test keys
-////        val tik = Constants.ISW_DUKPT_IPEK
-////        val ksn = Constants.ISW_DUKPT_KSN
-//
-//        // load keys
-////        device.loadInitialKey(tik, ksn)
-//        return true
-//    }
 
     override fun downloadAgentId(terminalId: String): AgentIdResponse? {
 
@@ -120,8 +86,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                 Logger.with("KeyResponseCode").log(responseBody.errorBody().toString())
                 false
             } else {
-                //store.saveString(Constants.KIMONO_KEY, responseBody.body().toString())
-
                 // load test keys
                 val tik = Constants.ISW_DUKPT_IPEK
                 val ksn = Constants.ISW_DUKPT_KSN
@@ -162,10 +126,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
 
     override suspend fun callHome(terminalInfo: TerminalInfo): Boolean {
-
-//terminalInfo.merchantId
-
-// terminalInfo.terminalId
 
         val uid = ""
         val request = CallHomeRequest.create(device.name, terminalInfo, uid)
@@ -308,7 +268,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         cardTrack2 = txnInfo.cardTrack2,
                         time = now.time
                 )
-                //logTransaction(transactionResult)
 
                 TransactionResponse(
                         responseCode = purchaseResponse.responseCode,//data.responseCode,
@@ -379,12 +338,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         type = TransactionType.Transfer
                 )
             } else {
-
-                val now = Date()
-                val pinStatus = when {
-                    purchaseResponse.responseCode == IsoUtils.OK -> "PIN Verified"
-                    else -> "PIN Unverified"
-                }
                 TransactionResponse(
                         responseCode = purchaseResponse.responseCode,//data.responseCode,
                         stan = purchaseResponse.stan,
@@ -407,7 +360,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
         val bodyCashOut = XmlStringConverter().toBody(xmlString)
 
         try {
-            var url = Constants.KIMONO_TOKEN_END_POINT
             val responseBody = tokenService.getToken(bodyCashOut).run()
             val response = responseBody.body()
             println(response)

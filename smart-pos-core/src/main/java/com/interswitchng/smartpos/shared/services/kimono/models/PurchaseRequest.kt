@@ -36,14 +36,14 @@ internal class PurchaseRequest
 		                                <cellStationId/>
 		                                <currencyCode/>
 		                                <languageInfo/>
-                                        <merchantId>2ISW1234567TEST</merchantId>
+                                        <merchantId>${terminalInfo.merchantId}</merchantId>
 		                                <merhcantLocation/>
 		                                <posConditionCode/>
 		                                <posDataCode/>
 		                                <posEntryMode/>
 		                                <posGeoCode/>
 		                                <printerStatus/>
-		                                <terminalId>2ISW0001</terminalId>
+		                                <terminalId>${terminalInfo.terminalId}</terminalId>
 		                                <terminalType/>
 		                                <transmissionDate/>
 		                                <uniqueId/>
@@ -126,14 +126,14 @@ internal class PurchaseRequest
                                      <batteryInformation>-1</batteryInformation>
                                      <currencyCode>${terminalInfo.currencyCode}</currencyCode>
                                      <languageInfo>EN</languageInfo>
-                                     <merchantId>2ISW1234567TEST</merchantId>
+                                     <merchantId>${terminalInfo.merchantId}</merchantId>
                                      <merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation>
                                      <posConditionCode>00</posConditionCode>
                                      <posDataCode>510101511344101</posDataCode>
                                      <posEntryMode>051</posEntryMode>
                                      <posGeoCode>00234000000000566</posGeoCode>
                                      <printerStatus>1</printerStatus>
-                                     <terminalId>2ISW0001</terminalId>
+                                     <terminalId>${terminalInfo.terminalId}</terminalId>
                                      <terminalType>${icc.TERMINAL_TYPE}</terminalType>
                                      <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate>
                                      <uniqueId>$serialId</uniqueId>

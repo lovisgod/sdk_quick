@@ -67,8 +67,6 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter,
 
     fun setCompanyLogo(bitmap: Bitmap) {
         companyLogo = bitmap
-
-
     }
 
 
@@ -88,7 +86,9 @@ class POSDeviceImpl private constructor(override val printer: DevicePrinter,
             setupDevice(context)
 
             // setup logo
+
             val drawable = ContextCompat.getDrawable(context, R.drawable.ic_bankly_logo)!!
+//            val drawable = ContextCompat.getDrawable(context, R.drawable.logo)!!
             companyLogo = run {
                 return@run when(drawable) {
                     is BitmapDrawable -> drawable.bitmap
