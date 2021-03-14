@@ -25,7 +25,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
     // font sizes
     private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_8_16, EFontTypeExtCode.FONT_16_16)
-    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_16_16)
+    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_24_24)
     private val VERY_LARGE_FONT = Pair(EFontTypeAscii.FONT_16_16, EFontTypeExtCode.FONT_16_32)
 
 
@@ -233,7 +233,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
     companion object {
         // screen caharacter length
-        private const val SCREEN_LARGE_LENGTH = 30
-        private const val SCREEN_NORMAL_LENGTH = 30
+        private const val SCREEN_LARGE_LENGTH = 24
+        private const val SCREEN_NORMAL_LENGTH = 24
     }
 }
