@@ -45,7 +45,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     private fun handleClicks() {
-        isw_transfer_card.setOnClickListener {
+        isw_transfer_hor_card.setOnClickListener {
             var paymentModel = PaymentModel()
             paymentModel.type = PaymentModel.TransactionType.TRANSFER
             val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(

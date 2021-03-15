@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.modules.main.transfer.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants
@@ -33,6 +34,10 @@ class AmountFragment : BaseFragment(TAG) {
         initializeAmount()
         handleProceedToolbarClicks()
         handleDigitsClicks()
+
+        isw_back.setOnClickListener {
+            findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
+        }
     }
 
     private fun handleProceedToolbarClicks() {

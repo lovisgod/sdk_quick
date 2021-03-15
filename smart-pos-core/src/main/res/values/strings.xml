@@ -130,6 +130,10 @@
     <string name="isw_transfer_funds_from_one_account_to_another">Transfer, eCash, eChange, and Raise a Dispute</string>
     <string name="isw_transfer_money">Transfer Money</string>
     <string name="isw_bill_payment">Bill Payment</string>
+    <string name="isw_airtime">Airtime</string>
+    <string name="isw_data">Mobile Data</string>
+    <string name="isw_utility_bills">Utility Bills</string>
+    <string name="isw_cable_tv">Cable Tv</string>
     <string name="isw_pay_for_electricity_toll_tax_and_other_bills">Pay for electricity, toll, tax and other bills
     </string>
     <string name="isw_purchase">Purchase</string>
