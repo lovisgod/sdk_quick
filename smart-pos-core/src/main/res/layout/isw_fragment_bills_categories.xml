@@ -61,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/isw_activity_customer_name_text"
             app:layout_constraintEnd_toStartOf="@+id/isw_guideline3"
             app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-    />
+        android:drawableEnd="@drawable/isw_ic_search" />
 
     <View
             android:id="@+id/isw_view"
