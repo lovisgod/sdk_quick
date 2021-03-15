@@ -17,6 +17,8 @@ import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_transfer_landing.*
+import kotlinx.android.synthetic.main.isw_fragment_transfer_landing.isw_transfer_card
+import kotlinx.android.synthetic.main.isw_pos_landing_horizontal_scroll_view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -51,6 +53,15 @@ class TransferLandingFragment : BaseFragment(TAG) {
 //            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
             findNavController().navigate(action)
         }
+
+//        isw_transfer_card.setOnClickListener {
+//            var paymentModel = PaymentModel()
+//            paymentModel.type = PaymentModel.TransactionType.TRANSFER
+//            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
+//                    paymentModel = paymentModel, BankModel = BankModel("","", ""), BeneficiaryModel = BeneficiaryModel())
+////            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
+//            findNavController().navigate(action)
+//        }
 
         isw_settings_icon.setOnClickListener {
            var popup = PopupMenu(this.requireContext(), isw_settings_icon, 0, 0, R.style.IswPopupMenuStyle)
