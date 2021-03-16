@@ -224,4 +224,9 @@
         <item name="android:dropDownHorizontalOffset">-4dp</item>
         <item name="android:dropDownVerticalOffset">4dp</item>
     </style>
+
+    <style name="IswCircularDeterminateProgressBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/isw_circular_progress</item>
+    </style>
 </resources>

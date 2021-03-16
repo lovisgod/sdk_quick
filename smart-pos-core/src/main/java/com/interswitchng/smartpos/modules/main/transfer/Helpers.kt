@@ -137,7 +137,7 @@ fun showErrorAlert(message: String, activity: Activity) {
             .setDuration(2000)
             .enableVibration(true)
             .enableSwipeToDismiss()
-            .setBackgroundColorRes(R.color.iswTextColorError)
+            .setBackgroundColorRes(R.color.iswFincaAccent)
             .show()
 }
 
@@ -148,6 +148,6 @@ fun showSuccessAlert(message: String, activity: Activity) {
             .setDuration(2000)
             .enableVibration(true)
             .enableSwipeToDismiss()
-            .setBackgroundColorRes(R.color.iswColorPrimary)
+            .setBackgroundColorRes(R.color.iswColorLightBlue)
             .show()
 }

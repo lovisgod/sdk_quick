@@ -218,6 +218,7 @@
     <string name="isw_done">Done</string>
     <string name="isw_sent_str">Sent</string>
     <string name="isw_account_number">Account Number</string>
+    <string name="isw_account_details">Account Details</string>
     <string name="isw_remarks">Remarks</string>
     <string name="isw_arbiter_status_request">Arbiter Status</string>
     <string name="isw_arbiter_hint">Transaction ID or Customer name</string>
@@ -298,8 +299,10 @@
     <string name="isw_transfer_title">Transfer</string>
     <string name="isw_transfer_account_number_hint">Enter Account Number</string>
     <string name="isw_transfer_fund_to_another_account">Transfer to another account</string>
+    <string name="isw_cashout_to_a_beneficiary">Cashout to a Beneficiary Account</string>
     <string name="isw_powered_by">Powered By</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="isw_select_a_bank">Select a Bank</string>
 
 </resources>

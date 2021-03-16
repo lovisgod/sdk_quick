@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.10" />
+        app:layout_constraintGuide_percent="0.20" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/isw_guideline2"
@@ -34,6 +34,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        android:visibility="gone"
         app:contentInsetStartWithNavigation="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,13 +55,16 @@
         android:id="@+id/isw_status_transfer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/isw_status"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:fontFamily="@font/roboto_bold"
         android:textColor="@android:color/white"
-        android:textSize="15sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@id/isw_guideline"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp" />
 
     <TextView
         android:id="@+id/isw_processing_text_transfer"
@@ -69,6 +73,7 @@
         android:layout_marginTop="50dp"
         android:text="@string/isw_processing_transaction"
         android:textSize="16sp"
+        android:visibility="gone"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
@@ -100,6 +105,7 @@
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/isw_guideline2"
@@ -117,6 +123,7 @@
         tools:drawableLeft="@drawable/isw_round_done"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.0"
@@ -134,11 +141,50 @@
         tools:drawableStart="@drawable/isw_round_done"
         tools:drawableLeft="@drawable/isw_round_done"
         android:drawablePadding="10dp"
+        android:visibility="gone"
         android:gravity="center_vertical"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/isw_guideline3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/isw_guideline2"
         app:layout_constraintTop_toBottomOf="@+id/isw_authenticating_transfer" />
+
+    <ProgressBar
+        android:id="@+id/isw_connection_progress_bar"
+        style="@style/IswCircularDeterminateProgressBar"
+        android:layout_width="337dp"
+        android:layout_height="337dp"
+        android:progress="10"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/progress_middle_image"
+        app:layout_constraintTop_toTopOf="@+id/isw_connection_progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_connection_progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/isw_connection_progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/isw_connection_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat = "@drawable/ic_processing_middle"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/isw_status_text_changing"
+        android:layout_height="wrap_content"
+        android:text="Sending Transaction"
+        android:textColor="@color/iswColorPrimary"
+        android:fontFamily="@font/roboto_bold"
+        android:visibility="visible"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/isw_connection_progress_bar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

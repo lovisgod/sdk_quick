@@ -228,7 +228,6 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
 
             // when the user enters an incomplete pin
             is EmvMessage.EmptyPin -> {
-                println("here here$message")
                 alert.setTitle("Empty Pin")
                 alert.setMessage("Please press the CANCEL (X) button and try again")
                 alert.show()
@@ -236,7 +235,6 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
 
             // when pin is incorrect
             is EmvMessage.PinError -> {
-                println("here here here$message")
                 alert.setTitle("Invalid Pin")
                 alert.setMessage("Please ensure you put the right pin.")
                 alert.show()

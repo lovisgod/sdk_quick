@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/iswColorPrimary">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/isw_guideline"
@@ -28,25 +27,20 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/isw_guideline" />
 
-
-
     <View
         android:id="@+id/isw_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/isw_card_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/isw_guideline" />
 
 
-    <TextView
+    <ImageView
         android:id="@+id/isw_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/isw_smartpos"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
         android:layout_marginTop="10dp"
+        app:srcCompat= "@drawable/finca_logo"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,41 +48,41 @@
         android:id="@+id/isw_settings_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:tint="@color/iswWhite"
+        android:tint="@color/iswColorPrimary"
         app:srcCompat = "@drawable/isw_settings_24"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@+id/isw_guideline3"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/isw_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:textColor="@color/iswColorPrimary"
-        android:textSize="12sp"
-        app:layout_constraintTop_toTopOf="@+id/isw_view"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        tools:text="Sunday, July 2019" />
+<!--    <TextView-->
+<!--        android:id="@+id/isw_date"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:textColor="@color/iswColorPrimary"-->
+<!--        android:textSize="12sp"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/isw_view"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"-->
+<!--        tools:text="Sunday, July 2019" />-->
 
-    <TextView
-        android:id="@+id/isw_merchant_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:textColor="@color/iswColorPrimary"
-        android:textSize="20sp"
-        android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/isw_date"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        tools:text="Smartware Solutions" />
+<!--    <TextView-->
+<!--        android:id="@+id/isw_merchant_name"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:textColor="@color/iswColorPrimary"-->
+<!--        android:textSize="20sp"-->
+<!--        android:visibility="visible"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/isw_date"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"-->
+<!--        tools:text="Smartware Solutions" />-->
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/isw_transfer_card"
         style="@style/Theme.MaterialComponents.Light"
-        android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_width="273dp"
+        android:layout_height="368dp"
         android:layout_margin="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -117,10 +111,11 @@
                 android:id="@+id/isw_cash_out_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/isw_transfer"
+                android:text="@string/isw_cash_out"
                 android:textColor="@android:color/black"
-                android:textSize="13sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
+                android:fontFamily="@font/roboto_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -128,17 +123,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/isw_transfer_fund_to_another_account"
-                android:textSize="10sp"
+                android:text="@string/isw_cashout_to_a_beneficiary"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/isw_cash_out_text" />
 
             <ImageView
-                android:layout_width="150dp"
-                android:layout_height="100dp"
+                android:layout_width="212dp"
+                android:layout_height="160dp"
                 android:layout_gravity="bottom"
-                app:srcCompat="@drawable/ic_transfer_money"
+                app:srcCompat="@drawable/ic_finca_transfer_image"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 

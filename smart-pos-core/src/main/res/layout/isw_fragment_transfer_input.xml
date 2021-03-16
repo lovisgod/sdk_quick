@@ -44,11 +44,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:textColor="@android:color/white"
-        android:textSize="26sp"
-        android:text="@string/isw_account_number"
+        android:textSize="30sp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/isw_account_details"
         app:layout_constraintBottom_toTopOf="@id/isw_guideline"
-        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
-        tools:text="@string/isw_transfer_title" />
+        app:layout_constraintStart_toStartOf="@+id/isw_guideline2"/>
 
     <View
         android:id="@+id/isw_view"
@@ -85,33 +85,81 @@
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:text="Bank"
+            android:textColor="@color/iswTextColorBlack"
+            android:fontFamily="@font/roboto_black"
             android:textSize="20sp">
         </TextView>
 
-        <EditText
-            android:id="@+id/isw_transfer_input_bank"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outlinedTextField"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
             android:focusable="false"
-            android:hint="Select a Bank"
-            />
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/isw_transfer_input_bank"
+                android:hint="@string/isw_select_a_bank"
+                android:gravity="center_vertical"
+                android:background="#EDEDED"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/isw_transfer_input_bank"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:focusable="false"-->
+<!--            android:visibility="gone"-->
+<!--            android:hint="Select a Bank"-->
+<!--            />-->
 
         <TextView
             android:id="@+id/account_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Account Number"
+            android:textColor="@color/iswTextColorBlack"
+            android:fontFamily="@font/roboto_black"
             android:textSize="20sp">
         </TextView>
 
-        <EditText
-            android:id="@+id/isw_transfer_input_account"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/outlinedTextFieldAmount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Account Number"
-            android:maxLength="10"
-            android:ems="10"
-            android:inputType="number" />
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/isw_transfer_input_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Enter Account Number"
+                android:background="#EDEDED"
+                android:gravity="center_vertical"
+                android:maxLength="10"
+                android:ems="10"
+                android:inputType="number"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/isw_transfer_input_account"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Enter Account Number"-->
+<!--            android:maxLength="10"-->
+<!--            android:ems="10"-->
+<!--            android:inputType="number" />-->
 
         <TextView
             android:id="@+id/account_name"
@@ -119,6 +167,8 @@
             android:layout_height="wrap_content"
             android:text="Account Name"
             android:visibility="gone"
+            android:textColor="@color/iswTextColorBlack"
+            android:fontFamily="@font/roboto_black"
             android:textSize="20sp">
         </TextView>
 
@@ -130,6 +180,25 @@
             android:visibility="gone"
             android:ems="10"
             android:inputType="number" />
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/outlinedTextFieldAccountName"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:visibility="visible"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">-->
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/isw_transfer_input_account_name"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:focusable="false"-->
+<!--                        android:visibility="visible"-->
+<!--                        android:ems="10"-->
+<!--                        android:inputType="number" />-->
+
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
 
         <com.google.android.material.button.MaterialButton

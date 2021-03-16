@@ -18,7 +18,7 @@
         android:textStyle="normal"
         android:textAllCaps="true"
         android:fontFamily="@font/roboto_medium"
-        android:textSize="25sp"
+        android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="70dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +29,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="16dp"
-        app:srcCompat="@drawable/ic_plain_credit_card"
+        app:srcCompat="@drawable/ic_finca_plain_credit_card_1"
         app:layout_constraintTop_toBottomOf="@+id/isw_textview4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

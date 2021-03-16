@@ -77,7 +77,7 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
         observeViewModel()
 
         runWithInternet {
-                dialog = customdailog(this.requireContext())
+//                dialog = customdailog(this.requireContext())
                 cardViewModel.processTransferTransaction(
                         paymentModel,
                         accountType,
@@ -111,32 +111,43 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                         }
                         //CardViewModel.OnlineProcessResult.ONLINE_APPROVED ->
                         else -> {
-                            isw_connecting_transfer.apply {
-                                setCompoundDrawablesWithIntrinsicBounds(
-                                        R.drawable.isw_round_done,
-                                        0,
-                                        0,
-                                        0
-                                )
-                                text = "Connected"
+//                            isw_connecting_transfer.apply {
+//                                setCompoundDrawablesWithIntrinsicBounds(
+//                                        R.drawable.isw_round_done,
+//                                        0,
+//                                        0,
+//                                        0
+//                                )
+//                                text = "Connected"
+//
+//                                isw_connection_progress_transfer.progress =
+//                                        isw_connection_progress_transfer.progress + 30
+//                            }
 
-                                isw_connection_progress_transfer.progress =
-                                        isw_connection_progress_transfer.progress + 30
+                            isw_status_text_changing.apply {
+                                text = "Connected"
+                                isw_connection_progress_bar.progress =
+                                        isw_connection_progress_bar.progress + 30
                             }
 
                             runBlocking { delay(1000) }
 
-                            isw_authenticating_transfer.apply {
-                                setCompoundDrawablesWithIntrinsicBounds(
-                                        R.drawable.isw_round_done,
-                                        0,
-                                        0,
-                                        0
-                                )
+//                            isw_authenticating_transfer.apply {
+//                                setCompoundDrawablesWithIntrinsicBounds(
+//                                        R.drawable.isw_round_done,
+//                                        0,
+//                                        0,
+//                                        0
+//                                )
+//                                text = "Authenticated"
+//
+//                                isw_connection_progress_transfer.progress =
+//                                        isw_connection_progress_transfer.progress + 30
+//                            }
+                            isw_status_text_changing.apply {
                                 text = "Authenticated"
-
-                                isw_connection_progress_transfer.progress =
-                                        isw_connection_progress_transfer.progress + 30
+                                isw_connection_progress_bar.progress =
+                                        isw_connection_progress_bar.progress + 30
                             }
 
                             context?.toast("Transaction Approved")
@@ -148,16 +159,22 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
     }
 
     private fun processResponse(transactionResponse: Optional<Pair<TransactionResponse, EmvData>>) {
-        if (dialog.isShowing) { dialog.dismiss() }
+//        if (dialog.isShowing) { dialog.dismiss() }
         when (transactionResponse) {
 
             is None -> logger.log("Unable to complete transaction")
             is Some -> {
-                isw_receiving_transfer.apply {
-                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_done, 0, 0, 0)
-                    text = "Received"
+//                isw_receiving_transfer.apply {
+//                    setCompoundDrawablesWithIntrinsicBounds(R.drawable.isw_round_done, 0, 0, 0)
+//                    text = "Received"
+//
+//                    isw_connection_progress_transfer.progress = isw_connection_progress_transfer.progress + 30
+//                }
 
-                    isw_connection_progress_transfer.progress = isw_connection_progress_transfer.progress + 30
+                isw_status_text_changing.apply {
+                    text = "Received"
+                    isw_connection_progress_bar.progress =
+                            isw_connection_progress_bar.progress + 30
                 }
                 // extract info
                 val response = transactionResponse.value.first

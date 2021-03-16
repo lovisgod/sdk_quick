@@ -52,6 +52,7 @@
            android:layout_marginTop="5dp"
            android:textSize="25sp"
            android:textColor="@color/iswTextColorBlack"
+           android:gravity="center"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            tools:text = ""/>

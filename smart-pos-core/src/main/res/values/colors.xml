@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="iswColorPrimary">#2E5BFF</color>
-    <color name="iswColorPrimaryDark">#2E5BFF</color>
+    <color name="iswColorPrimary">#B30938</color>
+    <color name="iswColorPrimaryDark">#B30938</color>
     <color name="iswTextColorPrimary">#FFF</color>
     <color name="iswColorMainBackground">#FFF</color>
-    <color name="iswColorTextSecondary">#2E5BFF</color>
+    <color name="iswColorTextSecondary">#B30938</color>
     <color name="iswColorSecondaryIcon">#dfdfdf</color>
     <color name="iswColorQrCodeBackground">#f8f8f9</color>
     <color name="iswTextColorDark">#363636</color>
@@ -13,15 +13,17 @@
     <color name="iswTextColorSecondary">#004570</color>
     <color name="iswTextColorSecondaryDark">#00365b</color>
     <color name="iswColorHighlight">#FFCBECFF</color>
-    <color name="iswTextColorSecondaryLight">#00b0f8</color>
+    <color name="iswTextColorSecondaryLight">#30B30938</color>
     <color name="iswTextColorError">#EE312A</color>
     <color name="iswGrey">#80B6B6B6</color>
     <color name="iswSelectedTypeColor">#A2A7B8</color>
     <color name="iswTransparent">#66000000</color>
-    <color name="iswColorTopBackground">#2E5BFF</color>
+    <color name="iswColorTopBackground">#B30938</color>
     <color name="iswColorLightGrey">#B3FFFFFF</color>
     <color name="iswTextColorBlack">#4E5053</color>
     <color name="iswColorLightBlue">#8097B1</color>
     <color name="iswlightBlue">#8089CFF0</color>
     <color name="iswWhite">#FFFFFF</color>
+    <color name="iswFincaAccent">#ECAB12</color>
+    <color name="iswFincaLight">#80B30938</color>
 </resources>
