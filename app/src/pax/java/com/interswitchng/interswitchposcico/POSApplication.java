@@ -98,6 +98,12 @@ public class POSApplication extends Application {
                 @Override
                 public DevicePrinter getPrinter() {
                     return new DevicePrinter() {
+                        @NotNull
+                        @Override
+                        public PrintStatus printSlipNew(@NotNull Bitmap slip) {
+                            return null;
+                        }
+
                         @Override
                         public PrintStatus printSlip(List<? extends PrintObject> slip, UserType user) {
                             return new PrintStatus.Error("No DevicePrinterImpl installed");

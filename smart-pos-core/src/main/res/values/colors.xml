@@ -26,4 +26,5 @@
     <color name="iswWhite">#FFFFFF</color>
     <color name="iswFincaAccent">#ECAB12</color>
     <color name="iswFincaLight">#80B30938</color>
+    <color name="isw_main_black">#000000</color>
 </resources>

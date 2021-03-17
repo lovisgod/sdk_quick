@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.viewmodel
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -119,6 +120,37 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
                     val printed = status !is PrintStatus.Error
                     _printedCustomerCopy.value = printed && user == UserType.Customer
                     _printedMerchantCopy.value = printed && user == UserType.Merchant
+                }
+            }
+        }
+    }
+
+
+    fun printSlipNew(bitmap: Bitmap) {
+
+        uiScope.launch {
+            // get printer status on IO thread
+            val printStatus = withContext(ioScope) {
+                posDevice.printer.canPrint()
+            }
+
+            when (printStatus) {
+                is PrintStatus.Error -> {
+                    _printerMessage.value = printStatus.message
+                }
+                else -> {
+                    // disable print button
+                    _printButton.value = false
+
+                    // print code in IO thread
+                    val status = withContext(ioScope) { posDevice.printer.printSlipNew(bitmap) }
+                    // publish print message
+                    _printerMessage.value = status.message
+                    // enable print button
+                    _printButton.value = true
+
+                    // set printed flags for customer and merchant copies
+                    val printed = status !is PrintStatus.Error
                 }
             }
         }

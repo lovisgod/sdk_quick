@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.device
 
+import android.graphics.Bitmap
 import com.interswitchng.smartpos.shared.models.core.UserType
 import com.interswitchng.smartpos.shared.models.posconfig.PrintObject
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
@@ -23,6 +24,8 @@ interface DevicePrinter {
      * @see PrintStatus
      */
     fun printSlip(slip: List<PrintObject>, user: UserType): PrintStatus
+
+    fun printSlipNew(slip: Bitmap): PrintStatus
 
 
     /**

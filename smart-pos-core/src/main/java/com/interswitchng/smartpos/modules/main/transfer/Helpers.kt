@@ -4,13 +4,14 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +20,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.PinEditText
 import com.tapadoo.alerter.Alerter
+
 
 fun EditText.getTextValue(): String {
     return this.text.toString()
@@ -150,4 +152,14 @@ fun showSuccessAlert(message: String, activity: Activity) {
             .enableSwipeToDismiss()
             .setBackgroundColorRes(R.color.iswColorLightBlue)
             .show()
+}
+
+ fun setBW(iv: ImageView) {
+    val brightness = 10f // change values to suite your need
+    val colorMatrix = floatArrayOf(
+            0.33f, 0.33f, 0.33f, 0f, brightness,
+            0.33f, 0.33f, 0.33f, 0f, brightness,
+            0.33f, 0.33f, 0.33f, 0f, brightness, 0f, 0f, 0f, 1f, 0f)
+    val colorFilter: ColorFilter = ColorMatrixColorFilter(colorMatrix)
+    iv.colorFilter = colorFilter
 }

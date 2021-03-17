@@ -95,6 +95,8 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         else PrintStatus.Error(result.second)
     }
 
+
+
     private fun printItem(paxPrinter: PaxPrinter, item: PrintObject) {
 
         when (item) {
@@ -235,5 +237,15 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         // screen caharacter length
         private const val SCREEN_LARGE_LENGTH = 24
         private const val SCREEN_NORMAL_LENGTH = 24
+    }
+
+    override fun printSlipNew(slip: Bitmap): PrintStatus {
+        val printer = PaxPrinter.getInstance()
+        // initialize printer
+        printer.init()
+        printer.printBitmap(slip)
+        val status = printer.start()
+        return if (status.first == PaxPrinter.PRINT_STATUS_OK) PrintStatus.Ok(status.second)
+        else PrintStatus.Error(status.second)
     }
 }

@@ -1,21 +1,26 @@
 package com.interswitchng.smartpos.modules.main.transfer.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.fragments.ReceiptFragmentArgs
-import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.hide
 import com.interswitchng.smartpos.modules.main.transfer.reveal
 import com.interswitchng.smartpos.modules.main.transfer.showSnack
 import com.interswitchng.smartpos.shared.activities.BaseFragment
-import com.interswitchng.smartpos.shared.models.core.UserType
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.slips.TransactionSlip
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
@@ -23,9 +28,9 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
-import kotlinx.android.synthetic.main.isw_fragment_receipt.*
 import kotlinx.android.synthetic.main.isw_fragment_transfer_status.*
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class TransferStatusFragment() : BaseFragment(TAG) {
 
@@ -79,24 +84,35 @@ class TransferStatusFragment() : BaseFragment(TAG) {
         isw_print_receipt_transfer.setOnClickListener {
             // print slip
             printSlip?.let {
-                if (result?.hasPrintedCustomerCopy == 0) {
-                    resultViewModel.printSlip(UserType.Customer, it)
-                    result?.hasPrintedCustomerCopy = 1
-                    resultViewModel.updateTransaction(result!!)
-                } else if (result?.hasPrintedMerchantCopy == 1) {
-                    resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
-                } else {
-                    // if has not printed merchant copy
-                    // print merchant copy
-                    resultViewModel.printSlip(UserType.Merchant, it)
-                    // change print text to re-print
-                    isw_print_receipt_transfer.text = getString(R.string.isw_title_re_print_receipt)
-                    result?.hasPrintedMerchantCopy = 1
-                    resultViewModel.updateTransaction(result!!)
-                }
+
+
+                // Getting width, height device
+
+
+                // Getting width, height device
+
+                result?.let { it1 -> getScreenBitMap(it1, this.requireContext(), terminalInfo)?.let { ixx -> resultViewModel.printSlipNew(ixx) } }
+
+//                if (result?.hasPrintedCustomerCopy == 0) {
+//                    resultViewModel.printSlip(UserType.Customer, it)
+//                    result?.hasPrintedCustomerCopy = 1
+//                    resultViewModel.updateTransaction(result!!)
+//                } else if (result?.hasPrintedMerchantCopy == 1) {
+//                    resultViewModel.printSlip(UserType.Merchant, it, reprint = true)
+//                } else {
+//                    // if has not printed merchant copy
+//                    // print merchant copy
+//                    resultViewModel.printSlip(UserType.Merchant, it)
+//                    // change print text to re-print
+//                    isw_print_receipt_transfer.text = getString(R.string.isw_title_re_print_receipt)
+//                    result?.hasPrintedMerchantCopy = 1
+//                    resultViewModel.updateTransaction(result!!)
+//                }
             }
         }
     }
+
+
 
     private fun handleClicks() {
        transactionResponseIcon_transfer.setOnClickListener {
@@ -188,5 +204,41 @@ class TransferStatusFragment() : BaseFragment(TAG) {
         val TAG = "TRANSFER STATUS FRAGMENT"
     }
 
+    /**
+     * Print receipt of the transaction*/
+    private fun getScreenBitMap(data: TransactionResult, context: Context, info: TerminalInfo): Bitmap? {
+         var rootview = root_view_for_print.rootView
+//        var rootview = LayoutInflater.from(context).inflate(R.layout.isw_printer_layout, null, false)
+//        rootview.findViewById<MaterialTextView>(R.id.agent_value).text = info.merchantNameAndLocation
+//        rootview.findViewById<MaterialTextView>(R.id.terminal_id_title).text = info.terminalId
+//        rootview.findViewById<MaterialTextView>(R.id.tel_title).text = info.merchantId
+//        rootview.findViewById<MaterialTextView>(R.id.withdraw_title).text = data.type.name
+//        rootview.findViewById<MaterialTextView>(R.id.channel_title).text = data.paymentType.name
+//        rootview.findViewById<MaterialTextView>(R.id.date_title).text = data.getTransactionInfo().originalDateTime
+//        rootview.findViewById<MaterialTextView>(R.id.time_title).text = data.time.toString()
+//        rootview.findViewById<MaterialTextView>(R.id.amount_title).text = data.amount
+//        rootview.findViewById<MaterialTextView>(R.id.card_title).text = data.cardType.name
+//        rootview.findViewById<MaterialTextView>(R.id.pan_title).text = data.cardPan
+//        rootview.findViewById<MaterialTextView>(R.id.expiry_date_title).text = data.cardExpiry
+//        rootview.findViewById<MaterialTextView>(R.id.stan_title).text  = data.stan
+//        rootview.findViewById<MaterialTextView>(R.id.aid_title).text = data.AID
 
+        val displayMetrics = DisplayMetrics()
+        this.requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        var width = displayMetrics.widthPixels
+        var height = displayMetrics.heightPixels
+        // Create a mutable bitmap
+
+        // Create a mutable bitmap
+        val secondScreen = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+        // Created a canvas using the bitmap
+
+        // Created a canvas using the bitmap
+        val c = Canvas(secondScreen)
+
+        rootview.draw(c)
+        return secondScreen
+    }
 }
