@@ -67,6 +67,10 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         }
     }
 
+    override fun printSlipNew(slip: Bitmap): PrintStatus {
+        TODO("Not yet implemented")
+    }
+
     override fun canPrint(): PrintStatus {
         return when (printer.checkStatus()) {
             UsbThermalPrinter.STATUS_NO_PAPER -> PrintStatus.Error("No paper in the tray")

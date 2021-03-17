@@ -73,6 +73,9 @@ data class BillPaymentResponse(
         var retrievalRefNumber: String = "",
 
         @field:Element(name = "customerId", required = false)
-        var customerId: String = ""
+        var customerId: String = "",
+
+        @field:Element(name = "referenceNumber", required = false)
+        var referenceNumber: String = ""
 
 )

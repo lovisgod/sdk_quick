@@ -342,7 +342,9 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         responseCode = purchaseResponse.responseCode,//data.responseCode,
                         stan = purchaseResponse.stan,
                         responseDescription = purchaseResponse.description,//data.description
-                        type = TransactionType.Transfer
+                        type = TransactionType.Transfer ,
+                        name = purchaseResponse.customerDescription,
+                        ref = purchaseResponse.referenceNumber
                 )
 
 

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/root_view_for_print_page"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/transactionstatus_image"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/finca_logo"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/customer_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:textColor="@color/isw_main_black"
+            android:text="*** CUSTOMER COPY ***"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/agent_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="30sp"
+            android:textColor="@color/isw_main_black"
+            android:text="AGENT"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/agent_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="AGENT"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/terminal_id_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="TERMINAL ID: 21W90CJFSHDF"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tel_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="TEL: 09089988666"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/withdraw_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/isw_main_black"
+            android:text="WITHDRAWAL"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/channel_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="CHANNEL: CARD PAYMENT"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="DATE:"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="TIME: "/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/amount_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="AMOUNT: 10.00 NGN"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/transaction_approved_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            app:textAllCaps="true"
+            android:text=""/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="28sp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/isw_main_black"
+            android:text="CARD TYPE: MASTERCARD"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/pan_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="CARD PAN: 675878*****3478"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/expiry_date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="EXPIRY DATE: 2402"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/stan_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="28sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="STAN: 0001021 "/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/aid_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text=""/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/ref_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text=""/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/website_client_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/isw_main_black"
+            android:text="www.fincanigeria.com/"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/powered_by_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/isw_main_black"
+            android:text="Powered by Interswitch"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/version_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/isw_main_black"
+            android:text="SmartPos version 1.0.0"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/quickteller_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/isw_main_black"
+            android:visibility="gone"
+            android:text="www.quickteller.com"/>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_go_to_landing"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/iswWhite"
+            android:textSize="20sp"
+            android:textAllCaps="true"
+            app:cornerRadius="10dp"
+            android:text="@string/isw_finish"
+            app:backgroundTint="@color/iswTextColorSuccessDark"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/isw_print_receipt_transfer"
+            app:rippleColor="@android:color/white" />
+
+    </LinearLayout>
+</ScrollView>
+

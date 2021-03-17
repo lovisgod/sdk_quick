@@ -91,8 +91,11 @@ class TransferStatusFragment() : BaseFragment(TAG) {
 
                 // Getting width, height device
 
-                result?.let { it1 -> getScreenBitMap(it1, this.requireContext(), terminalInfo)?.let { ixx -> resultViewModel.printSlipNew(ixx) } }
-
+//                result?.let { it1 -> getScreenBitMap(it1, this.requireContext(), terminalInfo)?.let { ixx -> resultViewModel.printSlipNew(ixx) } }
+                  result?.let {
+                      val action = TransferStatusFragmentDirections.iswActionIswTransferstatusfragmentToIswReceiptfragment2(paymentModel, transactionResponseModel)
+                      findNavController().navigate(action)
+                  }
 //                if (result?.hasPrintedCustomerCopy == 0) {
 //                    resultViewModel.printSlip(UserType.Customer, it)
 //                    result?.hasPrintedCustomerCopy = 1

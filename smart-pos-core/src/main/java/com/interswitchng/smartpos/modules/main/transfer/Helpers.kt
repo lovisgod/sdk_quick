@@ -3,15 +3,20 @@ package com.interswitchng.smartpos.modules.main.transfer
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.ColorFilter
-import android.graphics.ColorMatrixColorFilter
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.text.Html
+import android.util.DisplayMetrics
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -20,6 +25,8 @@ import com.google.android.material.textview.MaterialTextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.PinEditText
 import com.tapadoo.alerter.Alerter
+import java.time.format.DateTimeFormatter
+import kotlin.reflect.jvm.internal.impl.renderer.RenderingFormat
 
 
 fun EditText.getTextValue(): String {
@@ -154,12 +161,61 @@ fun showSuccessAlert(message: String, activity: Activity) {
             .show()
 }
 
- fun setBW(iv: ImageView) {
-    val brightness = 10f // change values to suite your need
-    val colorMatrix = floatArrayOf(
-            0.33f, 0.33f, 0.33f, 0f, brightness,
-            0.33f, 0.33f, 0.33f, 0f, brightness,
-            0.33f, 0.33f, 0.33f, 0f, brightness, 0f, 0f, 0f, 1f, 0f)
-    val colorFilter: ColorFilter = ColorMatrixColorFilter(colorMatrix)
-    iv.colorFilter = colorFilter
+
+fun getTime(dateTime: String): String {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val formatter  = DateTimeFormatter.ISO_TIME
+        return dateTime.format(formatter)
+    } else {
+        return dateTime.split("T").get(1).toString()
+    }
+}
+
+fun getDate(dateTime: String): String {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val formatter  = DateTimeFormatter.ISO_DATE
+        return dateTime.format(formatter)
+    } else {
+        return dateTime.split("T").get(0).toString()
+    }
+}
+
+/**
+ * Print receipt of the transaction*/
+ fun getScreenBitMap(activity: Activity, view: ScrollView): Bitmap? {
+    var rootview = view
+
+    val displayMetrics = DisplayMetrics()
+    activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+    var width = view.getChildAt(0).width
+    var height = view.getChildAt(0).height
+    // Create a mutable bitmap
+
+    // Create a mutable bitmap
+    val secondScreen = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+    // Created a canvas using the bitmap
+
+    // Created a canvas using the bitmap
+    val c = Canvas(secondScreen)
+
+    val bgDrawable: Drawable? = view.background
+    if (bgDrawable != null) bgDrawable.draw(c) else c.drawColor(Color.WHITE)
+    rootview.draw(c)
+    return secondScreen
+}
+
+fun mask(input: String): String? {
+    val length = input.length
+    val s = input.substring(5, length.toInt() - 4)
+    return input.substring(0, 5) + s.replace("[A-Za-z0-9]".toRegex(), "*") + input.substring(length.toInt() - 4)
+}
+
+fun getHtmlString(value: String): String {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        return Html.fromHtml(value, Html.FROM_HTML_MODE_LEGACY).toString()
+    } else {
+        return value
+    }
 }
