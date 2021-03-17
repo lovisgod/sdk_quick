@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchposcico
+package com.interswitchng.interswitchposfinca
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView

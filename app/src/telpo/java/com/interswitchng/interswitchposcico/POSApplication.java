@@ -1,4 +1,4 @@
-package com.interswitchng.interswitchposcico;
+package com.interswitchng.interswitchposfinca;
 
 import android.app.Application;
 import android.content.Context;
