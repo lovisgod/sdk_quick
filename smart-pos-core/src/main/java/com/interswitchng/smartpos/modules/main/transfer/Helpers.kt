@@ -188,14 +188,15 @@ fun getDate(dateTime: String): String {
     val displayMetrics = DisplayMetrics()
     activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
 
+    //  this get the width of the layout even beyond the visible screen
     var width = view.getChildAt(0).width
+
+    // this will get the height of the layout even beyond the visible screen
     var height = view.getChildAt(0).height
     // Create a mutable bitmap
 
     // Create a mutable bitmap
     val secondScreen = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-
-    // Created a canvas using the bitmap
 
     // Created a canvas using the bitmap
     val c = Canvas(secondScreen)
@@ -208,8 +209,8 @@ fun getDate(dateTime: String): String {
 
 fun mask(input: String): String? {
     val length = input.length
-    val s = input.substring(5, length.toInt() - 4)
-    return input.substring(0, 5) + s.replace("[A-Za-z0-9]".toRegex(), "*") + input.substring(length.toInt() - 4)
+    val s = input.substring(6, length.toInt() - 4)
+    return input.substring(0, 6) + s.replace("[A-Za-z0-9]".toRegex(), "*") + input.substring(length.toInt() - 4)
 }
 
 fun getHtmlString(value: String): String {
@@ -218,4 +219,11 @@ fun getHtmlString(value: String): String {
     } else {
         return value
     }
+}
+
+fun formatExpiryDate(value: String, formatSign: String): String {
+    val firstVal = value.substring(0,2);
+    val secondVal = value.substring(2,4);
+
+    return "$firstVal$formatSign$secondVal"
 }

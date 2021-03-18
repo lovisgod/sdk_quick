@@ -244,6 +244,8 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         // initialize printer
         printer.init()
         printer.printBitmap(slip)
+        // print 2 new lines for distance from logo
+        printer.printStr("\n\n\n", null)
         val status = printer.start()
         return if (status.first == PaxPrinter.PRINT_STATUS_OK) PrintStatus.Ok(status.second)
         else PrintStatus.Error(status.second)

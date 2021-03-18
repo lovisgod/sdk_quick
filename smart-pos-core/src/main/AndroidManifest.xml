@@ -104,6 +104,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/ISW.NoActionBar" />
+
+<!--        <receiver android:name=".modules.main.transfer.UsbReceiver">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
     </application>
 
 </manifest>

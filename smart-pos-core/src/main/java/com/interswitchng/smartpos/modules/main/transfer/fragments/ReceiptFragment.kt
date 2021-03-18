@@ -41,7 +41,7 @@ class ReceiptFragment : BaseFragment(TAG) {
                 }
             }
 
-        }, 3000)
+        }, 1000)
     }
 
     private fun listenToviewModel() {
@@ -74,7 +74,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         }
         card_title.text = "CARD TYPE: ${cardTypeName}"
         pan_title.text = "CARD PAN: ${mask(data?.cardPan.toString())}"
-        expiry_date_title.text = "EXPIRY DATE: ${data?.cardExpiry}"
+        expiry_date_title.text = "EXPIRY DATE: ${formatExpiryDate(data?.cardExpiry.toString(), "/")}"
         stan_title.text  = "STAN: ${data?.getTransactionInfo()?.stan?.padStart(6, '0')}"
         aid_title.text = "AID: ${data?.AID}"
 
@@ -86,7 +86,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         ref_title.text = "REF: ${data?.ref}"
 
         isw_go_to_landing.setOnClickListener {
-            findNavController().popBackStack(R.id.isw_transferlandingfragment, true)
+            findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
         }
     }
 

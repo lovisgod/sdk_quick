@@ -88,13 +88,17 @@ class TransferLandingFragment : BaseFragment(TAG) {
 //    check for settlement account setup for specific transfer
     private fun checkForSettlement() {
         if (Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, "").isNullOrEmpty()) {
-             message = customdailog(context = this.requireContext(),
-                    message = this.requireContext().resources.getString(R.string.isw_concat,
-                            "Please setup your settlement account number") )
-            {
-                message.dismiss()
-                findNavController().navigate(R.id.isw_transfersettlementpinfragment)
-            }
+//             message = customdailog(context = this.requireContext(),
+//                    message = this.requireContext().resources.getString(R.string.isw_concat,
+//                            "Please setup your settlement account number") )
+//            {
+//                message.dismiss()
+//                findNavController().navigate(R.id.isw_transfersettlementpinfragment)
+//            }
+            Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NUMBER, Constants.DEFAULT_SETTLEMENT_ACOOUNT_NUMBER)
+            Prefs.putString(Constants.SETTLEMENT_BANK_CODE, Constants.DEFAULT_SETTLEMENT_BANK_CODE)
+            Prefs.putString(Constants.SETTLEMENT_BANK_NAME, Constants.DEFAULT_SETTLEMENT_BANK_NAME)
+            Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NAME, Constants.DEFAULT_SETTLEMENT_ACCOUNT_NAME)
         }
     }
 
