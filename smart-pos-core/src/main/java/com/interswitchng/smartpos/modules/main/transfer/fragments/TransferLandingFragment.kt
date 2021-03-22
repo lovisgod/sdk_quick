@@ -54,6 +54,11 @@ class TransferLandingFragment : BaseFragment(TAG) {
             findNavController().navigate(action)
         }
 
+        isw_bill_pay_card.setOnClickListener {
+            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswChoosecategoryfragment()
+            findNavController().navigate(action)
+        }
+
 //        isw_transfer_card.setOnClickListener {
 //            var paymentModel = PaymentModel()
 //            paymentModel.type = PaymentModel.TransactionType.TRANSFER

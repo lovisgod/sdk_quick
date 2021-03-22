@@ -18,6 +18,7 @@
     <color name="iswGrey">#80B6B6B6</color>
     <color name="iswSelectedTypeColor">#A2A7B8</color>
     <color name="iswTransparent">#66000000</color>
+    <color name="iswSearchBg">#002140</color>
     <color name="iswColorTopBackground">#2E5BFF</color>
     <color name="iswColorLightGrey">#B3FFFFFF</color>
     <color name="iswTextColorBlack">#4E5053</color>

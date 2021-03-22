@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <ImageView
+        android:id="@+id/back_arrow"
+        app:layout_constraintTop_toTopOf="@+id/isw_transfer_bank_search_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/isw_transfer_bank_search_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        app:srcCompat = "@drawable/isw_ic_navback"
+        android:tint="@color/iswTextColorBlack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+    <EditText
+        android:id="@+id/isw_transfer_bank_search_bar"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:focusable="true"
+        app:iconifiedByDefault="false"
+        android:textColor="@color/iswWhite"
+        android:hint="Search here"
+        android:textColorHint="@color/iswWhite"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="10dp"
+        app:layout_constraintStart_toEndOf="@+id/back_arrow"
+        android:background="@drawable/isw_custom_tranfer_search_dark_background"
+        android:layout_margin="16dp">
+    </EditText>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/isw_transfer_bank_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        tools:listitem="@layout/isw_biller_item"
+        tools:itemCount="4"
+        app:layout_constraintTop_toBottomOf="@+id/isw_transfer_bank_search_bar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

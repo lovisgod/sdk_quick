@@ -223,21 +223,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.10" />
+            app:layout_constraintGuide_percent="0.15" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/isw_guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/isw_guideline"/>
+            app:layout_constraintGuide_begin="4dp"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/isw_guideline3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="@dimen/isw_guideline"/>
+            app:layout_constraintGuide_end="4dp"/>
 
 
     <ImageView
@@ -275,8 +275,8 @@
 
         <LinearLayout
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="@id/isw_guideline2"
-            app:layout_constraintEnd_toStartOf="@id/isw_guideline3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -284,7 +284,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="80dp"
+                        android:layout_marginTop="50dp"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -295,7 +295,7 @@
                             android:id="@+id/category_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="10dp"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -309,20 +309,20 @@
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/isw_bill_airtime"
                                 style="@style/Theme.MaterialComponents.Light"
-                                android:layout_width="154dp"
+                                android:layout_width="150dp"
                                 android:layout_height="157dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="24dp"
                                 android:clickable="true"
                                 android:focusable="true"
                                 app:cardCornerRadius="10dp"
-                                app:cardElevation="10dp"
+                                app:cardElevation="3dp"
                                 app:strokeWidth="0.2dp">
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
-                                    android:padding="10dp">
+                                    android:padding="5dp">
 
                                     <com.google.android.material.textview.MaterialTextView
                                         android:id="@+id/isw_airtime_text"
@@ -346,20 +346,20 @@
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/isw_bill_cable_tv"
                                 style="@style/Theme.MaterialComponents.Light"
-                                android:layout_width="154dp"
+                                android:layout_width="150dp"
                                 android:layout_height="157dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="24dp"
                                 android:clickable="true"
                                 android:focusable="true"
                                 app:cardCornerRadius="10dp"
-                                app:cardElevation="10dp"
+                                app:cardElevation="3dp"
                                 app:strokeWidth="0.2dp">
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
-                                    android:padding="10dp">
+                                    android:padding="5dp">
 
                                     <com.google.android.material.textview.MaterialTextView
                                         android:id="@+id/isw_cable_tv_text"
@@ -383,20 +383,20 @@
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/isw_bill_utility"
                                 style="@style/Theme.MaterialComponents.Light"
-                                android:layout_width="154dp"
+                                android:layout_width="150dp"
                                 android:layout_height="157dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="24dp"
                                 android:clickable="true"
                                 android:focusable="true"
                                 app:cardCornerRadius="10dp"
-                                app:cardElevation="10dp"
+                                app:cardElevation="3dp"
                                 app:strokeWidth="0.2dp">
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
-                                    android:padding="10dp">
+                                    android:padding="5dp">
 
                                     <com.google.android.material.textview.MaterialTextView
                                         android:id="@+id/isw_utility_text"
@@ -420,20 +420,20 @@
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/isw_bill_mobile_data"
                                 style="@style/Theme.MaterialComponents.Light"
-                                android:layout_width="154dp"
+                                android:layout_width="150dp"
                                 android:layout_height="157dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="24dp"
                                 android:clickable="true"
                                 android:focusable="true"
                                 app:cardCornerRadius="10dp"
-                                app:cardElevation="10dp"
+                                app:cardElevation="3dp"
                                 app:strokeWidth="0.2dp">
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
-                                    android:padding="10dp">
+                                    android:padding="5dp">
 
                                     <com.google.android.material.textview.MaterialTextView
                                         android:id="@+id/isw_mobile_data_text"
