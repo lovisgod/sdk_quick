@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
+import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
@@ -35,10 +36,25 @@ class TransferLandingFragment : BaseFragment(TAG) {
         // check for settlement account setup for specific transfer
         checkForSettlement()
         handleClicks()
+        setVersionCode()
         terminalInfo?.let {
             cardViewModel.getToken(it)
         }
 
+    }
+
+    private fun setVersionCode() {
+        val xxx = try {
+            this.requireContext().getPackageManager()
+                    .getPackageInfo(this.requireContext().getPackageName(), 0)
+                    .versionName
+                    .split("-")
+                    .get(0)
+        } catch (e:Exception) {
+            println(e)
+        }
+        val versionName = "Version: $xxx"
+        version_name.text = versionName
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)

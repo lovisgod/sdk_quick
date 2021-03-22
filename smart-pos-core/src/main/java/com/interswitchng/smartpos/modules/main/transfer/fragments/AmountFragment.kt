@@ -64,6 +64,9 @@ class AmountFragment : BaseFragment(TAG) {
         //cached temporarily the destination account number and receiving institution id
         Prefs.putString("destinationAccountNumber", benefeciaryDetails.accountNumber)
         Prefs.putString("receivingInstitutionId", bankDetails.recvInstId)
+
+//        Prefs.putString("destinationAccountNumber", Constants.DEFAULT_SETTLEMENT_ACOOUNT_NUMBER)
+//        Prefs.putString("receivingInstitutionId", Constants.DEFAULT_SETTLEMENT_BANK_CODE)
         val direction = AmountFragmentDirections.iswActionIswAmountfragmentToIswTransfercardtransactionfragment(payment)
         navigate(direction)
     }

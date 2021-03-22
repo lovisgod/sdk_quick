@@ -159,6 +159,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
                     }
                     when (beneficiary) {
                         is Some -> {
+                            println("this beneficary ${beneficiary.value}")
                             _beneficiaryPayload = beneficiary.value
                             isValid = true
 

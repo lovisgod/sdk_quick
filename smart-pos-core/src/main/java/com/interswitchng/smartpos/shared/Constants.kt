@@ -205,7 +205,9 @@ object Constants {
             BankModel("636088", "044", "Access Bank"),
             BankModel("636092", "076", "Polaris"),
             BankModel("627480", "033", "UBA"),
-            BankModel("627629", "057", "Zenith Bank")
+            BankModel("627629", "057", "Zenith Bank"),
+            BankModel("50613602009", "342", "Finca Mfb")
+
     )
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"
@@ -213,10 +215,14 @@ object Constants {
     const val SETTLEMENT_ACCOUNT_NAME = "SETTLEMENT_ACCOUNT_NAME"
     const val SETTLEMENT_BANK_NAME = "SETTLEMENT_BANK_NAME"
     const val SETTLEMENT_PIN = "090909"
-    const val DEFAULT_SETTLEMENT_ACOOUNT_NUMBER = "2089430464"
-    const val DEFAULT_SETTLEMENT_BANK_CODE = "627629"
-    const val DEFAULT_SETTLEMENT_ACCOUNT_NAME = "Ayooluwa Olosunde"
-    const val DEFAULT_SETTLEMENT_BANK_NAME = "Zenith Bank"
+
+
+    const val DEFAULT_SETTLEMENT_ACOOUNT_NUMBER = "1000268036"
+    const val DEFAULT_SETTLEMENT_BANK_CODE = "50613602009"
+    const val DEFAULT_SETTLEMENT_ACCOUNT_NAME = "FINCA MICROFINANCE MOBILE BANKING"
+    const val DEFAULT_SETTLEMENT_BANK_NAME = "Finca Mfb"
+
+    
     const val FOR_SETTLEMENT_ACCOUNT_SETUP = "FOR_SETTLEMENT_ACCOUNT_SETUP"
 
 }
