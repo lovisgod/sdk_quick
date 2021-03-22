@@ -15,4 +15,9 @@
         android:visible="true"
         />
 
+    <item android:id="@+id/resetSettlementPin"
+        android:title="@string/isw_reset_settlement_pin"
+        android:visible="true"
+        />
+
 </menu>

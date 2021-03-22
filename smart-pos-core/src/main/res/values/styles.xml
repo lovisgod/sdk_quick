@@ -219,10 +219,9 @@
         <item name="android:windowBackground">@drawable/isw_popup_bg</item>
     </style>
 
-    <style name="IswPopupMenuStyle">
+    <style name="IswPopupMenuStyle" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:popupBackground">@drawable/isw_popupmenu_padded_bg</item>
-        <item name="android:dropDownHorizontalOffset">-4dp</item>
-        <item name="android:dropDownVerticalOffset">4dp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="IswCircularDeterminateProgressBar">

@@ -11,7 +11,8 @@
     <string name="isw_title_generating_code">Generating Code</string>
     <string name="isw_title_loading">Loading…</string>
     <string name="isw_title_get_bank_code">get bank code</string>
-    <string name="isw_title_print_receipt">Print Receipt</string>
+    <string name="isw_title_print_receipt">Print Customer Receipt</string>
+    <string name="isw_title_print_receipt_agent">Print Agent and Customer Receipt</string>
     <string name="isw_title_transaction_approved">Transaction Approved</string>
     <string name="isw_title_transaction_in_progress">Transaction in Progress</string>
     <string name="isw_sub_title_processing_progress">Processing transaction…</string>
@@ -293,9 +294,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="isw_hello_blank_fragment">Hello blank fragment</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="isw_configure_terminal">Configure Terminal</string>
-    <string name="isw_configure_settlement_account">Configure Settlement Account</string>
-    <string name="isw_view_settlement_account">View Settlement Account</string>
+    <string name="isw_configure_terminal"><font fgcolor='#ffffff'>Configure Terminal</font></string>
+    <string name="isw_configure_settlement_account"><font fgcolor='#ffffff'>Configure Settlement Account</font></string>
+    <string name="isw_view_settlement_account"><font fgcolor='#ffffff'>View Settlement Account</font></string>
+    <string name="isw_reset_settlement_pin"><font fgcolor='#ffffff'>Reset Settlement Pin</font></string>
     <string name="isw_transfer_title">Transfer</string>
     <string name="isw_transfer_account_number_hint">Enter Account Number</string>
     <string name="isw_transfer_fund_to_another_account">Transfer to another account</string>
@@ -304,5 +306,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="isw_select_a_bank">Select a Bank</string>
+    <string name="isw_enter_enter_setup_password">ENTER YOUR SETUP PASSWORD</string>
 
 </resources>

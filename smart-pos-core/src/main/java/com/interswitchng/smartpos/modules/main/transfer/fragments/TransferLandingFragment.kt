@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.modules.main.transfer.fragments
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
 import androidx.annotation.RequiresApi
@@ -11,13 +12,17 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.transfer.clear
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
+import com.interswitchng.smartpos.modules.main.transfer.showErrorAlert
+import com.interswitchng.smartpos.modules.main.transfer.showSuccessAlert
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_transfer_landing.*
+import kotlinx.android.synthetic.main.isw_layout_insert_pin_reuseable.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -74,8 +79,11 @@ class TransferLandingFragment : BaseFragment(TAG) {
             inflater.inflate(R.menu.isw_generic_transfer_settings_options, popup.menu)
             popup.setOnMenuItemClickListener {
                 when(it.itemId) {
-                    R.id.configSettings -> {
-                        iswPos.goToSettingsUpdatePage()
+                    R.id.setTerminal -> {
+//                        iswPos.goToSettingsUpdatePage()
+                        val bundlex = Bundle()
+                        bundlex.putString("configure_pass", "configure_pass")
+                        findNavController().navigate(R.id.isw_transfersettlementpinfragment, bundlex)
                         return@setOnMenuItemClickListener true
                     }
 
@@ -84,19 +92,33 @@ class TransferLandingFragment : BaseFragment(TAG) {
                         return@setOnMenuItemClickListener true
                     }
 
+                    R.id.resetSettlementPin -> {
+                        val bundle = Bundle()
+                        bundle.putBoolean("reset_pin", true)
+                        findNavController().navigate(R.id.isw_transfersettlementpinfragment, bundle)
+                        return@setOnMenuItemClickListener true
+                    }
+
                     R.id.viewSettlementAccount -> {
                         findNavController().navigate(R.id.isw_viewsettlementaccountfragment)
                         return@setOnMenuItemClickListener true
                     }
                     else -> {
-                        iswPos.goToSettingsUpdatePage()
+//                        iswPos.goToSettingsUpdatePage()
                         return@setOnMenuItemClickListener true
 
                     }
                 }
             }
-            popup.show()
 
+            if (Prefs.getString(Constants.SETTLEMENT_PIN_SET, "").isNullOrEmpty()) {
+                popup.menu.findItem(R.id.resetSettlementPin).isVisible = false
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                popup.gravity = Gravity.END
+
+            }
+            popup.show()
         }
     }
 
@@ -104,17 +126,17 @@ class TransferLandingFragment : BaseFragment(TAG) {
 //    check for settlement account setup for specific transfer
     private fun checkForSettlement() {
         if (Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, "").isNullOrEmpty()) {
-//             message = customdailog(context = this.requireContext(),
-//                    message = this.requireContext().resources.getString(R.string.isw_concat,
-//                            "Please setup your settlement account number") )
-//            {
-//                message.dismiss()
-//                findNavController().navigate(R.id.isw_transfersettlementpinfragment)
-//            }
-            Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NUMBER, Constants.DEFAULT_SETTLEMENT_ACOOUNT_NUMBER)
-            Prefs.putString(Constants.SETTLEMENT_BANK_CODE, Constants.DEFAULT_SETTLEMENT_BANK_CODE)
-            Prefs.putString(Constants.SETTLEMENT_BANK_NAME, Constants.DEFAULT_SETTLEMENT_BANK_NAME)
-            Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NAME, Constants.DEFAULT_SETTLEMENT_ACCOUNT_NAME)
+             message = customdailog(context = this.requireContext(),
+                    message = this.requireContext().resources.getString(R.string.isw_concat,
+                            "Please setup your settlement account number") )
+            {
+                message.dismiss()
+                findNavController().navigate(R.id.isw_transfersettlementpinfragment)
+            }
+//            Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NUMBER, Constants.DEFAULT_SETTLEMENT_ACOOUNT_NUMBER)
+//            Prefs.putString(Constants.SETTLEMENT_BANK_CODE, Constants.DEFAULT_SETTLEMENT_BANK_CODE)
+//            Prefs.putString(Constants.SETTLEMENT_BANK_NAME, Constants.DEFAULT_SETTLEMENT_BANK_NAME)
+//            Prefs.putString(Constants.SETTLEMENT_ACCOUNT_NAME, Constants.DEFAULT_SETTLEMENT_ACCOUNT_NAME)
         }
     }
 

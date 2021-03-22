@@ -2,6 +2,8 @@ package com.interswitchng.smartpos.modules.main.transfer.fragments
 
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -13,12 +15,13 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.viewmodel.TransactionResultViewModel
 import kotlinx.android.synthetic.main.fragment_receipt.*
+import kotlinx.coroutines.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 class ReceiptFragment : BaseFragment(TAG) {
     private val receiptFragmentArgs by navArgs<ReceiptFragmentArgs>()
-
+    private             val job = Job()
     val data by lazy { receiptFragmentArgs.transactionResponse.transactionResult }
 
     private val resultViewModel: TransactionResultViewModel by viewModel()
@@ -37,13 +40,28 @@ class ReceiptFragment : BaseFragment(TAG) {
         Timer().schedule(object : TimerTask() {
             override fun run() {
                 this@ReceiptFragment.requireActivity().runOnUiThread {
-                    getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
+                    doPrinting()
                 }
             }
 
         }, 1000)
     }
 
+    private fun doPrinting() {
+        if (receiptFragmentArgs.withAgent) {
+            val scope = CoroutineScope(Dispatchers.Main + job)
+            scope.launch {
+                getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
+                delay(3000L)
+                customer_title.text = "*** AGENT COPY ***"
+                delay(1000L)
+                getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
+            }
+        } else {
+            getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
+        }
+
+    }
     private fun listenToviewModel() {
         val owner = { lifecycle }
         with(resultViewModel) {
@@ -97,7 +115,10 @@ class ReceiptFragment : BaseFragment(TAG) {
     }
 
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
 
 
 }
