@@ -16,6 +16,9 @@
         <action
             android:id="@+id/isw_action_isw_transferlandingfragment_to_isw_amountfragment"
             app:destination="@id/isw_amountfragment" />
+        <action
+            android:id="@+id/isw_action_isw_transferlandingfragment_to_isw_airtimerechargeinputfragment3"
+            app:destination="@id/isw_airtimerechargeinputfragment3" />
     </fragment>
     <fragment
         android:id="@+id/isw_transferinputfragment"
@@ -109,4 +112,8 @@
         android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.ViewSettleMentAccountFragment"
         android:label="isw_fragment_view_settle_ment_account"
         tools:layout="@layout/isw_fragment_view_settle_ment_account" />
+    <fragment
+        android:id="@+id/isw_airtimerechargeinputfragment3"
+        android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.AirtimeRechargeInputFragment"
+        android:label="AirtimeRechargeInputFragment" />
 </navigation>

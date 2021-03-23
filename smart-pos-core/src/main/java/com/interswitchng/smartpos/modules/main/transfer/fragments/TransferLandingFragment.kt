@@ -49,19 +49,21 @@ class TransferLandingFragment : BaseFragment(TAG) {
             var paymentModel = PaymentModel()
             paymentModel.type = PaymentModel.TransactionType.TRANSFER
             val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
-                    paymentModel = paymentModel, BankModel = BankModel("","", ""), BeneficiaryModel = BeneficiaryModel())
-//            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
+                    paymentModel = paymentModel,
+                    BankModel = BankModel("","", ""),
+                    BeneficiaryModel = BeneficiaryModel()
+            )
+//          val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
             findNavController().navigate(action)
-        }
+            }
 
-//        isw_transfer_card.setOnClickListener {
-//            var paymentModel = PaymentModel()
-//            paymentModel.type = PaymentModel.TransactionType.TRANSFER
-//            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
-//                    paymentModel = paymentModel, BankModel = BankModel("","", ""), BeneficiaryModel = BeneficiaryModel())
-////            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
-//            findNavController().navigate(action)
-//        }
+        isw_bill_pay_card.setOnClickListener {
+            logger.log("clicked the listener")
+            var paymentModel = PaymentModel()
+            paymentModel.type = PaymentModel.TransactionType.BILL_PAYMENT
+            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAirtimerechargeinputfragment3()
+            navigate(action)
+        }
 
         isw_settings_icon.setOnClickListener {
            var popup = PopupMenu(this.requireContext(), isw_settings_icon, 0, 0, R.style.IswPopupMenuStyle)
@@ -86,12 +88,10 @@ class TransferLandingFragment : BaseFragment(TAG) {
                     else -> {
                         iswPos.goToSettingsUpdatePage()
                         return@setOnMenuItemClickListener true
-
                     }
                 }
             }
             popup.show()
-
         }
     }
 
