@@ -25,9 +25,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
     // font sizes
     private val NORMAL_FONT = Pair(EFontTypeAscii.FONT_8_16, EFontTypeExtCode.FONT_16_16)
-    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_16_32, EFontTypeExtCode.FONT_24_24)
-    private val VERY_LARGE_FONT = Pair(EFontTypeAscii.FONT_16_16, EFontTypeExtCode.FONT_16_32)
-
+    private val LARGE_FONT = Pair(EFontTypeAscii.FONT_8_32, EFontTypeExtCode.FONT_16_32)
 
     private val line: String = "-".repeat(Companion.SCREEN_NORMAL_LENGTH)
 
@@ -54,9 +52,8 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         // print logo
         printCompanyLogo(printer)
 
-        // set the font of the printer
-        printer.fontSet(LARGE_FONT.first, LARGE_FONT.second)
         // print 2 new lines for distance from logo
+        printer.fontSet(NORMAL_FONT.first, NORMAL_FONT.second)
         printer.printStr("\n", null)
 
         // print users copy
@@ -67,7 +64,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         for (item in slip) printItem(printer, item)
 
         // print website at end of slip
-        val website = PrintObject.Data("www.fincanigeria.com/", PrintStringConfiguration(displayCenter = true, isBold = true))
+        val website = PrintObject.Data("www.fincanigeria.com", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(printer, website)
 
         // print thank you message at end of slip
@@ -95,8 +92,6 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         else PrintStatus.Error(result.second)
     }
 
-
-
     private fun printItem(paxPrinter: PaxPrinter, item: PrintObject) {
 
         when (item) {
@@ -108,7 +103,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
                 // set font size
                 val fontSize = when {
-                    printConfig.isTitle -> VERY_LARGE_FONT
+                    printConfig.isTitle -> LARGE_FONT
                     else -> NORMAL_FONT
                 }
 
@@ -155,8 +150,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
             val smallScale =
                     if (it.width == it.height) getScaledDownBitmap(it)
                     else getScaledDownBitmap(it, threshold = 200)
-            val logoPadding:Float = 0.7F
-            val paddingLeft = ((Companion.SCREEN_NORMAL_LENGTH * 12.5) - smallScale.width) / logoPadding // 1 dot in print is 12.5px
+            val paddingLeft = ((Companion.SCREEN_NORMAL_LENGTH * 12.5) - smallScale.width) / 2 // 1 dot in print is 12.5px
 
             // add padding to bitmap
             val outputBitmap = Bitmap.createBitmap(smallScale.width + paddingLeft.toInt(), smallScale.height, Bitmap.Config.ARGB_8888)
@@ -235,8 +229,8 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
     companion object {
         // screen caharacter length
-        private const val SCREEN_LARGE_LENGTH = 24
-        private const val SCREEN_NORMAL_LENGTH = 24
+        private const val SCREEN_LARGE_LENGTH = 40
+        private const val SCREEN_NORMAL_LENGTH = 48
     }
 
     override fun printSlipNew(slip: Bitmap): PrintStatus {
