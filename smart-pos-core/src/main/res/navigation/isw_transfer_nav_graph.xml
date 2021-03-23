@@ -115,5 +115,13 @@
     <fragment
         android:id="@+id/isw_choosecategoryfragment"
         android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.ChooseCategoryFragment"
-        android:label="ChooseCategoryFragment" />
+        android:label="ChooseCategoryFragment" >
+        <action
+            android:id="@+id/isw_action_isw_choosecategoryfragment_to_isw_billerscategoryfragment"
+            app:destination="@id/isw_billerscategoryfragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_billerscategoryfragment"
+        android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.BillersCategoryFragment"
+        android:label="BillersCategoryFragment" />
 </navigation>

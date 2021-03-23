@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.modules.main.transfer.fragments
+package com.interswitchng.smartpos.modules.main.billPayment.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.shared.Constants
-import com.interswitchng.smartpos.shared.activities.BaseFragment
-
 
 
 class BillersCategoryFragment : DialogFragment() {

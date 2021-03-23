@@ -25,4 +25,5 @@
     <color name="iswColorLightBlue">#8097B1</color>
     <color name="iswlightBlue">#8089CFF0</color>
     <color name="iswWhite">#FFFFFF</color>
+    <color name="isw_input_grey_bg_color">#51C4C4C4</color>
 </resources>
