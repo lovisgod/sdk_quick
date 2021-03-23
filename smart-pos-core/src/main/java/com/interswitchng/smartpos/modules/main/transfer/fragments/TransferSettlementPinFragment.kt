@@ -87,7 +87,13 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
     private fun checkForPin() {
         val pinAvailable = Prefs.getString(Constants.SETTLEMENT_PIN_SET, "")
         if (pinAvailable.isNullOrEmpty()) {
-            isw_pin_text.text = "Enter a new settlement pin"
+            if (this.arguments != null && this.requireArguments().getString("configure_pass", "").isNotEmpty()) {
+                isw_insert_pin_settlement_layout.hide()
+                isw_insert_password_configure_layout.reveal()
+            }else {
+                isw_pin_text.text = "Enter a new settlement pin"
+            }
+
         } else  if (this.arguments != null && this.requireArguments().getString("configure_pass", "").isNotEmpty()) {
             isw_insert_pin_settlement_layout.hide()
             isw_insert_password_configure_layout.reveal()

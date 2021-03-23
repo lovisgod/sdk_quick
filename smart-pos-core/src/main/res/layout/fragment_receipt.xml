@@ -62,7 +62,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text="TERMINAL ID: 21W90CJFSHDF"/>
@@ -93,6 +96,7 @@
             android:textSize="25sp"
             android:layout_marginTop="5dp"
             android:textColor="@color/isw_main_black"
+            android:textAllCaps="true"
             android:text="WITHDRAWAL"/>
 
         <com.google.android.material.textview.MaterialTextView
@@ -101,7 +105,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text="CHANNEL: CARD PAYMENT"/>
@@ -112,7 +119,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text="DATE:"/>
@@ -123,29 +133,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text="TIME: "/>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/isw_main_black"
-            android:layout_margin="5dp"/>
-
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/amount_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="25sp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="@color/isw_main_black"
-            android:text="AMOUNT: 10.00 NGN"/>
 
 
         <View
@@ -160,10 +154,31 @@
             android:layout_height="wrap_content"
             android:textSize="28sp"
             android:layout_marginTop="5dp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
+            android:textStyle="bold"
             android:textColor="@color/isw_main_black"
             app:textAllCaps="true"
             android:text=""/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/amount_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="25sp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="AMOUNT: 10.00 NGN"/>
 
         <View
             android:layout_width="match_parent"
@@ -180,6 +195,10 @@
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:layout_marginTop="5dp"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:textColor="@color/isw_main_black"
             android:text="CARD TYPE: MASTERCARD"/>
 
@@ -189,10 +208,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="27sp"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
+            android:gravity="start"
             android:textColor="@color/isw_main_black"
-            android:text="CARD PAN: 675878*****3478"/>
+            android:text="CARD PAN:456786********2345"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/expiry_date_title"
@@ -200,7 +222,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text="EXPIRY DATE: 2402"/>
@@ -211,7 +236,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text="STAN: 0001021 "/>
@@ -229,7 +257,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text=""/>
@@ -240,7 +271,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text=""/>

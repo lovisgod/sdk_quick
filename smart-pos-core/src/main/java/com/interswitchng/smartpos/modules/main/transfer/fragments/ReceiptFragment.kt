@@ -99,7 +99,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         if (data?.getTransactionStatus()?.responseCode.toString() == "00") {
             transaction_approved_title.text = "${data?.getTransactionStatus()?.responseMessage}"
         } else {
-            transaction_approved_title.text = "TRANSACTION FAILED: \n ${data?.getTransactionStatus()?.responseMessage}"
+            transaction_approved_title.text = "${data?.getTransactionStatus()?.responseMessage}"
         }
         ref_title.text = "REF: ${data?.ref}"
 
