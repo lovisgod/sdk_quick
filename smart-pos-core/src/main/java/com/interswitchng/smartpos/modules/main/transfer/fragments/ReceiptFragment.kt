@@ -97,6 +97,7 @@ class ReceiptFragment : BaseFragment(TAG) {
         aid_title.text = "AID: ${data?.AID}"
 
         if (data?.getTransactionStatus()?.responseCode.toString() == "00") {
+            retain_receipt_title.reveal()
             transaction_approved_title.text = "${data?.getTransactionStatus()?.responseMessage}"
         } else {
             transaction_approved_title.text = "${data?.getTransactionStatus()?.responseMessage}"

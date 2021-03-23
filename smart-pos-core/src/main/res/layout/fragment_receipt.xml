@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
+            android:textStyle="bold"
             android:textColor="@color/isw_main_black"
             android:text="*** CUSTOMER COPY ***"/>
 
@@ -153,7 +154,7 @@
             android:id="@+id/transaction_approved_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:layout_marginTop="5dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10dp"
@@ -171,7 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
@@ -312,6 +313,16 @@
             android:layout_marginTop="10dp"
             android:textColor="@color/isw_main_black"
             android:text="SmartPos version 1.0.0"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/retain_receipt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/isw_main_black"
+            android:text="@string/isw_please_retain_receipt"/>
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/quickteller_title"
             android:layout_width="wrap_content"
