@@ -315,6 +315,38 @@ class TerminalSettingsActivity : MenuActivity() {
                 configSettings.text = "Configured to NIBBS"
             }
 
+
+
+            // set the terminal-info download container based on kimono flag
+            terminalInfoDownloadContainer.visibility =
+                    if (button.isChecked) View.GONE else View.VISIBLE
+
+            // set the agentId container based on kimono flag
+            agentId.visibility =
+                    if (button.isChecked) View.VISIBLE else View.GONE
+
+            // set the agentEmail container based on kimono flag
+            agentEmail.visibility =
+                    if (button.isChecked) View.VISIBLE else View.GONE
+
+            terminalDownloadConfigKimonoContainer.visibility =
+                    if (button.isChecked) View.VISIBLE else View.GONE
+
+        }
+
+
+        switchToKimono3.setOnCheckedChangeListener { button, _ ->
+
+            // hide error messages for non required fields
+            if (button.isChecked) {
+                etServerUrl.setText(Constants.KIMONO_THREE_BASE_URl)
+
+            } else {
+                etServerUrl.setText(Constants.KIMONO_OLD_BASE_URL)
+            }
+
+
+
             // set the terminal-info download container based on kimono flag
             terminalInfoDownloadContainer.visibility =
                     if (button.isChecked) View.GONE else View.VISIBLE

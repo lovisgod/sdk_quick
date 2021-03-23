@@ -37,6 +37,7 @@ object Constants {
 
     //    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
     internal const val KIMONO_THREE_BASE_URl = "https://kimono.interswitchng.com"
+    interface const val KIMONO_OLD_BASE_URL = "https://webpay.interswitchng.com/"
     internal const val KIMONO_END_POINT = "kmw/kimonoservice"
     internal const val KIMONO_TRANSFER_FULL_URL = "https://saturn.interswitchng.com/kimonotms/sec/transferprocessor/process"
     internal const val KIMONO_THREE_TRANSFER_FULL_URL = "https://kimono.interswitchng.com/kmw/kimonoservice"
