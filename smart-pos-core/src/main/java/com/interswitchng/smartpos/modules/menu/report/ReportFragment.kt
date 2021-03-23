@@ -37,7 +37,7 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
 
     private lateinit var endOfDayPrintDialog: EndOfDayPrintDialog
 
-    private val transactionTypes = arrayOf("All", "Inquiry", "Completion", "Cash-out")
+    private val transactionTypes = arrayOf("All", "Cash-out")
     private var transactionType: TransactionType? = null
 
 
@@ -147,12 +147,12 @@ class ReportFragment : BaseFragment(TAG), DatePickerDialog.OnDateSetListener, Ad
         // get the neame of the transaction type
         val transactionTypeName = transactionTypes[position]
         transactionType = when (transactionTypeName) {
-            "Inquiry" -> {
-                TransactionType.CashOutInquiry
-            }
-            "Completion" -> {
-                TransactionType.CashOutPay
-            }
+//            "Inquiry" -> {
+//                TransactionType.CashOutInquiry
+//            }
+//            "Completion" -> {
+//                TransactionType.CashOutPay
+//            }
 
             "Cash-out" -> {
                 TransactionType.Transfer
