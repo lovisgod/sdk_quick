@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
-import com.interswitchng.smartpos.modules.main.transfer.TokenPassportResponse
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
@@ -28,12 +27,9 @@ import com.interswitchng.smartpos.shared.models.utils.XmlStringConverter
 import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandler
-import com.interswitchng.smartpos.shared.services.iso8583.utils.XmlPullParserHandlerBP
 import com.interswitchng.smartpos.shared.services.kimono.models.*
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import com.interswitchng.smartpos.shared.services.kimono.models.PurchaseRequest
-import com.interswitchng.smartpos.shared.utilities.DeviceUtils
-import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import com.interswitchng.smartpos.shared.utilities.Logger
 import com.pixplicity.easyprefs.library.Prefs
 import okhttp3.MediaType
@@ -324,10 +320,43 @@ internal class KimonoHttpServiceImpl(private val context: Context,
         val bodyCashOut = XmlStringConverter().toBody(xmlString)
 
         try {
-            var url = Constants.KIMONO_TRANSFER_END_POINT
-            val responseBody = httpService.makeTransfer(bodyCashOut, "Bearer ${Prefs.getString("token", "")}").run()
+            var url = Constants.KIMONO_TRANSFER_FULL_URL
+            if (terminalInfo.isKimono3) {
+                url = Constants.KIMONO_THREE_TRANSFER_FULL_URL
+            }
+            val responseBody = httpService.makeTransfer(url, bodyCashOut, "Bearer ${Prefs.getString("token", "")}").run()
             val purchaseResponse = responseBody.body()
-
+            val now = Date()
+            val pinStatus = when {
+                purchaseResponse?.responseCode == IsoUtils.OK -> "PIN Verified"
+                else -> "PIN Unverified"
+            }
+            if (purchaseResponse != null) {
+                transactionResult = TransactionResult(
+                        paymentType = PaymentType.Card,
+                        dateTime = DateUtils.universalDateFormat.format(now),
+                        amount = txnInfo.amount.toString(),
+                        type = TransactionType.Transfer,
+                        authorizationCode = purchaseResponse.authId,
+                        responseMessage = IsoUtils.getIsoResultMsg(purchaseResponse.responseCode)!!,
+                        responseCode = purchaseResponse.responseCode,
+                        cardPan = txnInfo.cardPAN,
+                        cardExpiry = txnInfo.cardExpiry,
+                        cardType = CardTransactionsFragment.CompletionData.cardType,
+                        stan = purchaseResponse.stan,
+                        pinStatus = pinStatus,
+                        AID = txnInfo.aid,
+                        code = "",
+                        telephone = purchaseResponse.customerId,
+                        icc = txnInfo.iccString,
+                        src = txnInfo.src,
+                        csn = txnInfo.csn,
+                        cardPin = txnInfo.cardPIN,
+                        cardTrack2 = txnInfo.cardTrack2,
+                        time = now.time
+                )
+                logTransaction(transactionResult)
+            }
             return if (!responseBody.isSuccessful || purchaseResponse?.responseCode == null) {
                 TransactionResponse(
                         responseCode = IsoUtils.TIMEOUT_CODE,
@@ -347,8 +376,8 @@ internal class KimonoHttpServiceImpl(private val context: Context,
                         ref = purchaseResponse.referenceNumber
                 )
 
-
             }
+
 
         } catch (e: Exception) {
             //logger.log(e.localizedMessage)

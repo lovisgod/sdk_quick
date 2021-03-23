@@ -156,6 +156,7 @@ internal class ReportViewModel(
 
         val transactionTypeString = when (transactionType) {
             "CashOutPay" -> "Completion"
+            "Transfer" -> "Cash-Out"
             else -> "Inquiry"
         }
 

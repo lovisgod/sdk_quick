@@ -36,7 +36,10 @@ object Constants {
 
 
     //    internal const val KIMONO_END_POINT = "kmw/v2/kimonoservice"
+    internal const val KIMONO_THREE_BASE_URl = "https://kimono.interswitchng.com"
     internal const val KIMONO_END_POINT = "kmw/kimonoservice"
+    internal const val KIMONO_TRANSFER_FULL_URL = "https://saturn.interswitchng.com/kimonotms/sec/transferprocessor/process"
+    internal const val KIMONO_THREE_TRANSFER_FULL_URL = "https://kimono.interswitchng.com/kmw/kimonoservice"
 
     internal const val SATURN_END_POINT = "https://saturn.interswitchng.com/api/"
 
@@ -47,7 +50,6 @@ object Constants {
 
     internal const val KIMONO_3_END_POINT = "https://kimono.interswitchng.com/kmw/kimonoservice"
 
-    internal const val KIMONO_TRANSFER_END_POINT = "https://kimono.interswitchng.com/kmw/kimonoservice/amex"
 
     internal const val KIMONO_TOKEN_END_POINT = "https://saturn.interswitchng.com:443/kimonotms/requesttoken/perform-process"
 
@@ -215,7 +217,7 @@ object Constants {
     const val SETTLEMENT_ACCOUNT_NAME = "SETTLEMENT_ACCOUNT_NAME"
     const val SETTLEMENT_BANK_NAME = "SETTLEMENT_BANK_NAME"
     const val SETTLEMENT_PIN = "090909"
-    const val DEFAULT_CONFIGURE_PASSWORD = "ISWpassCONFIG2021"
+    const val DEFAULT_CONFIGURE_PASSWORD = "ISWPASS"
     const val SETTLEMENT_PIN_SET = "SETTLEMENT_PIN_SET"
 
 

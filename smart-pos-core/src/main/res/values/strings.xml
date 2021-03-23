@@ -298,6 +298,7 @@
     <string name="isw_configure_settlement_account"><font fgcolor='#ffffff'>Configure Settlement Account</font></string>
     <string name="isw_view_settlement_account"><font fgcolor='#ffffff'>View Settlement Account</font></string>
     <string name="isw_reset_settlement_pin"><font fgcolor='#ffffff'>Reset Settlement Pin</font></string>
+    <string name="isw_print_eod"><font fgcolor='#ffffff'>PRINT EOD</font></string>
     <string name="isw_transfer_title">Transfer</string>
     <string name="isw_transfer_account_number_hint">Enter Account Number</string>
     <string name="isw_transfer_fund_to_another_account">Transfer to another account</string>

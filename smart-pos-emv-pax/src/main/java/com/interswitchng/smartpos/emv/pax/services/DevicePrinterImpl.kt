@@ -67,7 +67,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         for (item in slip) printItem(printer, item)
 
         // print website at end of slip
-        val website = PrintObject.Data("www.cico.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
+        val website = PrintObject.Data("www.fincanigeria.com/", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(printer, website)
 
         // print thank you message at end of slip
@@ -78,9 +78,9 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
         val posVersion = PrintObject.Data("SmartPOS version 1.0.0", PrintStringConfiguration(displayCenter = true))
         printItem(printer, posVersion)
 
-        // print quicktellerwebsite at end of slip
-        val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
-        printItem(printer, quicktellerWebsite)
+//        // print quicktellerwebsite at end of slip
+//        val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
+//        printItem(printer, quicktellerWebsite)
 
 
 
@@ -109,7 +109,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
                 // set font size
                 val fontSize = when {
                     printConfig.isTitle -> VERY_LARGE_FONT
-                    else -> LARGE_FONT
+                    else -> NORMAL_FONT
                 }
 
                 paxPrinter.fontSet(fontSize.first, fontSize.second)
@@ -138,7 +138,7 @@ class DevicePrinterImpl constructor(private val context: Context) : DevicePrinte
 
 
     fun printCompanyLogo(printer: PaxPrinter) {
-        val drawable = ContextCompat.getDrawable(context, R.drawable.ic_bankly_logo)!!
+        val drawable = ContextCompat.getDrawable(context, R.drawable.finca_logo)!!
         val companyLogo: Bitmap = run {
             return@run when (drawable) {
                 is BitmapDrawable -> drawable.bitmap

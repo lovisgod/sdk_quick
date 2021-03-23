@@ -60,8 +60,8 @@ internal interface IKimonoHttpService {
     fun getAgentId(@Url endpoint: String): retrofit2.Response<AgentIdResponse>
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
-    @POST(Constants.KIMONO_END_POINT)
-    fun makeTransfer(@Body purchaseRequest: RequestBody, @Header("Authorization") token: String): Simple<BillPaymentResponse>
+    @POST()
+    fun makeTransfer(@Url url: String, @Body purchaseRequest: RequestBody, @Header("Authorization") token: String): Simple<BillPaymentResponse>
 
 
 

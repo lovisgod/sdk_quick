@@ -166,7 +166,7 @@ internal class PurchaseRequest
                                         <track2>${track2}</track2>
                                     </track2>
                                 </cardData>
-                                <originalTransmissionDateTime>${date}</originalTransmissionDateTime>
+                                <originalTransmissionDateTime>${DateUtils.universalDateFormat.format(Date())}</originalTransmissionDateTime>
                                 <stan>${transaction.stan}</stan>
                                 <fromAccount>${transaction.accountType.name}</fromAccount>
                                 <toAccount></toAccount>

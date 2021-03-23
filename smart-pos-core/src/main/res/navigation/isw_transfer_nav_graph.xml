@@ -16,6 +16,9 @@
         <action
             android:id="@+id/isw_action_isw_transferlandingfragment_to_isw_amountfragment"
             app:destination="@id/isw_amountfragment" />
+        <action
+            android:id="@+id/isw_action_isw_transferlandingfragment_to_isw_reportfragment"
+            app:destination="@id/isw_reportfragment" />
     </fragment>
     <fragment
         android:id="@+id/isw_transferinputfragment"
@@ -127,4 +130,8 @@
             app:argType="boolean"
             android:defaultValue="false" />
     </fragment>
+    <fragment
+        android:id="@+id/isw_reportfragment"
+        android:name="com.interswitchng.smartpos.modules.menu.report.ReportFragment"
+        android:label="ReportFragment" />
 </navigation>

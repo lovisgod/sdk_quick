@@ -6,8 +6,10 @@ import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.interfaces.library.UserStore
 import com.interswitchng.smartpos.shared.interfaces.retrofit.*
+import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.utilities.ToStringConverterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -137,7 +139,6 @@ internal val networkModule = module {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
 //        val kimonoServiceUrl = "https://qa.interswitchng.com/"
-
         val kimonoServiceUrl = "https://webpay.interswitchng.com/"
 
         val builder = Retrofit.Builder()

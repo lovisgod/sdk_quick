@@ -117,7 +117,7 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
 
     fun printCompanyLogo() {
         printer.setAlgin(UsbThermalPrinter.ALGIN_MIDDLE)
-        val drawable = ContextCompat.getDrawable(context, R.drawable.isw_cico_logo)!!
+        val drawable = ContextCompat.getDrawable(context, R.drawable.finca_logo)!!
         val companyLogo: Bitmap = run {
             return@run when (drawable) {
                 is BitmapDrawable -> drawable.bitmap

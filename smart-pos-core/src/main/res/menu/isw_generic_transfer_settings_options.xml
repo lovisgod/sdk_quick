@@ -15,6 +15,11 @@
         android:visible="true"
         />
 
+    <item android:id="@+id/printEod"
+        android:title="@string/isw_print_eod"
+        android:visible="true"
+        />
+
     <item android:id="@+id/resetSettlementPin"
         android:title="@string/isw_reset_settlement_pin"
         android:visible="true"
