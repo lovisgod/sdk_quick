@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:text="@string/isw_action_cancel"
             app:rippleColor="@android:color/white" />
 
@@ -98,8 +98,6 @@
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
             android:text="@string/isw_proceed"
             app:rippleColor="@android:color/white" />
     </LinearLayout>
