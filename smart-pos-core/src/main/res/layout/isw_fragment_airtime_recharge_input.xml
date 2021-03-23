@@ -89,7 +89,8 @@
         </TextView>
 
         <EditText
-            android:id="@+id/isw_transfer_input_bank"
+            android:id="@+id/isw_recharge_input_phone"
+            android:maxLength="11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Phone Number"
@@ -131,7 +132,7 @@
             android:inputType="number" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/isw_transfer_input_proceed"
+            android:id="@+id/isw_recharge_input_proceed"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:enabled="false"

@@ -5,10 +5,8 @@
 
     <stroke
         android:width="3dp"
-        android:color="@color/iswlightBlue"
+        android:color="@color/iswColorPrimary"
         />
-
-    <solid android:color="@color/iswColorLightGrey" />
 
     <size
         android:width="60dp"
