@@ -40,7 +40,7 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         for (item in slip) printItem(item)
 
         // print website at end of slip
-        val website = PrintObject.Data("www.cico.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
+        val website = PrintObject.Data("www.fincanigeria.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(website)
 
         // print thank you message at end of slip
@@ -51,9 +51,9 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         val posVersion = PrintObject.Data("SmartPOS version 1.0.0", PrintStringConfiguration(displayCenter = true))
         printItem(posVersion)
 
-        // print quickteller website at end of slip
-        val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
-        printItem(quicktellerWebsite)
+//        // print quickteller website at end of slip
+//        val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
+//        printItem(quicktellerWebsite)
 
 
 
