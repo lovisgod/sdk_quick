@@ -8,7 +8,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion targetSdk
     defaultConfig {
-        applicationId "com.interswitchng.interswitchposcico"
+        applicationId "com.interswitchng.interswitchpos"
         minSdkVersion minSdk
         targetSdkVersion targetSdk
         multiDexEnabled true
@@ -20,7 +20,7 @@ android {
                 variant.outputs.all{
                     def date = new Date()
                     def formattedDate = date.format('yyMMdd')
-                    String appName = "CICO"
+                    String appName = "finca"
                     outputFileName = "${appName}-${variant.versionName}-${formattedDate}.apk"
                 }
         }

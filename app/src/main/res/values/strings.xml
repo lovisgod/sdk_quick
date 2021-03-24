@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cico</string>
+    <string name="app_name">Finca</string>
     <string name="action_pay">PAY</string>
     <string name="terminal_configuration">Terminal Configuration</string>
     <string name="title_activity_drawer">DrawerActivity</string>

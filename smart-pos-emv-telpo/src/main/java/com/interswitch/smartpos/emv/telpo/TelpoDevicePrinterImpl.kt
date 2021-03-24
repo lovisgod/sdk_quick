@@ -40,7 +40,7 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         for (item in slip) printItem(item)
 
         // print website at end of slip
-        val website = PrintObject.Data("www.cico.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
+        val website = PrintObject.Data("www.fincanigeria.ng", PrintStringConfiguration(displayCenter = true, isBold = true))
         printItem(website)
 
         // print thank you message at end of slip
@@ -50,10 +50,10 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
         // print pos version at end of slip
         val posVersion = PrintObject.Data("SmartPOS version 1.0.0", PrintStringConfiguration(displayCenter = true))
         printItem(posVersion)
-
-        // print quickteller website at end of slip
-        val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
-        printItem(quicktellerWebsite)
+//
+//        // print quickteller website at end of slip
+//        val quicktellerWebsite = PrintObject.Data("www.quickteller.com", PrintStringConfiguration(displayCenter = true, isBold = true))
+//        printItem(quicktellerWebsite)
 
 
 
@@ -68,7 +68,17 @@ class TelpoDevicePrinterImpl constructor(private val context: Context) : DeviceP
     }
 
     override fun printSlipNew(slip: Bitmap): PrintStatus {
-        TODO("Not yet implemented")
+        printer.printLogo(slip, false)
+        // print 2 new lines for distance from logo
+//        printer.printString("\n\n\n", null)
+        return try {
+            printer.printString()
+            // set step distance
+            printer.walkPaper(12)
+            PrintStatus.Ok("Printed")
+        } catch (exception: TelpoException) {
+            PrintStatus.Ok("Failed to print: ${exception.localizedMessage}")
+        }
     }
 
     override fun canPrint(): PrintStatus {
