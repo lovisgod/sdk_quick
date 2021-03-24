@@ -132,6 +132,10 @@
             android:name="withAgent"
             app:argType="boolean"
             android:defaultValue="false" />
+        <argument
+            android:name="reprint"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/isw_reportfragment"

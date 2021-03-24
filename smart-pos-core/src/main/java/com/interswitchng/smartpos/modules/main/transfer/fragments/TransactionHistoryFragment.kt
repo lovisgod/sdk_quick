@@ -4,8 +4,12 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.transfer.adapters.TransactionHistoryAdaptar
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
@@ -55,7 +59,6 @@ class TransactionHistoryFragment : BaseFragment(TAG), TransactionHistoryAdaptar.
             println(it)
             it?.let {
                 println(it)
-//                adapter.setData(it as ArrayList<TransactionLog>)
                 adapter.submitList(it)
                 adapter.notifyDataSetChanged()
                 rvTransactions.reveal()
@@ -79,6 +82,7 @@ class TransactionHistoryFragment : BaseFragment(TAG), TransactionHistoryAdaptar.
         adapter = TransactionHistoryAdaptar(this)
         rvTransactions.layoutManager = LinearLayoutManager(this.requireContext(), LinearLayoutManager.VERTICAL, false)
         rvTransactions.adapter = adapter
+        rvTransactions.addItemDecoration(DividerItemDecoration(this.requireContext(), DividerItemDecoration.VERTICAL))
     }
 
     private fun setupUI() {
@@ -98,7 +102,13 @@ class TransactionHistoryFragment : BaseFragment(TAG), TransactionHistoryAdaptar.
     }
 
     override fun onclick(data: TransactionResult) {
-
+        val action = TransactionHistoryFragmentDirections.iswActionIswTransactionhistoryfragmentToIswReceiptfragment2(
+                PaymentModel( amount = data.amount.toInt()),
+                TransactionResponseModel(data, PaymentModel.TransactionType.TRANSFER),
+                false,
+                true
+        )
+        findNavController().navigate(action)
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {

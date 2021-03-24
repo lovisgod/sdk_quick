@@ -33,7 +33,10 @@ class ReceiptFragment : BaseFragment(TAG) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         listenToviewModel()
-        handleprint()
+        if (!receiptFragmentArgs.reprint) {
+            handleprint()
+
+        }
     }
 
     private fun handleprint() {
@@ -104,8 +107,25 @@ class ReceiptFragment : BaseFragment(TAG) {
         }
         ref_title.text = "REF: ${data?.ref}"
 
+        if (receiptFragmentArgs.reprint) {
+            customer_title.text = "*** AGENT COPY ***"
+            reprint_title.reveal()
+            isw_reprint_btn.reveal()
+        }
+
         isw_go_to_landing.setOnClickListener {
             findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
+        }
+
+        isw_reprint_btn.setOnClickListener {
+            val scope = CoroutineScope(Dispatchers.Main + job)
+            scope.launch {
+                isw_reprint_btn.hide()
+                delay(100L)
+                doPrinting()
+                delay(100L)
+                isw_reprint_btn.reveal()
+            }
         }
     }
 

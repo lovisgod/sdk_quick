@@ -358,6 +358,25 @@
 
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/isw_reprint_btn"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/iswWhite"
+            android:textSize="20sp"
+            android:textAllCaps="true"
+            app:cornerRadius="10dp"
+            android:text="@string/isw_title_re_print_receipt"
+            app:backgroundTint="@color/iswColorPrimary"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/isw_print_receipt_transfer"
+            app:rippleColor="@android:color/white" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/isw_go_to_landing"
             android:layout_width="match_parent"
             android:visibility="visible"
