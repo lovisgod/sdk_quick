@@ -75,6 +75,8 @@ internal class TransactionLogServiceImpl(private val monarchy: Monarchy) : Trans
 
     override fun getTransactionFor(date: Date, transactionType: TransactionType, pagedListConfig: PagedList.Config): LiveData<PagedList<TransactionLog>> {
         // get the date range for current date as morning and midnight
+
+        println("this is so much getting herererer")
         val (morning, midnight) = getDateRange(date)
 
         // query for stream of transaction logs for specified day by creating dataSource factory

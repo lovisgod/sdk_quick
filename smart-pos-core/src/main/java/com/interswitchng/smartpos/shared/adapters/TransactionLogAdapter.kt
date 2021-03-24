@@ -102,6 +102,7 @@ class TransactionLogAdapter : PagedListAdapter<TransactionLog, RecyclerView.View
 
                 val txnTypeString = when {
                     type.name == TransactionType.CashOutPay.name -> "Completion"
+                    type.name == TransactionType.Transfer.name -> "Cash-Out"
                     else -> "Inquiry"
                 }
                 tvTxnType.text = txnTypeString

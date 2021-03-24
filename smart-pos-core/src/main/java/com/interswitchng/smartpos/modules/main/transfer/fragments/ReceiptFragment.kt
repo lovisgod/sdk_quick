@@ -21,7 +21,7 @@ import java.util.*
 
 class ReceiptFragment : BaseFragment(TAG) {
     private val receiptFragmentArgs by navArgs<ReceiptFragmentArgs>()
-    private             val job = Job()
+    private val job = Job()
     val data by lazy { receiptFragmentArgs.transactionResponse.transactionResult }
 
     private val resultViewModel: TransactionResultViewModel by viewModel()

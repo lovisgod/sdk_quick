@@ -288,6 +288,29 @@
             android:background="@color/isw_main_black"
             android:layout_margin="5dp"/>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reprint_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="25sp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="REPRINTED COPY"/>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/website_client_title"

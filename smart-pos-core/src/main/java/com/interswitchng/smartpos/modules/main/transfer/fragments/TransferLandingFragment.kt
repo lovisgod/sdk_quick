@@ -108,6 +108,11 @@ class TransferLandingFragment : BaseFragment(TAG) {
                         findNavController().navigate(R.id.isw_reportfragment)
                         return@setOnMenuItemClickListener true
                     }
+
+                    R.id.transactionHistory -> {
+                        findNavController().navigate(R.id.isw_transactionhistoryfragment)
+                        return@setOnMenuItemClickListener true
+                    }
                     else -> {
 //                        iswPos.goToSettingsUpdatePage()
                         return@setOnMenuItemClickListener true

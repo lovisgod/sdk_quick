@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.di
 import com.interswitchng.smartpos.modules.authentication.AuthenticationViewModel
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.transfer.TransferViewModel
+import com.interswitchng.smartpos.modules.main.transfer.viewmodels.TransactionHistoryViewmodel
 import com.interswitchng.smartpos.modules.main.viewmodels.FingerprintViewModel
 import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
 import com.interswitchng.smartpos.modules.menu.report.ReportViewModel
@@ -28,6 +29,9 @@ internal val viewModels = module {
     viewModel { UssdViewModel(get()) }
 
     viewModel { QrViewModel(get()) }
+
+    /** TransactionHistory Viewmodel**/
+    viewModel { TransactionHistoryViewmodel(get(), get()) }
 
     viewModel {
         val store: KeyValueStore = get()
