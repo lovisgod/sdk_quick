@@ -3,18 +3,14 @@ package com.interswitchng.smartpos.modules.main.billPayment.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.billPayment.models.AirtimeRechargeModel
 import com.interswitchng.smartpos.modules.main.billPayment.models.BillPaymentCategoriesModel
 import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCallBackListener
 import com.interswitchng.smartpos.modules.main.billPayment.utils.PackageBottomSheetDialog
-import com.interswitchng.smartpos.modules.main.billPayment.utils.RechargeSummaryDialog
+import com.interswitchng.smartpos.modules.main.billPayment.utils.BillPaymentSummaryDialog
 import com.interswitchng.smartpos.modules.main.transfer.makeActive
 import com.interswitchng.smartpos.modules.main.transfer.makeInActive
 import com.interswitchng.smartpos.shared.activities.BaseFragment
@@ -103,7 +99,7 @@ class DataPlanFragment : BaseFragment(TAG), NetworkListCallBackListener<BillPaym
     }
 
     fun showRechargeSummary() {
-        fragmentManager.let { it1 -> RechargeSummaryDialog().show(it1!!, "Summary Dialog Show") }
+        fragmentManager.let { it1 -> BillPaymentSummaryDialog().show(it1!!, "Summary Dialog Show") }
     }
 
     override fun onDataReceived(data: BillPaymentCategoriesModel) {

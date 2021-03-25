@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:paddingHorizontal="18dp"
+    android:layout_marginBottom="15dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -15,20 +17,19 @@
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             android:layout_centerHorizontal="true"
             app:searchIcon="@android:drawable/ic_menu_search"
             app:searchHintIcon="@android:drawable/ic_menu_search"
-            app:queryHint="Filter"
+            app:queryHint="filter for a package"
             android:theme="@style/ISWCustomSearchViewSheet"
-            android:gravity="center"
             android:focusableInTouchMode="true"
             app:closeIcon="@android:drawable/ic_menu_close_clear_cancel"
             app:iconifiedByDefault="false"
-            android:focusable="true"
             android:layout_marginTop="20dp"
             android:background="@drawable/isw_search_view_custom"
-            android:clickable="true"/>
+            android:clickable="true"
+            />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

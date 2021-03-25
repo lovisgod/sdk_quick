@@ -49,6 +49,21 @@ class PackageBottomSheetDialog(private val callBackListener: NetworkListCallBack
         val categories = arrayListOf(
                 BillPaymentCategoriesModel("Mtn Hynet flex","Flex 3,000", "1"),
                 BillPaymentCategoriesModel("Double stuff","Flex 3,000", "2"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
                 BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3")
         )
         val recyclerView = isw_package_list_dataplan
