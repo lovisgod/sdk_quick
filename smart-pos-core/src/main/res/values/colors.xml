@@ -24,4 +24,5 @@
     <color name="iswColorLightBlue">#8097B1</color>
     <color name="iswlightBlue">#8089CFF0</color>
     <color name="iswWhite">#FFFFFF</color>
+    <color name="iswDarkBlue">#002140</color>
 </resources>

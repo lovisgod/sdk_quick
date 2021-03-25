@@ -7,10 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCallBackListener
-import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
-import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
-import com.interswitchng.smartpos.shared.Constants
 
 class RechargeSummaryDialog(): DialogFragment() {
     val TAG = "isw_recharge_summary_dialog"

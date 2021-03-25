@@ -43,6 +43,8 @@ class TransferLandingFragment : BaseFragment(TAG) {
 
     }
 
+
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     private fun handleClicks() {
         isw_transfer_card.setOnClickListener {
@@ -61,7 +63,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
             logger.log("clicked the listener")
             var paymentModel = PaymentModel()
             paymentModel.type = PaymentModel.TransactionType.BILL_PAYMENT
-            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAirtimerechargeinputfragment3()
+            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswDataplanfragment2()
             navigate(action)
         }
 

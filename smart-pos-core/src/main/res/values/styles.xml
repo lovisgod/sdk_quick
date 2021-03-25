@@ -214,6 +214,30 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
+    <style name="ISWPackageCustomShapeAppearanceBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="bottomSheetStyle">@style/ISWAppModalStyle</item>
+    </style>
+
+    <style name="ISWAppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/isw_bottom_bg</item>
+    </style>
+
+    <style name="ISWCustomSearchViewSheet" parent="Widget.AppCompat.SearchView.ActionBar">
+        <item name="android:editTextColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">23dp</item>
+
+    </style>
+
 
     <style name="ISWCustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/isw_popup_bg</item>

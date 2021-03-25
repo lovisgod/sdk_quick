@@ -121,11 +121,9 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
         }
     }
 
-
     fun showRechargeSummary() {
         fragmentManager.let { it1 -> RechargeSummaryDialog().show(it1!!, "Summary Dialog Show") }
     }
-
 
     override fun onDataReceived(data: String) {
         selectedNetwork = data

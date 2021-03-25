@@ -219,6 +219,7 @@
     <string name="isw_done">Done</string>
     <string name="isw_sent_str">Sent</string>
     <string name="isw_account_number">Account Number</string>
+    <string name="isw_data_plan_recharge">Data Plan</string>
     <string name="isw_remarks">Remarks</string>
     <string name="isw_arbiter_status_request">Arbiter Status</string>
     <string name="isw_arbiter_hint">Transaction ID or Customer name</string>
@@ -303,5 +304,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="isw_phone_number_recharge_text_view_text">Phone Number</string>
     <string name="isw_phone_number_recharge_amount_text_view_text">Amount</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
