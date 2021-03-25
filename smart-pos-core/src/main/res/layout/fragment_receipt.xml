@@ -151,6 +151,30 @@
             android:layout_margin="5dp"/>
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reprint_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="25sp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="REPRINT COPY"/>
+
+        <View
+            android:id="@+id/line_after_reprint1"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/transaction_approved_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -181,6 +205,30 @@
             android:gravity="center"
             android:textColor="@color/isw_main_black"
             android:text="AMOUNT: 10.00 NGN"/>
+
+        <View
+            android:id="@+id/line_before_reprint2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/isw_main_black"
+            android:layout_margin="5dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reprint_title_"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="25sp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/isw_main_black"
+            android:text="REPRINT COPY"/>
 
         <View
             android:layout_width="match_parent"
@@ -288,22 +336,6 @@
             android:background="@color/isw_main_black"
             android:layout_margin="5dp"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/reprint_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="25sp"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/isw_main_black"
-            android:text="REPRINTED COPY"/>
-
 
         <View
             android:layout_width="match_parent"
@@ -335,7 +367,7 @@
             android:textSize="20sp"
             android:layout_marginTop="10dp"
             android:textColor="@color/isw_main_black"
-            android:text="SmartPos version 1.0.0"/>
+            android:text="SmartPos Version 1.0.0"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/retain_receipt_title"

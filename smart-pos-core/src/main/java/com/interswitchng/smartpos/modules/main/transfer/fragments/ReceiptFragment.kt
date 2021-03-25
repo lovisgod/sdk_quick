@@ -56,7 +56,7 @@ class ReceiptFragment : BaseFragment(TAG) {
             scope.launch {
                 getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
                 delay(3000L)
-                customer_title.text = "*** AGENT COPY ***"
+                customer_title.text = "*** MERCHANT COPY ***"
                 delay(1000L)
                 getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
             }
@@ -108,8 +108,11 @@ class ReceiptFragment : BaseFragment(TAG) {
         ref_title.text = "REF: ${data?.ref}"
 
         if (receiptFragmentArgs.reprint) {
-            customer_title.text = "*** AGENT COPY ***"
+            customer_title.text = "*** MERCHANT COPY ***"
             reprint_title.reveal()
+            reprint_title_.reveal()
+            line_after_reprint1.reveal()
+            line_before_reprint2.reveal()
             isw_reprint_btn.reveal()
         }
 

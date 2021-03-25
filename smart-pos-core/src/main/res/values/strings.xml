@@ -12,7 +12,7 @@
     <string name="isw_title_loading">Loading…</string>
     <string name="isw_title_get_bank_code">get bank code</string>
     <string name="isw_title_print_receipt">Print Customer Receipt</string>
-    <string name="isw_title_print_receipt_agent">Print Agent and Customer Receipt</string>
+    <string name="isw_title_print_receipt_agent">Print Merchant and Customer Receipt</string>
     <string name="isw_title_transaction_approved">Transaction Approved</string>
     <string name="isw_title_transaction_in_progress">Transaction in Progress</string>
     <string name="isw_sub_title_processing_progress">Processing transaction…</string>
