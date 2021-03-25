@@ -21,7 +21,7 @@ import java.util.*
 
 class ReceiptFragment : BaseFragment(TAG) {
     private val receiptFragmentArgs by navArgs<ReceiptFragmentArgs>()
-    private             val job = Job()
+    private val job = Job()
     val data by lazy { receiptFragmentArgs.transactionResponse.transactionResult }
 
     private val resultViewModel: TransactionResultViewModel by viewModel()
@@ -33,7 +33,10 @@ class ReceiptFragment : BaseFragment(TAG) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         listenToviewModel()
-        handleprint()
+        if (!receiptFragmentArgs.reprint) {
+            handleprint()
+
+        }
     }
 
     private fun handleprint() {
@@ -53,7 +56,7 @@ class ReceiptFragment : BaseFragment(TAG) {
             scope.launch {
                 getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
                 delay(3000L)
-                customer_title.text = "*** AGENT COPY ***"
+                customer_title.text = "*** MERCHANT COPY ***"
                 delay(1000L)
                 getScreenBitMap(this@ReceiptFragment.requireActivity(), root_view_for_print_page)?.let { resultViewModel.printSlipNew(it) }
             }
@@ -104,8 +107,28 @@ class ReceiptFragment : BaseFragment(TAG) {
         }
         ref_title.text = "REF: ${data?.ref}"
 
+        if (receiptFragmentArgs.reprint) {
+            customer_title.text = "*** MERCHANT COPY ***"
+            reprint_title.reveal()
+            reprint_title_.reveal()
+            line_after_reprint1.reveal()
+            line_before_reprint2.reveal()
+            isw_reprint_btn.reveal()
+        }
+
         isw_go_to_landing.setOnClickListener {
             findNavController().popBackStack(R.id.isw_transferlandingfragment, false)
+        }
+
+        isw_reprint_btn.setOnClickListener {
+            val scope = CoroutineScope(Dispatchers.Main + job)
+            scope.launch {
+                isw_reprint_btn.hide()
+                delay(100L)
+                doPrinting()
+                delay(100L)
+                isw_reprint_btn.reveal()
+            }
         }
     }
 

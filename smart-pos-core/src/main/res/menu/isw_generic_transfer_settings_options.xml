@@ -19,6 +19,10 @@
         android:title="@string/isw_print_eod"
         android:visible="true"
         />
+    <item android:id="@+id/transactionHistory"
+        android:title="@string/isw_transaction_history"
+        android:visible="true"
+        />
 
     <item android:id="@+id/resetSettlementPin"
         android:title="@string/isw_reset_settlement_pin"

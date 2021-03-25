@@ -6,6 +6,7 @@
     android:layout_height="100dp"
     android:orientation="vertical"
     android:gravity="center_vertical"
+    android:id="@+id/item_container"
     android:paddingTop="@dimen/isw_content_padding"
     android:paddingStart="@dimen/isw_content_padding"
     android:paddingEnd="@dimen/isw_content_padding"

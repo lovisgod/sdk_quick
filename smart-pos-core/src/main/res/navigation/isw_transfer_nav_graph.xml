@@ -19,6 +19,9 @@
         <action
             android:id="@+id/isw_action_isw_transferlandingfragment_to_isw_reportfragment"
             app:destination="@id/isw_reportfragment" />
+        <action
+            android:id="@+id/isw_action_isw_transferlandingfragment_to_isw_transactionhistoryfragment"
+            app:destination="@id/isw_transactionhistoryfragment" />
     </fragment>
     <fragment
         android:id="@+id/isw_transferinputfragment"
@@ -129,9 +132,21 @@
             android:name="withAgent"
             app:argType="boolean"
             android:defaultValue="false" />
+        <argument
+            android:name="reprint"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/isw_reportfragment"
         android:name="com.interswitchng.smartpos.modules.menu.report.ReportFragment"
         android:label="ReportFragment" />
+    <fragment
+        android:id="@+id/isw_transactionhistoryfragment"
+        android:name="com.interswitchng.smartpos.modules.main.transfer.fragments.TransactionHistoryFragment"
+        android:label="TransactionHistoryFragment" >
+        <action
+            android:id="@+id/isw_action_isw_transactionhistoryfragment_to_isw_receiptfragment2"
+            app:destination="@id/isw_receiptfragment2" />
+    </fragment>
 </navigation>

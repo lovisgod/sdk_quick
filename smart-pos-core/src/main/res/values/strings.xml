@@ -12,7 +12,7 @@
     <string name="isw_title_loading">Loading…</string>
     <string name="isw_title_get_bank_code">get bank code</string>
     <string name="isw_title_print_receipt">Print Customer Receipt</string>
-    <string name="isw_title_print_receipt_agent">Print Agent and Customer Receipt</string>
+    <string name="isw_title_print_receipt_agent">Print Merchant and Customer Receipt</string>
     <string name="isw_title_transaction_approved">Transaction Approved</string>
     <string name="isw_title_transaction_in_progress">Transaction in Progress</string>
     <string name="isw_sub_title_processing_progress">Processing transaction…</string>
@@ -299,6 +299,7 @@
     <string name="isw_view_settlement_account"><font fgcolor='#ffffff'>View Settlement Account</font></string>
     <string name="isw_reset_settlement_pin"><font fgcolor='#ffffff'>Reset Settlement Pin</font></string>
     <string name="isw_print_eod"><font fgcolor='#ffffff'>End of Day</font></string>
+    <string name="isw_transaction_history"><font fgcolor='#ffffff'>Transaction History</font></string>
     <string name="isw_transfer_title">Transfer</string>
     <string name="isw_transfer_account_number_hint">Enter Account Number</string>
     <string name="isw_transfer_fund_to_another_account">Transfer to another account</string>
@@ -309,5 +310,6 @@
     <string name="isw_select_a_bank">Select a Bank</string>
     <string name="isw_enter_enter_setup_password">ENTER YOUR SETUP PASSWORD</string>
     <string name="isw_please_retain_receipt">Please Retain Receipt</string>
+
 
 </resources>

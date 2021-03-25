@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.di
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.transfer.repo.RealmRepo
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -28,7 +29,6 @@ internal val serviceModule = module() //override = true
     single<HttpService> { HttpServiceImpl(get()) }
 
     single<SaturnService> { SaturnServiceImpl(get()) }
-
 
     factory<IsoService> { (isKimono: Boolean) ->
 
@@ -65,6 +65,11 @@ internal val serviceModule = module() //override = true
 
         TransactionLogServiceImpl(monarchy)
     }
+
+    // realm repository
+    single<RealmRepo> { RealmRepo(get()) }
+
+
     factory<IsoSocket> {
         val resource = androidContext().resources
 

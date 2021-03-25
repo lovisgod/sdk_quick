@@ -57,7 +57,9 @@ internal class ReportViewModel(
     }
 
     fun getReport(day: Date, transactionType: TransactionType): LiveData<PagedList<TransactionLog>> {
-        return transactionLogService.getTransactionFor(day, transactionType, config)
+        val response = transactionLogService.getTransactionFor(day, transactionType, config)
+        println(response.value?.get(0))
+        return response
     }
 
     fun printEndOfDay(date: Date, transactions: List<TransactionLog>, transactionType: TransactionType) {
