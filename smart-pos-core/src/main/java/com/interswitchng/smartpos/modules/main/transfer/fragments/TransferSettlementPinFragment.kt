@@ -63,7 +63,7 @@ class TransferSettlementPinFragment : BottomSheetDialogFragment() {
 
         isw_pass_edit_text_reusable.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString().length >= 7)
+                if (s.toString().length >= 6)
                 {
                     isw_pass_edit_text_reusable.hideKeyboard()
                     isw_button_pass_proceed_reuseable.makeActive()
