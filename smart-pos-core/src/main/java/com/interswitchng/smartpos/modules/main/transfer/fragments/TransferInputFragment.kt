@@ -77,7 +77,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
                             validateBeneficiary()
                         }
                     }
-
                 }, 300)
                 accountNumber = s.toString()
             }
