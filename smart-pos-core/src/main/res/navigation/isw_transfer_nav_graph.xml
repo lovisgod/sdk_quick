@@ -119,9 +119,28 @@
         <action
             android:id="@+id/isw_action_isw_choosecategoryfragment_to_isw_billerscategoryfragment"
             app:destination="@id/isw_billerscategoryfragment" />
+        <action
+            android:id="@+id/isw_action_isw_choosecategoryfragment_to_isw_airtimerechargeinputfragment"
+            app:destination="@id/isw_airtimerechargeinputfragment" />
     </fragment>
     <fragment
         android:id="@+id/isw_billerscategoryfragment"
         android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.BillersCategoryFragment"
         android:label="BillersCategoryFragment" />
+    <fragment
+        android:id="@+id/isw_airtimerechargeinputfragment"
+        android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.AirtimeRechargeInputFragment"
+        android:label="AirtimeRechargeInputFragment" >
+        <action
+            android:id="@+id/isw_action_isw_airtimerechargeinputfragment_to_isw_billpaymentcardfragment"
+            app:destination="@id/isw_billpaymentcardfragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_billpaymentcardfragment"
+        android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.BillPaymentCardFragment"
+        android:label="BillPaymentCardFragment" >
+        <argument
+            android:name="paymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel" />
+    </fragment>
 </navigation>

@@ -9,6 +9,7 @@
     <color name="iswColorQrCodeBackground">#f8f8f9</color>
     <color name="iswTextColorDark">#363636</color>
     <color name="iswTextColorSuccess">#85e95d</color>
+    <color name="iswDarkBlue">#002140</color>
     <color name="iswTextColorSuccessDark">#FF62A73E</color>
     <color name="iswTextColorSecondary">#004570</color>
     <color name="iswTextColorSecondaryDark">#00365b</color>

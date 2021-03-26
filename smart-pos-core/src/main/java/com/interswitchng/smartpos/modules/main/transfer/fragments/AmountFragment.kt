@@ -63,7 +63,6 @@ class AmountFragment : BaseFragment(TAG) {
         payment.newPayment {
             amount = latestAmountWithoutComma.toInt()//latestAmount.toDouble()
             formattedAmount = latestAmount
-
         }
 
         //cached temporarily the destination account number and receiving institution id

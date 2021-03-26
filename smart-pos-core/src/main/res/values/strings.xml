@@ -223,6 +223,7 @@
     <string name="isw_done">Done</string>
     <string name="isw_sent_str">Sent</string>
     <string name="isw_account_number">Account Number</string>
+    <string name="isw_bill_payment_airtime_recharge">Airtime Recharge</string>
     <string name="isw_data_plan_recharge">Data Plan</string>
     <string name="isw_remarks">Remarks</string>
     <string name="isw_arbiter_status_request">Arbiter Status</string>

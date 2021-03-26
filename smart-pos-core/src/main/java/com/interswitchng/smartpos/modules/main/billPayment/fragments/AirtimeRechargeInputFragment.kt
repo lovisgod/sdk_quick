@@ -9,17 +9,19 @@ import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.adapters.NetworkRecyclerAdapter
-import com.interswitchng.smartpos.modules.main.billPayment.models.AirtimeRechargeModel
-import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCallBackListener
+import com.interswitchng.smartpos.modules.main.billPayment.models.*
 import com.interswitchng.smartpos.modules.main.billPayment.utils.BillPaymentSummaryDialog
+import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.makeActive
 import com.interswitchng.smartpos.modules.main.transfer.makeInActive
+import com.interswitchng.smartpos.shared.Constants.NETWORKS_LIST
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_fragment_airtime_recharge_input.*
 
-class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListener<String> {
-    val networks = arrayOf<String>("MTN", "GLO", "AIRTEL", "9MOBILE")
-    var selectedNetwork: String = ""
+class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListener<NetworksModel>, DialogCallBackListener<Boolean> {
+    val networks = NETWORKS_LIST
+
+    lateinit var selectedNetwork: NetworksModel
     lateinit var phoneInput: EditText
     lateinit var amountInput: EditText
     lateinit var submitButton: Button
@@ -51,6 +53,9 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
     fun observeClicks() {
         submitButton.setOnClickListener {
             submitDetails()
+        }
+        backImg.setOnClickListener {
+            navigateUp()
         }
         phoneInput.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -92,7 +97,7 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
             println("Phone number is not valid")
             return
         }
-        if(selectedNetwork == null || selectedNetwork == ""){
+        if(!this::selectedNetwork.isInitialized){
             isValid = false
             println("Selected is not valid")
             return
@@ -116,13 +121,22 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
     }
 
     fun showRechargeSummary() {
-        fragmentManager.let { it1 -> BillPaymentSummaryDialog().show(it1!!, "Summary Dialog Show") }
+        val summary = BillSummaryModel(
+                selectedNetwork.networkLogoPath,
+           "You are about to make an airtime purchase. Kindly confirm the details below",
+           arrayListOf(
+                   BillDisplayDataModel("Amount", amountInput.text.toString()),
+                   BillDisplayDataModel("Phone Number", phoneInput.text.toString())
+           )
+        )
+        fragmentManager.let { it1 -> BillPaymentSummaryDialog(summary, this).show(it1!!, "Summary Dialog Show") }
     }
 
-    override fun onDataReceived(data: String) {
+    override fun onDataReceived(data: NetworksModel) {
         selectedNetwork = data
         validateData()
     }
+
 
     companion object {
         @JvmStatic
@@ -130,6 +144,22 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
         val TAG = "AirtimeRechargeInput"
     }
 
+    override fun onDialogDataReceived(goForward: Boolean) {
+        //  move to the input card fragment
+        if (goForward) {
+            val payment = PaymentModel()
+            payment.type = PaymentModel.TransactionType.BILL_PAYMENT
+            payment.amount = amountInput.text.toString().toInt()
+            payment.billPayment?.customerId = phoneInput.text.toString()
+            payment.billPayment?.phoneNumber = phoneInput.text.toString()
+            payment.billPayment?.customerEmail = ""
+            payment.billPayment?.customerEmail = selectedNetwork.networkid
+            payment.billPayment?.customerEmail = ""
+
+            val action = AirtimeRechargeInputFragmentDirections.iswActionIswAirtimerechargeinputfragmentToIswBillpaymentcardfragment(payment)
+            navigate(action)
+        }
+    }
 
 
 }

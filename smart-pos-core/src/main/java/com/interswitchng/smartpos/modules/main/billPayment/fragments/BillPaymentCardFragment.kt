@@ -1,9 +1,11 @@
-package com.interswitchng.smartpos.modules.main.transfer.fragments
+package com.interswitchng.smartpos.modules.main.billPayment.fragments
 
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.IswPos
@@ -11,9 +13,11 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
-import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragmentArgs
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
+import com.interswitchng.smartpos.modules.main.transfer.fragments.TransferCardTransactionFragment
+import com.interswitchng.smartpos.modules.main.transfer.fragments.TransferCardTransactionFragmentArgs
+import com.interswitchng.smartpos.modules.main.transfer.fragments.TransferCardTransactionFragmentDirections
 import com.interswitchng.smartpos.modules.main.transfer.showErrorDialog
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.posconfig.PosType
@@ -25,18 +29,18 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessa
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.utilities.DialogUtils
+import kotlinx.android.synthetic.main.isw_fragment_bill_payment_card.iswCardPaymentViewAnimator
 import com.interswitchng.smartpos.shared.utilities.hide
 import com.interswitchng.smartpos.shared.utilities.show
 import com.interswitchng.smartpos.shared.utilities.toast
 import kotlinx.android.synthetic.main.isw_fragment_card_payment.*
-import kotlinx.android.synthetic.main.isw_fragment_card_payment.iswCardPaymentViewAnimator
 import kotlinx.android.synthetic.main.isw_fragment_pin.*
-import kotlinx.android.synthetic.main.isw_fragment_pin.cardPin
 import kotlinx.android.synthetic.main.isw_fragment_transfer_card_transaction.*
 import kotlinx.android.synthetic.main.isw_layout_card_found.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class TransferCardTransactionFragment : BaseFragment(TAG) {
+
+class BillPaymentCardFragment : BaseFragment(TAG) {
     private var accountType = AccountType.Default
     private var cardType = CardType.None
     private lateinit var transactionResult: TransactionResult
@@ -121,26 +125,26 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
                     when (result) {
                         CardViewModel.OnlineProcessResult.NO_EMV -> {
                             context?.toast("Unable to getResult icc")
-                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                            showErrorDialog(this@BillPaymentCardFragment.requireContext()
                                     , "Unable to getResult icc")
                             //finish()
                         }
                         CardViewModel.OnlineProcessResult.NO_RESPONSE -> {
                             context?.toast("Unable to process Transaction")
-                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                            showErrorDialog(this@BillPaymentCardFragment.requireContext()
                                     , "Unable to process Transaction")
                             //finish()
-                        } 
+                        }
                         CardViewModel.OnlineProcessResult.ONLINE_DENIED -> {
                             context?.toast("Transaction Declined")
-                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                            showErrorDialog(this@BillPaymentCardFragment.requireContext()
                                     , "Transaction Declined")
 
                             //showContainer(CardTransactionState.Default)
                         }
                         CardViewModel.OnlineProcessResult.ONLINE_APPROVED -> {
                             context?.toast("Transaction Approved")
-                            showErrorDialog(this@TransferCardTransactionFragment.requireContext()
+                            showErrorDialog(this@BillPaymentCardFragment.requireContext()
                                     , "Transaction Approved")
                         }
                     }
@@ -333,6 +337,6 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
     companion object {
         @JvmStatic
         fun newInstance() = TransferCardTransactionFragment()
-        val TAG = "TRANSFER CARD TRANSACTION FRAGMENT"
+        val TAG = "BILLPAYMENT CARD TRANSACTION FRAGMENT"
     }
 }

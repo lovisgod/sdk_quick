@@ -1,6 +1,8 @@
 package com.interswitchng.smartpos.shared
 
 import com.interswitchng.smartpos.IswPos
+import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.billPayment.models.NetworksModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.shared.models.core.Environment
 import com.interswitchng.smartpos.shared.utilities.KeysUtils
@@ -206,6 +208,13 @@ object Constants {
             BankModel("636092", "076", "Polaris"),
             BankModel("627480", "033", "UBA"),
             BankModel("627629", "057", "Zenith Bank")
+    )
+
+    val NETWORKS_LIST = arrayListOf<NetworksModel>(
+            NetworksModel("628051049", "628051049", "9MOBILE", R.drawable.logo_nine),
+            NetworksModel("6280510420", "6280510420", "AIRTEL", R.drawable.logo_airtel),
+            NetworksModel("628051043", "628051043", "MTN", R.drawable.logo_mtn),
+            NetworksModel("628051045", "628051045", "GLO", R.drawable.logo_glo)
     )
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"

@@ -1,7 +1,5 @@
 package com.interswitchng.smartpos.modules.main.billPayment.adapters
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +8,9 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCallBackListener
+import com.interswitchng.smartpos.modules.main.billPayment.models.NetworksModel
 
-class NetworkRecyclerAdapter(val networkList: Array<String>, private val callBackListener: NetworkListCallBackListener<String>): RecyclerView.Adapter<NetworkRecyclerAdapter.ViewHolder>() {
+class NetworkRecyclerAdapter(val networkList: ArrayList<NetworksModel>, private val callBackListener: NetworkListCallBackListener<NetworksModel>): RecyclerView.Adapter<NetworkRecyclerAdapter.ViewHolder>() {
     var viewHolderList = arrayListOf<ViewHolder>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NetworkRecyclerAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.isw_network_list_card, parent, false)
@@ -45,16 +44,10 @@ class NetworkRecyclerAdapter(val networkList: Array<String>, private val callBac
     //the class is holding the list view
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var previous: FrameLayout? = null
-        fun bindItems(network: String) {
+        fun bindItems(network: NetworksModel) {
             val imageContainer = itemView.findViewById(R.id.isw_networks_image) as ImageView
-            val imageResourse = when(network) {
-                "MTN" -> R.drawable.logo_glo
-                "GLO" -> R.drawable.logo_mtn
-                "AIRTEL" -> R.drawable.logo_airtel
-                "9MOBILE" -> R.drawable.logo_nine
-                else -> R.drawable.logo_mtn
-            }
-            imageContainer.setImageResource(imageResourse)
+            val imageResource = network.networkLogoPath
+            imageContainer.setImageResource(imageResource)
         }
     }
 }

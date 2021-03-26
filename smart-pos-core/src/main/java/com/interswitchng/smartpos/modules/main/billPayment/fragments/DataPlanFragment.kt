@@ -99,7 +99,7 @@ class DataPlanFragment : BaseFragment(TAG), NetworkListCallBackListener<BillPaym
     }
 
     fun showRechargeSummary() {
-        fragmentManager.let { it1 -> BillPaymentSummaryDialog().show(it1!!, "Summary Dialog Show") }
+//        fragmentManager.let { it1 -> BillPaymentSummaryDialog().show(it1!!, "Summary Dialog Show") }
     }
 
     override fun onDataReceived(data: BillPaymentCategoriesModel) {
