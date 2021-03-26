@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_fragment_choose_category.*
@@ -22,6 +23,11 @@ class ChooseCategoryFragment : BaseFragment(TAG) {
         isw_bill_airtime.setOnClickListener {
             val action = ChooseCategoryFragmentDirections.iswActionIswChoosecategoryfragmentToIswAirtimerechargeinputfragment()
             navigate(action)
+        }
+
+        isw_bill_cable_tv.setOnClickListener {
+            val action = ChooseCategoryFragmentDirections.iswActionIswChoosecategoryfragmentToIswBillerscategoryfragment()
+            findNavController().navigate(action)
         }
     }
 

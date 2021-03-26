@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.shared
 
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.billPayment.models.BillDisplayDataModel
 import com.interswitchng.smartpos.modules.main.billPayment.models.NetworksModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.shared.models.core.Environment
@@ -215,6 +216,12 @@ object Constants {
             NetworksModel("6280510420", "6280510420", "AIRTEL", R.drawable.logo_airtel),
             NetworksModel("628051043", "628051043", "MTN", R.drawable.logo_mtn),
             NetworksModel("628051045", "628051045", "GLO", R.drawable.logo_glo)
+    )
+
+    val CABLE_TV_PROVIDERS = arrayListOf<BillDisplayDataModel>(
+            BillDisplayDataModel("DSTV", "Subscribe for your favourite DSTV"),
+            BillDisplayDataModel("GOTV", "Subscribe for your favourite GOTV"),
+            BillDisplayDataModel("OTHERS", "Subscribe forOHTER CableTV Provider")
     )
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"

@@ -49,7 +49,7 @@ class PackageRecyclerAdapter<BC: ArrayList<BillPaymentCategoriesModel>> (val lis
                      val filteredList = arrayListOf<BillPaymentCategoriesModel>()
                      for (row in list) {
                          Log.d("Changing", "I dey try change")
-                         if (row.title.toLowerCase().contains(charString.toLowerCase()) || row.subTitle.toLowerCase().contains(charString.toLowerCase())) {
+                         if (row.title?.toLowerCase()?.contains(charString.toLowerCase())!! || row.subTitle?.toLowerCase()?.contains(charString.toLowerCase())!!) {
                              filteredList.add(row)
                          }
                      }

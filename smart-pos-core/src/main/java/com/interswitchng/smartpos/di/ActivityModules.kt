@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.di
 
 import com.interswitchng.smartpos.modules.authentication.AuthenticationViewModel
 import com.interswitchng.smartpos.modules.card.CardViewModel
+import com.interswitchng.smartpos.modules.main.billPayment.viewmodels.BillPaymentViewmodel
 import com.interswitchng.smartpos.modules.main.transfer.TransferViewModel
 import com.interswitchng.smartpos.modules.main.viewmodels.FingerprintViewModel
 import com.interswitchng.smartpos.modules.menu.history.HistoryViewModel
@@ -24,6 +25,10 @@ internal val viewModels = module {
 
     /**Transfer viewmodel**/
     viewModel { TransferViewModel(get(), get()) }
+
+    viewModel {
+        BillPaymentViewmodel(get())
+    }
 
     viewModel { UssdViewModel(get()) }
 
