@@ -83,13 +83,21 @@
             android:textColor="@color/iswTextColorBlack"
             android:textSize="20sp">
         </TextView>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/smart_card_num_container"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-        <EditText
-                android:id="@+id/isw_smart_card_number"
-                android:layout_width="match_parent"
-                android:paddingStart="10dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isw_smart_card_number"
+            android:gravity="center_vertical"
+            android:background="#EDEDED"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
 
@@ -103,15 +111,24 @@
             android:textSize="20sp">
         </TextView>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/isw_select_package_container"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/isw_select_package"
-                android:layout_width="match_parent"
-                android:drawableRight="@drawable/isw_ic_expanded"
-                android:paddingStart="10dp"
+                android:gravity="center_vertical"
+                android:background="#EDEDED"
                 android:focusable="false"
-                android:layout_height="wrap_content"
-                android:paddingEnd="10dp"
-                android:drawableEnd="@drawable/isw_ic_expanded" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableEnd="@drawable/isw_ic_expanded"
+                android:drawableRight="@drawable/isw_ic_expanded" />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <TextView
             android:id="@+id/isw_amount_label"
@@ -123,13 +140,20 @@
             android:textSize="20sp">
         </TextView>
 
-        <EditText
-            android:id="@+id/isw_amount"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/isw_amount_container"
             android:layout_width="match_parent"
-            android:paddingStart="10dp"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp" />
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/isw_amount"
+                android:gravity="center_vertical"
+                android:background="#EDEDED"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/isw_transfer_input_proceed"
