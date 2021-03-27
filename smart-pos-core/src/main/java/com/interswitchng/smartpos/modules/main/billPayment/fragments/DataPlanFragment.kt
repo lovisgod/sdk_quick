@@ -35,12 +35,12 @@ class DataPlanFragment : BaseFragment(TAG), NetworkListCallBackListener<BillPaym
         packageName = isw_data_package_input
         submitButton = isw_dataplan_input_proceed
 
-        sheet = PackageBottomSheetDialog(this)
-        isw_data_package_input.setOnClickListener {
-            fragmentManager?.let { it1 ->
-                sheet.show(it1, "Bottomet sheet")
-            }
-        }
+//        sheet = PackageBottomSheetDialog(this)
+//        isw_data_package_input.setOnClickListener {
+//            fragmentManager?.let { it1 ->
+//                sheet.show(it1, "Bottomet sheet")
+//            }
+//        }
         setUpPage()
         observeClicks()
     }

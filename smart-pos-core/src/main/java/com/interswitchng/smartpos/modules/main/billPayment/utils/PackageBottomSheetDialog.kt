@@ -20,7 +20,10 @@ import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCal
 import kotlinx.android.synthetic.main.isw_fragment_airtime_recharge_input.*
 import kotlinx.android.synthetic.main.isw_package_select_data_bottomsheet.*
 
-class PackageBottomSheetDialog(private val callBackListener: NetworkListCallBackListener<BillPaymentCategoriesModel>): BottomSheetDialogFragment(), NetworkListCallBackListener<BillPaymentCategoriesModel> {
+class PackageBottomSheetDialog(private val categories: ArrayList<BillPaymentCategoriesModel> = ArrayList(),
+                               private val callBackListener: NetworkListCallBackListener<BillPaymentCategoriesModel>):
+        BottomSheetDialogFragment(), NetworkListCallBackListener<BillPaymentCategoriesModel> {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,26 +49,26 @@ class PackageBottomSheetDialog(private val callBackListener: NetworkListCallBack
     @SuppressLint("WrongConstant")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val categories = arrayListOf(
-                BillPaymentCategoriesModel("Mtn Hynet flex","Flex 3,000", "1"),
-                BillPaymentCategoriesModel("Double stuff","Flex 3,000", "2"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
-                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3")
-        )
+//        val categories = arrayListOf(
+//                BillPaymentCategoriesModel("Mtn Hynet flex","Flex 3,000", "1"),
+//                BillPaymentCategoriesModel("Double stuff","Flex 3,000", "2"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3"),
+//                BillPaymentCategoriesModel("Maiden something","Flex 3,000", "3")
+//        )
         val recyclerView = isw_package_list_dataplan
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
         val adapter = PackageRecyclerAdapter(categories, this)

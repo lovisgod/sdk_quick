@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.adapters.cableTvBillerCategoryAdapter
@@ -80,7 +81,8 @@ class BillersCategoryFragment : DialogFragment(), NetworkListCallBackListener<Bi
     }
 
     override fun onDataReceived(data: BillDisplayDataModel) {
-
+        val action = BillersCategoryFragmentDirections.iswActionIswBillerscategoryfragmentToIswChoosepackagefragment(billerName = data.title)
+        findNavController().navigate(action)
     }
 
 

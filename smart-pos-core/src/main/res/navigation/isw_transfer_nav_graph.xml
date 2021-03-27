@@ -126,7 +126,11 @@
     <fragment
         android:id="@+id/isw_billerscategoryfragment"
         android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.BillersCategoryFragment"
-        android:label="BillersCategoryFragment" />
+        android:label="BillersCategoryFragment" >
+        <action
+            android:id="@+id/isw_action_isw_billerscategoryfragment_to_isw_choosepackagefragment"
+            app:destination="@id/isw_choosepackagefragment" />
+    </fragment>
     <fragment
         android:id="@+id/isw_airtimerechargeinputfragment"
         android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.AirtimeRechargeInputFragment"
@@ -142,5 +146,14 @@
         <argument
             android:name="paymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_choosepackagefragment"
+        android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.ChoosePackageFragment"
+        android:label="ChoosePackageFragment" >
+        <argument
+            android:name="billerName"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 </navigation>

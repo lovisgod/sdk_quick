@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.shared
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.models.BillDisplayDataModel
+import com.interswitchng.smartpos.modules.main.billPayment.models.BillPaymentCategoriesModel
 import com.interswitchng.smartpos.modules.main.billPayment.models.NetworksModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.shared.models.core.Environment
@@ -222,6 +223,15 @@ object Constants {
             BillDisplayDataModel("DSTV", "Subscribe for your favourite DSTV"),
             BillDisplayDataModel("GOTV", "Subscribe for your favourite GOTV"),
             BillDisplayDataModel("OTHERS", "Subscribe forOHTER CableTV Provider")
+    )
+
+    val DSTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
+            BillPaymentCategoriesModel(title = "DSTV COMPACT", subTitle = "Dstv Compact",
+                    packageId = "10403", productcode = "10403", logoPath = 0),
+            BillPaymentCategoriesModel(title = "DSTV PREMIUM", subTitle = "Dstv Premium",
+                    packageId = "10401", productcode = "10401", logoPath = 0),
+            BillPaymentCategoriesModel(title = "OTHERS", subTitle = "Other Dstv Packages",
+                    packageId = "", productcode = "", logoPath = 0)
     )
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"
