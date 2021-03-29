@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.shared.services.iso8583
 import android.content.Context
 import com.interswitchng.smartpos.IswPos.Companion.getNextStan
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
 import com.interswitchng.smartpos.shared.Constants.KEY_PIN_KEY
@@ -43,6 +44,10 @@ internal class IsoServiceImpl(
 
     override fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun initiateGeneralBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse? {
+        TODO("Not yet implemented")
     }
 
     override fun initiateTransfer(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, destinationAccountNumber: String, receivingInstitutionId: String): TransactionResponse? {

@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.adapters.NetworkRecyclerAdapter
 import com.interswitchng.smartpos.modules.main.billPayment.models.*
 import com.interswitchng.smartpos.modules.main.billPayment.utils.BillPaymentSummaryDialog
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.makeActive
 import com.interswitchng.smartpos.modules.main.transfer.makeInActive
@@ -89,17 +90,14 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
     fun validateData() {
         if(amountInput.text.toString() == "" || amountInput.text.toString() == null){
             isValid = false
-            println("Amount is not valid")
             return
         }
         if(phoneInput.text.toString() == "" || amountInput.text == null){
             isValid = false
-            println("Phone number is not valid")
             return
         }
         if(!this::selectedNetwork.isInitialized){
             isValid = false
-            println("Selected is not valid")
             return
         }
         isValid = true
@@ -150,12 +148,13 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
             val payment = PaymentModel()
             payment.type = PaymentModel.TransactionType.BILL_PAYMENT
             payment.amount = amountInput.text.toString().toInt()
-            payment.billPayment?.customerId = phoneInput.text.toString()
-            payment.billPayment?.phoneNumber = phoneInput.text.toString()
-            payment.billPayment?.customerEmail = ""
-            payment.billPayment?.customerEmail = selectedNetwork.networkid
-            payment.billPayment?.customerEmail = ""
-
+            val billPaymentModel = BillPaymentModel()
+            billPaymentModel.apply {
+                customerId = phoneInput.text.toString()
+                phoneNumber = phoneInput.text.toString()
+                paymentCode = selectedNetwork.productcode
+            }
+            payment.billPayment = billPaymentModel
             val action = AirtimeRechargeInputFragmentDirections.iswActionIswAirtimerechargeinputfragmentToIswBillpaymentcardfragment(payment)
             navigate(action)
         }
