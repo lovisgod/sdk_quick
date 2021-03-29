@@ -232,11 +232,11 @@ object Constants {
 
     val DSTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "DSTV COMPACT", subTitle = "Dstv Compact",
-                    packageId = "10403", productcode = "10403", logoPath = 0),
+                    packageId = "10403", productcode = "10403", logoPath = R.drawable.dstv_1),
             BillPaymentCategoriesModel(title = "DSTV PREMIUM", subTitle = "Dstv Premium",
-                    packageId = "10401", productcode = "10401", logoPath = 0),
+                    packageId = "10401", productcode = "10401", logoPath = R.drawable.dstv_1),
             BillPaymentCategoriesModel(title = "OTHERS", subTitle = "Other Dstv Packages",
-                    packageId = "", productcode = "", logoPath = 0)
+                    packageId = "", productcode = "", logoPath = R.drawable.dstv_1)
     )
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"
