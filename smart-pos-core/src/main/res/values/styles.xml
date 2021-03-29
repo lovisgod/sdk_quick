@@ -132,9 +132,9 @@
         <item name="colorPrimary">@color/iswColorPrimary</item>
 
         <!-- Set this to true if you want Full Screen without status bar -->
-        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowFullscreen">true</item>
 
-        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsFloating">true</item>
 
         <!-- This is important! Don't forget to set window background -->
         <item name="android:windowBackground">@android:color/black</item>
@@ -242,6 +242,7 @@
     <style name="ISWCustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/isw_popup_bg</item>
     </style>
+
 
     <style name="IswPopupMenuStyle">
         <item name="android:popupBackground">@drawable/isw_popupmenu_padded_bg</item>

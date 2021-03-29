@@ -13,7 +13,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.models.BillPaymentCategoriesModel
 import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCallBackListener
 
-class PackageRecyclerAdapter<BC: ArrayList<BillPaymentCategoriesModel>> (val list: BC, private val callBackListener: NetworkListCallBackListener<BillPaymentCategoriesModel>): RecyclerView.Adapter<PackageRecyclerAdapter.ViewHolder>() {
+class PackageRecyclerAdapter(val list: ArrayList<BillPaymentCategoriesModel>, private val callBackListener: NetworkListCallBackListener<BillPaymentCategoriesModel>): RecyclerView.Adapter<PackageRecyclerAdapter.ViewHolder>() {
 
     var filteredItems = ArrayList<BillPaymentCategoriesModel>()
 
@@ -49,11 +49,11 @@ class PackageRecyclerAdapter<BC: ArrayList<BillPaymentCategoriesModel>> (val lis
                      val filteredList = arrayListOf<BillPaymentCategoriesModel>()
                      for (row in list) {
                          Log.d("Changing", "I dey try change")
-                         if (row.title.toLowerCase().contains(charString.toLowerCase()) || row.subTitle.toLowerCase().contains(charString.toLowerCase())) {
+                         if (row.title?.toLowerCase()?.contains(charString.toLowerCase())!! || row.subTitle?.toLowerCase()?.contains(charString.toLowerCase())!!) {
                              filteredList.add(row)
                          }
                      }
-                     filteredList as BC
+                     filteredList
                  }
                 val filterResults = FilterResults()
                 filterResults.values = filteredItems
@@ -61,7 +61,7 @@ class PackageRecyclerAdapter<BC: ArrayList<BillPaymentCategoriesModel>> (val lis
             }
 
              override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
-                filteredItems = filterResults?.values as BC
+                filteredItems = filterResults?.values as ArrayList<BillPaymentCategoriesModel>
                 notifyDataSetChanged()
             }
         }

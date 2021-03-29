@@ -13,13 +13,17 @@
         android:id="@+id/isw_bill_payment_package_list_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="15dp"
+        android:text=""
+        android:textSize="20sp"
+        android:textColor="@color/iswTextColorBlack"
+        android:fontFamily="@font/roboto_bold"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/isw_bill_payment_package_list_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:textSize="15sp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="" />
 </LinearLayout>

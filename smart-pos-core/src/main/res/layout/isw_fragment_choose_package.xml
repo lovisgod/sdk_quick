@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.30" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/isw_guideline2"
@@ -30,9 +30,9 @@
 
     <ImageView
         android:id="@+id/isw_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="140dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toTopOf="@id/isw_guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat = "@drawable/ic_baseline_arrow_back_ios_24"
@@ -83,26 +83,22 @@
             android:textColor="@color/iswTextColorBlack"
             android:textSize="20sp">
         </TextView>
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/isw_smart_card_number_container"
+            android:id="@+id/smart_card_num_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginTop="5dp"
-            app:boxBackgroundColor="@color/isw_input_grey_bg_color"
-            android:background="@color/isw_input_grey_bg_color"
-            android:focusable="false">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/isw_smart_card_number"
-                android:layout_width="match_parent"
-                android:hint="Smart Card Number"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:layout_height="50dp"
-                android:paddingLeft="10dp" />
-
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/isw_smart_card_number"
+            android:gravity="center_vertical"
+            android:background="#EDEDED"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
         </com.google.android.material.textfield.TextInputLayout>
+
 
 
         <TextView
@@ -118,24 +114,21 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/isw_select_package_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginTop="5dp"
-            app:boxBackgroundColor="@color/isw_input_grey_bg_color"
-            android:background="@color/isw_input_grey_bg_color"
-            android:focusable="false">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/isw_select_package"
-                android:layout_width="match_parent"
-                android:hint="Select a package"
-                android:drawableRight="@drawable/isw_ic_expanded"
                 android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:layout_height="50dp"
-                android:paddingEnd="10dp"
-                android:drawableEnd="@drawable/isw_ic_expanded" />
-
+                android:background="#EDEDED"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableEnd="@drawable/isw_ic_expanded"
+                android:drawableRight="@drawable/isw_ic_expanded" />
         </com.google.android.material.textfield.TextInputLayout>
+
 
         <TextView
             android:id="@+id/isw_amount_label"
@@ -150,21 +143,43 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/isw_amount_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginTop="5dp"
-            app:boxBackgroundColor="@color/isw_input_grey_bg_color"
-            android:background="@color/isw_input_grey_bg_color"
-            android:focusable="false">
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/isw_amount"
-                android:layout_width="match_parent"
-                android:hint="Amount"
                 android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:layout_height="50dp"
-                android:paddingLeft="10dp" />
+                android:background="#EDEDED"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
+
+        <TextView
+            android:id="@+id/isw_biller_code_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Biller Code"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/iswTextColorBlack"
+            android:textSize="20sp">
+        </TextView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/isw_biller_code_container"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/isw_biller_code"
+                android:gravity="center_vertical"
+                android:background="#EDEDED"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
