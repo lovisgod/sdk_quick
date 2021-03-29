@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_choose_category.*
 
 class ChooseCategoryFragment : BaseFragment(TAG) {
@@ -21,6 +22,7 @@ class ChooseCategoryFragment : BaseFragment(TAG) {
 
     private fun observeClicks() {
         isw_bill_airtime.setOnClickListener {
+            Prefs.putBoolean("isAirtime", true)
             val action = ChooseCategoryFragmentDirections.iswActionIswChoosecategoryfragmentToIswAirtimerechargeinputfragment()
             navigate(action)
         }

@@ -13,6 +13,7 @@ import com.interswitchng.smartpos.modules.main.billPayment.models.*
 import com.interswitchng.smartpos.modules.main.billPayment.utils.BillPaymentSummaryDialog
 import com.interswitchng.smartpos.modules.main.billPayment.utils.PackageBottomSheetDialog
 import com.interswitchng.smartpos.modules.main.billPayment.viewmodels.BillPaymentViewmodel
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.*
 import com.interswitchng.smartpos.shared.activities.BaseFragment
@@ -110,6 +111,7 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
             val payment = PaymentModel()
             payment.type = PaymentModel.TransactionType.BILL_PAYMENT
             payment.amount = isw_amount.getTextValue().toInt()
+            payment.billPayment = BillPaymentModel()
             payment.billPayment?.customerId = isw_smart_card_number.getTextValue()
             payment.billPayment?.phoneNumber = ""
             payment.billPayment?.customerEmail = ""

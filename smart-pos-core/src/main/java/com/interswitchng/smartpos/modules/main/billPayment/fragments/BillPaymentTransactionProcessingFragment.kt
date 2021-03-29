@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.modules.main.transfer.fragments
+package com.interswitchng.smartpos.modules.main.billPayment.fragments
 
 import android.app.Dialog
 import android.os.Bundle
@@ -13,7 +13,7 @@ import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.TransactionResponseModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
-import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.modules.main.transfer.fragments.TransfertransactionPreocessingFragmentDirections
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
 import com.interswitchng.smartpos.shared.models.transaction.TransactionResult
@@ -25,7 +25,6 @@ import com.interswitchng.smartpos.shared.services.iso8583.utils.DateUtils
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.toast
 import com.pixplicity.easyprefs.library.Prefs
-import kotlinx.android.synthetic.main.isw_fragment_processing_transaction.*
 import kotlinx.android.synthetic.main.isw_fragment_transfertransaction_preocessing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -33,8 +32,8 @@ import org.koin.android.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
-    private val processingRequestFragmentArgs by navArgs<TransfertransactionPreocessingFragmentArgs>()
+class BillPaymentTransactionProcessingFragment : BaseFragment(TAG) {
+    private val processingRequestFragmentArgs by navArgs<BillPaymentTransactionProcessingFragmentArgs>()
     private val paymentModel by lazy { processingRequestFragmentArgs.paymentModel }
     private val cardType by lazy { processingRequestFragmentArgs.CardType }
     private val transactionType by lazy { processingRequestFragmentArgs.TransactionType }
@@ -44,7 +43,7 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
     private lateinit var transactionResult: TransactionResult
 
     override val layoutId: Int
-        get() = R.layout.isw_fragment_transfertransaction_preocessing
+        get() = R.layout.isw_fragment_bill_pyament_transaction_processing
 
     private val cardViewModel: CardViewModel by viewModel()
 
@@ -76,29 +75,16 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
 
         observeViewModel()
 
+        logger.log(paymentModel.toString())
+
         runWithInternet {
-                dialog = customdailog(this.requireContext())
-                when(paymentModel.type) {
-                    PaymentModel.TransactionType.BILL_PAYMENT -> {
-                        cardViewModel.processBillPayment(
-                                paymentModel,
-                                accountType,
-                                terminalInfo
-                        )
-                    }
-
-                    else -> {
-                        cardViewModel.processTransferTransaction(
-                                paymentModel,
-                                accountType,
-                                terminalInfo,
-                                Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, ""), // use this for generic transfer
-                                Prefs.getString(Constants.SETTLEMENT_BANK_CODE, "")  // use this fot specific transfer
-                        )
-                    }
-                }
-
-            }
+            dialog = customdailog(this.requireContext())
+            cardViewModel.processBillPayment(
+                    paymentModel,
+                    accountType,
+                    terminalInfo
+            )
+        }
     }
 
     private fun observeViewModel() {
@@ -216,18 +202,15 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
                 )
 
                 val direction =
-                       TransfertransactionPreocessingFragmentDirections.iswActionIswTransfertransactionpreocessingfragmentToIswTransferstatusfragment(
+                        BillPaymentTransactionProcessingFragmentDirections.iswActionIswBillpyamenttransactionprocessingfragmentToIswTransferstatusfragment(
                                 paymentModel,
                                 TransactionResponseModel(
                                         transactionResult = transactionResult,
                                         transactionType = PaymentModel.TransactionType.CARD_PURCHASE
                                 )
                         )
-               findNavController().navigate(direction)
+                findNavController().navigate(direction)
 
-                // delete the saved receivinginstitionid and destinationAccountNumber
-                Prefs.remove("receivingInstitutionId")
-                Prefs.remove("destinationAccountNumber")
             }
         }
     }
@@ -235,7 +218,7 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
     companion object {
 
         @JvmStatic
-        fun newInstance() = TransfertransactionPreocessingFragment()
-        val TAG = "TRANSFER TRANSACTION PROCESSING FRAGMENT"
+        fun newInstance() = BillPaymentTransactionProcessingFragment()
+        val TAG = "BILL PAYMENT TRANSACTION PROCESSING FRAGMENT"
     }
 }

@@ -138,6 +138,9 @@
         <action
             android:id="@+id/isw_action_isw_airtimerechargeinputfragment_to_isw_billpaymentcardfragment"
             app:destination="@id/isw_billpaymentcardfragment" />
+        <action
+            android:id="@+id/isw_action_isw_airtimerechargeinputfragment_to_isw_transfercardtransactionfragment"
+            app:destination="@id/isw_transfercardtransactionfragment" />
     </fragment>
     <fragment
         android:id="@+id/isw_billpaymentcardfragment"
@@ -146,6 +149,33 @@
         <argument
             android:name="paymentModel"
             app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel" />
+        <action
+            android:id="@+id/isw_action_isw_billpaymentcardfragment_to_isw_billpyamenttransactionprocessingfragment"
+            app:destination="@id/isw_billpyamenttransactionprocessingfragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/isw_billpyamenttransactionprocessingfragment"
+        android:name="com.interswitchng.smartpos.modules.main.billPayment.fragments.BillPaymentTransactionProcessingFragment"
+        android:label="isw_fragment_bill_pyament_transaction_processing"
+        tools:layout="@layout/isw_fragment_bill_pyament_transaction_processing" >
+        <argument
+            android:name="paymentModel"
+            app:argType="com.interswitchng.smartpos.modules.main.models.PaymentModel" />
+        <argument
+            android:name="TransactionType"
+            app:argType="com.interswitchng.smartpos.shared.models.printer.info.TransactionType" />
+        <argument
+            android:name="CardType"
+            app:argType="com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType" />
+        <argument
+            android:name="AccountType"
+            app:argType="com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType" />
+        <argument
+            android:name="PaymentIfnfo"
+            app:argType="com.interswitchng.smartpos.shared.models.transaction.PaymentInfo" />
+        <action
+            android:id="@+id/isw_action_isw_billpyamenttransactionprocessingfragment_to_isw_transferstatusfragment"
+            app:destination="@id/isw_transferstatusfragment" />
     </fragment>
     <fragment
         android:id="@+id/isw_choosepackagefragment"

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.bills.fragments.BillPaymentFragmentDirections
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
@@ -256,9 +257,8 @@ class BillPaymentCardFragment : BaseFragment(TAG) {
 
             // when transaction is processing
             is EmvMessage.ProcessingTransaction -> {
-                val direction = TransferCardTransactionFragmentDirections
-                        .iswActionIswTransfercardtransactionfragmentToIswTransfertransactionpreocessingfragment(
-                                paymentModel, transactionType, cardType, accountType, paymentInfo
+                val direction = BillPaymentCardFragmentDirections.iswActionIswBillpaymentcardfragmentToIswBillpyamenttransactionprocessingfragment(
+                           paymentModel, transactionType, cardType, accountType, paymentInfo
                         )
                 findNavController().navigate(direction)
             }
