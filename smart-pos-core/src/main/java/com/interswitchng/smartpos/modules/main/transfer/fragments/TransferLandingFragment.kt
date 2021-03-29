@@ -34,6 +34,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Prefs.putBoolean("isAirtime", false)
         // check for settlement account setup for specific transfer
         checkForSettlement()
         handleClicks()

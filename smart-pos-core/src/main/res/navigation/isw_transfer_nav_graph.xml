@@ -138,6 +138,9 @@
         <action
             android:id="@+id/isw_action_isw_airtimerechargeinputfragment_to_isw_billpaymentcardfragment"
             app:destination="@id/isw_billpaymentcardfragment" />
+        <action
+            android:id="@+id/isw_action_isw_airtimerechargeinputfragment_to_isw_transfercardtransactionfragment"
+            app:destination="@id/isw_transfercardtransactionfragment" />
     </fragment>
     <fragment
         android:id="@+id/isw_billpaymentcardfragment"

@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.adapters.NetworkRecyclerAdapter
@@ -155,8 +156,9 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
                 paymentCode = selectedNetwork.productcode
             }
             payment.billPayment = billPaymentModel
-            val action = AirtimeRechargeInputFragmentDirections.iswActionIswAirtimerechargeinputfragmentToIswBillpaymentcardfragment(payment)
-            navigate(action)
+            val action = AirtimeRechargeInputFragmentDirections.iswActionIswAirtimerechargeinputfragmentToIswTransfercardtransactionfragment(payment)
+//            val action = AirtimeRechargeInputFragmentDirections.iswActionIswAirtimerechargeinputfragmentToIswBillpaymentcardfragment(payment)
+            findNavController().navigate(action)
         }
     }
 

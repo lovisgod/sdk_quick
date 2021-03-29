@@ -52,7 +52,7 @@ internal interface IKimonoHttpService {
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST
-    fun makeCashOutPayment(@Url url: String, @Body purchaseRequest: RequestBody): Simple<BillPaymentResponse>
+    fun makeCashOutPayment(@Url url: String, @Body purchaseRequest: RequestBody,  @Header("Authorization") token: String): Simple<BillPaymentResponse>
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
