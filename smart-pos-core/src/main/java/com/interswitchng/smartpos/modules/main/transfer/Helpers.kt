@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -19,8 +21,14 @@ import com.google.android.material.textview.MaterialTextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.PinEditText
 import com.tapadoo.alerter.Alerter
+import kotlinx.android.synthetic.main.isw_transfer_fragment_amount.*
+import java.text.NumberFormat
 
 fun EditText.getTextValue(): String {
+    return this.text.toString()
+}
+
+fun TextInputEditText.getTextValue(): String {
     return this.text.toString()
 }
 
@@ -150,4 +158,31 @@ fun showSuccessAlert(message: String, activity: Activity) {
             .enableSwipeToDismiss()
             .setBackgroundColorRes(R.color.iswColorPrimary)
             .show()
+}
+
+fun changeListener(fields: ArrayList<TextInputEditText>, action: (() -> Any?)? = null) {
+    for( i in fields) {
+        i.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                action?.invoke()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+        })
+    }
+}
+
+ fun updateAmount(digit: String): String? {
+    val parsed = java.lang.Double.parseDouble(digit)
+    val numberFormat = NumberFormat.getInstance()
+    numberFormat.minimumFractionDigits = 2
+    numberFormat.maximumFractionDigits = 2
+    val formatted = numberFormat.format(parsed / 100)
+     println(formatted)
+    return formatted
 }

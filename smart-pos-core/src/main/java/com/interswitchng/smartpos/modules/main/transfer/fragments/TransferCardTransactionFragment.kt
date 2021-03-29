@@ -269,6 +269,9 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
     private fun setTransactionType() {
         println(originalTxnData)
 //        cardViewModel.setOriginalTxnInfo(originalTxnData!!)
+    if (paymentModel.paymentType == PaymentModel.TransactionType.BILL_PAYMENT) {
+
+    }
         cardViewModel.setTransactionType(PaymentModel.TransactionType.TRANSFER)
         transactionType = TransactionType.Transfer
     }

@@ -23,7 +23,6 @@
             app:searchHintIcon="@android:drawable/ic_menu_search"
             app:queryHint="filter for a package"
             android:theme="@style/ISWCustomSearchViewSheet"
-            android:focusableInTouchMode="true"
             app:closeIcon="@android:drawable/ic_menu_close_clear_cancel"
             app:iconifiedByDefault="false"
             android:layout_marginTop="20dp"

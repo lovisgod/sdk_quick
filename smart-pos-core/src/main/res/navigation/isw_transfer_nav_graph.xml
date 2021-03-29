@@ -155,5 +155,8 @@
             android:name="billerName"
             app:argType="string"
             android:defaultValue='""' />
+        <action
+            android:id="@+id/isw_action_isw_choosepackagefragment_to_isw_transfercardtransactionfragment"
+            app:destination="@id/isw_transfercardtransactionfragment" />
     </fragment>
 </navigation>
