@@ -525,7 +525,45 @@ internal class PurchaseRequest
                 <merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> 
                 <posConditionCode>00</posConditionCode> <posDataCode>511101511344101</posDataCode> 
                 <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> 
-                <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${icc.TERMINAL_TYPE}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${serialId}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber> <track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear><track2>${track2}</track2></track2><emvData><AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults><iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan> <uuid></uuid>  <minorAmount>${transactionAmount}</minorAmount> ${pinData} <keyLabel>${keyLabel}</keyLabel></billPaymentRequest>
+                <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> 
+                <terminalType>${icc.TERMINAL_TYPE}</terminalType> 
+                <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> 
+                <uniqueId>${serialId}</uniqueId></terminalInformation>
+                <cardData>
+                    <cardSequenceNumber>${transaction.csn}</cardSequenceNumber>
+                    <track2>
+                        <pan>${transaction.cardPAN}</pan> 
+                        <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> 
+                        <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear>
+                        <track2>${track2}</track2>
+                    </track2>
+                    <emvData>
+                        <AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized> 
+                        <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> 
+                        <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> 
+                        <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc>
+                        <Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> 
+                        <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> 
+                        <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults>
+                        <iad>${icc.ISSUER_APP_DATA}</iad> 
+                        <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> 
+                        <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> 
+                        <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> 
+                        <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> 
+                        <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> 
+                        <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> 
+                        <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> 
+                        <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> 
+                        ${dedicatedFileTag}
+                    </emvData>
+                  </cardData>
+                   <fromAccount>${transaction.accountType.name}</fromAccount> 
+                   <stan>${transaction.stan}</stan> 
+                   <uuid>${serialId}</uuid>  
+                   <minorAmount>${transactionAmount}</minorAmount> 
+                   ${pinData} 
+                   <keyLabel>${keyLabel}</keyLabel>
+                   </billPaymentRequest>
         """
             Logger.with("Purchase Request body").logErr(requestBody)
 

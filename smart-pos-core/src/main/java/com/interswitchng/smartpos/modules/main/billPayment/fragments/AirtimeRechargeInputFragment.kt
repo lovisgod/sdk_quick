@@ -14,6 +14,7 @@ import com.interswitchng.smartpos.modules.main.billPayment.models.*
 import com.interswitchng.smartpos.modules.main.billPayment.utils.BillPaymentSummaryDialog
 import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.transfer.hideKeyboard
 import com.interswitchng.smartpos.modules.main.transfer.makeActive
 import com.interswitchng.smartpos.modules.main.transfer.makeInActive
 import com.interswitchng.smartpos.shared.Constants.NETWORKS_LIST
@@ -133,6 +134,7 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
 
     override fun onDataReceived(data: NetworksModel) {
         selectedNetwork = data
+        phoneInput.hideKeyboard()
         validateData()
     }
 
