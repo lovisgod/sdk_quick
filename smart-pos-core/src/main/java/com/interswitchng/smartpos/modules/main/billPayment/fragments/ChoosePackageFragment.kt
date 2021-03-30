@@ -49,8 +49,7 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
         }
         isw_select_package.isClickable = true
         isw_select_package.setOnClickListener {
-            viewmodel.getDstvPackages().observe(viewLifecycleOwner, Observer {array ->
-                println(array)
+            viewmodel.getDstvPackages(billerName.toString().toLowerCase()).observe(viewLifecycleOwner, Observer {array ->
                 it.let {
                     fragmentManager?.let {
                         dialog = PackageBottomSheetDialog(categories = array, callBackListener = this)
@@ -110,7 +109,7 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
         if (data) {
             val payment = PaymentModel()
             payment.type = PaymentModel.TransactionType.BILL_PAYMENT
-            payment.amount = isw_amount.getTextValue().toInt()
+            payment.amount = isw_amount.getTextValue().toInt() * 100
             payment.billPayment = BillPaymentModel()
             payment.billPayment?.customerId = isw_smart_card_number.getTextValue()
             payment.billPayment?.phoneNumber = ""

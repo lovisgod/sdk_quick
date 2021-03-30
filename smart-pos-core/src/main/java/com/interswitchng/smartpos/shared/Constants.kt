@@ -47,11 +47,11 @@ object Constants {
 
 //    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://webpay.interswitchng.com/kimonotms/paybills/inquire"
 
-    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://saturn.interswitchng.com/halifax"
+    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://saturn.interswitchng.com/kimonotms/paybills/inquire"
 
-    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://webpay.interswitchng.com/kimonotms/paybills/pay"
+//    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://webpay.interswitchng.com/kimonotms/paybills/pay"
 
-//    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://saturn.interswitchng.com/halifax"
+    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://saturn.interswitchng.com/kimonotms/paybills/pay"
 
 
     internal const val KIMONO_3_END_POINT = "https://kimono.interswitchng.com/kmw/kimonoservice"
@@ -237,6 +237,23 @@ object Constants {
                     packageId = "10401", productcode = "10401", logoPath = R.drawable.dstv_1),
             BillPaymentCategoriesModel(title = "OTHERS", subTitle = "Other Dstv Packages",
                     packageId = "", productcode = "", logoPath = R.drawable.dstv_1)
+    )
+
+    val GOTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
+            BillPaymentCategoriesModel(title = "LITE MONTHLY", subTitle = "GOTV Lite Monthly",
+                    packageId = "495117", productcode = "495117", logoPath = R.drawable.gotv),
+            BillPaymentCategoriesModel(title = "LITE QUARTERLY", subTitle = "GOTV Lite Quarterly",
+                    packageId = "459116", productcode = "459116", logoPath = R.drawable.gotv),
+            BillPaymentCategoriesModel(title = "LITE ANNUAL", subTitle = "Lite Annual",
+                    packageId = "459115", productcode = "459115", logoPath = R.drawable.gotv),
+            BillPaymentCategoriesModel(title = "GOTV VALUE", subTitle = "GOTV Value",
+                    packageId = "459112", productcode = "459112", logoPath = R.drawable.gotv),
+            BillPaymentCategoriesModel(title = "GOTV PLUS", subTitle = "GOTV Plus",
+                    packageId = "459111", productcode = "459111", logoPath = R.drawable.gotv),
+            BillPaymentCategoriesModel(title = "MOBILE ACCESS", subTitle = "Mobile Access",
+                    packageId = "459113", productcode = "459113", logoPath = R.drawable.gotv),
+            BillPaymentCategoriesModel(title = "OTHERS", subTitle = "Others",
+                    packageId = "", productcode = "", logoPath = R.drawable.gotv)
     )
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"

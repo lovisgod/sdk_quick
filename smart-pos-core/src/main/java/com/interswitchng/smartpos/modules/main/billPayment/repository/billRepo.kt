@@ -15,7 +15,14 @@ class billRepo {
         return Constants.CABLE_TV_PROVIDERS
     }
 
-    fun getDstvPackages(): ArrayList<BillPaymentCategoriesModel> {
-        return Constants.DSTV_PACKAGES
+    fun getDstvPackages(provider: String): ArrayList<BillPaymentCategoriesModel> {
+
+         return when (provider) {
+           "dstv" ->  Constants.DSTV_PACKAGES
+            "gotv" -> Constants.GOTV_PACKAGES
+             else -> {
+                 Constants.DSTV_PACKAGES
+             }
+         }
     }
 }

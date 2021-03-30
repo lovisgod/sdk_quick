@@ -110,7 +110,7 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
         if (isValid){
             val data = AirtimeRechargeModel(
                     selectedNetwork,
-                    amountInput.text.toString(),
+                    (amountInput.text.toString().toInt() * 100).toString(),
                     phoneInput.text.toString()
             )
 
@@ -148,7 +148,7 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
         if (goForward) {
             val payment = PaymentModel()
             payment.type = PaymentModel.TransactionType.BILL_PAYMENT
-            payment.amount = amountInput.text.toString().toInt()
+            payment.amount =   (amountInput.text.toString().toInt() * 100)
             val billPaymentModel = BillPaymentModel()
             billPaymentModel.apply {
                 customerId = phoneInput.text.toString()

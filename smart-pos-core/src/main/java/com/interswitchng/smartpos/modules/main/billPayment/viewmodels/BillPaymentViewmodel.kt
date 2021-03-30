@@ -14,8 +14,8 @@ class BillPaymentViewmodel(val billRepo: billRepo): RootViewModel() {
         return MutableLiveData(resp)
     }
 
-    fun getDstvPackages(): MutableLiveData<ArrayList<BillPaymentCategoriesModel>> {
-        val resp = billRepo.getDstvPackages()
+    fun getDstvPackages(provider: String): MutableLiveData<ArrayList<BillPaymentCategoriesModel>> {
+        val resp = billRepo.getDstvPackages(provider)
         return MutableLiveData(resp)
     }
 }
