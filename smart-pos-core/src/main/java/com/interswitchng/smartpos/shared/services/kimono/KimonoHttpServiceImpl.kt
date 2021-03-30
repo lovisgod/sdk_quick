@@ -228,7 +228,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             }
             val responseBody = httpService.makeCashOutInquiry(url, bodyCashOut).run()
             val purchaseResponse = responseBody.body()
-
+            println(purchaseResponse)
             return if (!responseBody.isSuccessful || purchaseResponse?.responseCode == null) {
                 TransactionResponse(
                         responseCode = IsoUtils.TIMEOUT_CODE,
