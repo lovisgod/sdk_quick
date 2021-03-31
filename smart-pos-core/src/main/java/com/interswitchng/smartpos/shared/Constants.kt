@@ -49,6 +49,9 @@ object Constants {
 
     internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://saturn.interswitchng.com/kimonotms/paybills/inquire"
 
+    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY_HALIFAX = "https://saturn.interswitchng.com/halifax"
+
+
 //    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://webpay.interswitchng.com/kimonotms/paybills/pay"
 
     internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://saturn.interswitchng.com/kimonotms/paybills/pay"
@@ -243,7 +246,7 @@ object Constants {
 
     val GOTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "LITE MONTHLY", subTitle = "GOTV Lite Monthly",
-                    packageId = "495117", productcode = "495117", logoPath = R.drawable.gotv),
+                    packageId = "459117", productcode = "459117", logoPath = R.drawable.gotv),
             BillPaymentCategoriesModel(title = "LITE QUARTERLY", subTitle = "GOTV Lite Quarterly",
                     packageId = "459116", productcode = "459116", logoPath = R.drawable.gotv),
             BillPaymentCategoriesModel(title = "LITE ANNUAL", subTitle = "Lite Annual",

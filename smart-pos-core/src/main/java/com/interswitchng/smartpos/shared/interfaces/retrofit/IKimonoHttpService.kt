@@ -4,6 +4,7 @@ import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.modules.main.transfer.TokenPassportResponse
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
+import com.interswitchng.smartpos.shared.services.kimono.models.AirtimeResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.BillPaymentResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.CallHomeRequest
 import okhttp3.RequestBody
@@ -57,7 +58,7 @@ internal interface IKimonoHttpService {
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST
-    fun makeCashOutPaymentnew(@Url url: String, @Body purchaseRequest: RequestBody): Simple<BillPaymentResponse>
+    fun makeCashOutPaymentnew(@Url url: String, @Body purchaseRequest: RequestBody,  @Header("Authorization") token: String): Simple<ResponseBody>
 
     @Headers("Content-Type: text/xml", "Accept: application/xml", "Accept-Charset: utf-8")
     @POST(Constants.KIMONO_END_POINT)
