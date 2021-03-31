@@ -556,20 +556,180 @@ internal class PurchaseRequest
                 <terminalId>${terminalInfo.terminalId}</terminalId>
                 <customerName></customerName>
                 <requestType>Payment</requestType>
-                <terminalInformation><batteryInformation>-1</batteryInformation> 
+                <terminalInformation>
+                <batteryInformation>-1</batteryInformation> 
                 <currencyCode>${terminalInfo.currencyCode}</currencyCode>
                 <languageInfo>EN</languageInfo>
                 <merchantId>${terminalInfo.merchantId}</merchantId>
                 <merhcantLocation>${terminalInfo.merchantNameAndLocation}</merhcantLocation> 
                 <posConditionCode>00</posConditionCode> <posDataCode>511101511344101</posDataCode> 
                 <posEntryMode>051</posEntryMode> <posGeoCode>00234000000000566</posGeoCode> 
-                <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId> <terminalType>${icc.TERMINAL_TYPE}</terminalType> <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate> <uniqueId>${serialId}</uniqueId></terminalInformation><cardData><cardSequenceNumber>${transaction.csn}</cardSequenceNumber> <track2><pan>${transaction.cardPAN}</pan> <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth> <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear><track2>${track2}</track2></track2><emvData><AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized> <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther> <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile> <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc><Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram> <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData> <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults><iad>${icc.ISSUER_APP_DATA}</iad> <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode> <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult> <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode> <TerminalType>${icc.TERMINAL_TYPE}</TerminalType> <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities> <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate> <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber> ${dedicatedFileTag}</emvData></cardData><fromAccount>${transaction.accountType.name}</fromAccount> <stan>${transaction.stan}</stan> <uuid>${serialId}</uuid>  <minorAmount>${transactionAmount}</minorAmount> ${pinData} <keyLabel>${keyLabel}</keyLabel></billPaymentRequest>
-        """
+                <printerStatus>1</printerStatus><terminalId>${terminalInfo.terminalId}</terminalId>
+                <terminalType>${icc.TERMINAL_TYPE}</terminalType>
+                <transmissionDate>${DateUtils.universalDateFormat.format(Date())}</transmissionDate>
+                <uniqueId>${serialId}</uniqueId>
+                </terminalInformation>
+                <cardData>
+                <cardSequenceNumber>${transaction.csn}</cardSequenceNumber>
+                <track2>
+                <pan>${transaction.cardPAN}</pan>
+                <expiryMonth>${transaction.cardExpiry.takeLast(2)}</expiryMonth>
+                <expiryYear>${transaction.cardExpiry.take(2)}</expiryYear>
+                <track2>${track2}</track2>
+                </track2>
+                <emvData>
+                <AmountAuthorized>${icc.TRANSACTION_AMOUNT}</AmountAuthorized>
+                <AmountOther>${icc.ANOTHER_AMOUNT}</AmountOther>
+                <ApplicationInterchangeProfile>${icc.APPLICATION_INTERCHANGE_PROFILE}</ApplicationInterchangeProfile>
+                <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc>
+                <Cryptogram>${icc.AUTHORIZATION_REQUEST}</Cryptogram>
+                <CryptogramInformationData>${icc.CRYPTOGRAM_INFO_DATA}</CryptogramInformationData>
+                <CvmResults>${icc.CARD_HOLDER_VERIFICATION_RESULT}</CvmResults>
+                <iad>${icc.ISSUER_APP_DATA}</iad>
+                <TransactionCurrencyCode>${icc.TRANSACTION_CURRENCY_CODE}</TransactionCurrencyCode>
+                <TerminalVerificationResult>${icc.TERMINAL_VERIFICATION_RESULT}</TerminalVerificationResult>
+                <TerminalCountryCode>${icc.TERMINAL_COUNTRY_CODE}</TerminalCountryCode>
+                <TerminalType>${icc.TERMINAL_TYPE}</TerminalType>
+                <TerminalCapabilities>${icc.TERMINAL_CAPABILITIES}</TerminalCapabilities>
+                <TransactionDate>${icc.TRANSACTION_DATE}</TransactionDate>
+                <TransactionType>${icc.TRANSACTION_TYPE}</TransactionType> 
+                <UnpredictableNumber>${icc.UNPREDICTABLE_NUMBER}</UnpredictableNumber>
+                ${dedicatedFileTag}
+                </emvData>
+                </cardData>
+                <fromAccount>${transaction.accountType.name}</fromAccount>
+                <stan>${transaction.stan}</stan>
+                <uuid>${serialId}</uuid>
+                <minorAmount>${transactionAmount}</minorAmount>
+                ${pinData} 
+                <keyLabel>${keyLabel}</keyLabel>
+</billPaymentRequest>"""
             Logger.with("Purchase Request body").logErr(requestBody)
 
             return requestBody
 
         }
+
+
+        /**This is Ksmg**/
+        fun toBillPaymentPayAirtimeStringKsmg(terminalInfo: TerminalInfo, transaction: TransactionInfo, paymentModel: BillPaymentModel): String {
+            val hasPin = transaction.cardPIN.isNotEmpty()
+            var pinData = ""
+            var customerId = paymentModel.customerId
+            var phoneNumber = paymentModel.phoneNumber
+            var bankCbnCode = terminalInfo.terminalId.drop(1).take(3)
+            var customerEmail = terminalInfo.agentEmail
+
+            var transactionAmount = transaction.amount
+            var paymentCode = paymentModel.paymentCode
+            //var paymentCode = Constants.PAYMENT_CODE_2
+
+            var rrfNumber = transaction.stan.padStart(12, '0')
+            val amount = String.format(Locale.getDefault(), "%012d", transactionAmount)
+            Logger.with("purchaserequest").logErr(amount)
+            val now = Date()
+            val date = DateUtils.dateFormatter.format(now)
+            var icc = getIcc(terminalInfo, amount, date, transaction)
+
+            val iswConfig = IswPos.getInstance().config
+            var keyLabel = if (iswConfig.environment == Environment.Test) "000006" else "000002"
+
+            var dedicatedFileTag = "<DedicatedFileName>${icc.DEDICATED_FILE_NAME}</DedicatedFileName>"
+
+            var track2 = let {
+                val neededLength = transaction.cardTrack2.length - 2
+                val isVisa = transaction.cardTrack2.startsWith('4')
+                val hasCharacter = transaction.cardTrack2.last().isLetter()
+
+                // remove character suffix for visa
+                if (isVisa && hasCharacter) transaction.cardTrack2.substring(0..neededLength)
+                else transaction.cardTrack2
+            }
+
+            if (hasPin)
+
+                pinData = """<pinData><ksnd>605</ksnd><pinType>Dukpt</pinType><ksn>${transaction.pinKsn}</ksn><pinBlock>${transaction.cardPIN}</pinBlock></pinData>"""
+
+
+            val requestBody = """<kmsg>
+                                    <scheme>standard</scheme>
+	                                <app>recharge</app>
+	                                <terminfo>
+		                                <mid>${terminalInfo.merchantId}</mid>
+		                                <ttype>POS</ttype>
+		                                <tmanu>PAX</tmanu>
+		                                <tid>${terminalInfo.terminalId}</tid>
+		                                <uid>${serialId}</uid>
+		                                <mloc>${terminalInfo.merchantNameAndLocation}</mloc>
+		                                <batt>-1</batt>
+		                                <tim>${DateUtils.universalDateFormat.format(Date())}</tim>
+		                                <csid>SS:100</csid>
+		                                <pstat>1</pstat>
+		                                <lang>EN</lang>
+		                                <poscondcode>00</poscondcode>
+		                                <posgeocode>00234000000000566</posgeocode>
+		                                <currencycode>${terminalInfo.currencyCode}</currencycode>
+                                        <tmodel>${icc.TERMINAL_TYPE}</tmodel>
+		                                <comms>GPRS</comms>
+		                                <cstat>0</cstat>
+		                                <sversion>kimono-v3.14.11</sversion>
+		                                <hasbattery>1</hasbattery>
+		                                <lasttranstime>${DateUtils.universalDateFormat.format(Date())}</lasttranstime>
+	                                </terminfo>
+	                                <request>
+		                                <ttid>000002</ttid>
+		                                <type>trans</type>
+		                                <amt>${transactionAmount}</amt>
+		                                <track2>${track2}</track2>
+                                        <pindata>${transaction.cardPIN}</pindata>
+		                                <ksn>000002DDDDE00001</ksn>
+		                                <ksnd>605</ksnd>
+		                                <selacctype>${transaction.accountType.name}</selacctype>
+		                                <posdatacode>510101513344101</posdatacode>
+		                                <posentrymode>051</posentrymode>
+		                                <cardseqnum>${transaction.csn}</cardseqnum>
+		                                <keysetid>000002</keysetid>
+		                                <chvm>OnlinePin</chvm>
+		                                <icd>
+			                                <isfallback>false</isfallback>
+			                                <aa>${icc.TRANSACTION_AMOUNT}</aa>
+			                                <ao>${icc.ANOTHER_AMOUNT}</ao>
+			                                <aip>${icc.APPLICATION_INTERCHANGE_PROFILE}</aip>
+			                                <atc>${icc.APPLICATION_TRANSACTION_COUNTER}</atc>
+			                                <cg>${icc.AUTHORIZATION_REQUEST}</cg>
+			                                <cid>${icc.CRYPTOGRAM_INFO_DATA}</cid>
+			                                <cr>${icc.CARD_HOLDER_VERIFICATION_RESULT}</cr>
+			                                <iad>${icc.ISSUER_APP_DATA}</iad>
+			                                <trc>${icc.TRANSACTION_CURRENCY_CODE}</trc>
+			                                <tvr>${icc.TERMINAL_VERIFICATION_RESULT}</tvr>
+			                                <tcc>${icc.TERMINAL_COUNTRY_CODE}</tcc>
+			                                <tty>${icc.TERMINAL_TYPE}</tty>
+			                                <tck>R</tck>
+			                                <td>${icc.TRANSACTION_DATE}</td>
+			                                <trt>00</trt>
+			                                <un>${icc.UNPREDICTABLE_NUMBER}</un>
+			                                <dfn>${icc.DEDICATED_FILE_NAME}</dfn>
+			                                <tcp${icc.TERMINAL_CAPABILITIES}</tcp>
+		                                </icd>
+		                                <addinfo>
+			                                <rechargeinfo>
+				                                <TPhoneNo>${customerId}</TPhoneNo>
+				                                <networkid>${paymentCode}</networkid>
+				                                <productcode>${paymentCode}</productcode>
+				                                <cardHName>AYOOLUWA OLOSUNDE</cardHName>
+				                                <ver>2.0SE(20130620)</ver>
+			                                </rechargeinfo>
+		                                </addinfo>
+	                                </request>
+</kmsg>"""
+            Logger.with("Purchase Request body").logErr(requestBody)
+            return requestBody
+ }
+
+
+
+
+
 
         fun toCNPPurchaseString(device:POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
 

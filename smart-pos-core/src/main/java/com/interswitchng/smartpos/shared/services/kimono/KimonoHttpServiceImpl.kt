@@ -578,9 +578,9 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     private fun billPaymentPayAirtime(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse? {
 
         var url = Constants.KIMONO_CASH_OUT_ENDPOINT_PAY
-        if (terminalInfo.isKimono3) {
-            url = Constants.KIMONO_3_END_POINT
-        }
+//        if (terminalInfo.isKimono3) {
+//            url = Constants.KIMONO_3_END_POINT
+//        }
 
         val requestBody: String = PurchaseRequest.toBillPaymentPayAirtimeString( terminalInfo, txnInfo, paymentModel)
         val body = RequestBody.create(MediaType.parse("text/xml"), requestBody)
