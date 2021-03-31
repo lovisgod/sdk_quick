@@ -45,9 +45,14 @@ object Constants {
     internal const val SATURN_END_POINT = "https://saturn.interswitchng.com/api/"
 
 
-    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://webpay.interswitchng.com/kimonotms/paybills/inquire"
+//    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://webpay.interswitchng.com/kimonotms/paybills/inquire"
+
+    internal const val KIMONO_CASH_OUT_ENDPOINT_INQUIRY = "https://saturn.interswitchng.com/kimonotms/paybills/inquire"
+
+//    internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://webpay.interswitchng.com/kimonotms/paybills/pay"
 
     internal const val KIMONO_CASH_OUT_ENDPOINT_PAY = "https://saturn.interswitchng.com/kimonotms/paybills/pay"
+
 
     internal const val KIMONO_3_END_POINT = "https://kimono.interswitchng.com/kmw/kimonoservice"
 
@@ -227,12 +232,64 @@ object Constants {
 
     val DSTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "DSTV COMPACT", subTitle = "Dstv Compact",
-                    packageId = "10403", productcode = "10403", logoPath = 0),
+                    packageId = "10403", productcode = "10403", logoPath = R.drawable.dstv_1),
             BillPaymentCategoriesModel(title = "DSTV PREMIUM", subTitle = "Dstv Premium",
-                    packageId = "10401", productcode = "10401", logoPath = 0),
+                    packageId = "10401", productcode = "10401", logoPath = R.drawable.dstv_1),
             BillPaymentCategoriesModel(title = "OTHERS", subTitle = "Other Dstv Packages",
+                    packageId = "", productcode = "", logoPath = R.drawable.dstv_1)
+    )
+
+    val GOTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
+            BillPaymentCategoriesModel(title = "LITE MONTHLY", subTitle = "GOTV Lite Monthly",
+                    packageId = "495117", productcode = "495117", logoPath = 0),
+            BillPaymentCategoriesModel(title = "LITE QUARTERLY", subTitle = "GOTV Lite Quarterly",
+                    packageId = "459116", productcode = "459116", logoPath = 0),
+            BillPaymentCategoriesModel(title = "LITE ANNUAL", subTitle = "Lite Annual",
+                    packageId = "459115", productcode = "459115", logoPath = 0),
+            BillPaymentCategoriesModel(title = "GOTV VALUE", subTitle = "GOTV Value",
+                    packageId = "459112", productcode = "459112", logoPath = 0),
+            BillPaymentCategoriesModel(title = "GOTV PLUS", subTitle = "GOTV Plus",
+                    packageId = "459111", productcode = "459111", logoPath = 0),
+            BillPaymentCategoriesModel(title = "MOBILE ACCESS", subTitle = "Mobile Access",
+                    packageId = "459113", productcode = "459113", logoPath = 0),
+            BillPaymentCategoriesModel(title = "OTHERS", subTitle = "Others",
                     packageId = "", productcode = "", logoPath = 0)
     )
+
+
+    val UTILITY_BILL_PROVIDERS = arrayListOf<BillDisplayDataModel>(
+            BillDisplayDataModel("IKEDC", "Pay for your electricity bill"),
+            BillDisplayDataModel("IBADAN", "Pay for your electricity bill"),
+            BillDisplayDataModel("EKO", "Pay for your")
+    )
+
+    val EKO_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
+            BillPaymentCategoriesModel(title = "PREPAID PAID", subTitle = "",
+                    packageId = "04147302", productcode = "04147302", logoPath = 0),
+            BillPaymentCategoriesModel(title = "POST PAID", subTitle = "",
+                    packageId = "04131606", productcode = "04131606", logoPath = 0),
+            BillPaymentCategoriesModel(title = "OTHERS", subTitle = "",
+                    packageId = "", productcode = "", logoPath = 0)
+    )
+
+    val IKEJA_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
+            BillPaymentCategoriesModel(title = "PREPAID PAID", subTitle = "",
+                    packageId = "76601", productcode = "76601", logoPath = 0),
+            BillPaymentCategoriesModel(title = "POST PAID", subTitle = "",
+                    packageId = "84801", productcode = "84801", logoPath = 0),
+            BillPaymentCategoriesModel(title = "OTHERS", subTitle = "",
+                    packageId = "", productcode = "", logoPath = 0)
+    )
+
+    val IBADAN_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
+            BillPaymentCategoriesModel(title = "PREPAID PAID", subTitle = "",
+                    packageId = "79201", productcode = "79201", logoPath = 0),
+            BillPaymentCategoriesModel(title = "POST PAID", subTitle = "",
+                    packageId = "78401", productcode = "78401", logoPath = 0),
+            BillPaymentCategoriesModel(title = "OTHERS", subTitle = "",
+                    packageId = "", productcode = "", logoPath = 0)
+    )
+
 
     const val SETTLEMENT_ACCOUNT_NUMBER = "SETTLEMENT_ACCOUNT_NUMBER"
     const val SETTLEMENT_BANK_CODE = "SETTLEMENT_BANK_CODE"

@@ -11,11 +11,25 @@ class billRepo {
         return Constants.NETWORKS_LIST
     }
 
+    fun getUtilityBillers(): ArrayList<BillDisplayDataModel> {
+        return Constants.UTILITY_BILL_PROVIDERS
+    }
+
     fun getCableTvProviders(): ArrayList<BillDisplayDataModel> {
         return Constants.CABLE_TV_PROVIDERS
     }
 
-    fun getDstvPackages(): ArrayList<BillPaymentCategoriesModel> {
-        return Constants.DSTV_PACKAGES
+    fun getDstvPackages(provider: String): ArrayList<BillPaymentCategoriesModel> {
+
+         return when (provider) {
+           "dstv" ->  Constants.DSTV_PACKAGES
+           "gotv" -> Constants.GOTV_PACKAGES
+           "eko" -> Constants.EKO_PACKAGES
+           "ikedc" -> Constants.IKEJA_PACKAGES
+           "ibadan" -> Constants.IBADAN_PACKAGES
+             else -> {
+                 Constants.DSTV_PACKAGES
+             }
+         }
     }
 }

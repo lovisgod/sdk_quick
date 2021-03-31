@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.adapters.cableTvBillerCategoryAdapter
 import com.interswitchng.smartpos.modules.main.billPayment.models.BillDisplayDataModel
+import com.interswitchng.smartpos.modules.main.billPayment.models.ChoosePackageConfigModel
 import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCallBackListener
 import com.interswitchng.smartpos.modules.main.billPayment.viewmodels.BillPaymentViewmodel
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_billers_category.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -23,6 +25,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class BillersCategoryFragment : DialogFragment(), NetworkListCallBackListener<BillDisplayDataModel> {
    private var list = ArrayList<BillDisplayDataModel>()
    private lateinit var adapter: cableTvBillerCategoryAdapter
+   private lateinit var packageChoiceConfig: ChoosePackageConfigModel
 
    private val viewmodel: BillPaymentViewmodel by viewModel()
 
@@ -62,14 +65,26 @@ class BillersCategoryFragment : DialogFragment(), NetworkListCallBackListener<Bi
     }
 
     private fun getData() {
-        viewmodel.getCableBillers().observe(viewLifecycleOwner, Observer {
-            it.let {
-                if (!it.isNullOrEmpty()) {
-                    list = it
-                    adapter.setData(list)
+        packageChoiceConfig = ChoosePackageConfigModel(billerName = "")
+        when(Prefs.getString("CATEGORY_CHOSEN", "CABLE")) {
+            "CABLE" -> viewmodel.getCableBillers().observe(viewLifecycleOwner, Observer {
+                it.let {
+                    if (!it.isNullOrEmpty()) {
+                        list = it
+                        adapter.setData(list)
+                    }
                 }
-            }
-        })
+            })
+            "UTILITY" -> viewmodel.getUtilityBillers().observe(viewLifecycleOwner, Observer {
+                packageChoiceConfig.selectPackageField?.show = false
+                it.let {
+                    if (!it.isNullOrEmpty()) {
+                        list = it
+                        adapter.setData(list)
+                    }
+                }
+            })
+        }
     }
 
 
@@ -81,7 +96,8 @@ class BillersCategoryFragment : DialogFragment(), NetworkListCallBackListener<Bi
     }
 
     override fun onDataReceived(data: BillDisplayDataModel) {
-        val action = BillersCategoryFragmentDirections.iswActionIswBillerscategoryfragmentToIswChoosepackagefragment(billerName = data.title)
+        packageChoiceConfig = viewmodel.getBillerConfig(data)
+        val action = BillersCategoryFragmentDirections.iswActionIswBillerscategoryfragmentToIswChoosepackagefragment(billerName = data.title, fieldsConfigModel = packageChoiceConfig)
         findNavController().navigate(action)
     }
 
