@@ -45,7 +45,7 @@
         android:layout_marginBottom="24dp"
         android:textColor="@android:color/white"
         android:textSize="26sp"
-        android:text="@string/isw_account_number"
+        android:text="@string/isw_bill_payment_airtime_recharge"
         app:layout_constraintBottom_toTopOf="@id/isw_guideline"
         app:layout_constraintStart_toStartOf="@+id/isw_guideline2"
         tools:text="@string/isw_transfer_title" />
@@ -88,13 +88,23 @@
             android:textSize="20sp">
         </TextView>
 
-        <EditText
-            android:id="@+id/isw_recharge_input_phone"
-            android:maxLength="11"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/isw_recharge_input_phone_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Phone Number"
-            android:inputType="number" />
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/isw_recharge_input_phone"
+                android:gravity="center_vertical"
+                android:background="#EDEDED"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -124,12 +134,22 @@
             android:textSize="20sp">
         </TextView>
 
-        <EditText
-            android:id="@+id/isw_recharge_amount_input"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/isw_recharge_amount_input_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Amount"
-            android:inputType="number" />
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/isw_recharge_amount_input"
+                android:gravity="center_vertical"
+                android:background="#EDEDED"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/isw_recharge_input_proceed"

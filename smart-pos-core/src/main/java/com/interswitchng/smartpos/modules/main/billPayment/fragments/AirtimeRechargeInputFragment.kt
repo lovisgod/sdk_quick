@@ -8,12 +8,14 @@ import android.view.View
 import android.widget.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.textfield.TextInputEditText
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.billPayment.adapters.NetworkRecyclerAdapter
 import com.interswitchng.smartpos.modules.main.billPayment.models.*
 import com.interswitchng.smartpos.modules.main.billPayment.utils.BillPaymentSummaryDialog
 import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
+import com.interswitchng.smartpos.modules.main.transfer.getTextValue
 import com.interswitchng.smartpos.modules.main.transfer.hideKeyboard
 import com.interswitchng.smartpos.modules.main.transfer.makeActive
 import com.interswitchng.smartpos.modules.main.transfer.makeInActive
@@ -27,8 +29,8 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
     val networks = NETWORKS_LIST
 
     lateinit var selectedNetwork: NetworksModel
-    lateinit var phoneInput: EditText
-    lateinit var amountInput: EditText
+    lateinit var phoneInput: TextInputEditText
+    lateinit var amountInput: TextInputEditText
     lateinit var submitButton: Button
     var isValid = false
 
@@ -96,11 +98,11 @@ class AirtimeRechargeInputFragment : BaseFragment(TAG), NetworkListCallBackListe
     }
 
     fun validateData() {
-        if(amountInput.text.toString() == "" || amountInput.text.toString() == null){
+        if(amountInput.getTextValue().isNullOrEmpty()){
             isValid = false
             return
         }
-        if(phoneInput.text.toString() == "" || amountInput.text == null){
+        if(phoneInput.getTextValue().isNullOrEmpty() || phoneInput.getTextValue().length != 11){
             isValid = false
             return
         }

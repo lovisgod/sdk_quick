@@ -218,9 +218,9 @@ object Constants {
     )
 
     val NETWORKS_LIST = arrayListOf<NetworksModel>(
+            NetworksModel("628051043", "628051043", "MTN", R.drawable.logo_mtn),
             NetworksModel("628051049", "628051049", "9MOBILE", R.drawable.logo_nine),
             NetworksModel("6280510420", "6280510420", "AIRTEL", R.drawable.logo_airtel),
-            NetworksModel("628051043", "628051043", "MTN", R.drawable.logo_mtn),
             NetworksModel("628051045", "628051045", "GLO", R.drawable.logo_glo)
     )
 

@@ -240,8 +240,8 @@ internal class PurchaseRequest
                 <bankCbnCode>${bankCbnCode}</bankCbnCode>
                 <cardPan>${transaction.cardPAN}</cardPan>
                 <customerEmail>$customerEmail</customerEmail>
+                <customerMobile>$phoneNumber</customerMobile>
                 <customerId>$customerId</customerId>
-               c
                 <paymentCode>$paymentCode</paymentCode>
                 <terminalId>${terminalInfo.terminalId}</terminalId>
                 <requestType>Inquiry</requestType>

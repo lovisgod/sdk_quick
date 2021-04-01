@@ -15,6 +15,7 @@ import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.*
 import com.interswitchng.smartpos.shared.activities.BaseFragment
+import kotlinx.android.synthetic.main.isw_fragment_airtime_recharge_input.*
 import kotlinx.android.synthetic.main.isw_fragment_choose_package.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -41,6 +42,9 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
     }
 
     private fun setupUI() {
+        isw_back.setOnClickListener {
+            navigateUp()
+        }
         // Check and set based on config
         fieldsConfig.let {
             // Set visibility
