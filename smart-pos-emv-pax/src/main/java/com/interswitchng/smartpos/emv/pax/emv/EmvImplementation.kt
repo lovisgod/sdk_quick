@@ -488,6 +488,7 @@ internal class EmvImplementation(private val context: Context, private val pinCa
                 TRANSACTION_DATE = ICCData.TRANSACTION_DATE.getTlv() ?: "",
                 TRANSACTION_TYPE = ICCData.TRANSACTION_TYPE.getTlv() ?: "",
                 UNPREDICTABLE_NUMBER = ICCData.UNPREDICTABLE_NUMBER.getTlv() ?: "",
+                CARD_HOLDER_NAME = ICCData.CARD_HOLDER_NAME.getTlv() ?: "",
                 DEDICATED_FILE_NAME = ICCData.DEDICATED_FILE_NAME.getTlv() ?: "").apply {
 
 

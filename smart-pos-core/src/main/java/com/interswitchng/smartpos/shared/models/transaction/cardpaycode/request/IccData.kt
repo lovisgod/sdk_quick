@@ -36,7 +36,9 @@ class IccData(
         @field:Element(name = "UnpredictableNumber")
         var UNPREDICTABLE_NUMBER: String = "",
         @field:Element(name = "DedicatedFileName")
-        var DEDICATED_FILE_NAME: String = "") {
+        var DEDICATED_FILE_NAME: String = "",
+        @field:Element(name = "CardHolderName")
+        var CARD_HOLDER_NAME: String = "") {
 
 
         var INTERFACE_DEVICE_SERIAL_NUMBER: String = ""
