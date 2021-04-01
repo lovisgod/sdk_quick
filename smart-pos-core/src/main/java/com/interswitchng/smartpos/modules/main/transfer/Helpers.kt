@@ -51,6 +51,14 @@ fun View.hide() {
     this.visibility = View.GONE
 }
 
+fun View.isVisible(visibility: Boolean) {
+    this.visibility = if(visibility) {
+        View.VISIBLE
+    } else {
+        View.GONE
+    }
+}
+
 fun Dialog.showDialog(message: String) {
 //    this.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
 //    this.show()

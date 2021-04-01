@@ -188,5 +188,8 @@
         <action
             android:id="@+id/isw_action_isw_choosepackagefragment_to_isw_transfercardtransactionfragment"
             app:destination="@id/isw_transfercardtransactionfragment" />
+        <argument
+            android:name="fieldsConfigModel"
+            app:argType="com.interswitchng.smartpos.modules.main.billPayment.models.ChoosePackageConfigModel" />
     </fragment>
 </navigation>

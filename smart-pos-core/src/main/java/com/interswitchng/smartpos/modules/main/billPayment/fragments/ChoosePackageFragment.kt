@@ -2,8 +2,6 @@ package com.interswitchng.smartpos.modules.main.billPayment.fragments
 
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -19,7 +17,6 @@ import com.interswitchng.smartpos.modules.main.transfer.*
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import kotlinx.android.synthetic.main.isw_fragment_choose_package.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.*
 
 
 class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<BillPaymentCategoriesModel>, DialogCallBackListener<Boolean> {
@@ -27,6 +24,7 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
     val viewmodel:BillPaymentViewmodel by viewModel()
     private val parameters by navArgs<ChoosePackageFragmentArgs>()
     private val billerName by lazy { parameters.billerName }
+    private val fieldsConfig by lazy { parameters.fieldsConfigModel}
     private lateinit var dialog: PackageBottomSheetDialog
 
     var isValid: Boolean = false
@@ -43,22 +41,62 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
     }
 
     private fun setupUI() {
+        // Check and set based on config
+        fieldsConfig.let {
+            // Set visibility
+            isw_select_package_container.isVisible(it.selectPackageField?.show!!)
+            isw_select_package.isVisible(it.selectPackageField?.show!!)
+            isw_select_package_label.isVisible(it.selectPackageField?.show!!)
+
+            isw_smart_card_number_label.isVisible(it.accountNumberField?.show!!)
+            isw_smart_card_number.isVisible(it.accountNumberField?.show!!)
+
+            isw_amount_container.isVisible(it.amountField?.show!!)
+            isw_amount_label.isVisible(it.amountField?.show!!)
+            isw_amount.isVisible(it.amountField?.show!!)
+
+            isw_phone_number.isVisible(it.phoneNumberField?.show!!)
+            isw_phone_number_label.isVisible(it.phoneNumberField?.show!!)
+            isw_phone_number_container.isVisible(it.phoneNumberField?.show!!)
+
+            isw_biller_code_container.isVisible(it.billerCodeField?.show!!)
+            isw_biller_code_label.isVisible(it.billerCodeField?.show!!)
+            isw_biller_code.isVisible(it.billerCodeField?.show!!)
+
+
+//            set field properties
+            if(it.accountNumberField?.show!!) {
+                isw_smart_card_number_label.text = it.accountNumberField.title
+            }
+            if(it.selectPackageField?.show!!) {
+                isw_select_package.isClickable = true
+                isw_select_package.setOnClickListener {
+                    viewmodel.getDstvPackages(billerName.toString().toLowerCase()).observe(viewLifecycleOwner, Observer {array ->
+                        it.let {
+                            fragmentManager?.let {
+                                dialog = PackageBottomSheetDialog(categories = array, callBackListener = this)
+                                dialog.show(it, TAG)
+
+                            }
+                        }
+                    })
+                }
+                isw_select_package_label.text = it.selectPackageField.title
+            }
+            if(it.amountField?.show!!) {
+                isw_amount_label.text = it.amountField.title
+            }
+            if(it.billerCodeField?.show!!){
+                isw_biller_code_label.text = it.billerCodeField.title
+            }
+
+        }
+
         isw_transfer_input_proceed.makeInActive()
         if (!billerName.isNullOrEmpty()) {
             isw_merchant_name.text = billerName.toString()
         }
-        isw_select_package.isClickable = true
-        isw_select_package.setOnClickListener {
-            viewmodel.getDstvPackages(billerName.toString().toLowerCase()).observe(viewLifecycleOwner, Observer {array ->
-                it.let {
-                    fragmentManager?.let {
-                        dialog = PackageBottomSheetDialog(categories = array, callBackListener = this)
-                        dialog.show(it, TAG)
 
-                    }
-                }
-            })
-        }
 
         isw_transfer_input_proceed.setOnClickListener {
             showRechargeSummary()
@@ -87,12 +125,14 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
 
 
     fun observerTextChange() {
-        changeListener(arrayListOf(isw_biller_code, isw_amount, isw_select_package, isw_smart_card_number)) { validateData() }
+        changeListener(arrayListOf(isw_biller_code, isw_amount, isw_select_package, isw_smart_card_number, isw_phone_number)) { validateData() }
     }
 
 
     fun validateData() {
-        if(isw_biller_code.getTextValue().isNullOrEmpty() ||
+        if(
+                isw_biller_code.getTextValue().isNullOrEmpty() ||
+                (isw_phone_number.getTextValue().isNullOrEmpty() && fieldsConfig?.phoneNumberField?.required!!)||
                 isw_select_package.getTextValue().isNullOrEmpty() ||
                 isw_smart_card_number.getTextValue().isNullOrEmpty() ||
                 isw_amount.getTextValue().isNullOrEmpty()){
@@ -112,7 +152,7 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
             payment.amount = isw_amount.getTextValue().toInt() * 100
             payment.billPayment = BillPaymentModel()
             payment.billPayment?.customerId = isw_smart_card_number.getTextValue()
-            payment.billPayment?.phoneNumber = ""
+            payment.billPayment?.phoneNumber = isw_phone_number.getTextValue()
             payment.billPayment?.customerEmail = ""
             payment.billPayment?.paymentCode = isw_biller_code.getTextValue()
 

@@ -241,7 +241,7 @@ internal class PurchaseRequest
                 <cardPan>${transaction.cardPAN}</cardPan>
                 <customerEmail>$customerEmail</customerEmail>
                 <customerId>$customerId</customerId>
-                <customerMobile>$phoneNumber</customerMobile>
+               c
                 <paymentCode>$paymentCode</paymentCode>
                 <terminalId>${terminalInfo.terminalId}</terminalId>
                 <requestType>Inquiry</requestType>
