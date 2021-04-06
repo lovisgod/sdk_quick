@@ -2,7 +2,11 @@ package com.interswitchng.smartpos.shared.services.kimono
 
 import android.content.Context
 import android.util.Base64
+import android.util.Log
+import com.github.underscore.lodash.U
+import com.google.gson.Gson
 import com.igweze.ebi.simplecalladapter.Simple
+import com.interswitchng.smartpos.modules.main.billPayment.models.AirtimeMapperClass
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
 import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.TokenPassportResponse
@@ -588,31 +592,46 @@ internal class KimonoHttpServiceImpl(private val context: Context,
         try {
             val responseBody = httpService.makeCashOutPaymentnew(url, body, "bearer ${Prefs.getString("token", "")}").run()
             var purchaseResponse = responseBody
-            println(purchaseResponse)
-            return TransactionResponse("", "", "", "")
-//            return if (!responseBody.isSuccessful || purchaseResponse == null) {
-//                TransactionResponse(
-//                        responseCode = IsoUtils.TIMEOUT_CODE,
-//                        authCode = "",
-//                        stan = "",
-//                        scripts = "",
-//                        responseDescription = responseBody.message(),
-//                        type = TransactionType.CashOutPay
-//                )
-//            } else {
-//                TransactionResponse(
-//                        responseCode = purchaseResponse.responseCode,//data.responseCode,
-//                        stan = purchaseResponse.stan,
-//                        authCode = purchaseResponse.authId,//purchaseResponse.authCode,// data.authCode,
-//                        scripts = purchaseResponse.stan,
-//                        responseDescription = purchaseResponse.description,//data.description
-//                        name = purchaseResponse.customerDescription,
-//                        ref = purchaseResponse.transactionRef,
-//                        rrn = purchaseResponse.retrievalRefNumber,
-//                        type = TransactionType.CashOutPay
-//
-//                )
-//            }
+            println("this is response raw ${purchaseResponse}")
+            var splittedresponse = purchaseResponse.body()?.string()?.split("<card")?.get(2)
+            var responseWithCard = "<card " + splittedresponse
+            // println(responseWithCard)
+            var xxx = responseWithCard.split("<var")
+            // println(xxx)
+            var yyy = "<response> <code ${xxx.get(1).replace("</var>", "", true)}</code><message${xxx.get(2).replace("</var>", "", true)}</message></response>"
+            println(yyy)
+
+            var fff = yyy.replace("name=\"responsecode\"", "")
+            var ttt = fff.replace("name=\"responsemessage\"", "")
+            println(ttt)
+            var uuu = U.xmlToJson(ttt)
+            println(uuu)
+            var gson = Gson()
+            var modeledRes = gson.fromJson<AirtimeMapperClass>(uuu, AirtimeMapperClass::class.java)
+            println(modeledRes)
+            return if (!responseBody.isSuccessful || purchaseResponse == null) {
+                TransactionResponse(
+                        responseCode = IsoUtils.TIMEOUT_CODE,
+                        authCode = "",
+                        stan = "",
+                        scripts = "",
+                        responseDescription = responseBody.message(),
+                        type = TransactionType.BillPayment
+                )
+            } else {
+                TransactionResponse(
+                        responseCode = modeledRes.response.code,//data.responseCode,
+                        stan = txnInfo.stan,
+                        authCode = "",//purchaseResponse.authCode,// data.authCode,
+                        scripts =txnInfo.stan,
+                        responseDescription = modeledRes.response.message,//data.description
+                        name = "",
+                        ref = "",
+                        rrn = "",
+                        type = TransactionType.BillPayment
+
+                )
+            }
 
         } catch (e: Exception) {
             logger.log(e.localizedMessage)
