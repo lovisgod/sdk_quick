@@ -610,7 +610,6 @@ internal class PurchaseRequest
 
         }
 
-
         /**This is Ksmg**/
         fun toBillPaymentPayAirtimeStringKsmg(terminalInfo: TerminalInfo, transaction: TransactionInfo, paymentModel: BillPaymentModel): String {
             val hasPin = transaction.cardPIN.isNotEmpty()
@@ -725,11 +724,6 @@ internal class PurchaseRequest
             Logger.with("Purchase Request body").logErr(requestBody)
             return requestBody
  }
-
-
-
-
-
 
         fun toCNPPurchaseString(device:POSDevice, terminalInfo: TerminalInfo, transaction: TransactionInfo): String {
 

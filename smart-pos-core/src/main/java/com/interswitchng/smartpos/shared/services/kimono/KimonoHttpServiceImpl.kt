@@ -577,7 +577,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
 
     private fun billPaymentPayAirtime(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse? {
 
-        var url = Constants.KIMONO_CASH_OUT_ENDPOINT_PAY
+        var url = Constants.KIMONO_CASH_OUT_ENDPOINT_AIRTIME
 //        if (terminalInfo.isKimono3) {
 //            url = Constants.KIMONO_3_END_POINT
 //        }

@@ -42,6 +42,8 @@ class ChooseCategoryFragment : BaseFragment(TAG) {
             Prefs.putString("CATEGORY_CHOSEN", "UTILITY")
             findNavController().navigate(action)
         }
+
+
     }
 
 

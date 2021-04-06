@@ -19,6 +19,7 @@ import com.interswitchng.smartpos.modules.main.billPayment.models.NetworkListCal
 import com.interswitchng.smartpos.modules.main.billPayment.viewmodels.BillPaymentViewmodel
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_billers_category.*
+import kotlinx.android.synthetic.main.isw_fragment_choose_category.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -62,6 +63,10 @@ class BillersCategoryFragment : DialogFragment(), NetworkListCallBackListener<Bi
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+
+        back_arrow.setOnClickListener {
+            findNavController().popBackStack(R.id.isw_choosecategoryfragment, false)
+        }
     }
 
     private fun getData() {
