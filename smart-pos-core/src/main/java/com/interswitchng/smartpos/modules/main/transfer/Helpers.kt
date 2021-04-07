@@ -20,6 +20,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.PinEditText
+import com.interswitchng.smartpos.modules.main.billPayment.models.AirtimeMapperClass
+import com.interswitchng.smartpos.modules.main.billPayment.models.Response
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.isw_transfer_fragment_amount.*
 import java.text.NumberFormat
@@ -185,4 +187,20 @@ fun changeListener(fields: ArrayList<TextInputEditText>, action: (() -> Any?)? =
     val formatted = numberFormat.format(parsed / 100)
      println(formatted)
     return formatted
+}
+
+fun getDataFromRechargeResponse(resp: String): AirtimeMapperClass {
+    val refPattern =  """SessionAdd\(\'refnum\',\'[0-9]{1,20}\'\)""".toRegex()
+    val codePattern = """SessionAdd\(\'rcode\',\'[0-9]{1,20}\'\)""".toRegex()
+
+    val messagePattern =  """SessionAdd\(\'__myrmsg\',\'[a-z, A-Z]{1,30}\'\)""".toRegex()
+    var ref = refPattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    println(ref)
+    var code = codePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    println(code)
+
+    var message = messagePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    println(message)
+
+    return AirtimeMapperClass( Response(code, message, ref))
 }
