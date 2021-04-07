@@ -4,11 +4,11 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import android.widget.Button
+import android.widget.CompoundButton
 import android.widget.EditText
+import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.gojuno.koptional.None
@@ -17,13 +17,12 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.TransferViewModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
+import com.interswitchng.smartpos.modules.main.transfer.getTextValue
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BeneficiaryModel
 import com.interswitchng.smartpos.modules.main.transfer.models.CallbackListener
-import com.interswitchng.smartpos.modules.main.transfer.models.NameEnquiryResponse
 import com.interswitchng.smartpos.modules.main.transfer.showSuccessAlert
 import com.interswitchng.smartpos.modules.main.transfer.utils.BankFilterDialog
-import com.interswitchng.smartpos.modules.main.transfer.utils.LoadingDialog
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.interswitchng.smartpos.shared.utilities.toast
@@ -47,6 +46,7 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
 
 
     var accountNumber: String? = ""
+    var useNameEnquiry = true
 
     private val transferViewModel: TransferViewModel by viewModel()
 
@@ -59,7 +59,6 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
         bankList.addAll(Constants.BANK_LIST.sortedWith(compareBy { it.bankName }))
         submitButton = isw_transfer_input_proceed
         accountNumberEditor = isw_transfer_input_account
-
 
 
         validateInput()
@@ -90,9 +89,39 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
             }
         })
 
+        isw_transfer_input_account_name.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+              if (!useNameEnquiry) {
+                  validateBeneficiary()
+              }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+        })
+
+
         isw_transfer_input_proceed.setOnClickListener { view ->
             submitForm(view)
         }
+
+        isw_name_enquiry_switch.isChecked = useNameEnquiry
+        isw_name_enquiry_switch.setOnCheckedChangeListener { _, isChecked ->
+            useNameEnquiry = isChecked
+            isw_transfer_input_account_name.isFocusable = !useNameEnquiry
+            isw_transfer_input_account_name.isFocusableInTouchMode = !useNameEnquiry
+            toggleAccountNameVisibility()
+
+            if(isChecked) {
+                isValid = false
+                validateBeneficiary()
+            }
+        }
+
     }
 
     override fun onDataReceived(data: BankModel) {
@@ -104,7 +133,15 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
 
 
     private fun validateBeneficiary() {
+
         if (accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
+
+            if(!useNameEnquiry) {
+                isValid = !isw_transfer_input_account_name.getTextValue().isNullOrEmpty()
+                validateInput()
+                return
+            }
+
             if (!this::dialog.isInitialized) {
                 dialog = customdailog(this.requireContext())
             }else {
@@ -177,14 +214,19 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
     }
 
     private fun toggleAccountNameVisibility() {
-        if (isValid) {
+        if (isValid || !useNameEnquiry) {
             account_name.visibility = View.VISIBLE
+            outlinedNameTextField.visibility = View.VISIBLE
             isw_transfer_input_account_name.visibility = View.VISIBLE
-            isw_transfer_input_account_name.setText(_beneficiaryPayload.accountName)
+            if(this::_beneficiaryPayload.isInitialized) isw_transfer_input_account_name.setText(_beneficiaryPayload.accountName)
         } else {
             account_name.visibility = View.GONE
+            outlinedNameTextField.visibility = View.GONE
             isw_transfer_input_account_name.visibility = View.GONE
         }
+
+//      make Account name input focusable based on the state of use name enquiry
+
     }
 
     companion object {
