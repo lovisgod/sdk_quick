@@ -676,7 +676,7 @@ internal class PurchaseRequest
 		<lasttranstime>2021/03/30 11:33:37</lasttranstime>
 	</terminfo>
 	<request>
-		<ttid>000002</ttid>
+		<ttid>${transaction.stan}</ttid>
 		<type>trans</type>
 		<amt>${transactionAmount}</amt>
 		<track2>${track2}</track2>

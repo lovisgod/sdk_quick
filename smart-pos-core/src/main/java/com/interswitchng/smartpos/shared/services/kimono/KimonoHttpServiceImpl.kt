@@ -595,30 +595,6 @@ internal class KimonoHttpServiceImpl(private val context: Context,
             var purchaseResponse = responseBody
             val modeledRes  = getDataFromRechargeResponse(purchaseResponse.body()?.string().toString())
             println(modeledRes)
-//            println("this is response raw ${purchaseResponse}")
-//            var resp = """${purchaseResponse.body()?.string()}"""
-//            val refPattern =  """SessionAdd\(\'refnum\',\'[0-9]{1,20}\'\)""".toRegex()
-////            val codePattern = """SessionAdd\(\'rcode\',\'[0-9]{1,20}\'\)""".toRegex()
-////
-////            val messagePattern = """SessionAdd\(\'__myrmsg\',\'^[A-Za-z]*$\'\)""".toRegex()
-//            var ref = refPattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
-//            println(ref)
-//            var splittedresponse = purchaseResponse.body()?.string()?.split("<card")?.get(2)
-//            var responseWithCard = "<card " + splittedresponse
-//            // println(responseWithCard)
-//            var xxx = responseWithCard.split("<var")
-//            // println(xxx)
-//            var yyy = "<response> <code ${xxx.get(1).replace("</var>", "", true)}</code><message${xxx.get(2).replace("</var>", "", true)}</message></response>"
-//            println(yyy)
-//
-//            var fff = yyy.replace("name=\"responsecode\"", "")
-//            var ttt = fff.replace("name=\"responsemessage\"", "")
-//            println(ttt)
-//            var uuu = U.xmlToJson(ttt)
-//            println(uuu)
-//            var gson = Gson()
-//            var modeledRes = gson.fromJson<AirtimeMapperClass>(uuu, AirtimeMapperClass::class.java)
-//            println(modeledRes)
             return if (!responseBody.isSuccessful || purchaseResponse == null) {
                 TransactionResponse(
                         responseCode = IsoUtils.TIMEOUT_CODE,
