@@ -136,12 +136,11 @@ class ChoosePackageFragment : BaseFragment(TAG), NetworkListCallBackListener<Bil
     fun validateData() {
         if(
                 isw_biller_code.getTextValue().isNullOrEmpty() ||
-                (isw_phone_number.getTextValue().isNullOrEmpty() && fieldsConfig?.phoneNumberField?.required!!)||
-                isw_select_package.getTextValue().isNullOrEmpty() ||
-                isw_smart_card_number.getTextValue().isNullOrEmpty() ||
+                (isw_phone_number.getTextValue().isNullOrEmpty() && fieldsConfig?.phoneNumberField?.required!!) ||
+                (isw_select_package.getTextValue().isNullOrEmpty() && fieldsConfig?.selectPackageField?.required!!) ||
+                (isw_smart_card_number.getTextValue().isNullOrEmpty() && fieldsConfig?.accountNumberField?.required!!) ||
                 isw_amount.getTextValue().isNullOrEmpty()){
             isValid = false
-            println("Amount is not valid")
             return
         } else {
             isw_transfer_input_proceed.makeActive()

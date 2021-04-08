@@ -41,12 +41,14 @@ fun View.makeActive() {
     this.alpha = 1.0f
     this.isClickable = true
     this.isActivated = true
+    this.isEnabled = true
 }
 
 fun View.makeInActive() {
     this.alpha = 0.4f
     this.isClickable = false
     this.isActivated = false
+    this.isEnabled = false
 }
 
 fun View.hide() {

@@ -81,7 +81,6 @@ class BillersCategoryFragment : DialogFragment(), NetworkListCallBackListener<Bi
                 }
             })
             "UTILITY" -> viewmodel.getUtilityBillers().observe(viewLifecycleOwner, Observer {
-                packageChoiceConfig.selectPackageField?.show = false
                 it.let {
                     if (!it.isNullOrEmpty()) {
                         list = it

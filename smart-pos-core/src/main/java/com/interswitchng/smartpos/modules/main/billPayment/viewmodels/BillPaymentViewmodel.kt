@@ -7,6 +7,7 @@ import com.interswitchng.smartpos.modules.main.billPayment.models.BillPaymentCat
 import com.interswitchng.smartpos.modules.main.billPayment.models.ChoosePackageConfigModel
 import com.interswitchng.smartpos.modules.main.billPayment.repository.billRepo
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
+import com.pixplicity.easyprefs.library.Prefs
 
 class BillPaymentViewmodel(val billRepo: billRepo): RootViewModel() {
 
@@ -28,10 +29,17 @@ class BillPaymentViewmodel(val billRepo: billRepo): RootViewModel() {
     fun getBillerConfig(biller: BillDisplayDataModel): ChoosePackageConfigModel {
         val config = ChoosePackageConfigModel("")
         config.billerName = biller.title
-        if (arrayListOf<String>("eko", "ibadan", "ikedc").contains(biller.title.toLowerCase())) {
+        val isOthers = biller.title.toLowerCase() == "others"
+        val isUtility = (Prefs.getString("CATEGORY_CHOSEN", "CABLE") == "UTILITY")
+        if (isUtility) {
             config.accountNumberField?.title = "Meter Number"
             config.phoneNumberField?.show = true
             config.phoneNumberField?.required = true
+        }
+        if(isUtility && isOthers ) {
+            config.accountNumberField?.title = "Customer ID"
+            config.selectPackageField?.required = false
+            config.selectPackageField?.show = false
         }
             return config
         }
