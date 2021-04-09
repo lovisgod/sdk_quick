@@ -137,6 +137,9 @@ class TransferInputFragment : BaseFragment(TAG), CallbackListener {
         if (accountNumber?.length == 10 && this::_selectedBank.isInitialized) {
 
             if(!useNameEnquiry) {
+                _beneficiaryPayload = BeneficiaryModel()
+                _beneficiaryPayload.accountName = isw_transfer_input_account_name.text.toString()
+                _beneficiaryPayload.accountNumber = accountNumber.toString()
                 isValid = !isw_transfer_input_account_name.getTextValue().isNullOrEmpty()
                 validateInput()
                 return

@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class BeneficiaryModel(
         val accountCurrency: String? = "",
-        val accountName: String? = "",
-        val accountNumber: String? = "",
+        var accountName: String? = "",
+        var accountNumber: String? = "",
         val accountType: String? = "",
         val addrLine1: String? = "",
         val addrLine2: String? = "",

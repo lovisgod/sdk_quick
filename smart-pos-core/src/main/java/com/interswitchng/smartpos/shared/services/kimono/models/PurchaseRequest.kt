@@ -23,9 +23,6 @@ internal class PurchaseRequest
 
         private val serialId by lazy { DeviceUtils.getSerialNumber()}
 
-
-
-
         /**
          * this function returns the get token response**/
 
