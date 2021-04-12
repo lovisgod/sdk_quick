@@ -1,4 +1,4 @@
-package com.interswitchng.smartpos.shared.models.core
+ package com.interswitchng.smartpos.shared.models.core
 
 import android.app.Notification
 import com.google.gson.Gson
