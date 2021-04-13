@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
+import com.interswitchng.smartpos.IswTxnHandler
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel.TransactionType
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -28,6 +29,8 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     // communication channel with cardreader
     // this uses coroutine channels to update messages
     private val channel = Channel<EmvMessage>()
+
+
 
     // card removed flag
     private var cardRemoved = false
@@ -310,47 +313,59 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
             val emvData = emv.getTransactionInfo()
 
             // return response based on data
-            if (emvData != null) {
-                // create transaction info and issue online transfer request
-                val response = withContext(ioScope) {
-                    val txnInfo =
-                            TransactionInfo.fromEmv(
-                                    emvData,
-                                    paymentModel,
-                                    PurchaseType.Card,
-                                    accountType
-                            )
-                    initiateTransfer(transactionType, terminalInfo,
-                            txnInfo, destinationAccountNumber, receivingInstitutionId)
+//            if (emvData != null) {
+//                // create transaction info and issue online transfer request
+//                val response = withContext(ioScope) {
+//                    val txnInfo =
+//                            TransactionInfo.fromEmv(
+//                                    emvData,
+//                                    paymentModel,
+//                                    PurchaseType.Card,
+//                                    accountType
+//                            )
+//                    initiateTransfer(transactionType, terminalInfo,
+//                            txnInfo, destinationAccountNumber, receivingInstitutionId)
+//                }
+//
+//                when (response) {
+//                    null -> {
+//                        _onlineResult.value = OnlineProcessResult.NO_RESPONSE
+//                        _transactionResponse.value = None
+//                    }
+//                    else -> {
+//                        // complete transaction by applying scripts
+//                        // only when responseCode is 'OK'
+//                        if (response.responseCode == IsoUtils.OK) {
+//                            // get result code of applying server response
+//
+//                            // react to result code
+//                            when (emv.completeTransaction(response)) {
+//                                EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(
+//                                        OnlineProcessResult.ONLINE_APPROVED
+//                                )
+//                                else -> _onlineResult.value = OnlineProcessResult.ONLINE_DENIED
+//                            }
+//                        }
+//
+//                        _transactionResponse.value = Some(Pair(response, emvData))
+//                    }
+//                }
+//            } else {
+//                _onlineResult.postValue(OnlineProcessResult.NO_EMV)
+//                _transactionResponse.value = None
+//            }
+            var response =
+                withContext(ioScope) {
+                    IswTxnHandler(posDevice).processTransaction(paymentModel, accountType, terminalInfo, destinationAccountNumber, receivingInstitutionId)
                 }
 
-                when (response) {
-                    null -> {
-                        _onlineResult.value = OnlineProcessResult.NO_RESPONSE
-                        _transactionResponse.value = None
-                    }
-                    else -> {
-                        // complete transaction by applying scripts
-                        // only when responseCode is 'OK'
-                        if (response.responseCode == IsoUtils.OK) {
-                            // get result code of applying server response
-
-                            // react to result code
-                            when (emv.completeTransaction(response)) {
-                                EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(
-                                        OnlineProcessResult.ONLINE_APPROVED
-                                )
-                                else -> _onlineResult.value = OnlineProcessResult.ONLINE_DENIED
-                            }
-                        }
-
-                        _transactionResponse.value = Some(Pair(response, emvData))
-                    }
-                }
+            _onlineResult.postValue(OnlineProcessResult.valueOf(response.onlineProcessResult?.name.toString()))
+            if (response.transactionResponse != null) {
+                _transactionResponse.value = Some(Pair(response.transactionResponse!!, response.emvData!!))
             } else {
-                _onlineResult.postValue(OnlineProcessResult.NO_EMV)
                 _transactionResponse.value = None
             }
+
         }
     }
 

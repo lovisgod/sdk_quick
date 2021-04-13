@@ -5,8 +5,10 @@ import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.main.transfer.repo.RealmRepo
 import com.interswitchng.smartpos.shared.Constants
+import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
+import com.interswitchng.smartpos.shared.models.posconfig.PosType
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 import com.interswitchng.smartpos.shared.services.HttpServiceImpl
 import com.interswitchng.smartpos.shared.services.SaturnServiceImpl
@@ -39,6 +41,7 @@ internal val serviceModule = module() //override = true
             return@factory IsoServiceImpl(androidContext(), get(), get(), get())
         }
     }
+
 
 
     single<UserStore> { UserStoreImpl(get()) }

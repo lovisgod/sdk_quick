@@ -22,8 +22,8 @@ import com.pax.neptunelite.api.NeptuneLiteUser
 /**
  * This class provides Implemenation for the [POSDevice]
  */
-class POSDeviceImpl private constructor(override val printer: DevicePrinter,
-                                        private val factory: () -> EmvCardReader) : POSDevice {
+class POSDeviceImpl(override val printer: DevicePrinter,
+                    private val factory: () -> EmvCardReader) : POSDevice {
 
 
     init {

@@ -2,6 +2,7 @@ package com.interswitchng.smartpos.modules.menu.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.interswitchng.smartpos.IswTxnHandler
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
@@ -35,7 +36,7 @@ internal  class SettingsViewModel : RootViewModel(), KoinComponent {
     fun downloadTerminalParameters(serialNumber: String, isKimono: Boolean) {
         val isoService: IsoService = get { parametersOf(isKimono) }
         uiScope.launch {
-            val response = withContext(ioScope) { isoService.downloadTerminalParametersForKimono(serialNumber) }
+            val response = withContext(ioScope) { IswTxnHandler().downloadTmKimParam(serialNumber) }
             _terminalConfigResponse.value = response
             println("Settings ViewModel : $terminalConfigResponse")
         }

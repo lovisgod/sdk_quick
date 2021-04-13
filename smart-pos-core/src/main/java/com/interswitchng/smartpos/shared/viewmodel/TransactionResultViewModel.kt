@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.shared.viewmodel
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.interswitchng.smartpos.IswTxnHandler
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.EmailService
 import com.interswitchng.smartpos.shared.interfaces.library.IsoService
@@ -131,7 +132,8 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
         uiScope.launch {
             // get printer status on IO thread
             val printStatus = withContext(ioScope) {
-                posDevice.printer.canPrint()
+//                posDevice.printer.canPrint()
+                  IswTxnHandler(posDevice).checkPrintStatus()
             }
 
             when (printStatus) {
@@ -143,7 +145,7 @@ internal class TransactionResultViewModel(private val posDevice: POSDevice,
                     _printButton.value = false
 
                     // print code in IO thread
-                    val status = withContext(ioScope) { posDevice.printer.printSlipNew(bitmap) }
+                    val status = withContext(ioScope) { IswTxnHandler(posDevice).printslip(bitmap) }
                     // publish print message
                     _printerMessage.value = status.message
                     // enable print button

@@ -9,7 +9,7 @@
         android:name="com.interswitchng.interswitchposfinca.POSApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_logo_image"
-        android:label="@string/app_name"
+        android:label="Sample test App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
