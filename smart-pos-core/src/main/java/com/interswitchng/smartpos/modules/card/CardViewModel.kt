@@ -356,7 +356,7 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
 //            }
             var response =
                 withContext(ioScope) {
-                    IswTxnHandler(posDevice).processTransaction(paymentModel, accountType, terminalInfo, destinationAccountNumber, receivingInstitutionId)
+                    IswTxnHandler(posDevice).processTransferTransaction(paymentModel, accountType, terminalInfo, destinationAccountNumber, receivingInstitutionId)
                 }
 
             _onlineResult.postValue(OnlineProcessResult.valueOf(response.onlineProcessResult?.name.toString()))

@@ -2,6 +2,8 @@
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.gojuno.koptional.None
+import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter
@@ -10,17 +12,21 @@ import com.interswitchng.smartpos.shared.interfaces.library.IsoService
 import com.interswitchng.smartpos.shared.interfaces.library.KeyValueStore
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.printer.info.PrintStatus
-import com.interswitchng.smartpos.shared.models.transaction.CardOnlineProcessResult
-import com.interswitchng.smartpos.shared.models.transaction.CardReadTransactionResponse
+import com.interswitchng.smartpos.shared.models.printer.info.TransactionType
+import com.interswitchng.smartpos.shared.models.transaction.*
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
 import com.interswitchng.smartpos.shared.services.iso8583.utils.FileUtils
+import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.services.kimono.models.AgentIdResponse
 import com.interswitchng.smartpos.shared.services.kimono.models.AllTerminalInfo
 import com.interswitchng.smartpos.shared.services.kimono.models.TerminalInformation
+import com.interswitchng.smartpos.shared.utilities.DisplayUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import org.koin.core.parameter.parametersOf
@@ -28,6 +34,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 import org.koin.standalone.inject
 import java.io.InputStream
+import java.util.*
 
  class IswTxnHandler(private val posDevice: POSDevice? = null): KoinComponent {
 
@@ -66,7 +73,7 @@ import java.io.InputStream
 
     /**
      *initiate a transfer transaction*/
-    fun processTransaction(
+    fun processTransferTransaction(
             paymentModel: PaymentModel,
             accountType: AccountType,
             terminalInfo: TerminalInfo,
@@ -134,6 +141,147 @@ import java.io.InputStream
                 )
             }
         }
+
+
+
+
+     /**
+      *This function is used in processing purchase transaction,
+      * pre-authorization transaction, refund transaction and some other types of transactions*/
+     fun processCardTransaction(
+             paymentModel: PaymentModel,
+             accountType: AccountType,
+             terminalInfo: TerminalInfo
+     ): CardReadTransactionResponse {
+         val emvData = emv.getTransactionInfo()
+
+         // return response based on data
+         if (emvData != null) {
+             // create transaction info and issue online transfer request
+             val response =  {
+                 val txnInfo =
+                         TransactionInfo.fromEmv(
+                                 emvData,
+                                 paymentModel,
+                                 PurchaseType.Card,
+                                 accountType
+                         )
+                 println("this is this ${paymentModel.type}")
+                 when (paymentModel.type) {
+                     PaymentModel.TransactionType.CARD_PURCHASE ->  isoService.initiateCardPurchase(terminalInfo, txnInfo)
+                     PaymentModel.TransactionType.PRE_AUTHORIZATION -> isoService.initiatePreAuthorization(terminalInfo, txnInfo)
+                     PaymentModel.TransactionType.REFUND -> isoService.initiateRefund(terminalInfo, txnInfo)
+                     else -> null
+                 }
+
+             }.invoke()
+
+             when (response) {
+                 null -> {
+                     return CardReadTransactionResponse(
+                             onlineProcessResult = CardOnlineProcessResult.NO_RESPONSE,
+                             transactionResponse = null,
+                             emvData = null
+                     )
+                 }
+                 else -> {
+                     // complete transaction by applying scripts
+                     // only when responseCode is 'OK'
+
+                     // react to result code
+                     return when (emv.completeTransaction(response)) {
+                         EmvResult.OFFLINE_APPROVED -> CardReadTransactionResponse(
+                                 onlineProcessResult = CardOnlineProcessResult.ONLINE_APPROVED,
+                                 transactionResponse = response,
+                                 emvData = emvData
+                         )
+                         else ->  CardReadTransactionResponse(
+                                 onlineProcessResult = CardOnlineProcessResult.ONLINE_DENIED,
+                                 transactionResponse = response,
+                                 emvData = emvData
+                         )
+                     }
+
+                 }
+             }
+         } else {
+             return CardReadTransactionResponse(
+                     onlineProcessResult = CardOnlineProcessResult.NO_EMV,
+                     transactionResponse = null,
+                     emvData = null
+             )
+         }
+     }
+
+
+
+
+     /**
+      *this function initiate a reversal transaction
+      * @param `is` [TerminalInfo]
+      * @return [Unit]*/
+     internal fun processReversal(
+             txnInfo: TransactionInfo,
+             terminalInfo: TerminalInfo
+     ): TransactionResponse? {
+             val response =  {
+                    isoService.initiateReversal(terminalInfo, txnInfo)
+             }.invoke()
+
+             when (response) {
+                 null -> {
+                     return null
+                 }
+                 else -> {
+                     return  response
+                 }
+             }
+     }
+
+
+
+     /**
+      *this function initiates a paycode transaction and returns the response
+      * @param [terminalInfo]
+      * @param [paymentInfo]
+      * @param [code]
+      * @return [Unit]*/
+     internal fun processPayCode(
+             terminalInfo: TerminalInfo,
+             paymentInfo: PaymentInfo,
+             code: String
+     ): TransactionResult? {
+         val response =  {
+             isoService.initiatePaycodePurchase(terminalInfo, code, paymentInfo)
+         }.invoke()
+
+         return when (response) {
+             null -> null
+             else -> {
+
+                 val now = Date()
+                 val responseMsg = IsoUtils.getIsoResultMsg(response.responseCode)
+                         ?: "Unknown Error"
+
+                 // extract result
+                 TransactionResult(
+                         paymentType = PaymentType.PayCode,
+                         dateTime = DisplayUtils.getIsoString(now),
+                         amount = DisplayUtils.getAmountString(paymentInfo),
+                         type = TransactionType.Purchase,
+                         authorizationCode = response.authCode,
+                         responseMessage = responseMsg,
+                         responseCode = response.responseCode,
+                         stan = response.stan, pinStatus = "", AID = "", code = "",
+                         cardPan = "", cardExpiry = "", cardType = CardType.None,
+                         telephone = "", cardTrack2 = "",
+                         cardPin = "", icc = "", csn = "", src = "", time = -1L)
+             }
+         }
+     }
+
+
+
 
     /**
      *initiate get token request and save the result in Pref
