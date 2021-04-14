@@ -18,6 +18,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.CardType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvMessage
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.EmvResult
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.AccountType
+import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.OriginalTransactionInfoData
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.PurchaseType
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.request.TransactionInfo
 import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response.TransactionResponse
@@ -57,6 +58,7 @@ import java.util.*
 
     /**
      * this method should be called when the card is inserted or when you want to start reading the card
+     * this method should always be called before any card transaction
      * @return[Unit]**/
     suspend fun setupTransaction(amount: Int, terminalInfo: TerminalInfo, scope: CoroutineScope) {
         emv.setupTransaction(amount, terminalInfo, channel, scope)
@@ -71,8 +73,14 @@ import java.util.*
     }
 
 
-    /**
-     *initiate a transfer transaction*/
+     /**
+      *This function is used in processing transfer transaction,
+      * @param [terminalInfo]
+      * @param [paymentModel]
+      * @param [accountType]
+      * @param [destinationAccountNumber]
+      * @param [receivingInstitutionId]
+      * @return [CardReadTransactionResponse]*/
     fun processTransferTransaction(
             paymentModel: PaymentModel,
             accountType: AccountType,
@@ -147,7 +155,11 @@ import java.util.*
 
      /**
       *This function is used in processing purchase transaction,
-      * pre-authorization transaction, refund transaction and some other types of transactions*/
+      * pre-authorization transaction, refund transaction and some other types of transactions
+      * @param [terminalInfo]
+      * @param [paymentModel]
+      * @param [accountType]
+      * @return [CardReadTransactionResponse]*/
      fun processCardTransaction(
              paymentModel: PaymentModel,
              accountType: AccountType,
@@ -217,9 +229,74 @@ import java.util.*
 
 
      /**
-      *this function initiate a reversal transaction
-      * @param `is` [TerminalInfo]
-      * @return [Unit]*/
+      *This function is used in processing completion transaction,
+      * @param [terminalInfo]
+      * @param [paymentModel]
+      * @param [accountType]
+      * @param [originalTxnData]
+      * @return [CardReadTransactionResponse]*/
+     internal fun processCompletionTransaction(
+             paymentModel: PaymentModel,
+             accountType: AccountType,
+             terminalInfo: TerminalInfo,
+             originalTxnData: OriginalTransactionInfoData
+     ): CardReadTransactionResponse {
+         val emvData = emv.getTransactionInfo()
+
+         // return response based on data
+         if (emvData != null) {
+             // create transaction info and issue online transfer request
+             val response =  {
+                 val txnInfo = TransactionInfo.fromEmv(
+                                 emvData,
+                                 paymentModel,
+                                 PurchaseType.Card,
+                                 accountType
+                 )
+
+                 txnInfo.originalTransactionInfoData = originalTxnData
+                 isoService.initiateCompletion(terminalInfo, txnInfo)
+             }.invoke()
+
+             when (response) {
+                 null -> {
+                     return CardReadTransactionResponse(
+                             onlineProcessResult = CardOnlineProcessResult.NO_RESPONSE,
+                             transactionResponse = null,
+                             emvData = null
+                     )
+                 }
+                 else -> {
+                     return when (emv.completeTransaction(response)) {
+                         EmvResult.OFFLINE_APPROVED -> CardReadTransactionResponse(
+                                 onlineProcessResult = CardOnlineProcessResult.ONLINE_APPROVED,
+                                 transactionResponse = response,
+                                 emvData = emvData
+                         )
+                         else ->  CardReadTransactionResponse(
+                                 onlineProcessResult = CardOnlineProcessResult.ONLINE_DENIED,
+                                 transactionResponse = response,
+                                 emvData = emvData
+                         )
+                     }
+
+                 }
+             }
+         } else {
+             return CardReadTransactionResponse(
+                     onlineProcessResult = CardOnlineProcessResult.NO_EMV,
+                     transactionResponse = null,
+                     emvData = null
+             )
+         }
+     }
+
+
+     /**
+      *this function initiates a reversal transaction and returns the response
+      * @param [terminalInfo]
+      * @param [txnInfo]
+      * @return [TransactionResponse]*/
      internal fun processReversal(
              txnInfo: TransactionInfo,
              terminalInfo: TerminalInfo
@@ -245,7 +322,7 @@ import java.util.*
       * @param [terminalInfo]
       * @param [paymentInfo]
       * @param [code]
-      * @return [Unit]*/
+      * @return [TransactionResult]*/
      internal fun processPayCode(
              terminalInfo: TerminalInfo,
              paymentInfo: PaymentInfo,
