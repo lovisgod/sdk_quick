@@ -3,7 +3,6 @@ package com.interswitchng.smartpos.shared.services.kimono
 import android.content.Context
 import android.util.Base64
 import android.util.Log
-import com.github.underscore.lodash.U
 import com.google.gson.Gson
 import com.igweze.ebi.simplecalladapter.Simple
 import com.interswitchng.smartpos.modules.main.billPayment.models.AirtimeMapperClass
