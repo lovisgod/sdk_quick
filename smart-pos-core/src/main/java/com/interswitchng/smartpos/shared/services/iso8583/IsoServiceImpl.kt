@@ -46,7 +46,7 @@ internal class IsoServiceImpl(
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun initiateGeneralBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse? {
+    override fun initiateGeneralBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel, isAirTime: Boolean?): TransactionResponse? {
         TODO("Not yet implemented")
     }
 

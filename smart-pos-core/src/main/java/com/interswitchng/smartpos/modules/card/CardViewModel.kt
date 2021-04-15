@@ -20,6 +20,7 @@ import com.interswitchng.smartpos.shared.models.transaction.cardpaycode.response
 import com.interswitchng.smartpos.shared.services.iso8583.utils.IsoUtils
 import com.interswitchng.smartpos.shared.utilities.toast
 import com.interswitchng.smartpos.shared.viewmodel.RootViewModel
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -582,8 +583,12 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     }
 
     private fun initiateBillPayment(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse? {
+        if (Prefs.getBoolean("isAirtime", false)) {
+            return isoService.initiateGeneralBillPayment(terminalInfo, txnInfo, paymentModel, true)
+        } else {
+            return isoService.initiateGeneralBillPayment(terminalInfo, txnInfo, paymentModel, false)
+        }
 
-        return isoService.initiateGeneralBillPayment(terminalInfo, txnInfo, paymentModel)
     }
 
     private fun initiateTransfer(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo,

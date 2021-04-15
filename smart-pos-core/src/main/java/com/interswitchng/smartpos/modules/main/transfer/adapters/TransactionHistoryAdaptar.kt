@@ -61,6 +61,8 @@ class TransactionHistoryAdaptar(val clickListener: TransactionHistoryItemClickLi
                 val txnTypeString = when {
                     it?.type?.name == TransactionType.CashOutPay.name -> "Completion"
                     it.type.name == TransactionType.Transfer.name -> "Cash-Out"
+                    it.type.name == TransactionType.BillPayment.name -> "BillPayment"
+                    it.type.name == TransactionType.AirtimeRecharge.name -> "Airtime"
                     else -> "Inquiry"
                 }
                 holder.tvTxnType.text = txnTypeString

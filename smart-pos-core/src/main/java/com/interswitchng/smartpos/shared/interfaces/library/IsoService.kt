@@ -165,7 +165,7 @@ internal interface IsoService {
      * @return   response status indicating transaction success or failure
      */
 
-    fun initiateGeneralBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse?
+    fun initiateGeneralBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel, isAirTime: Boolean? = false): TransactionResponse?
 
 
 

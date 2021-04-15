@@ -226,6 +226,75 @@ import java.util.*
      }
 
 
+     /**
+      *This function is used in processing purchase transaction,
+      * pre-authorization transaction, refund transaction and some other types of transactions
+      * @param [terminalInfo]
+      * @param [paymentModel]
+      * @param [accountType]
+      * @param [isAirTime]
+      * @return [CardReadTransactionResponse]*/
+     fun processBillPaymentTransaction(
+             paymentModel: PaymentModel,
+             accountType: AccountType,
+             terminalInfo: TerminalInfo,
+             isAirTime: Boolean
+     ): CardReadTransactionResponse {
+         val emvData = emv.getTransactionInfo()
+
+         // return response based on data
+         if (emvData != null) {
+             // create transaction info and issue online transfer request
+             val response =  {
+                 val txnInfo =
+                         TransactionInfo.fromEmv(
+                                 emvData,
+                                 paymentModel,
+                                 PurchaseType.Card,
+                                 accountType
+                         )
+                 println("this is this ${paymentModel.type}")
+                 isoService.initiateGeneralBillPayment(terminalInfo, txnInfo, paymentModel.billPayment!!, isAirTime)
+             }.invoke()
+
+             when (response) {
+                 null -> {
+                     return CardReadTransactionResponse(
+                             onlineProcessResult = CardOnlineProcessResult.NO_RESPONSE,
+                             transactionResponse = null,
+                             emvData = null
+                     )
+                 }
+                 else -> {
+                     // complete transaction by applying scripts
+                     // only when responseCode is 'OK'
+
+                     // react to result code
+                     return when (emv.completeTransaction(response)) {
+                         EmvResult.OFFLINE_APPROVED -> CardReadTransactionResponse(
+                                 onlineProcessResult = CardOnlineProcessResult.ONLINE_APPROVED,
+                                 transactionResponse = response,
+                                 emvData = emvData
+                         )
+                         else ->  CardReadTransactionResponse(
+                                 onlineProcessResult = CardOnlineProcessResult.ONLINE_DENIED,
+                                 transactionResponse = response,
+                                 emvData = emvData
+                         )
+                     }
+
+                 }
+             }
+         } else {
+             return CardReadTransactionResponse(
+                     onlineProcessResult = CardOnlineProcessResult.NO_EMV,
+                     transactionResponse = null,
+                     emvData = null
+             )
+         }
+     }
+
+
 
 
      /**

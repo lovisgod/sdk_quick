@@ -102,9 +102,21 @@ class TransactionHistoryFragment : BaseFragment(TAG), TransactionHistoryAdaptar.
     }
 
     override fun onclick(data: TransactionResult) {
+        val transType: PaymentModel.TransactionType = when (data.type) {
+            TransactionType.CashOutPay -> {
+                PaymentModel.TransactionType.BILL_PAYMENT
+            }
+
+            TransactionType.AirtimeRecharge -> {
+                PaymentModel.TransactionType.AIRTIME
+            }
+            else -> {
+                PaymentModel.TransactionType.TRANSFER
+            }
+        }
         val action = TransactionHistoryFragmentDirections.iswActionIswTransactionhistoryfragmentToIswReceiptfragment2(
                 PaymentModel( amount = data.amount.toInt()),
-                TransactionResponseModel(data, PaymentModel.TransactionType.TRANSFER),
+                TransactionResponseModel(data, transType),
                 false,
                 true
         )

@@ -280,12 +280,12 @@ fun getDataFromRechargeResponse(resp: String): AirtimeMapperClass {
     val codePattern = """SessionAdd\(\'rcode\',\'[0-9]{1,20}\'\)""".toRegex()
 
     val messagePattern =  """SessionAdd\(\'__myrmsg\',\'[a-z, A-Z]{1,30}\'\)""".toRegex()
-    var ref = refPattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    var ref = refPattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0).split("\'").get(1)
     println(ref)
-    var code = codePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    var code = codePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0).split("\'").get(1)
     println(code)
 
-    var message = messagePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    var message = messagePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0).split("\'").get(1)
     println(message)
 
     return AirtimeMapperClass( Response(code, message, ref))
