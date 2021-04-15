@@ -78,15 +78,28 @@ class TransfertransactionPreocessingFragment : BaseFragment(TAG) {
 
         runWithInternet {
 //                dialog = customdailog(this.requireContext())
-                cardViewModel.processTransferTransaction(
-                        paymentModel,
-                        accountType,
-                        terminalInfo,
-                        Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, ""), // use this for generic transfer
-                        Prefs.getString(Constants.SETTLEMENT_BANK_CODE, "")  // use this fot specific transfer
-//                       Prefs.getString("destinationAccountNumber", ""),
+                when(paymentModel.type) {
+                    PaymentModel.TransactionType.BILL_PAYMENT -> {
+                        cardViewModel.processBillPayment(
+                                paymentModel,
+                                accountType,
+                                terminalInfo
+                        )
+                    }
+
+                    else -> {
+                        cardViewModel.processTransferTransaction(
+                                paymentModel,
+                                accountType,
+                                terminalInfo,
+                                Prefs.getString(Constants.SETTLEMENT_ACCOUNT_NUMBER, ""), // use this for generic transfer
+                                Prefs.getString(Constants.SETTLEMENT_BANK_CODE, "")  // use this fot specific transfer
+        //                       Prefs.getString("destinationAccountNumber", ""),
 //                       Prefs.getString("receivingInstitutionId", "")
                 )
+            }
+    }
+
             }
     }
 

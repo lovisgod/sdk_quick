@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingHorizontal="18dp"
+    android:layout_marginBottom="15dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+ >
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            app:searchIcon="@android:drawable/ic_menu_search"
+            app:searchHintIcon="@android:drawable/ic_menu_search"
+            app:queryHint="filter for a package"
+            android:theme="@style/ISWCustomSearchViewSheet"
+            app:closeIcon="@android:drawable/ic_menu_close_clear_cancel"
+            app:iconifiedByDefault="false"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/isw_search_view_custom"
+            android:clickable="true"
+            />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/isw_package_list_dataplan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/iswWhite"
+        />
+
+</LinearLayout>

@@ -23,6 +23,8 @@ import com.interswitchng.smartpos.shared.activities.BaseFragment
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.isw_fragment_transfer_landing.*
 import kotlinx.android.synthetic.main.isw_layout_insert_pin_reuseable.*
+import kotlinx.android.synthetic.main.isw_fragment_transfer_landing.isw_transfer_card
+import kotlinx.android.synthetic.main.isw_pos_landing_horizontal_scroll_view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -38,6 +40,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Prefs.putBoolean("isAirtime", false)
         // check for settlement account setup for specific transfer
         checkForSettlement()
         handleClicks()
@@ -64,7 +67,7 @@ class TransferLandingFragment : BaseFragment(TAG) {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     private fun handleClicks() {
-        isw_transfer_card.setOnClickListener {
+        isw_transfer_hor_card.setOnClickListener {
             var paymentModel = PaymentModel()
             paymentModel.type = PaymentModel.TransactionType.TRANSFER
             val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
@@ -72,6 +75,20 @@ class TransferLandingFragment : BaseFragment(TAG) {
 //            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
             findNavController().navigate(action)
         }
+
+        isw_bill_pay_card.setOnClickListener {
+            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswChoosecategoryfragment()
+            findNavController().navigate(action)
+        }
+
+//        isw_transfer_card.setOnClickListener {
+//            var paymentModel = PaymentModel()
+//            paymentModel.type = PaymentModel.TransactionType.TRANSFER
+//            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswAmountfragment(
+//                    paymentModel = paymentModel, BankModel = BankModel("","", ""), BeneficiaryModel = BeneficiaryModel())
+////            val action = TransferLandingFragmentDirections.iswActionIswTransferlandingfragmentToIswTransferinputfragment()
+//            findNavController().navigate(action)
+//        }
 
         isw_settings_icon.setOnClickListener {
            var popup = PopupMenu(this.requireContext(), isw_settings_icon, 0, 0, R.style.IswPopupMenuStyle)

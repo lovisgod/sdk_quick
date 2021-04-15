@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
 import android.util.DisplayMetrics
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -24,12 +26,20 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textview.MaterialTextView
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.PinEditText
+import com.interswitchng.smartpos.modules.main.billPayment.models.AirtimeMapperClass
+import com.interswitchng.smartpos.modules.main.billPayment.models.Response
 import com.tapadoo.alerter.Alerter
 import java.time.format.DateTimeFormatter
 import kotlin.reflect.jvm.internal.impl.renderer.RenderingFormat
 
+import kotlinx.android.synthetic.main.isw_transfer_fragment_amount.*
+import java.text.NumberFormat
 
 fun EditText.getTextValue(): String {
+    return this.text.toString()
+}
+
+fun TextInputEditText.getTextValue(): String {
     return this.text.toString()
 }
 
@@ -40,16 +50,26 @@ fun View.makeActive() {
     this.alpha = 1.0f
     this.isClickable = true
     this.isActivated = true
+    this.isEnabled = true
 }
 
 fun View.makeInActive() {
     this.alpha = 0.4f
     this.isClickable = false
     this.isActivated = false
+    this.isEnabled = false
 }
 
 fun View.hide() {
     this.visibility = View.GONE
+}
+
+fun View.isVisible(visibility: Boolean) {
+    this.visibility = if(visibility) {
+        View.VISIBLE
+    } else {
+        View.GONE
+    }
 }
 
 fun Dialog.showDialog(message: String) {
@@ -226,4 +246,47 @@ fun formatExpiryDate(value: String, formatSign: String): String {
     val secondVal = value.substring(2,4);
 
     return "$firstVal$formatSign$secondVal"
+}
+
+fun changeListener(fields: ArrayList<TextInputEditText>, action: (() -> Any?)? = null) {
+    for( i in fields) {
+        i.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                action?.invoke()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+        })
+    }
+}
+
+ fun updateAmount(digit: String): String? {
+    val parsed = java.lang.Double.parseDouble(digit)
+    val numberFormat = NumberFormat.getInstance()
+    numberFormat.minimumFractionDigits = 2
+    numberFormat.maximumFractionDigits = 2
+    val formatted = numberFormat.format(parsed / 100)
+     println(formatted)
+    return formatted
+}
+
+fun getDataFromRechargeResponse(resp: String): AirtimeMapperClass {
+    val refPattern =  """SessionAdd\(\'refnum\',\'[0-9]{1,20}\'\)""".toRegex()
+    val codePattern = """SessionAdd\(\'rcode\',\'[0-9]{1,20}\'\)""".toRegex()
+
+    val messagePattern =  """SessionAdd\(\'__myrmsg\',\'[a-z, A-Z]{1,30}\'\)""".toRegex()
+    var ref = refPattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    println(ref)
+    var code = codePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    println(code)
+
+    var message = messagePattern.find(resp)?.value!!.split(",").get(1).split(")")?.get(0)
+    println(message)
+
+    return AirtimeMapperClass( Response(code, message, ref))
 }

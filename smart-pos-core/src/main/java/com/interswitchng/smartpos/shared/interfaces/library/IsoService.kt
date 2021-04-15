@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.shared.interfaces.library
 
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.TokenPassportResponse
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
@@ -154,6 +155,18 @@ internal interface IsoService {
      */
 
     fun initiateBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse?
+
+    /**
+     * Initiates a bill payment transaction using the provided terminal and transaction info, and returns the
+     * transaction response provided by EPMS
+     *
+     * @param terminalInfo  the necessary information that identifies the current POS terminal
+     * @param transaction  the information required to perform the transaction
+     * @return   response status indicating transaction success or failure
+     */
+
+    fun initiateGeneralBillPayment(terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse?
+
 
 
     /**

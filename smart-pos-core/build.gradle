@@ -161,6 +161,7 @@ dependencies {
 
     implementation 'com.pixplicity.easyprefs:library:1.9.0'
     implementation 'com.airbnb.android:lottie:3.6.1'
+    implementation 'com.github.javadev:underscore:1.64'
 
 
 }

@@ -72,7 +72,6 @@ class BankFilterDialog(private val callbackListener: CallbackListener): DialogFr
             }
 
             override fun afterTextChanged(s: Editable?) {
-//                adapter?.filter?.filter(s.toString())
             }
         })
 

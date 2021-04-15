@@ -23,6 +23,7 @@ enum class ICCData(val tagName: String, val tag: Int, val min: Int, val max: Int
     ANOTHER_AMOUNT("Amount", 0x9F03, 6, 6),
     APP_PAN_SEQUENCE_NUMBER("App PAN Sequence Number", 0x5F34, 1, 1),
     FORM_FACTOR_INDICATOR("Form Factor Indicator", 0x9F6E, 1, 4),
+    CARD_HOLDER_NAME("Card Holder name", 0x9F20,6,15),
 
 
 
@@ -53,4 +54,5 @@ internal val REQUEST_TAGS = listOf(ICCData.AUTHORIZATION_REQUEST,
         ICCData.APP_VERSION_NUMBER,
         ICCData.ANOTHER_AMOUNT,
         ICCData.APP_PAN_SEQUENCE_NUMBER,
-        ICCData.FORM_FACTOR_INDICATOR)
+        ICCData.FORM_FACTOR_INDICATOR,
+        ICCData.CARD_HOLDER_NAME)

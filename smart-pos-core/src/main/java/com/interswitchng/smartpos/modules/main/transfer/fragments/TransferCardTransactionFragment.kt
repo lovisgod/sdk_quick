@@ -11,6 +11,7 @@ import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.modules.card.CardViewModel
 import com.interswitchng.smartpos.modules.main.dialogs.AccountTypeDialog
 import com.interswitchng.smartpos.modules.main.dialogs.PaymentTypeDialog
+import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
 import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragmentArgs
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.customdailog
@@ -130,7 +131,7 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
                             showErrorDialog(this@TransferCardTransactionFragment.requireContext()
                                     , "Unable to process Transaction")
                             //finish()
-                        }
+                        } 
                         CardViewModel.OnlineProcessResult.ONLINE_DENIED -> {
                             context?.toast("Transaction Declined")
                             showErrorDialog(this@TransferCardTransactionFragment.requireContext()
@@ -267,8 +268,17 @@ class TransferCardTransactionFragment : BaseFragment(TAG) {
     private fun setTransactionType() {
         println(originalTxnData)
 //        cardViewModel.setOriginalTxnInfo(originalTxnData!!)
-        cardViewModel.setTransactionType(PaymentModel.TransactionType.TRANSFER)
-        transactionType = TransactionType.Transfer
+        when (paymentModel.type) {
+            PaymentModel.TransactionType.BILL_PAYMENT -> {
+                cardViewModel.setTransactionType(PaymentModel.TransactionType.BILL_PAYMENT)
+                transactionType = TransactionType.BillPayment
+            }
+          else  -> {
+              cardViewModel.setTransactionType(PaymentModel.TransactionType.TRANSFER)
+              transactionType = TransactionType.Transfer
+          }
+        }
+
     }
 
 

@@ -131,6 +131,10 @@
     <string name="isw_transfer_funds_from_one_account_to_another">Transfer, eCash, eChange, and Raise a Dispute</string>
     <string name="isw_transfer_money">Transfer Money</string>
     <string name="isw_bill_payment">Bill Payment</string>
+    <string name="isw_airtime">Airtime</string>
+    <string name="isw_data">Mobile Data</string>
+    <string name="isw_utility_bills">Utility Bills</string>
+    <string name="isw_cable_tv">Cable Tv</string>
     <string name="isw_pay_for_electricity_toll_tax_and_other_bills">Pay for electricity, toll, tax and other bills
     </string>
     <string name="isw_purchase">Purchase</string>
@@ -151,6 +155,7 @@
     <string name="isw_qr_code">QR Code</string>
     <string name="isw_card_payment">Card Payment</string>
     <string name="isw_make_payment">Make Payment</string>
+    <string name="isw_make_bill_payment">Make Bill Payment</string>
     <string name="isw_payment_sub_text">Pay for items purchased</string>
     <string name="isw_default_account">Default Account</string>
     <string name="isw_savings_account">Savings Account</string>
@@ -220,6 +225,8 @@
     <string name="isw_sent_str">Sent</string>
     <string name="isw_account_number">Account Number</string>
     <string name="isw_account_details">Account Details</string>
+    <string name="isw_bill_payment_airtime_recharge">Airtime Recharge</string>
+    <string name="isw_data_plan_recharge">Data Plan</string>
     <string name="isw_remarks">Remarks</string>
     <string name="isw_arbiter_status_request">Arbiter Status</string>
     <string name="isw_arbiter_hint">Transaction ID or Customer name</string>
@@ -305,6 +312,9 @@
     <string name="isw_transfer_fund_to_another_account">Transfer to another account</string>
     <string name="isw_cashout_to_a_beneficiary">Cashout to a Beneficiary Account</string>
     <string name="isw_powered_by">Powered By</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="isw_phone_number_recharge_text_view_text">Phone Number</string>
+    <string name="isw_phone_number_recharge_amount_text_view_text">Amount</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="isw_select_a_bank">Select a Bank</string>

@@ -3,6 +3,7 @@ package com.interswitchng.smartpos.di
 import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.billPayment.repository.billRepo
 import com.interswitchng.smartpos.modules.main.transfer.repo.RealmRepo
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -48,6 +49,8 @@ internal val serviceModule = module() //override = true
     single { SharePreferenceManager(androidContext()) }
     single<KeyValueStore> { KeyValueStoreImpl(get()) }
     single<EmailService> { EmailServiceImpl(get()) }
+
+    single<billRepo> { billRepo() }
 
 
 

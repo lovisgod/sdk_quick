@@ -7,6 +7,7 @@ import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
 import com.interswitchng.smartpos.IswTxnHandler
+import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel
 import com.interswitchng.smartpos.modules.main.models.PaymentModel.TransactionType
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -297,6 +298,64 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
         }
     }
 
+    fun processBillPayment(
+            paymentModel: PaymentModel,
+            accountType: AccountType,
+            terminalInfo: TerminalInfo
+
+    ) {
+
+        //var responseProcessed: Optional<Pair<TransactionResponse, EmvData>> = None
+
+        uiScope.launch {
+            // get emv data captured by card
+            val emvData = emv.getTransactionInfo()
+
+            // return response based on data
+            if (emvData != null) {
+                // create transaction info and issue online purchase request
+                val response = withContext(ioScope) {
+                    val txnInfo =
+                            TransactionInfo.fromEmv(
+                                    emvData,
+                                    paymentModel,
+                                    PurchaseType.Card,
+                                    accountType
+                            )
+
+                    initiateBillPayment(transactionType, terminalInfo, txnInfo, paymentModel.billPayment!!)
+                }
+
+                when (response) {
+                    null -> {
+                        _onlineResult.value = OnlineProcessResult.NO_RESPONSE
+                        _transactionResponse.value = None
+                    }
+                    else -> {
+                        // complete transaction by applying scripts
+                        // only when responseCode is 'OK'
+                        if (response.responseCode == IsoUtils.OK) {
+                            // get result code of applying server response
+
+                            // react to result code
+                            when (emv.completeTransaction(response)) {
+                                EmvResult.OFFLINE_APPROVED -> _onlineResult.postValue(
+                                        OnlineProcessResult.ONLINE_APPROVED
+                                )
+                                else -> _onlineResult.value = OnlineProcessResult.ONLINE_DENIED
+                            }
+                        }
+
+                        _transactionResponse.value = Some(Pair(response, emvData))
+                    }
+                }
+            } else {
+                _onlineResult.postValue(OnlineProcessResult.NO_EMV)
+                _transactionResponse.value = None
+            }
+        }
+    }
+
     /**
      *initiate a transfer transaction*/
     fun processTransferTransaction(
@@ -520,6 +579,11 @@ internal class CardViewModel(private val posDevice: POSDevice, private val isoSe
     private fun initiateTransactionBillPayment(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo): TransactionResponse? {
 
         return isoService.initiateBillPayment(terminalInfo, txnInfo)
+    }
+
+    private fun initiateBillPayment(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo, paymentModel: BillPaymentModel): TransactionResponse? {
+
+        return isoService.initiateGeneralBillPayment(terminalInfo, txnInfo, paymentModel)
     }
 
     private fun initiateTransfer(transactionType: TransactionType, terminalInfo: TerminalInfo, txnInfo: TransactionInfo,
