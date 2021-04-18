@@ -44,9 +44,9 @@ allprojects {
         minSdk = 16
         targetSdk = 28
         javaVersion = JavaVersion.VERSION_1_8
-        emailApiKey = properties.get 'EMAIL_API_KEY'
-        realmKey = properties.get 'REALM_KEY'
-        defaultPin = properties.get 'DEFAULT_PIN'
+        emailApiKey = ""
+        realmKey = "35363764303735613930313632346137333133303733323835303436363337346537613436313431653335383763313738316232343661313334336531383830"
+        defaultPin = "535649b032069346b35d260a6b086bc0"
         minified = false
 
         // config
