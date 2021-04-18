@@ -10,7 +10,7 @@ apply plugin: 'realm-android'
 
 apply plugin: 'realm-android'
 
-apply plugin: 'androidx.navigation.safeargs.kotlin'
+//apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 apply plugin: 'com.getkeepsafe.dexcount'
 
