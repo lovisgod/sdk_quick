@@ -83,7 +83,7 @@ internal val networkModule = module {
         clientBuilder.addInterceptor { chain ->
             val request = chain.request().newBuilder()
                     .addHeader("Content-type", "application/json")
-                    .addHeader("Authorization", "Bearer ${BuildConfig.ISW_EMAIL_API_KEY}")
+                    .addHeader("Authorization", "Bearer ")
                     .build()
 
             chain.proceed(request)
