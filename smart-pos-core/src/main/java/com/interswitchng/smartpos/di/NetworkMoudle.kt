@@ -2,7 +2,6 @@ package com.interswitchng.smartpos.di
 
 import android.util.Base64
 import com.igweze.ebi.simplecalladapter.SimpleCallAdapterFactory
-import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 import com.interswitchng.smartpos.shared.Constants

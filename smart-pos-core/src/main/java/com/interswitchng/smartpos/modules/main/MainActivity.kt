@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
 //            startActivity(intent)
 //        }
         setContentView(R.layout.isw_activity_main)
-        isw_bottom_navigation_view.setupWithNavController(navController)
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.isHomePage()) isw_bottom_navigation_view.showMe()
-            else isw_bottom_navigation_view.hideMe()
-        }
+//        isw_bottom_navigation_view.setupWithNavController(navController)
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            if (destination.isHomePage()) isw_bottom_navigation_view.showMe()
+//            else isw_bottom_navigation_view.hideMe()
+//        }
     }
 }

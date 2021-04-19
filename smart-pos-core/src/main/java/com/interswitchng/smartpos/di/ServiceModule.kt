@@ -1,15 +1,11 @@
 package com.interswitchng.smartpos.di
 
-import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.billPayment.repository.billRepo
-import com.interswitchng.smartpos.modules.main.transfer.repo.RealmRepo
+//import com.interswitchng.smartpos.modules.main.billPayment.repository.billRepo
 import com.interswitchng.smartpos.shared.Constants
-import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
 import com.interswitchng.smartpos.shared.interfaces.library.*
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
-import com.interswitchng.smartpos.shared.models.posconfig.PosType
 import com.interswitchng.smartpos.shared.services.EmailServiceImpl
 import com.interswitchng.smartpos.shared.services.HttpServiceImpl
 import com.interswitchng.smartpos.shared.services.SaturnServiceImpl
@@ -50,7 +46,7 @@ internal val serviceModule = module() //override = true
     single<KeyValueStore> { KeyValueStoreImpl(get()) }
     single<EmailService> { EmailServiceImpl(get()) }
 
-    single<billRepo> { billRepo() }
+//    single<billRepo> { billRepo() }
 
 
 
@@ -72,8 +68,8 @@ internal val serviceModule = module() //override = true
         TransactionLogServiceImpl(monarchy)
     }
 
-    // realm repository
-    single<RealmRepo> { RealmRepo(get()) }
+//    // realm repository
+//    single<RealmRepo> { RealmRepo(get()) }
 
 
     factory<IsoSocket> {

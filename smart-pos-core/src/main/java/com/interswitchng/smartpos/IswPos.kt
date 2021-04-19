@@ -5,18 +5,8 @@ import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.interswitchng.smartpos.di.networkModule
 import com.interswitchng.smartpos.di.serviceModule
-import com.interswitchng.smartpos.di.viewModels
-import com.interswitchng.smartpos.modules.card.CardActivity
-import com.interswitchng.smartpos.modules.home.HomeActivity
 import com.interswitchng.smartpos.modules.main.MainActivity
-import com.interswitchng.smartpos.modules.main.transfer.TransferActivity
-import com.interswitchng.smartpos.modules.menu.history.HistoryActivity
-import com.interswitchng.smartpos.modules.menu.report.ReportActivity
-import com.interswitchng.smartpos.modules.menu.settings.SettingsActivity
-import com.interswitchng.smartpos.modules.menu.settings.TerminalSettingsActivity
-import com.interswitchng.smartpos.modules.paycode.PayCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.activities.QrCodeActivity
-import com.interswitchng.smartpos.modules.ussdqr.activities.UssdActivity
+
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.errors.NotConfiguredException
 import com.interswitchng.smartpos.shared.interfaces.device.POSDevice
@@ -27,7 +17,6 @@ import com.interswitchng.smartpos.shared.models.core.PurchaseResult
 import com.interswitchng.smartpos.shared.models.core.TerminalInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentInfo
 import com.interswitchng.smartpos.shared.models.transaction.PaymentType
-import com.interswitchng.smartpos.shared.views.BottomSheetOptionsDialog
 import com.zhuinden.monarchy.Monarchy
 import org.koin.dsl.module.module
 import org.koin.standalone.KoinComponent
@@ -43,48 +32,6 @@ import java.util.*
  *
  */
 class IswPos private constructor(private val app: Application, internal val device: POSDevice, internal val config: POSConfig) {
-
-    @Throws(NotConfiguredException::class)
-    fun initiatePayment(activity: FragmentActivity, amount: Int, paymentType: PaymentType?) {
-
-        if (!isConfigured()) throw NotConfiguredException()
-
-        val stan = getNextStan()
-        // create payment info for purchase request
-        val paymentInfo = PaymentInfo(amount, stan)
-
-        if (paymentType == null) {
-            // create and show bottom sheet
-            BottomSheetOptionsDialog
-                    .newInstance(info = paymentInfo)
-                    .show(activity.supportFragmentManager, "Payment Options")
-
-        } else {
-            // getResult the activity class object
-            val typeClass = when (paymentType) {
-                PaymentType.PayCode -> PayCodeActivity::class.java
-                PaymentType.QR -> QrCodeActivity::class.java
-                PaymentType.USSD -> UssdActivity::class.java
-                PaymentType.Card -> CardActivity::class.java
-            }
-
-            // create intent with payment info and flags
-            val intent = Intent(app, typeClass).putExtra(Constants.KEY_PAYMENT_INFO, paymentInfo)
-
-            // start activity
-            activity.startActivityForResult(intent, CODE_PURCHASE)
-        }
-    }
-
-    fun gotoSettings() = showSettingsScreen()
-
-    fun goToSettingsUpdatePage() = showSettingsUpdateScreen()
-
-    fun gotoDashboard() = showDashboardScreen()
-
-    fun gotoReports() = showScreen(ReportActivity::class.java)
-
-    fun gotoHistory() = showScreen(HistoryActivity::class.java)
 
     companion object {
         // code used to start purchase request
@@ -135,7 +82,7 @@ class IswPos private constructor(private val app: Application, internal val devi
                 }
 
                 // set up koin
-                val modules = listOf(appContext, serviceModule, networkModule, viewModels)
+                val modules = listOf(appContext, serviceModule, networkModule)
                 loadKoinModules(modules)
 
                 // setup monarchy and realmdb
@@ -170,43 +117,6 @@ class IswPos private constructor(private val app: Application, internal val devi
         }
 
 
-        /**
-         * This method loads the settings screen
-         */
-        @JvmStatic
-        fun showSettingsScreen() = showScreen(SettingsActivity::class.java)
-
-
-
-        /**
-         * This method loads the settings screen
-         */
-        @JvmStatic
-        fun showSettingsUpdateScreen() = showScreen(TerminalSettingsActivity::class.java)
-
-        @JvmStatic
-        fun showMainActivity() = showScreen(MainActivity::class.java)
-
-
-
-        @JvmStatic
-        fun showTransferActivity() = showScreen(TransferActivity::class.java)
-
-
-        /**
-         * This method loads the dashboard screen
-         */
-        @JvmStatic
-        fun showDashboardScreen() = showScreen(HomeActivity::class.java)
-
-        private fun showScreen(clazz: Class<*>) {
-            val app = INSTANCE.app
-            val intent = Intent(app, clazz).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            if (clazz.isAssignableFrom(TerminalSettingsActivity::class.java)) {
-                intent.putExtra("FROM_SETTINGS", true)
-            }
-            app.startActivity(intent)
-        }
 
         /**
          * This method returns the single instance of IswPos for the current app

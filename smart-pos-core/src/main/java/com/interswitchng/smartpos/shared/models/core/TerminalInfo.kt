@@ -77,7 +77,7 @@ data class TerminalInfo(
 
         private const val PERSIST_KEY = "terminal_data"
 
-        internal fun get(store: KeyValueStore): TerminalInfo? {
+        fun get(store: KeyValueStore): TerminalInfo? {
 
             val jsonString = store.getString(PERSIST_KEY, "")
             return when(jsonString) {

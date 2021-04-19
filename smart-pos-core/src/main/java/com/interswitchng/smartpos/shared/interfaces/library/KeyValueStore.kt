@@ -4,7 +4,7 @@ package com.interswitchng.smartpos.shared.interfaces.library
  * This interface is responsible for providing quick storage
  * options, enabling quick storage of only primitive types.
  */
-internal interface KeyValueStore {
+interface KeyValueStore {
 
 
     /**
