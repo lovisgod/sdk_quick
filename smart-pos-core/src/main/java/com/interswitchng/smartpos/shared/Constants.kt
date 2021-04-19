@@ -1,10 +1,9 @@
 package com.interswitchng.smartpos.shared
-
-import BillDisplayDataModel
-import BillPaymentCategoriesModel
-import NetworksModel
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
+import com.interswitchng.smartpos.modules.main.billPayment.models.BillDisplayDataModel
+import com.interswitchng.smartpos.modules.main.billPayment.models.BillPaymentCategoriesModel
+import com.interswitchng.smartpos.modules.main.billPayment.models.NetworksModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.shared.models.core.Environment
 import com.interswitchng.smartpos.shared.utilities.KeysUtils
@@ -207,7 +206,7 @@ object Constants {
 
     }
 
-    val BANK_LIST = arrayListOf(
+    val BANK_LIST = arrayListOf<BankModel>(
             BankModel("639563", "084", "Heritage"),
             BankModel("627955", "082", "Keys Bank"),
             BankModel("639609", "215", "Unity"),
@@ -228,20 +227,20 @@ object Constants {
 
     )
 
-    val NETWORKS_LIST = arrayListOf(
+    val NETWORKS_LIST = arrayListOf<NetworksModel>(
             NetworksModel("628051043", "628051043", "MTN", R.drawable.logo_mtn),
             NetworksModel("628051049", "628051049", "9MOBILE", R.drawable.logo_nine),
             NetworksModel("6280510420", "6280510420", "AIRTEL", R.drawable.logo_airtel),
             NetworksModel("628051045", "628051045", "GLO", R.drawable.logo_glo)
     )
 
-    val CABLE_TV_PROVIDERS = arrayListOf(
+    val CABLE_TV_PROVIDERS = arrayListOf<BillDisplayDataModel>(
             BillDisplayDataModel("DSTV", "Subscribe for your favourite DSTV"),
             BillDisplayDataModel("GOTV", "Subscribe for your favourite GOTV"),
             BillDisplayDataModel("OTHERS", "Subscribe forOHTER CableTV Provider")
     )
 
-    val DSTV_PACKAGES = arrayListOf(
+    val DSTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "DSTV COMPACT", subTitle = "Dstv Compact",
                     packageId = "10403", productcode = "10403", logoPath = R.drawable.dstv_1),
             BillPaymentCategoriesModel(title = "DSTV PREMIUM", subTitle = "Dstv Premium",
@@ -250,7 +249,7 @@ object Constants {
                     packageId = "", productcode = "", logoPath = 0)
     )
 
-    val GOTV_PACKAGES = arrayListOf(
+    val GOTV_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "LITE MONTHLY", subTitle = "GOTV Lite Monthly",
                     packageId = "459117", productcode = "459117", logoPath = 0),
             BillPaymentCategoriesModel(title = "LITE QUARTERLY", subTitle = "GOTV Lite Quarterly",
@@ -268,14 +267,14 @@ object Constants {
     )
 
 
-    val UTILITY_BILL_PROVIDERS = arrayListOf(
+    val UTILITY_BILL_PROVIDERS = arrayListOf<BillDisplayDataModel>(
             BillDisplayDataModel("IKEDC", "Pay for your electricity bill"),
             BillDisplayDataModel("IBADAN", "Pay for your electricity bill"),
             BillDisplayDataModel("EKO", "Pay for your electricity bill"),
             BillDisplayDataModel("OTHERS", "others")
     )
 
-    val EKO_PACKAGES = arrayListOf(
+    val EKO_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "PREPAID", subTitle = "",
                     packageId = "04147302", productcode = "04147302", logoPath = 0),
             BillPaymentCategoriesModel(title = "POSTPAID", subTitle = "",
@@ -284,7 +283,7 @@ object Constants {
                     packageId = "", productcode = "", logoPath = 0)
     )
 
-    val IKEJA_PACKAGES = arrayListOf(
+    val IKEJA_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "PREPAID", subTitle = "",
                     packageId = "76601", productcode = "76601", logoPath = 0),
             BillPaymentCategoriesModel(title = "POSTPAID", subTitle = "",
@@ -293,7 +292,7 @@ object Constants {
                     packageId = "", productcode = "", logoPath = 0)
     )
 
-    val IBADAN_PACKAGES = arrayListOf(
+    val IBADAN_PACKAGES = arrayListOf<BillPaymentCategoriesModel>(
             BillPaymentCategoriesModel(title = "PREPAID", subTitle = "",
                     packageId = "79201", productcode = "79201", logoPath = 0),
             BillPaymentCategoriesModel(title = "POSTPAID", subTitle = "",

@@ -1,3 +1,4 @@
+package com.interswitchng.smartpos.modules.main.billPayment.models
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

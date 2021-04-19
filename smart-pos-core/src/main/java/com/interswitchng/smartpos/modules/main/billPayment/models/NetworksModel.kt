@@ -1,3 +1,4 @@
+package com.interswitchng.smartpos.modules.main.billPayment.models
 
 data class NetworksModel(
         val networkid: String,
