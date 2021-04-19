@@ -1,10 +1,10 @@
 package com.interswitchng.smartpos.shared
 
+import BillDisplayDataModel
+import BillPaymentCategoriesModel
+import NetworksModel
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
-import com.interswitchng.smartpos.modules.main.billPayment.models.BillDisplayDataModel
-import com.interswitchng.smartpos.modules.main.billPayment.models.BillPaymentCategoriesModel
-import com.interswitchng.smartpos.modules.main.billPayment.models.NetworksModel
 import com.interswitchng.smartpos.modules.main.transfer.models.BankModel
 import com.interswitchng.smartpos.shared.models.core.Environment
 import com.interswitchng.smartpos.shared.utilities.KeysUtils

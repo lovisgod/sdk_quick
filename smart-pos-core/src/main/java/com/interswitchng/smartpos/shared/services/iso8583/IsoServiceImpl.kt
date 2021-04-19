@@ -2,7 +2,6 @@ package com.interswitchng.smartpos.shared.services.iso8583
 
 import android.content.Context
 import com.interswitchng.smartpos.IswPos.Companion.getNextStan
-import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
 import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.shared.Constants
 import com.interswitchng.smartpos.shared.Constants.KEY_MASTER_KEY
@@ -833,7 +832,7 @@ internal class IsoServiceImpl(
             val processCode = "61" + transaction.accountType.value + "00"
             val hasPin = transaction.cardPIN.isNotEmpty()
             val stan = transaction.stan
-            val originalStan = CardTransactionsFragment.CompletionData.stan
+            val originalStan = transaction.originalTransactionInfoData?.originalStan
             val acquiringInstitutionId = "00000111129"
             val forwardingInstitutionId = "00000111129"
             val originalTransactionInfoData = transaction.originalTransactionInfoData
@@ -841,7 +840,7 @@ internal class IsoServiceImpl(
             val actualSettlementAmount = "000000000000"
             val actualSettlementFee = "C00000000"
             val actualTransactionFee = "C00000000"
-            val originalDataElement = "0100" + originalStan + CardTransactionsFragment.CompletionData.dateTime + acquiringInstitutionId + forwardingInstitutionId
+            val originalDataElement = "0100" + originalStan + originalTransactionInfoData?.month + acquiringInstitutionId + forwardingInstitutionId
             val replacementAmount = String.format(Locale.getDefault(), "%012d", transaction.amount) + actualSettlementAmount + actualTransactionFee + actualSettlementFee
 
             message

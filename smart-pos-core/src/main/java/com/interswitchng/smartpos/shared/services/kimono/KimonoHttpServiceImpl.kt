@@ -5,8 +5,6 @@ import android.util.Base64
 import android.util.Log
 import com.google.gson.Gson
 import com.igweze.ebi.simplecalladapter.Simple
-import com.interswitchng.smartpos.modules.main.billPayment.models.AirtimeMapperClass
-import com.interswitchng.smartpos.modules.main.fragments.CardTransactionsFragment
 import com.interswitchng.smartpos.modules.main.models.BillPaymentModel
 import com.interswitchng.smartpos.modules.main.transfer.TokenPassportResponse
 import com.interswitchng.smartpos.modules.main.transfer.getDataFromRechargeResponse

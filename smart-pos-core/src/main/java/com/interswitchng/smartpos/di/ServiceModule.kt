@@ -1,5 +1,6 @@
 package com.interswitchng.smartpos.di
 
+import com.interswitchng.smartpos.BuildConfig
 import com.interswitchng.smartpos.IswPos
 import com.interswitchng.smartpos.R
 //import com.interswitchng.smartpos.modules.main.billPayment.repository.billRepo

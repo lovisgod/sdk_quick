@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
 import androidx.multidex.MultiDex;
 
+import com.interswitchng.smartpos.BuildConfig;
 import com.interswitchng.smartpos.IswPos;
 import com.interswitchng.smartpos.emv.pax.services.POSDeviceImpl;
 import com.interswitchng.smartpos.shared.interfaces.device.DevicePrinter;
@@ -70,7 +71,7 @@ public class POSApplication extends Application {
     private void configureTerminal() {
         POSDevice device;
 
-        if (BuildConfig.MOCK) {
+        if (BuildConfig.DEBUG) {
             device = new POSDevice() {
 
                 @Override
