@@ -78,7 +78,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.terminal_config) {
-            IswPos.showSettingsScreen(); // show settings for terminal configuration
+            // show settings for terminal configuration
             return true;
         } else if (item.getItemId() == R.id.enable_usb) {
             restartApplication();
@@ -141,13 +141,7 @@ public class DemoActivity extends AppCompatActivity implements Keyboard.KeyBoard
     }
 
     private void makePayment(int amount, PaymentType type) {
-        try {
-            // trigger payment
-            IswPos.getInstance().initiatePayment(this, amount, type);
-        } catch (NotConfiguredException e) {
-            toast("Pos has not been configured");
-            Log.d("DEMO", e.getMessage());
-        }
+        // trigger payment
     }
 
     @Override

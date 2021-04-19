@@ -966,7 +966,7 @@ internal class KimonoHttpServiceImpl(private val context: Context,
     fun logTransaction(result: TransactionResult) {
         // get and log transaction to storage
         val resultLog = TransactionLog.fromResult(result)
-        transactionLogService.logTransactionResult(resultLog)
+//        transactionLogService.logTransactionResult(resultLog)
     }
 
     private fun generatePan(code: String): String {
